@@ -17,13 +17,8 @@ public class Authorization {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key authorizatoinId;
-
-    @Persistent
-    private Fighter fighter;
-    
     @Persistent
     private AuthType authType;
-
     @Persistent
     private Date date;
 
@@ -33,14 +28,6 @@ public class Authorization {
 
     public void setAuthType(AuthType authType) {
         this.authType = authType;
-    }
-
-    public Fighter getFighter() {
-        return fighter;
-    }
-
-    public void setFighter(Fighter fighter) {
-        this.fighter = fighter;
     }
 
     public Key getAuthorizatoinId() {
@@ -58,6 +45,4 @@ public class Authorization {
     public void setDate(Date date) {
         this.date = date;
     }
-
-    
 }

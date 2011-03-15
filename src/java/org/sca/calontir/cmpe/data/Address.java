@@ -20,25 +20,16 @@ public class Address {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key addressId;
-
-    @Persistent
-    private Fighter fighter;
-
     @Persistent
     private String address1;
-
     @Persistent
     private String address2;
-
     @Persistent
     private String city;
-
     @Persistent
     private String district;
-
     @Persistent
     private String postalCode;
-
     @Persistent
     private String type;
 
@@ -82,14 +73,6 @@ public class Address {
         this.district = district;
     }
 
-    public Fighter getFighter() {
-        return fighter;
-    }
-
-    public void setFighter(Fighter fighter) {
-        this.fighter = fighter;
-    }
-
     public String getPostalCode() {
         return postalCode;
     }
@@ -105,8 +88,4 @@ public class Address {
     public void setType(String type) {
         this.type = type;
     }
-
-    
-
-
 }

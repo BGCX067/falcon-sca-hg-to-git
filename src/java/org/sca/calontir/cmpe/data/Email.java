@@ -10,18 +10,14 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * @author rik
  */
-@PersistenceCapable(detachable="true")
+@PersistenceCapable(detachable = "true")
 public class Email {
+
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key emailId;
-
-    @Persistent
-    private Fighter fighter;
-
     @Persistent
     private String emailAddress;
-
     @Persistent
     private String type;
 
@@ -41,14 +37,6 @@ public class Email {
         this.emailId = emailId;
     }
 
-    public Fighter getFighter() {
-        return fighter;
-    }
-
-    public void setFighter(Fighter fighter) {
-        this.fighter = fighter;
-    }
-
     public String getType() {
         return type;
     }
@@ -56,5 +44,4 @@ public class Email {
     public void setType(String type) {
         this.type = type;
     }
-    
 }

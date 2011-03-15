@@ -5,6 +5,7 @@
 
 package org.sca.calontir.cmpe;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import org.sca.calontir.cmpe.common.FighterResource;
 import static org.junit.Assert.*;
 import org.restlet.resource.ClientResource;
+import org.sca.calontir.cmpe.data.Email;
 import org.sca.calontir.cmpe.data.Fighter;
 
 /**
@@ -71,6 +73,15 @@ public class FighterServerResourceTest {
 
         fighter = new Fighter();
         fighter.setScaName("Capt Shiny");
+        fighter.setGoogleId("captshiny@gmail.com");
+        fighter.setScaMemberNo("1249339");
+
+        Email email = new Email();
+        email.setEmailAddress("captshiny@gmail.com");
+        email.setType("personal");
+        List<Email> emailList = new ArrayList<Email>();
+        emailList.add(email);
+        fighter.setEmail(emailList);
 
         fighterResource.store(fighter);
     }
