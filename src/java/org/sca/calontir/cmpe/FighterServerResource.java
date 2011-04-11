@@ -14,6 +14,7 @@ import org.sca.calontir.cmpe.common.FighterResource;
 import org.sca.calontir.cmpe.data.Fighter;
 import java.util.ArrayList;
 import java.util.List;
+import org.restlet.security.User;
 import org.sca.calontir.cmpe.db.FighterDAO;
 
 /**
@@ -26,6 +27,7 @@ public class FighterServerResource extends ServerResource implements FighterReso
 
     @Get
     public List<Fighter> retrieve() {
+        User u = getRequest().getClientInfo().getUser();
         List<Fighter> retVal = null;
 
         String fk = (String) getRequestAttributes().get("fighterkey");

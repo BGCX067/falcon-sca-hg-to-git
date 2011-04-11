@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.sca.calontir.cmpe.common.FighterResource;
 import static org.junit.Assert.*;
 import org.restlet.resource.ClientResource;
+import org.sca.calontir.cmpe.data.Authorization;
 import org.sca.calontir.cmpe.data.Email;
 import org.sca.calontir.cmpe.data.Fighter;
 
@@ -46,7 +47,7 @@ public class FighterServerResourceTest {
     /**
      * Test of retrieve method, of class FighterServerResource.
      */
-    @Test
+    //@Test
     public void testRetrieve() {
         System.out.println("retrieve");
         ClientResource clientResource = new ClientResource(
@@ -68,13 +69,13 @@ public class FighterServerResourceTest {
         System.out.println("store");
         Fighter fighter = null;
         ClientResource clientResource = new ClientResource(
-                "http://localhost:8080/fighter");
+                "http://calon-marshal-project-engine.appspot.com/fighter");
         FighterResource fighterResource = clientResource.wrap(FighterResource.class);
 
         fighter = new Fighter();
-        fighter.setScaName("Brendan");
+        fighter.setScaName("Brendan Mac an tSaoir");
         fighter.setGoogleId("riksca@gmail.com");
-        fighter.setScaMemberNo("1249339");
+        fighter.setScaMemberNo("38910");
 
         Email email = new Email();
         email.setEmailAddress("riksca@gmail.com");
@@ -82,6 +83,7 @@ public class FighterServerResourceTest {
         List<Email> emailList = new ArrayList<Email>();
         emailList.add(email);
         fighter.setEmail(emailList);
+        
 
         fighterResource.store(fighter);
     }
