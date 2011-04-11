@@ -72,12 +72,12 @@ public class FighterServerResourceTest {
         FighterResource fighterResource = clientResource.wrap(FighterResource.class);
 
         fighter = new Fighter();
-        fighter.setScaName("Capt Shiny");
-        fighter.setGoogleId("captshiny@gmail.com");
+        fighter.setScaName("Brendan");
+        fighter.setGoogleId("riksca@gmail.com");
         fighter.setScaMemberNo("1249339");
 
         Email email = new Email();
-        email.setEmailAddress("captshiny@gmail.com");
+        email.setEmailAddress("riksca@gmail.com");
         email.setType("personal");
         List<Email> emailList = new ArrayList<Email>();
         emailList.add(email);
