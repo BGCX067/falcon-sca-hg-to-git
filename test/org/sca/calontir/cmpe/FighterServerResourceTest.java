@@ -6,6 +6,7 @@
 package org.sca.calontir.cmpe;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.sca.calontir.cmpe.common.FighterResource;
 import static org.junit.Assert.*;
 import org.restlet.resource.ClientResource;
+import org.sca.calontir.cmpe.data.AuthType;
 import org.sca.calontir.cmpe.data.Authorization;
 import org.sca.calontir.cmpe.data.Email;
 import org.sca.calontir.cmpe.data.Fighter;
@@ -69,7 +71,7 @@ public class FighterServerResourceTest {
         System.out.println("store");
         Fighter fighter = null;
         ClientResource clientResource = new ClientResource(
-                "http://calon-marshal-project-engine.appspot.com/fighter");
+                "http://localhost:8080/fighter");
         FighterResource fighterResource = clientResource.wrap(FighterResource.class);
 
         fighter = new Fighter();
@@ -83,6 +85,19 @@ public class FighterServerResourceTest {
         List<Email> emailList = new ArrayList<Email>();
         emailList.add(email);
         fighter.setEmail(emailList);
+        
+        AuthType at = new AuthType();
+        at.setCode("GS");
+        at.setDescription("Great Sword");
+        
+        Authorization auth = new Authorization();
+        auth.setAuthType(at);
+        auth.setDate(new Date());
+        
+        List <Authorization> auths = new ArrayList<Authorization>();
+        auths.add(auth);
+        
+        fighter.setAuthorization(auths);
         
 
         fighterResource.store(fighter);

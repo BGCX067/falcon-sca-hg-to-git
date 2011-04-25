@@ -25,6 +25,8 @@ public class CMPEApplication extends Application {
 
         router.attach("/fighter", FighterServerResource.class);
         router.attach("/fighter/{fighterkey}", FighterServerResource.class);
+        router.attach("/authType", AuthTypeServerResource.class);
+        router.attach("/authType/{authTypekey}", AuthTypeServerResource.class);
 
         return router;
     }
