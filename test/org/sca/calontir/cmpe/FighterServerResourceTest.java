@@ -66,7 +66,7 @@ public class FighterServerResourceTest {
     /**
      * Test of store method, of class FighterServerResource.
      */
-    @Test
+    //@Test
     public void testStore() {
         System.out.println("store");
         Fighter fighter = null;
@@ -86,22 +86,32 @@ public class FighterServerResourceTest {
         emailList.add(email);
         fighter.setEmail(emailList);
         
-        AuthType at = new AuthType();
-        at.setCode("GS");
-        at.setDescription("Great Sword");
+//        AuthType at = new AuthType();
+//        at.setCode("GS");
+//        at.setDescription("Great Sword");
+//        
+//        Authorization auth = new Authorization();
+//        auth.setAuthType(at);
+//        auth.setDate(new Date());
+//        
+//        List <Authorization> auths = new ArrayList<Authorization>();
+//        auths.add(auth);
         
-        Authorization auth = new Authorization();
-        auth.setAuthType(at);
-        auth.setDate(new Date());
-        
-        List <Authorization> auths = new ArrayList<Authorization>();
-        auths.add(auth);
-        
-        fighter.setAuthorization(auths);
+        //fighter.setAuthorization(auths);
         
 
         fighterResource.store(fighter);
     }
+    
+    //@Test
+    public void testUpdate() {
+        System.out.println("update");
+        ClientResource clientResource = new ClientResource(
+                "http://localhost:8080/fighter");
+        FighterResource fighterResource = clientResource.wrap(FighterResource.class);
+        List<Fighter> result = fighterResource.retrieve();
+    }
+
 
     /**
      * Test of remove method, of class FighterServerResource.

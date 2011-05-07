@@ -1,12 +1,9 @@
 package org.sca.calontir.cmpe.db;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.sca.calontir.cmpe.data.AuthType;
-import org.sca.calontir.cmpe.data.Authorization;
 
 /**
  *

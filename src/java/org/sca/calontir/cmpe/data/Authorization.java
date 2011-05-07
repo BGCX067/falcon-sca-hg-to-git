@@ -18,15 +18,15 @@ public class Authorization {
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key authorizatoinId;
     @Persistent
-    private AuthType authType;
+    private Key authType;
     @Persistent
     private Date date;
 
-    public AuthType getAuthType() {
+    public Key getAuthType() {
         return authType;
     }
 
-    public void setAuthType(AuthType authType) {
+    public void setAuthType(Key authType) {
         this.authType = authType;
     }
 

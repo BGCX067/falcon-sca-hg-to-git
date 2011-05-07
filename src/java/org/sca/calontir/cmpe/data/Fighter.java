@@ -40,7 +40,7 @@ public class Fighter {
     private List<Authorization> authorization;
 
     @Persistent
-    private ScaGroup scaGroup;
+    private Key scaGroup;
 
     public Key getFighterId() {
         return fighterId;
@@ -107,11 +107,11 @@ public class Fighter {
         this.phone = phone;
     }
 
-    public ScaGroup getScaGroup() {
+    public Key getScaGroup() {
         return scaGroup;
     }
 
-    public void setScaGroup(ScaGroup scaGroup) {
+    public void setScaGroup(Key scaGroup) {
         this.scaGroup = scaGroup;
     }
 

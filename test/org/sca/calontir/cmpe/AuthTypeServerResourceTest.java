@@ -4,6 +4,8 @@
  */
 package org.sca.calontir.cmpe;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -51,9 +53,10 @@ public class AuthTypeServerResourceTest {
         AuthTypeResource instance = clientResource.wrap(AuthTypeResource.class);
         List expResult = null;
         List<AuthType> result = instance.retrieve();
+        System.out.println(result);
         //for(AuthType at : result) {
-            AuthType at = result.get(1);
-            System.out.println(at.getAuthTypeId().getId());
+//            AuthType at = result.get(1);
+//            System.out.println(at.getAuthTypeId().getId());
         //}
     }
 
@@ -71,7 +74,19 @@ public class AuthTypeServerResourceTest {
         authType.setDescription("Sword and Shield");
         instance.store(authType);
     }
-
+    
+    //@Test
+    public void testUpdate() {
+        System.out.println("update");
+        AuthType authType = new AuthType();
+        ClientResource clientResource = new ClientResource(
+                "http://localhost:8080/authType");
+        AuthTypeResource instance = clientResource.wrap(AuthTypeResource.class);
+        authType.setCode("GS");
+        authType.setDescription("Great Sword");
+        instance.store(authType);
+        
+    }
     /**
      * Test of remove method, of class AuthTypeServerResource.
      */
