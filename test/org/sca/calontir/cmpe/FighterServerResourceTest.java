@@ -6,18 +6,15 @@
 package org.sca.calontir.cmpe;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.sca.calontir.cmpe.common.FighterResource;
 import static org.junit.Assert.*;
 import org.restlet.resource.ClientResource;
-import org.sca.calontir.cmpe.data.AuthType;
-import org.sca.calontir.cmpe.data.Authorization;
+import org.sca.calontir.cmpe.common.AuthTypeResource;
 import org.sca.calontir.cmpe.data.Email;
 import org.sca.calontir.cmpe.data.Fighter;
 
@@ -73,6 +70,9 @@ public class FighterServerResourceTest {
         ClientResource clientResource = new ClientResource(
                 "http://localhost:8080/fighter");
         FighterResource fighterResource = clientResource.wrap(FighterResource.class);
+        
+        ClientResource authTypeClient = new ClientResource("http://localhost:8080/authType");
+        AuthTypeResource authTypeResource = clientResource.wrap(AuthTypeResource.class);
 
         fighter = new Fighter();
         fighter.setScaName("Brendan Mac an tSaoir");
