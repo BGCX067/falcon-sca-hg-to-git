@@ -49,7 +49,7 @@ public class AuthTypeServerResourceTest {
     public void testRetrieve() {
         System.out.println("retrieve");
         ClientResource clientResource = new ClientResource(
-                "http://localhost:8080/authType");
+                "http://localhost:8080/ws/authType");
         AuthTypeResource instance = clientResource.wrap(AuthTypeResource.class);
         List expResult = null;
         List<AuthType> result = instance.retrieve();

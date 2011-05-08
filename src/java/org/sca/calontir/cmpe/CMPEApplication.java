@@ -4,11 +4,8 @@
  */
 package org.sca.calontir.cmpe;
 
-import java.io.File;
 import org.restlet.Application;
 import org.restlet.Restlet;
-import org.restlet.data.LocalReference;
-import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 
 /**
@@ -27,6 +24,8 @@ public class CMPEApplication extends Application {
         router.attach("/fighter/{fighterkey}", FighterServerResource.class);
         router.attach("/authType", AuthTypeServerResource.class);
         router.attach("/authType/{authTypekey}", AuthTypeServerResource.class);
+        router.attach("/scaGroup", ScaGroupServerResource.class);
+        router.attach("/scaGroup/{scaGroupkey}", ScaGroupServerResource.class);
 
         return router;
     }
