@@ -4,23 +4,21 @@
  */
 package org.sca.calontir.cmpe;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.sca.calontir.cmpe.data.AuthType;
-import org.sca.calontir.cmpe.db.AuthTypeDAO;
+import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.db.FighterDAO;
 
 /**
  *
  * @author rik
  */
-public class AuthTypesServlet extends HttpServlet {
+public class FighterSearchServlet extends HttpServlet {
 
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -31,26 +29,24 @@ public class AuthTypesServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-           
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AuthTypesServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AuthTypesServlet at " + request.getContextPath () + "</h1>");
-            while(request.getParameterNames().hasMoreElements()) {
-                String s = (String) request.getParameterNames().nextElement();
-                out.println("<p>" + s + ": " + request.getParameter(s) + "</p>");
-            }
-            out.println("</body>");
-            out.println("</html>");
-             
-        } finally {            
-            out.close();
+        Fighter fighter = null;
+        FighterDAO dao = new FighterDAO();
+        String mode = request.getParameter("mode");
+        if (mode.equals("add")) {
+            fighter = new Fighter();
+        } else {
+            String search = request.getParameter("search");
+            //int i = Integer.parseInt(search);
+            //fighter = dao.getFighter(i);
+            fighter = new Fighter();
+            fighter.setScaName("Brendan");
+            fighter.setScaMemberNo("123");
         }
+        request.setAttribute("mode", mode);
+        request.setAttribute("fighter", fighter);
+        //response.sendRedirect("/fighter.jsp");
+        this.getServletContext().getRequestDispatcher("/fighter.jsp").
+                include(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -77,20 +73,7 @@ public class AuthTypesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
-        
-        AuthTypeDAO dao = new AuthTypeDAO();
-
-        String code = request.getParameter("code");
-        String description = request.getParameter("description");
-        
-        AuthType authType = new AuthType();
-        authType.setCode(code);
-        authType.setDescription(description);
-        
-        dao.saveAuthType(authType);
-        response.sendRedirect("/authTypes.jsp");
+        processRequest(request, response);
     }
 
     /** 

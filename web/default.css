@@ -1,0 +1,66 @@
+/* 
+    Document   : default
+    Created on : Apr 24, 2011, 6:09:30 PM
+    Author     : rik
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+.userbox {
+    display: inline;
+    border: 1px solid darkblue;
+    text-align: center;
+    vertical-align: middle;
+    margin: .25em;
+    padding: .5em;
+    width: 25em;
+    float: right;
+}
+
+.userbox input {
+    width: 100%;
+}
+
+.buttonLink {
+    display: block;
+    border: 1px solid darkblue;
+    text-align: center;
+    vertical-align: middle;
+    margin: .25em;
+    padding: .25em;
+    width: 15em;
+    background-color: lightblue;
+    color: white;
+}
+
+.buttonLink a {
+    
+}
+
+a:link.buttonLink.buttonLink {text-decoration: none}
+a:visited.buttonLink {text-decoration: none}
+a:active.buttonLink {text-decoration: none}
+a:hover.buttonLink {text-decoration: none}
+
+#searchBar {
+    background-color: lightblue;
+    display: block;
+    border: 1px solid darkblue;
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: .25em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 4em;
+    padding: .5em;
+    width: 40%;
+}
