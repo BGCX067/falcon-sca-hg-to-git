@@ -32,7 +32,7 @@ public class FighterSearchServlet extends HttpServlet {
         Fighter fighter = null;
         FighterDAO dao = new FighterDAO();
         String mode = request.getParameter("mode");
-        if (mode.equals("add")) {
+        if (mode != null && mode.equals("add")) {
             fighter = new Fighter();
         } else {
             String search = request.getParameter("search");

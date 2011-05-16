@@ -5,7 +5,6 @@
 --%>
 <%@ taglib uri="/WEB-INF/tld/c.tld" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tld/cmp.tld" prefix="cmp" %>
-<%@page import="org.sca.calontir.cmpe.data.Fighter"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
@@ -20,7 +19,8 @@
     </head>
     <body>
         <jsp:useBean id="fighter" scope="request" class="org.sca.calontir.cmpe.data.Fighter" /> 
-        
+        <jsp:useBean id="authTypes" scope="session" class="java.util.List" />
+
         <% String mode = (String) request.getAttribute("mode");
             if (mode == null) {
                 mode = "view";
@@ -31,35 +31,27 @@
         <%@include file="WEB-INF/jspf/userbox.jspf" %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
-        <div class="figherIdBox">
-            SCA Name: <cmp:input name="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>"/>
-        </div>
-        <c:choose>
-            <c:when test="${mode eq 'add'}">
-                <div class="dataBox">
-                    <form action="/FighterServlet" method="post">
-                        <div class="dataHeader">Fighter Info</div>
-                        <div class="dataBody">
-                            <div>SCA Name: <input type=text name=scaName SIZE=60><br>
-                                Membership Number: <input type=text name="scaMemberNo" size=20><br>
-                            </div>
-                            <div><input type="submit" value="Add Fighter" /></div>
-                        </div>
-                    </form>
+        <form action="/FighterServlet" method="post">
+            <div class="figherIdBox">
+                SCA Name: <cmp:input name="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>"/>
+            </div>
+            <div class="dataBox">
+                <div class="dataHeader">Authorizations</div>
+                <div class="dataBody">
+                    <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization() %>"/>
                 </div>
-            </c:when>
-            <c:otherwise>
-                <div class="dataBox">
-                    <div class="dataHeader">Fighter Info</div>
-                    <div class="dataBody">
-                        <div>SCA Name: <%= fighter.getScaName()%><br>
-                            Membership Number: <%= fighter.getScaMemberNo()%><br>
-                        </div>
-
+            </div>
+            <div class="dataBox">
+                <div class="dataHeader">Fighter Info</div>
+                <div class="dataBody">
+                    <div>Membership Number: <cmp:input type="text" name="scaMemberNo" size="20" 
+                        mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" /><br>
                     </div>
-                </c:otherwise>
-            </c:choose>
+                    <div><cmp:input type="submit" value="Add Fighter" mode="<%= mode%>" /></div>
+                </div>
 
-        </div>
-    </body>
+            </div>
+        </form>
+    </div>
+</body>
 </html>

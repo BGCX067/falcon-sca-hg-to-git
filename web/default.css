@@ -23,7 +23,11 @@ root {
     margin: .25em;
     padding: .5em;
     width: 25em;
-    float: right;
+    position:absolute;
+    top:0;
+    right:0;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
 }
 
 .userbox input {
@@ -43,7 +47,7 @@ root {
 }
 
 .buttonLink a {
-    
+
 }
 
 a:link.buttonLink.buttonLink {text-decoration: none}
@@ -55,7 +59,7 @@ a:hover.buttonLink {text-decoration: none}
     background-color: lightblue;
     display: block;
     border: 1px solid darkblue;
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
     margin-bottom: .25em;
     margin-left: 1em;
@@ -63,4 +67,40 @@ a:hover.buttonLink {text-decoration: none}
     margin-top: 4em;
     padding: .5em;
     width: 40%;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.dataBox {
+    background-color: lightblue;
+    display: block;
+    border: 1px solid darkblue;
+    text-align: left;
+    vertical-align: middle;
+    margin-bottom: .25em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 4em;
+    width: 80%;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.dataHeader {
+    background-color: purple;
+    color: white;
+    margin: 0,0,0,0;
+    padding: 0,0,0,0;
+    border-top: 1px solid darkblue;
+    border-left: 1px solid darkblue;
+    border-right: 1px solid darkblue;
+    padding: .5em;
+    -moz-border-right-radius: 15px;
+    -moz-border-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+.dataBody {
+    padding: .5em;
 }

@@ -1,0 +1,21 @@
+<%-- any content can be specified here e.g.: --%>
+<%@page import="com.google.appengine.api.users.User"%>
+<%@page import="com.google.appengine.api.users.UserServiceFactory"%>
+<%@page import="com.google.appengine.api.users.UserService"%>
+<%@ page pageEncoding="UTF-8" %>
+<div class="userbox">
+            <%
+                UserService userService = UserServiceFactory.getUserService();
+                User user = userService.getCurrentUser();
+                if (user != null) {
+            %>
+            Logged in, <%= user.getNickname()%>
+            <a href="<%= userService.createLogoutURL(request.getRequestURI())%>" class="buttonLink">logout</a>
+            <%
+            } else {
+            %>
+            <a href="<%= userService.createLoginURL(request.getRequestURI())%>" class="buttonLink">login</a>
+            <%
+                }
+            %>
+        </div>

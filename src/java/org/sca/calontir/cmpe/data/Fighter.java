@@ -1,6 +1,7 @@
 package org.sca.calontir.cmpe.data;
 
 import com.google.appengine.api.datastore.Key;
+import java.util.Date;
 import java.util.List;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -23,6 +24,12 @@ public class Fighter {
 
     @Persistent
     private String scaMemberNo;
+    
+    @Persistent
+    private String modernName;
+    
+    @Persistent
+    private Date dateOfBirth;
 
     @Persistent
     private String googleId;
@@ -111,10 +118,23 @@ public class Fighter {
         return scaGroup;
     }
 
-    public void setScaGroup(Key scaGroup) {
-        this.scaGroup = scaGroup;
+    public Date getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    
-    
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getModernName() {
+        return modernName;
+    }
+
+    public void setModernName(String modernName) {
+        this.modernName = modernName;
+    }
+
+    public void setScaGroup(Key scaGroup) {
+        this.scaGroup = scaGroup;
+    }   
 }
