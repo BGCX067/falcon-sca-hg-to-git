@@ -3,6 +3,9 @@
     Created on : May 8, 2011, 12:23:19 PM
     Author     : rik
 --%>
+<%@page import="org.sca.calontir.cmpe.data.AuthType"%>
+<%@page import="java.util.List"%>
+<%@page import="org.sca.calontir.cmpe.db.AuthTypeDAO"%>
 <%@ taglib uri="/WEB-INF/tld/c.tld" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tld/cmp.tld" prefix="cmp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -19,13 +22,15 @@
     </head>
     <body>
         <jsp:useBean id="fighter" scope="request" class="org.sca.calontir.cmpe.data.Fighter" /> 
-        <jsp:useBean id="authTypes" scope="session" class="java.util.List" />
 
         <% String mode = (String) request.getAttribute("mode");
             if (mode == null) {
                 mode = "view";
             }
             pageContext.setAttribute("mode", mode);
+            
+            AuthTypeDAO atDao = new AuthTypeDAO();
+            List<AuthType> authTypes = atDao.getAuthType();
         %>
 
         <%@include file="WEB-INF/jspf/userbox.jspf" %>

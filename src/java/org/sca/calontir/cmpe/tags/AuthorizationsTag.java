@@ -20,10 +20,10 @@ import org.sca.calontir.cmpe.data.Authorization;
  * @author rik
  */
 public class AuthorizationsTag extends SimpleTagSupport {
+
     private String mode;
     private List<Authorization> authorizations;
     private List<AuthType> authTypes;
-    
     // internal for lookup;
     private List<Long> authorizationIds;
     private Map<Long, AuthType> authTypeMap;
@@ -36,27 +36,31 @@ public class AuthorizationsTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException {
         JspWriter out = getJspContext().getOut();
-        
+
         try {
             if (mode != null && mode.equals("add")) {
-                for(AuthType at : this.authTypes) {
-                    out.print("<input type=\"checkbox\" name=\"authorization\" value=\"" );
+                for (AuthType at : this.authTypes) {
+                    out.print("<input type=\"checkbox\" name=\"authorization\" value=\"");
                     out.print(at.getCode() + "\" ");
-                    if(authorizationIds.contains(at.getAuthTypeId().getId()))
+                    if (authorizationIds.contains(at.getAuthTypeId().getId())) {
                         out.print(" checked ");
+                    }
                     out.print(" />");
+                    out.print(at.getCode());
                 }
             } else {
                 boolean first = false;
-                for(Authorization a : authorizations) {
-                    if(first) {
-                        first = false;
-                    } else {
-                        out.print(" ; ");
+                if (authorizations != null) {
+                    for (Authorization a : authorizations) {
+                        if (first) {
+                            first = false;
+                        } else {
+                            out.print(" ; ");
+                        }
+                        long authTypeId = a.getAuthType().getId();
+                        AuthType at = authTypeMap.get(authTypeId);
+                        out.print(at.getCode());
                     }
-                    long authTypeId = a.getAuthType().getId();
-                    AuthType at = authTypeMap.get(authTypeId);
-                    out.print(at.getCode());
                 }
             }
 
@@ -72,16 +76,20 @@ public class AuthorizationsTag extends SimpleTagSupport {
     public void setAuthorizations(List<Authorization> authorizations) {
         this.authorizations = authorizations;
         authorizationIds = new LinkedList<Long>();
-        for(Authorization a : this.authorizations) {
-            authorizationIds.add(a.getAuthorizatoinId().getId());
+        if (this.authorizations != null) {
+            for (Authorization a : this.authorizations) {
+                authorizationIds.add(a.getAuthorizatoinId().getId());
+            }
         }
     }
 
     public void setAuthTypes(List<AuthType> authTypes) {
         this.authTypes = authTypes;
         authTypeMap = new LinkedHashMap<Long, AuthType>();
-        for(AuthType at : this.authTypes) {
-            authTypeMap.put(at.getAuthTypeId().getId(), at);
+        if (this.authTypes != null) {
+            for (AuthType at : this.authTypes) {
+                authTypeMap.put(at.getAuthTypeId().getId(), at);
+            }
         }
     }
 }
