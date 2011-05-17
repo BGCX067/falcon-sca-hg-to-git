@@ -41,7 +41,7 @@ public class AuthorizationsTag extends SimpleTagSupport {
             if (mode != null && mode.equals("add")) {
                 for (AuthType at : this.authTypes) {
                     out.print("<input type=\"checkbox\" name=\"authorization\" value=\"");
-                    out.print(at.getCode() + "\" ");
+                    out.print(at.getAuthTypeId().getId() + "\" ");
                     if (authorizationIds.contains(at.getAuthTypeId().getId())) {
                         out.print(" checked ");
                     }
@@ -49,7 +49,7 @@ public class AuthorizationsTag extends SimpleTagSupport {
                     out.print(at.getCode());
                 }
             } else {
-                boolean first = false;
+                boolean first = true;
                 if (authorizations != null) {
                     for (Authorization a : authorizations) {
                         if (first) {

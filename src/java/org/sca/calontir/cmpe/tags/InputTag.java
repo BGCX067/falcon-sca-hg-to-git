@@ -44,6 +44,11 @@ public class InputTag extends SimpleTagSupport {
                     out.print(" value=" + value);
                 if(size > 0)
                     out.print(" size=" + size);
+                if (type.equalsIgnoreCase("text")) {
+                    out.print(" onfocus=\"if (this.value==this.defaultValue) this.value='';"
+                            + " else this.select()\" onblur=\"if (!this.value) this.value=this.defaultValue)\"");
+                }
+                out.println(" />");
             } else {
                 if(value != null && !("submit".equals(type)))
                     out.println(value);

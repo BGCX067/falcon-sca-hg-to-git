@@ -26,6 +26,7 @@
     <body-content>scriptless</body-content>
     <attribute>
       <name>mode</name>
+      <required>true</required>
       <rtexprvalue>true</rtexprvalue>
       <type>java.lang.String</type>
     </attribute>
@@ -41,6 +42,7 @@
     </attribute>
     <attribute>
       <name>type</name>
+      <required>true</required>
       <rtexprvalue>true</rtexprvalue>
       <type>java.lang.String</type>
     </attribute>

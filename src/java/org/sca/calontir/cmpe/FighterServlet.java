@@ -4,22 +4,28 @@
  */
 package org.sca.calontir.cmpe;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.sca.calontir.cmpe.data.AuthType;
+import org.sca.calontir.cmpe.data.Authorization;
 import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
 
 /**
  *
  * @author rik
  */
-public class FighterSearchServlet extends HttpServlet {
+public class FighterServlet extends HttpServlet {
 
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -30,23 +36,35 @@ public class FighterSearchServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Fighter fighter = null;
+        response.setContentType("text/html;charset=UTF-8");
+        UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+        
         FighterDAO dao = new FighterDAO();
-        String mode = request.getParameter("mode");
-        if (mode != null && mode.equals("add")) {
-            fighter = new Fighter();
-        } else {
-            String search = request.getParameter("search");
-            
-            List<Fighter> ret = dao.queryFightersByScaName(search);
-            
-            fighter = ret.get(0);
+        AuthTypeDAO atDao = new AuthTypeDAO();
+        
+        Fighter fighter = new Fighter();
+        
+        fighter.setScaName(request.getParameter("scaName"));
+        fighter.setScaMemberNo(request.getParameter("scaMemberNo"));
+        List<Authorization> authorizations = new LinkedList<Authorization>();
+        String[] authIds = request.getParameterValues("authorization");
+        for(String authId : authIds) {
+            int aid = Integer.parseInt(authId);
+            AuthType at = atDao.getAuthType(aid);
+            Authorization a = new Authorization();
+            a.setAuthType(at.getAuthTypeId());
+            a.setDate(new Date());
+            authorizations.add(a);
         }
-        request.setAttribute("mode", mode);
+        fighter.setAuthorization(authorizations);
+        dao.saveFighter(fighter);
+        request.setAttribute("mode", "view");
         request.setAttribute("fighter", fighter);
         //response.sendRedirect("/fighter.jsp");
         this.getServletContext().getRequestDispatcher("/fighter.jsp").
                 include(request, response);
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

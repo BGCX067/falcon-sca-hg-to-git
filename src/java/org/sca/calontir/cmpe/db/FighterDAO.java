@@ -21,6 +21,14 @@ public class FighterDAO {
 
         return fighter;
     }
+    
+    public List<Fighter> queryFightersByScaName(String scaName) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        Query query = pm.newQuery(Fighter.class);
+        query.setFilter("scaName == scaNameParam");
+        query.declareParameters("String scaNameParam");
+        return (List<Fighter>) query.execute(scaName);
+    }
 
     public List<Fighter> getFighters() {
         PersistenceManager pm = PMF.get().getPersistenceManager();

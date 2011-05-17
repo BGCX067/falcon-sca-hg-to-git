@@ -38,7 +38,7 @@
 
         <form action="/FighterServlet" method="post">
             <div class="figherIdBox">
-                SCA Name: <cmp:input name="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>"/>
+                SCA Name: <cmp:input type="text" name="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>"/>
             </div>
             <div class="dataBox">
                 <div class="dataHeader">Authorizations</div>
