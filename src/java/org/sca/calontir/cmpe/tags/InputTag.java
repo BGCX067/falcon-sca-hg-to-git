@@ -38,7 +38,7 @@ public class InputTag extends SimpleTagSupport {
                 f.invoke(out);
             }
 
-            if (mode != null && mode.equals("add")) {
+            if (mode != null && mode.equals("add")  && !type.equals("viewonly")) {
                 out.print("<input type=" + type + " name=" + name);
                 if(value != null && !StringUtil.isEmptyOrWhitespace(value))
                     out.print(" value=" + value);

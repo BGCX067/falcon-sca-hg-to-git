@@ -40,7 +40,10 @@ public class FighterSearchServlet extends HttpServlet {
             
             List<Fighter> ret = dao.queryFightersByScaName(search);
             
-            fighter = ret.get(0);
+            if(ret.isEmpty()) 
+                fighter = null;
+            else
+                fighter = ret.get(0);
         }
         request.setAttribute("mode", mode);
         request.setAttribute("fighter", fighter);
