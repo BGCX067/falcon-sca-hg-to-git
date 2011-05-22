@@ -5,11 +5,12 @@
 package org.sca.calontir.cmpe.tags;
 
 import com.google.appengine.repackaged.com.google.common.base.StringUtil;
-import com.google.appengine.repackaged.org.apache.commons.codec.binary.StringUtils;
+import java.util.Date;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -19,7 +20,7 @@ public class InputTag extends SimpleTagSupport {
 
     private String mode;
     private String name;
-    private String value;
+    private Object value;
     private String type;
     private Integer size = 0;
 
@@ -32,26 +33,43 @@ public class InputTag extends SimpleTagSupport {
     public void doTag() throws JspException {
         JspWriter out = getJspContext().getOut();
 
+        String valueOut = "";
+        if (value instanceof String) {
+            valueOut = (String) value;
+        } else if (value instanceof Date) {
+            if (value != null) {
+                DateTime dt = new DateTime(((Date) value).getTime());
+                valueOut = dt.toString("MM/dd/yyyy");
+            }
+        } else if (value instanceof Boolean) {
+            valueOut = ((Boolean)value) ? "true" : "false";
+        } else {
+            if(value != null)
+            valueOut = value.toString();
+        }
         try {
             JspFragment f = getJspBody();
             if (f != null) {
                 f.invoke(out);
             }
 
-            if (mode != null && mode.equals("add")  && !type.equals("viewonly")) {
+            if (mode != null && mode.equals("add") && !type.equals("viewonly")) {
                 out.print("<input type=" + type + " name=" + name);
-                if(value != null && !StringUtil.isEmptyOrWhitespace(value))
-                    out.print(" value=" + value);
-                if(size > 0)
+                if (valueOut != null && !StringUtil.isEmptyOrWhitespace(valueOut)) {
+                    out.print(" value=" + valueOut);
+                }
+                if (size > 0) {
                     out.print(" size=" + size);
+                }
                 if (type.equalsIgnoreCase("text")) {
                     out.print(" onfocus=\"if (this.value==this.defaultValue) this.value='';"
                             + " else this.select()\" onblur=\"if (!this.value) this.value=this.defaultValue)\"");
                 }
                 out.println(" />");
             } else {
-                if(value != null && !("submit".equals(type)))
-                    out.println(value);
+                if (valueOut != null && !("submit".equals(type))) {
+                    out.println(valueOut);
+                }
             }
 
         } catch (java.io.IOException ex) {
@@ -59,7 +77,7 @@ public class InputTag extends SimpleTagSupport {
         }
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

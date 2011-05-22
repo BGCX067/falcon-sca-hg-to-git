@@ -38,7 +38,7 @@
     <attribute>
       <name>value</name>
       <rtexprvalue>true</rtexprvalue>
-      <type>java.lang.String</type>
+      <type>java.lang.Object</type>
     </attribute>
     <attribute>
       <name>type</name>
@@ -70,6 +70,22 @@
     </attribute>
     <attribute>
       <name>authTypes</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.util.List</type>
+    </attribute>
+  </tag>
+  <tag>
+    <name>address</name>
+    <tag-class>org.sca.calontir.cmpe.tags.AddressTag</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>mode</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <name>addresses</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
       <type>java.util.List</type>

@@ -31,6 +31,8 @@ public class Address {
     @Persistent
     private String postalCode;
     @Persistent
+    private String state;
+    @Persistent
     private String type;
 
     public String getAddress1() {
@@ -88,4 +90,13 @@ public class Address {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+    
 }

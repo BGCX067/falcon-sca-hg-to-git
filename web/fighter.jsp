@@ -53,8 +53,7 @@
                     <div>
                         Modern Name: <cmp:input type="text" name="modernName"
                                                 mode ="<%=mode%>" value="<%= fighter.getModernName()%>" /><br>
-                        Address: <%--- cmp:input type="text" name="address"
-                                            mode="<%=mode%>" value="<%=fighter.getAddress()%>" / --%><br>
+                        <cmp:address mode="<%=mode%>" addresses="<%=fighter.getAddress()%>" /><br>
                         
                         SCA Membership: <cmp:input type="text" name="scaMemberNo" size="20" 
                         mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" /><br>
@@ -62,8 +61,8 @@
                         Group: <br>
                         <% String minorValue = MarshalUtils.isMinor(fighter) ? "true" : "false"; %>
                         Minor: <cmp:input type="viewonly" mode="<%=mode%>" value="<%= minorValue %>" /><br>
-                        DOB: <%-- cmp:input type="text" name="dateOfBirth" 
-                                        mode="<%=mode%>" value="<%=fighter.getDateOfBirth() %>" / --%><br>
+                        DOB: <cmp:input type="text" name="dateOfBirth" 
+                                        mode="<%=mode%>" value="<%=fighter.getDateOfBirth() %>" /><br>
                         Phone Number: <br>
                         Email Address: <%-- cmp:input type="text" name="emailAddress" 
                                         mode="<%=mode%>" value="<%=fighter.getEmail() %>" / --%><br>
