@@ -7,7 +7,6 @@ package org.sca.calontir.cmpe;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.appengine.repackaged.com.google.common.base.StringUtil;
 import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
@@ -16,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -55,7 +55,7 @@ public class FighterServlet extends HttpServlet {
         fighter.setModernName(request.getParameter("modernName"));
 
         String dob = request.getParameter("dateOfBirth");
-        if (dob != null && !StringUtil.isEmptyOrWhitespace(dob)) {
+        if (StringUtils.isNotBlank(dob)) {
             DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
             DateTime dateOfBirth = fmt.parseDateTime(dob);
             fighter.setDateOfBirth(dateOfBirth.toDate());
