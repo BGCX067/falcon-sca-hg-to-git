@@ -31,22 +31,20 @@ public class ScaGroupServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-            /* TODO output your page here
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ScaGroupServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ScaGroupServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-             */
-        } finally {
-            out.close();
-        }
+        UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+
+        ScaGroupDAO dao = new ScaGroupDAO();
+
+        String name = request.getParameter("groupName");
+        String location = request.getParameter("location");
+
+        ScaGroup scaGroup = new ScaGroup();
+        scaGroup.setGroupName(name);
+        scaGroup.setGroupLocation(location);
+
+        dao.saveScaGroup(scaGroup);
+        response.sendRedirect("/scaGroup.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -73,20 +71,7 @@ public class ScaGroupServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
-
-        ScaGroupDAO dao = new ScaGroupDAO();
-
-        String name = request.getParameter("scaName");
-        String location = request.getParameter("location");
-
-        ScaGroup scaGroup = new ScaGroup();
-        scaGroup.setGroupName(name);
-        scaGroup.setGroupLocation(location);
-
-        dao.saveScaGroup(scaGroup);
-        response.sendRedirect("/scaGroup.jsp");
+        processRequest(request, response);
     }
 
     /** 

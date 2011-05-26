@@ -23,8 +23,10 @@ import org.sca.calontir.cmpe.data.Address;
 import org.sca.calontir.cmpe.data.AuthType;
 import org.sca.calontir.cmpe.data.Authorization;
 import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.data.ScaGroup;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.db.ScaGroupDAO;
 
 /**
  *
@@ -47,12 +49,19 @@ public class FighterServlet extends HttpServlet {
 
         FighterDAO dao = new FighterDAO();
         AuthTypeDAO atDao = new AuthTypeDAO();
+        ScaGroupDAO groupDao = new ScaGroupDAO();
 
         Fighter fighter = new Fighter();
 
         fighter.setScaName(request.getParameter("scaName"));
         fighter.setScaMemberNo(request.getParameter("scaMemberNo"));
         fighter.setModernName(request.getParameter("modernName"));
+        
+        String groupKeyStr = request.getParameter("scaGroup");
+        int scaGroupId = Integer.parseInt(groupKeyStr);
+        ScaGroup group = groupDao.getScaGroup(scaGroupId);
+        if(group != null)
+        fighter.setScaGroup(group.getScaGroupId());
 
         String dob = request.getParameter("dateOfBirth");
         if (StringUtils.isNotBlank(dob)) {
@@ -89,6 +98,8 @@ public class FighterServlet extends HttpServlet {
             addresses.add(address);
         }
         fighter.setAddress(addresses);
+        
+        
 
         dao.saveFighter(fighter);
         request.setAttribute("mode", "view");

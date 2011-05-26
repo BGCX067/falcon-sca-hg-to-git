@@ -58,7 +58,8 @@
                         SCA Membership: <cmp:input type="text" name="scaMemberNo" size="20" 
                         mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" /><br>
                         
-                        Group: <br>
+                        <% Long groupId = fighter.getScaGroup() == null ? null : fighter.getScaGroup().getId(); %>
+                        Group: <cmp:groupTag mode="<%=mode%>" groupId="<%= groupId %>"/><br>
                         <% String minorValue = MarshalUtils.isMinor(fighter) ? "true" : "false"; %>
                         Minor: <cmp:input type="viewonly" mode="<%=mode%>" value="<%= minorValue %>" /><br>
                         DOB: <cmp:input type="text" name="dateOfBirth" 
