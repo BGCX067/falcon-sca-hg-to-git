@@ -53,7 +53,7 @@
                     <div>
                         Modern Name: <cmp:input type="text" name="modernName"
                                                 mode ="<%=mode%>" value="<%= fighter.getModernName()%>" /><br>
-                        <cmp:address mode="<%=mode%>" addresses="<%=fighter.getAddress()%>" /><br>
+                        Address: <cmp:address mode="<%=mode%>" addresses="<%=fighter.getAddress()%>" /><br>
                         
                         SCA Membership: <cmp:input type="text" name="scaMemberNo" size="20" 
                         mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" /><br>
@@ -64,9 +64,8 @@
                         Minor: <cmp:input type="viewonly" mode="<%=mode%>" value="<%= minorValue %>" /><br>
                         DOB: <cmp:input type="text" name="dateOfBirth" 
                                         mode="<%=mode%>" value="<%=fighter.getDateOfBirth() %>" /><br>
-                        Phone Number: <br>
-                        Email Address: <%-- cmp:input type="text" name="emailAddress" 
-                                        mode="<%=mode%>" value="<%=fighter.getEmail() %>" / --%><br>
+                        Phone Number: <cmp:phone mode="<%=mode%>" numbers="<%=fighter.getPhone()%>" /><br>
+                        Email Address: <cmp:email mode="<%=mode%>" emails="<%=fighter.getEmail() %>" /><br>
 
                     </div>
                     <div><cmp:input type="submit" value="Add Fighter" mode="<%= mode%>" /></div>

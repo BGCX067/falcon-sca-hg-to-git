@@ -52,7 +52,6 @@ public class AddressTag extends SimpleTagSupport {
     }
     
     private void doView(JspWriter out, Address address) throws IOException {
-        out.print("Address:");
         out.print(StringUtils.trimToEmpty(address.getAddress1()));
         if(StringUtils.isNotBlank(address.getAddress2())) {
             out.print(", ");
