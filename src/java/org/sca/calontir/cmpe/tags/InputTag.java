@@ -20,6 +20,7 @@ public class InputTag extends SimpleTagSupport {
 
     private String mode;
     private String name;
+    private String id;
     private Object value;
     private String type;
     private Integer size = 0;
@@ -55,6 +56,9 @@ public class InputTag extends SimpleTagSupport {
 
             if (mode != null && mode.equals("add") && !type.equals("viewonly")) {
                 out.print("<input type=" + type + " name=" + name);
+                if (StringUtils.isNotBlank(id)) {
+                    out.print(" id=\"" + id + "\"");
+                }
                 if (StringUtils.isNotBlank(valueOut)) {
                     out.print(" value=" + valueOut);
                 }
@@ -87,6 +91,10 @@ public class InputTag extends SimpleTagSupport {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setSize(Integer size) {
