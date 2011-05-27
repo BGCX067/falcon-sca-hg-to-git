@@ -4,6 +4,9 @@
     Author     : rik
 --%>
 
+<%@page import="org.sca.calontir.cmpe.data.Fighter"%>
+<%@page import="java.util.List"%>
+<%@page import="org.sca.calontir.cmpe.db.FighterDAO"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
@@ -15,6 +18,28 @@
         <style type="text/css" media="all">@import "default.css";</style>
         <link rel="SHORTCUT ICON" href="images/Marshal.ico">
         <script type="text/javascript" src="jscmpe-1.0.0.js"></script>
+        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />	
+        <script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+        <%
+            FighterDAO fighterDao = new FighterDAO();
+            List<Fighter> fighters = fighterDao.getFighters();
+        %>
+        <script type="text/javascript">
+            $(function(){
+                // Datepicker
+                $('#dateOfBirth').datepicker({
+                    inline: true
+                });
+                var availableTags = [];
+            <% for (int i = 0; i < fighters.size(); ++i) {%>
+                        availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
+            <% }%>
+        $( "#search" ).autocomplete({
+            source: availableTags
+        });
+    });
+        </script>
     </head>
     <body>
     <%@include file="WEB-INF/jspf/userbox.jspf" %>
