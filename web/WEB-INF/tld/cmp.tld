@@ -56,6 +56,12 @@
       <rtexprvalue>true</rtexprvalue>
       <type>java.lang.Integer</type>
     </attribute>
+    <attribute>
+      <name>editMode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
   </tag>
   <tag>
     <name>auths</name>
@@ -79,6 +85,12 @@
       <rtexprvalue>true</rtexprvalue>
       <type>java.util.List</type>
     </attribute>
+    <attribute>
+      <name>editMode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
   </tag>
   <tag>
     <name>address</name>
@@ -95,6 +107,12 @@
       <rtexprvalue>true</rtexprvalue>
       <type>java.util.List</type>
     </attribute>
+    <attribute>
+      <name>editMode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
   </tag>
   <tag>
     <name>groupTag</name>
@@ -110,6 +128,12 @@
       <name>groupId</name>
       <rtexprvalue>true</rtexprvalue>
       <type>java.lang.Long</type>
+    </attribute>
+    <attribute>
+      <name>editMode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
     </attribute>
   </tag>
   <tag>
@@ -128,6 +152,12 @@
       <rtexprvalue>true</rtexprvalue>
       <type>java.util.List</type>
     </attribute>
+    <attribute>
+      <name>editMode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
   </tag>
   <tag>
     <name>email</name>
@@ -144,6 +174,12 @@
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
       <type>java.util.List</type>
+    </attribute>
+    <attribute>
+      <name>editMode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
     </attribute>
   </tag>
   <tag>

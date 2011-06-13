@@ -4,6 +4,7 @@
  */
 package org.sca.calontir.cmpe.tags;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,58 +20,55 @@ import org.sca.calontir.cmpe.data.Authorization;
  *
  * @author rik
  */
-public class AuthorizationsTag extends SimpleTagSupport {
+public class AuthorizationsTag extends CMPExtendedTagSupport {
 
-    private String mode;
     private List<Authorization> authorizations;
     private List<AuthType> authTypes;
     // internal for lookup;
     private List<Long> authorizationIds;
     private Map<Long, AuthType> authTypeMap;
 
-    /**
-     * Called by the container to invoke this tag. 
-     * The implementation of this method is provided by the tag library developer,
-     * and handles all tag processing, body iteration, etc.
-     */
     @Override
-    public void doTag() throws JspException {
-        JspWriter out = getJspContext().getOut();
-
-        try {
-            if (mode != null && mode.equals("add")) {
-                for (AuthType at : this.authTypes) {
-                    out.print("<input type=\"checkbox\" name=\"authorization\" value=\"");
-                    out.print(at.getAuthTypeId().getId() + "\" ");
-                    if (authorizationIds.contains(at.getAuthTypeId().getId())) {
-                        out.print(" checked ");
-                    }
-                    out.print(" />");
-                    out.print(at.getCode());
-                }
-            } else {
-                boolean first = true;
-                if (authorizations != null) {
-                    for (Authorization a : authorizations) {
-                        if (first) {
-                            first = false;
-                        } else {
-                            out.print(" ; ");
-                        }
-                        long authTypeId = a.getAuthType().getId();
-                        AuthType at = authTypeMap.get(authTypeId);
-                        out.print(at.getCode());
-                    }
-                }
+    protected void doAdd(JspWriter out) throws IOException {
+        for (AuthType at : this.authTypes) {
+            out.print("<input type=\"checkbox\" name=\"authorization\" value=\"");
+            out.print(at.getAuthTypeId().getId() + "\" ");
+            if (authorizationIds.contains(at.getAuthTypeId().getId())) {
+                out.print(" checked ");
             }
-
-        } catch (java.io.IOException ex) {
-            throw new JspException("Error in AuthorizationsTag tag", ex);
+            out.print(" />");
+            out.print(at.getCode());
         }
     }
 
-    public void setMode(String mode) {
-        this.mode = mode;
+    @Override
+    protected void doEdit(JspWriter out) throws IOException {
+        for (AuthType at : this.authTypes) {
+            out.print("<input type=\"checkbox\" name=\"authorization\" value=\"");
+            out.print(at.getAuthTypeId().getId() + "\" ");
+            if (authorizationIds.contains(at.getAuthTypeId().getId())) {
+                out.print(" checked ");
+            }
+            out.print(" />");
+            out.print(at.getCode());
+        }
+    }
+
+    @Override
+    protected void doView(JspWriter out) throws IOException {
+        boolean first = true;
+        if (authorizations != null) {
+            for (Authorization a : authorizations) {
+                if (first) {
+                    first = false;
+                } else {
+                    out.print(" ; ");
+                }
+                long authTypeId = a.getAuthType().getId();
+                AuthType at = authTypeMap.get(authTypeId);
+                out.print(at.getCode());
+            }
+        }
     }
 
     public void setAuthorizations(List<Authorization> authorizations) {

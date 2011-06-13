@@ -17,43 +17,24 @@ import org.sca.calontir.cmpe.db.ScaGroupDAO;
  *
  * @author rik
  */
-public class GroupTag extends SimpleTagSupport {
+public class GroupTag extends CMPExtendedTagSupport {
 
     private String mode;
     private Long groupId;
     private ScaGroupDAO groupDao = null;
-
-    /**
-     * Called by the container to invoke this tag. 
-     * The implementation of this method is provided by the tag library developer,
-     * and handles all tag processing, body iteration, etc.
-     */
+    
     @Override
-    public void doTag() throws JspException {
-        JspWriter out = getJspContext().getOut();
+    protected void init() {
         groupDao = new ScaGroupDAO();
-
-        try {
-            if (mode != null && mode.equals("add")) {
-                doAdd(out);
-            } else {
-                doView(out);
-            }
-
-        } catch (java.io.IOException ex) {
-            throw new JspException("Error in GroupTag tag", ex);
-        }
+        
     }
 
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 
-    private void doAdd(JspWriter out) throws IOException {
+    protected void doAdd(JspWriter out) throws IOException {
         List<ScaGroup> groups = groupDao.getScaGroup();
 
         out.println("<select name=\"scaGroup\">");
@@ -63,7 +44,7 @@ public class GroupTag extends SimpleTagSupport {
         out.println("</select>");
     }
 
-    private void doView(JspWriter out) throws IOException {
+    protected void doView(JspWriter out) throws IOException {
         if (groupId != null) {
             ScaGroup scaGroup = groupDao.getScaGroup(groupId.intValue());
             if (scaGroup != null) {
@@ -71,5 +52,21 @@ public class GroupTag extends SimpleTagSupport {
                 out.print(scaGroup.getGroupName());
             }
         }
+    }
+
+    protected void doEdit(JspWriter out) throws IOException {
+        List<ScaGroup> groups = groupDao.getScaGroup();
+
+        out.println("<select name=\"scaGroup\">");
+        for (ScaGroup group : groups) {
+            out.print("<option ");
+            if(groupId != null) {
+                if(group.getScaGroupId().getId() == groupId.intValue()) {
+                    out.print(" selected ");
+                }
+            }
+            out.print(" value=\"" + group.getScaGroupId().getId() + "\">" + group.getGroupName() + "</option>");
+        }
+        out.println("</select>");
     }
 }

@@ -67,9 +67,9 @@
         <form action="/FighterServlet" method="post" name="fighterInfoForm">
             <input type="hidden" name="mode" value="<%= mode%>"/>
             <% Long fighterId = fighter.getFighterId() == null ? null : fighter.getFighterId().getId();%>
-            <input type="hidden" name="fighterId" value="<%=fighterId%>" />
+            <input type="hidden" name="fighterId" value="<%=fighterId%>"/>
             <div class="figherIdBox">
-                SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>"/>
+                SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
             </div>
             <div class="dataBox">
                 <div class="dataHeader">Authorizations</div>
@@ -82,20 +82,20 @@
                 <div class="dataBody">
                     <div>
                         Modern Name: <cmp:input type="text" name="modernName"
-                        mode ="<%=mode%>" value="<%= fighter.getModernName()%>" /><br>
-                        Address: <cmp:address mode="<%=mode%>" addresses="<%=fighter.getAddress()%>" /><br>
+                        mode ="<%=mode%>" value="<%= fighter.getModernName()%>" editMode="editFighterInfo" /><br>
+                        Address: <cmp:address mode="<%=mode%>" addresses="<%=fighter.getAddress()%>" editMode="editFighterInfo" /><br>
 
                         SCA Membership: <cmp:input type="text" name="scaMemberNo" size="20" 
-                        mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" /><br>
+                        mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" editMode="editFighterInfo"/><br>
 
                         <% Long groupId = fighter.getScaGroup() == null ? null : fighter.getScaGroup().getId();%>
-                        Group: <cmp:groupTag mode="<%=mode%>" groupId="<%= groupId%>"/><br>
+                        Group: <cmp:groupTag mode="<%=mode%>" groupId="<%= groupId%>" editMode="editFighterInfo" /><br>
                         <% String minorValue = MarshalUtils.isMinor(fighter) ? "true" : "false";%>
-                        Minor: <cmp:input type="viewonly" mode="<%=mode%>" value="<%= minorValue%>" /><br>
+                        Minor: <cmp:input type="viewonly" mode="<%=mode%>" value="<%= minorValue%>" editMode="editFighterInfo"/><br>
                         DOB: <cmp:input type="text" name="dateOfBirth"  id="dateOfBirth"
-                        mode="<%=mode%>" value="<%=fighter.getDateOfBirth()%>" /><br>
-                        Phone Number: <cmp:phone mode="<%=mode%>" numbers="<%=fighter.getPhone()%>" /><br>
-                        Email Address: <cmp:email mode="<%=mode%>" emails="<%=fighter.getEmail()%>" /><br>
+                        mode="<%=mode%>" value="<%=fighter.getDateOfBirth()%>" editMode="editFighterInfo" /><br>
+                        Phone Number: <cmp:phone mode="<%=mode%>" numbers="<%=fighter.getPhone()%>" editMode="editFighterInfo" /><br>
+                        Email Address: <cmp:email mode="<%=mode%>" emails="<%=fighter.getEmail()%>" editMode="editFighterInfo"  /><br>
 
                     </div>
                     <div><cmp:input type="submit" value="Add Fighter" mode="<%= mode%>" /></div>
