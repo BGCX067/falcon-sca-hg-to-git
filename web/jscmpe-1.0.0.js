@@ -8,3 +8,8 @@ function setMode(theForm, mode) {
     
     return true;
 }
+
+function editthis(theForm, target) {
+    setMode(theForm, target)
+    theForm.submit();
+}

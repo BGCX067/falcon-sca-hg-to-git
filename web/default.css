@@ -101,6 +101,17 @@ a:hover.buttonLink {text-decoration: none}
     border-top-left-radius: 15px;
 }
 
+.dataHeader span {
+    float: right;
+}
+
+.dataHeader span a:link,
+.dataHeader span a:visited,
+.dataHeader span a:hover,
+.dataHeader span a:active {
+    color: lightslategray;
+}
+
 .dataBody {
     padding: .5em;
 }

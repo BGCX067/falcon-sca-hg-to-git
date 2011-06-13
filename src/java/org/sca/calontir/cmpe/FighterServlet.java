@@ -51,58 +51,68 @@ public class FighterServlet extends HttpServlet {
         AuthTypeDAO atDao = new AuthTypeDAO();
         ScaGroupDAO groupDao = new ScaGroupDAO();
 
-        Fighter fighter = new Fighter();
+        String fighterIdStr = request.getParameter("fighterId");
+        int fighterId = (fighterIdStr == null || fighterIdStr.equalsIgnoreCase("null")) ? 0 : Integer.parseInt(fighterIdStr);
+        Fighter fighter;
+        if (fighterId > 0) {
+            String mode = request.getParameter("mode");
+            fighter = dao.getFighter(fighterId);
+            System.out.println("Got fighter " + fighter.getFighterId() + ": " + fighter.getScaName());
+            request.setAttribute("mode", mode);
+        } else {
+            fighter = new Fighter();
 
-        fighter.setScaName(request.getParameter("scaName"));
-        fighter.setScaMemberNo(request.getParameter("scaMemberNo"));
-        fighter.setModernName(request.getParameter("modernName"));
-        
-        String groupKeyStr = request.getParameter("scaGroup");
-        int scaGroupId = Integer.parseInt(groupKeyStr);
-        ScaGroup group = groupDao.getScaGroup(scaGroupId);
-        if(group != null)
-        fighter.setScaGroup(group.getScaGroupId());
 
-        String dob = request.getParameter("dateOfBirth");
-        if (StringUtils.isNotBlank(dob)) {
-            DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
-            DateTime dateOfBirth = fmt.parseDateTime(dob);
-            fighter.setDateOfBirth(dateOfBirth.toDate());
+            fighter.setScaName(request.getParameter("scaName"));
+            fighter.setScaMemberNo(request.getParameter("scaMemberNo"));
+            fighter.setModernName(request.getParameter("modernName"));
+
+            String groupKeyStr = request.getParameter("scaGroup");
+            int scaGroupId = Integer.parseInt(groupKeyStr);
+            ScaGroup group = groupDao.getScaGroup(scaGroupId);
+            if (group != null) {
+                fighter.setScaGroup(group.getScaGroupId());
+            }
+
+            String dob = request.getParameter("dateOfBirth");
+            if (StringUtils.isNotBlank(dob)) {
+                DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+                DateTime dateOfBirth = fmt.parseDateTime(dob);
+                fighter.setDateOfBirth(dateOfBirth.toDate());
+            }
+
+            List<Authorization> authorizations = new LinkedList<Authorization>();
+            String[] authIds = request.getParameterValues("authorization");
+            for (String authId : authIds) {
+                int aid = Integer.parseInt(authId);
+                AuthType at = atDao.getAuthType(aid);
+                Authorization a = new Authorization();
+                a.setAuthType(at.getAuthTypeId());
+                a.setDate(new Date());
+                authorizations.add(a);
+            }
+            fighter.setAuthorization(authorizations);
+
+            String[] address1 = request.getParameterValues("address1");
+            String[] address2 = request.getParameterValues("address2");
+            String[] city = request.getParameterValues("city");
+            String[] postalCode = request.getParameterValues("postalCode");
+            String[] state = request.getParameterValues("state");
+            List<Address> addresses = new LinkedList<Address>();
+            for (int i = 0; i < address1.length; ++i) {
+                Address address = new Address();
+                address.setAddress1(address1[i]);
+                address.setAddress2(address2[i]);
+                address.setCity(city[i]);
+                address.setPostalCode(postalCode[i]);
+                address.setState(state[i]);
+                addresses.add(address);
+            }
+            fighter.setAddress(addresses);
+
+            dao.saveFighter(fighter);
+            request.setAttribute("mode", "view");
         }
-
-        List<Authorization> authorizations = new LinkedList<Authorization>();
-        String[] authIds = request.getParameterValues("authorization");
-        for (String authId : authIds) {
-            int aid = Integer.parseInt(authId);
-            AuthType at = atDao.getAuthType(aid);
-            Authorization a = new Authorization();
-            a.setAuthType(at.getAuthTypeId());
-            a.setDate(new Date());
-            authorizations.add(a);
-        }
-        fighter.setAuthorization(authorizations);
-
-        String[] address1 = request.getParameterValues("address1");
-        String[] address2 = request.getParameterValues("address2");
-        String[] city = request.getParameterValues("city");
-        String[] postalCode = request.getParameterValues("postalCode");
-        String[] state = request.getParameterValues("state");
-        List<Address> addresses = new LinkedList<Address>();
-        for (int i = 0; i < address1.length; ++i) {
-            Address address = new Address();
-            address.setAddress1(address1[i]);
-            address.setAddress2(address2[i]);
-            address.setCity(city[i]);
-            address.setPostalCode(postalCode[i]);
-            address.setState(state[i]);
-            addresses.add(address);
-        }
-        fighter.setAddress(addresses);
-        
-        
-
-        dao.saveFighter(fighter);
-        request.setAttribute("mode", "view");
         request.setAttribute("fighter", fighter);
         //response.sendRedirect("/fighter.jsp");
         this.getServletContext().getRequestDispatcher("/fighter.jsp").

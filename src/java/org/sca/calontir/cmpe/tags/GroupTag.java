@@ -67,6 +67,7 @@ public class GroupTag extends SimpleTagSupport {
         if (groupId != null) {
             ScaGroup scaGroup = groupDao.getScaGroup(groupId.intValue());
             if (scaGroup != null) {
+                out.println("<input type=\"hidden\" name=\"scaGroup\" value=\"" + scaGroup.getScaGroupId().getId() + "\"/>");
                 out.print(scaGroup.getGroupName());
             }
         }

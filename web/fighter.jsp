@@ -35,14 +35,16 @@
                 $('#dateOfBirth').datepicker({
                     inline: true
                 });
+                
+                
                 var availableTags = [];
-            <% for (int i = 0; i < fighters.size(); ++i) {%>
-                        availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
-            <% }%>
-        $( "#search" ).autocomplete({
-            source: availableTags
-        });
-    });
+                    <% for (int i = 0; i < fighters.size(); ++i) {%>
+                                availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
+                    <% }%>
+                $( "#search" ).autocomplete({
+                    source: availableTags
+                });
+            });
         </script>
 
     </head>
@@ -62,7 +64,10 @@
         <%@include file="WEB-INF/jspf/userbox.jspf" %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
-        <form action="/FighterServlet" method="post">
+        <form action="/FighterServlet" method="post" name="fighterInfoForm">
+            <input type="hidden" name="mode" value="<%= mode%>"/>
+            <% Long fighterId = fighter.getFighterId() == null ? null : fighter.getFighterId().getId();%>
+            <input type="hidden" name="fighterId" value="<%=fighterId%>" />
             <div class="figherIdBox">
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>"/>
             </div>
@@ -72,8 +77,8 @@
                     <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"/>
                 </div>
             </div>
-            <div class="dataBox">
-                <div class="dataHeader">Fighter Info</div>
+            <div class="dataBox" name="fighterInfoBox">
+                <div class="dataHeader">Fighter Info <cmp:editButton mode="<%=mode%>" target="editFighterInfo" form="document.fighterInfoForm" /></div>
                 <div class="dataBody">
                     <div>
                         Modern Name: <cmp:input type="text" name="modernName"

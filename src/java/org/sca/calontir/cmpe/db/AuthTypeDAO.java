@@ -24,9 +24,6 @@ public class AuthTypeDAO {
         PersistenceManager pm = PMF.get().getPersistenceManager();
         Query query = pm.newQuery(AuthType.class);
         List<AuthType> atList = (List<AuthType>) query.execute();
-        for(AuthType at : atList) {
-            System.out.println(at.getAuthTypeId().getId());
-        }
         return atList;
     }
 

@@ -146,4 +146,27 @@
       <type>java.util.List</type>
     </attribute>
   </tag>
+  <tag>
+    <name>editButton</name>
+    <tag-class>org.sca.calontir.cmpe.tags.EditButton</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>mode</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <name>target</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+     <attribute>
+      <name>form</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
 </taglib>
