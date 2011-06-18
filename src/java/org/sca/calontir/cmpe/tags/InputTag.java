@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
@@ -9,7 +5,6 @@ import java.util.Date;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.JspFragment;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
@@ -82,7 +77,7 @@ public class InputTag extends CMPExtendedTagSupport {
             out.print(" id=\"" + id + "\"");
         }
         if (StringUtils.isNotBlank(valueOut)) {
-            out.print(" value=" + valueOut);
+            out.print(" value=\"" + valueOut + "\"");
         }
         if (size > 0) {
             out.print(" size=" + size);
@@ -96,7 +91,7 @@ public class InputTag extends CMPExtendedTagSupport {
             out.print(" id=\"" + id + "\"");
         }
         if (StringUtils.isNotBlank(valueOut)) {
-            out.print(" value=" + valueOut);
+            out.print(" value=\"" + valueOut + "\"");
         }
         if (size > 0) {
             out.print(" size=" + size);

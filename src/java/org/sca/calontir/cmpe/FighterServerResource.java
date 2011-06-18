@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe;
 
 import java.util.logging.Level;
@@ -11,7 +7,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 import org.sca.calontir.cmpe.common.FighterResource;
-import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.dto.Fighter;
 import java.util.ArrayList;
 import java.util.List;
 import org.restlet.security.User;

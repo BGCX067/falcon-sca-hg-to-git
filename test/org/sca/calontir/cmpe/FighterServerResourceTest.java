@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.sca.calontir.cmpe;
 
 import java.util.ArrayList;
@@ -15,8 +10,8 @@ import org.sca.calontir.cmpe.common.FighterResource;
 import static org.junit.Assert.*;
 import org.restlet.resource.ClientResource;
 import org.sca.calontir.cmpe.common.AuthTypeResource;
-import org.sca.calontir.cmpe.data.Email;
-import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.dto.Email;
+import org.sca.calontir.cmpe.dto.Fighter;
 
 /**
  *

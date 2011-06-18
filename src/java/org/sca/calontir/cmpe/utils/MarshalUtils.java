@@ -1,13 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.utils;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
-import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.dto.Fighter;
 
 /**
  *
@@ -22,7 +18,7 @@ public class MarshalUtils {
         DateMidnight birthday = new DateMidnight(fighter.getDateOfBirth());
         DateTime today = new DateTime();
         Years age = Years.yearsBetween(birthday, today);
-        boolean retVal = true;
+        boolean retVal = false;
         if (age.isLessThan(Years.years(18))) {
             retVal = true;
         }

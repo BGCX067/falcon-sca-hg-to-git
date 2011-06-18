@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.common;
 
 import java.util.List;
-import org.sca.calontir.cmpe.data.ScaGroup;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
  *

@@ -10,7 +10,7 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * @author rik
  */
-@PersistenceCapable(detachable = "true")
+@PersistenceCapable(detachable="true")
 public class Email {
 
     @PrimaryKey

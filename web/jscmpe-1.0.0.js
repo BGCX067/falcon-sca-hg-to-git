@@ -10,6 +10,13 @@ function setMode(theForm, mode) {
 }
 
 function editthis(theForm, target) {
-    setMode(theForm, target)
+    var targetMode = "edit" + target;
+    setMode(theForm, targetMode)
+    theForm.submit();
+}
+
+function savethis(theForm, target) {
+    var targetMode = "save" + target;
+    setMode(theForm, targetMode)
     theForm.submit();
 }

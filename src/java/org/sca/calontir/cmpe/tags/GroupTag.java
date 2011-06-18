@@ -1,16 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.JspFragment;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
-import org.sca.calontir.cmpe.data.ScaGroup;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 
 /**
@@ -20,18 +13,17 @@ import org.sca.calontir.cmpe.db.ScaGroupDAO;
 public class GroupTag extends CMPExtendedTagSupport {
 
     private String mode;
-    private Long groupId;
+    private String groupName;
     private ScaGroupDAO groupDao = null;
-    
+
     @Override
     protected void init() {
         groupDao = new ScaGroupDAO();
-        
+
     }
 
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     protected void doAdd(JspWriter out) throws IOException {
@@ -39,18 +31,15 @@ public class GroupTag extends CMPExtendedTagSupport {
 
         out.println("<select name=\"scaGroup\">");
         for (ScaGroup group : groups) {
-            out.println("<option value=\"" + group.getScaGroupId().getId() + "\">" + group.getGroupName() + "</option>");
+            out.println("<option value=\"" + group.getGroupName() + "\">" + group.getGroupName() + "</option>");
         }
         out.println("</select>");
     }
 
     protected void doView(JspWriter out) throws IOException {
-        if (groupId != null) {
-            ScaGroup scaGroup = groupDao.getScaGroup(groupId.intValue());
-            if (scaGroup != null) {
-                out.println("<input type=\"hidden\" name=\"scaGroup\" value=\"" + scaGroup.getScaGroupId().getId() + "\"/>");
-                out.print(scaGroup.getGroupName());
-            }
+        if (groupName != null) {
+            out.println("<input type=\"hidden\" name=\"scaGroup\" value=\"" + groupName + "\"/>");
+            out.print(groupName);
         }
     }
 
@@ -60,12 +49,12 @@ public class GroupTag extends CMPExtendedTagSupport {
         out.println("<select name=\"scaGroup\">");
         for (ScaGroup group : groups) {
             out.print("<option ");
-            if(groupId != null) {
-                if(group.getScaGroupId().getId() == groupId.intValue()) {
+            if (groupName != null) {
+                if (group.getGroupName().equals(groupName)) {
                     out.print(" selected ");
                 }
             }
-            out.print(" value=\"" + group.getScaGroupId().getId() + "\">" + group.getGroupName() + "</option>");
+            out.print(" value=\"" + group.getGroupName() + "\">" + group.getGroupName() + "</option>");
         }
         out.println("</select>");
     }

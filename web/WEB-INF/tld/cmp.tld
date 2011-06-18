@@ -125,9 +125,9 @@
       <type>java.lang.String</type>
     </attribute>
     <attribute>
-      <name>groupId</name>
+      <name>groupName</name>
       <rtexprvalue>true</rtexprvalue>
-      <type>java.lang.Long</type>
+      <type>java.lang.String</type>
     </attribute>
     <attribute>
       <name>editMode</name>

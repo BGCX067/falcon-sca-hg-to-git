@@ -1,21 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.db.FighterDAO;
 
 /**
+ * Servlet called from the fighter search box.
  *
  * @author rik
  */

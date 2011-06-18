@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe;
 
 import java.util.ArrayList;
@@ -11,10 +7,11 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 import org.sca.calontir.cmpe.common.AuthTypeResource;
-import org.sca.calontir.cmpe.data.AuthType;
+import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 
 /**
+ * This class is the REST WebService class for the AuthType object.
  *
  * @author rik
  */

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
@@ -17,6 +13,7 @@ public abstract class CMPExtendedTagSupport extends SimpleTagSupport {
     protected String mode;
     protected String editMode = "";
     
+    @Override
     public void doTag() throws JspException {
         JspWriter out = getJspContext().getOut();
 

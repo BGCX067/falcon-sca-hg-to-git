@@ -1,32 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import javax.jdo.Transaction;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.sca.calontir.cmpe.data.Address;
-import org.sca.calontir.cmpe.data.AuthType;
-import org.sca.calontir.cmpe.data.Authorization;
-import org.sca.calontir.cmpe.data.Fighter;
-import org.sca.calontir.cmpe.data.ScaGroup;
+import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.db.PMF;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
+import org.sca.calontir.cmpe.utils.FighterUpdater;
 
 /**
  *
@@ -58,57 +47,16 @@ public class FighterServlet extends HttpServlet {
             String mode = request.getParameter("mode");
             fighter = dao.getFighter(fighterId);
             System.out.println("Got fighter " + fighter.getFighterId() + ": " + fighter.getScaName());
+            if(mode.startsWith("save")) {
+                fighter = FighterUpdater.infoFromRequest(request, fighter);
+                fighter = dao.saveFighter(fighter);
+                mode = "view";
+            }
             request.setAttribute("mode", mode);
         } else {
             fighter = new Fighter();
 
-
-            fighter.setScaName(request.getParameter("scaName"));
-            fighter.setScaMemberNo(request.getParameter("scaMemberNo"));
-            fighter.setModernName(request.getParameter("modernName"));
-
-            String groupKeyStr = request.getParameter("scaGroup");
-            int scaGroupId = Integer.parseInt(groupKeyStr);
-            ScaGroup group = groupDao.getScaGroup(scaGroupId);
-            if (group != null) {
-                fighter.setScaGroup(group.getScaGroupId());
-            }
-
-            String dob = request.getParameter("dateOfBirth");
-            if (StringUtils.isNotBlank(dob)) {
-                DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
-                DateTime dateOfBirth = fmt.parseDateTime(dob);
-                fighter.setDateOfBirth(dateOfBirth.toDate());
-            }
-
-            List<Authorization> authorizations = new LinkedList<Authorization>();
-            String[] authIds = request.getParameterValues("authorization");
-            for (String authId : authIds) {
-                int aid = Integer.parseInt(authId);
-                AuthType at = atDao.getAuthType(aid);
-                Authorization a = new Authorization();
-                a.setAuthType(at.getAuthTypeId());
-                a.setDate(new Date());
-                authorizations.add(a);
-            }
-            fighter.setAuthorization(authorizations);
-
-            String[] address1 = request.getParameterValues("address1");
-            String[] address2 = request.getParameterValues("address2");
-            String[] city = request.getParameterValues("city");
-            String[] postalCode = request.getParameterValues("postalCode");
-            String[] state = request.getParameterValues("state");
-            List<Address> addresses = new LinkedList<Address>();
-            for (int i = 0; i < address1.length; ++i) {
-                Address address = new Address();
-                address.setAddress1(address1[i]);
-                address.setAddress2(address2[i]);
-                address.setCity(city[i]);
-                address.setPostalCode(postalCode[i]);
-                address.setState(state[i]);
-                addresses.add(address);
-            }
-            fighter.setAddress(addresses);
+            fighter = FighterUpdater.fromRequest(request, fighter);            
 
             dao.saveFighter(fighter);
             request.setAttribute("mode", "view");

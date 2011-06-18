@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
@@ -52,9 +47,9 @@ public class EditButton extends SimpleTagSupport {
     private void doEdit(JspWriter out)  throws IOException {
         out.print("<span class=\"editbutton\">"
                 + "<a href=\"#\""
-                + " onClick=\"return false;\">save</a>&nbsp;&nbsp;"
+                + " onClick=\"savethis(" + form + ", '" + target + "');\">save</a>&nbsp;&nbsp;"
                 + "<a href=\"#\""
-                + " onClick=\"return false;\">cancel</a>"
+                + " onClick=\"setMode(" + form + ", '" + "'view');" + form + ".submt(); \">cancel</a>"
                 + "</span>");
     }
     

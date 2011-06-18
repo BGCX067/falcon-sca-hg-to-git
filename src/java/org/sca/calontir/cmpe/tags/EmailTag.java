@@ -1,16 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.apache.commons.lang.StringUtils;
-import org.sca.calontir.cmpe.data.Email;
+import org.sca.calontir.cmpe.dto.Email;
 
 /**
  *

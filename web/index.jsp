@@ -4,7 +4,7 @@
     Author     : rik
 --%>
 
-<%@page import="org.sca.calontir.cmpe.data.Fighter"%>
+<%@page import="org.sca.calontir.cmpe.dto.Fighter"%>
 <%@page import="java.util.List"%>
 <%@page import="org.sca.calontir.cmpe.db.FighterDAO"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

@@ -1,16 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.apache.commons.lang.StringUtils;
-import org.sca.calontir.cmpe.data.Phone;
+import org.sca.calontir.cmpe.dto.Phone;
 
 /**
  *
@@ -22,32 +16,13 @@ public class PhoneTag extends CMPExtendedTagSupport {
     // local
     private Phone number;
 
-    /**
-     * Called by the container to invoke this tag. 
-     * The implementation of this method is provided by the tag library developer,
-     * and handles all tag processing, body iteration, etc.
-     */
     @Override
-    public void doTag() throws JspException {
-        JspWriter out = getJspContext().getOut();
-
-        try {
-            List<Phone> numberList = (List<Phone>) numbers;
+    protected void init() {
+        List<Phone> numberList = (List<Phone>) numbers;
             number = (numberList == null || numberList.isEmpty()) ? null : numberList.get(0);
             if (number == null) {
                 number = new Phone();
             }
-
-            if (mode != null && mode.equals("add")) {
-                doAdd(out);
-            } else if (mode.equals(editMode)) {
-                doEdit(out);
-            } else {
-                doView(out);
-            }
-        } catch (java.io.IOException ex) {
-            throw new JspException("Error in PhoneTag tag", ex);
-        }
     }
 
     protected void doView(JspWriter out) throws IOException {

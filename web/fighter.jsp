@@ -3,10 +3,10 @@
     Created on : May 8, 2011, 12:23:19 PM
     Author     : rik
 --%>
-<%@page import="org.sca.calontir.cmpe.data.Fighter"%>
+<%@page import="org.sca.calontir.cmpe.dto.Fighter"%>
 <%@page import="org.sca.calontir.cmpe.db.FighterDAO"%>
 <%@page import="org.sca.calontir.cmpe.utils.MarshalUtils"%>
-<%@page import="org.sca.calontir.cmpe.data.AuthType"%>
+<%@page import="org.sca.calontir.cmpe.dto.AuthType"%>
 <%@page import="java.util.List"%>
 <%@page import="org.sca.calontir.cmpe.db.AuthTypeDAO"%>
 <%@ taglib uri="/WEB-INF/tld/c.tld" prefix="c" %>
@@ -49,7 +49,7 @@
 
     </head>
     <body>
-        <jsp:useBean id="fighter" scope="request" class="org.sca.calontir.cmpe.data.Fighter" /> 
+        <jsp:useBean id="fighter" scope="request" class="org.sca.calontir.cmpe.dto.Fighter" /> 
 
         <% String mode = (String) request.getAttribute("mode");
             if (mode == null) {
@@ -66,7 +66,7 @@
 
         <form action="/FighterServlet" method="post" name="fighterInfoForm">
             <input type="hidden" name="mode" value="<%= mode%>"/>
-            <% Long fighterId = fighter.getFighterId() == null ? null : fighter.getFighterId().getId();%>
+            <% Long fighterId = fighter.getFighterId() == null ? null : fighter.getFighterId();%>
             <input type="hidden" name="fighterId" value="<%=fighterId%>"/>
             <div class="figherIdBox">
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div class="dataBox" name="fighterInfoBox">
-                <div class="dataHeader">Fighter Info <cmp:editButton mode="<%=mode%>" target="editFighterInfo" form="document.fighterInfoForm" /></div>
+                <div class="dataHeader">Fighter Info <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" /></div>
                 <div class="dataBody">
                     <div>
                         Modern Name: <cmp:input type="text" name="modernName"
@@ -88,8 +88,8 @@
                         SCA Membership: <cmp:input type="text" name="scaMemberNo" size="20" 
                         mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" editMode="editFighterInfo"/><br>
 
-                        <% Long groupId = fighter.getScaGroup() == null ? null : fighter.getScaGroup().getId();%>
-                        Group: <cmp:groupTag mode="<%=mode%>" groupId="<%= groupId%>" editMode="editFighterInfo" /><br>
+                        <% String groupName = fighter.getScaGroup() == null ? null : fighter.getScaGroup().getGroupName();%>
+                        Group: <cmp:groupTag mode="<%=mode%>" groupName="<%= groupName%>" editMode="editFighterInfo" /><br>
                         <% String minorValue = MarshalUtils.isMinor(fighter) ? "true" : "false";%>
                         Minor: <cmp:input type="viewonly" mode="<%=mode%>" value="<%= minorValue%>" editMode="editFighterInfo"/><br>
                         DOB: <cmp:input type="text" name="dateOfBirth"  id="dateOfBirth"

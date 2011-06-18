@@ -1,11 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,7 +9,7 @@ import org.junit.Test;
 import org.restlet.resource.ClientResource;
 import static org.junit.Assert.*;
 import org.sca.calontir.cmpe.common.AuthTypeResource;
-import org.sca.calontir.cmpe.data.AuthType;
+import org.sca.calontir.cmpe.dto.AuthType;
 
 /**
  *

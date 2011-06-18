@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe;
 
 import org.restlet.Application;
@@ -9,6 +5,7 @@ import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
 /**
+ * REST configuration file.
  *
  * @author rik
  */
