@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%-- 
     Document   : index
     Created on : Feb 28, 2011, 9:13:51 PM

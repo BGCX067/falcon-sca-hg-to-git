@@ -49,7 +49,8 @@ public class FighterServlet extends HttpServlet {
             System.out.println("Got fighter " + fighter.getFighterId() + ": " + fighter.getScaName());
             if(mode.startsWith("save")) {
                 fighter = FighterUpdater.infoFromRequest(request, fighter);
-                fighter = dao.saveFighter(fighter);
+                Long key = dao.saveFighter(fighter);
+                fighter.setFighterId(key);
                 mode = "view";
             }
             request.setAttribute("mode", mode);

@@ -72,7 +72,10 @@ public class InputTag extends CMPExtendedTagSupport {
     }
 
     protected void doEdit(JspWriter out) throws IOException {
-        out.print("<input type=" + type + " name=" + name);
+        out.print("<input type=" + type );
+        if (StringUtils.isNotBlank(name)) {
+            out.print(" name=\"" + name + "\"");
+        }
         if (StringUtils.isNotBlank(id)) {
             out.print(" id=\"" + id + "\"");
         }
@@ -86,9 +89,9 @@ public class InputTag extends CMPExtendedTagSupport {
     }
 
     protected void doAdd(JspWriter out) throws IOException {
-        out.print("<input type=" + type + " name=" + name);
-        if (StringUtils.isNotBlank(id)) {
-            out.print(" id=\"" + id + "\"");
+        out.print("<input type=" + type );
+        if (StringUtils.isNotBlank(name)) {
+            out.print(" name=\"" + name + "\"");
         }
         if (StringUtils.isNotBlank(valueOut)) {
             out.print(" value=\"" + valueOut + "\"");

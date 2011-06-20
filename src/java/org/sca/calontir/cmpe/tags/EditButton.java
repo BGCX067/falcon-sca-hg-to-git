@@ -49,7 +49,7 @@ public class EditButton extends SimpleTagSupport {
                 + "<a href=\"#\""
                 + " onClick=\"savethis(" + form + ", '" + target + "');\">save</a>&nbsp;&nbsp;"
                 + "<a href=\"#\""
-                + " onClick=\"setMode(" + form + ", '" + "'view');" + form + ".submt(); \">cancel</a>"
+                + " onClick=\"setMode(" + form + ", 'view');" + form + ".submit(); \">cancel</a>"
                 + "</span>");
     }
     

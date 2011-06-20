@@ -45,12 +45,14 @@ public class AddressTag extends CMPExtendedTagSupport {
 
     @Override
     protected void doEdit(JspWriter out) throws IOException {
-        writeInputs(out, true);
+        writeInputs(out, false);
     }
 
     private void writeInputs(JspWriter out, boolean add) throws IOException {
-        out.print("Street:");
-        out.print("<input type=\"text\" name=\"address1\"");
+        out.println("<table>");
+        out.println("<tr>");
+        out.print("<td>Street:</td>");
+        out.print("<td><input type=\"text\" name=\"address1\"");
         out.print(" value=\"" + StringUtils.trimToEmpty(address.getAddress1()) + "\"");
         out.print(" size=\"60\"");
         if (add) {
@@ -58,10 +60,12 @@ public class AddressTag extends CMPExtendedTagSupport {
                     + " else this.select()\" onblur=\"if (!this.value) this.value=this.defaultValue)\"");
         }
         out.print(" />");
-        out.println("<br>");
+        out.println("</td>");
+        out.println("</tr>");
 
-        out.print("Line 2:");
-        out.print("<input type=\"text\" name=\"address2\"");
+        out.println("<tr>");
+        out.print("<td>Line 2:</td>");
+        out.print("<td><input type=\"text\" name=\"address2\"");
         out.print(" value=\"" + StringUtils.trimToEmpty(address.getAddress2()) + "\"");
         out.print(" size=\"60\"");
         if (add) {
@@ -69,10 +73,12 @@ public class AddressTag extends CMPExtendedTagSupport {
                     + " else this.select()\" onblur=\"if (!this.value) this.value=this.defaultValue)\"");
         }
         out.print(" />");
-        out.println("<br>");
+        out.println("</td>");
+        out.println("</tr>");
 
-        out.print("City");
-        out.print("<input type=\"text\" name=\"city\"");
+        out.println("<tr>");
+        out.print("<td>City:</td>");
+        out.print("<td><input type=\"text\" name=\"city\"");
         out.print(" value=\"" + StringUtils.trimToEmpty(address.getCity()) + "\"");
         out.print(" size=\"20\"");
         if (add) {
@@ -80,7 +86,8 @@ public class AddressTag extends CMPExtendedTagSupport {
                     + " else this.select()\" onblur=\"if (!this.value) this.value=this.defaultValue)\"");
         }
         out.print(" />");
-        out.println("<br>");
+        out.println("</td>");
+        out.println("</tr>");
 
 //        out.print("<input type=\"text\" name=\"district\"");
 //        out.print(" value=\"" + address.getDistrict() + "\"");
@@ -90,8 +97,9 @@ public class AddressTag extends CMPExtendedTagSupport {
 //        out.println(" />");
 
 
-        out.print("State");
-        out.print("<input type=\"text\" name=\"state\"");
+        out.println("<tr>");
+        out.print("<td>State:</td>");
+        out.print("<td><input type=\"text\" name=\"state\"");
         out.print(" value=\"" + StringUtils.trimToEmpty(address.getState()) + "\"");
         out.print(" size=\"20\"");
         if (add) {
@@ -99,10 +107,12 @@ public class AddressTag extends CMPExtendedTagSupport {
                     + " else this.select()\" onblur=\"if (!this.value) this.value=this.defaultValue)\"");
         }
         out.print(" />");
-        out.println("<br>");
+        out.println("</td>");
+        out.println("</tr>");
 
-        out.print("Postal Code");
-        out.print("<input type=\"text\" name=\"postalCode\"");
+        out.println("<tr>");
+        out.print("<td>Postal Code:</td>");
+        out.print("<td><input type=\"text\" name=\"postalCode\"");
         out.print(" value=\"" + StringUtils.trimToEmpty(address.getPostalCode()) + "\"");
         out.print(" size=\"30\"");
         if (add) {
@@ -110,7 +120,9 @@ public class AddressTag extends CMPExtendedTagSupport {
                     + " else this.select()\" onblur=\"if (!this.value) this.value=this.defaultValue)\"");
         }
         out.print(" />");
-
+        out.println("</td>");
+        out.println("</tr>");
+        out.println("</table>");
 
     }
 

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%-- 
     Document   : fighter
     Created on : May 8, 2011, 12:23:19 PM
@@ -38,13 +39,13 @@
                 
                 
                 var availableTags = [];
-                    <% for (int i = 0; i < fighters.size(); ++i) {%>
-                                availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
-                    <% }%>
-                $( "#search" ).autocomplete({
-                    source: availableTags
+            <% for (int i = 0; i < fighters.size(); ++i) {%>
+                    availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
+            <% }%>
+                    $( "#search" ).autocomplete({
+                        source: availableTags
+                    });
                 });
-            });
         </script>
 
     </head>
@@ -77,32 +78,51 @@
                     <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"/>
                 </div>
             </div>
+            <% if (userService.isUserLoggedIn()) {%>
             <div class="dataBox" name="fighterInfoBox">
                 <div class="dataHeader">Fighter Info <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" /></div>
                 <div class="dataBody">
                     <div>
-                        Modern Name: <cmp:input type="text" name="modernName"
-                        mode ="<%=mode%>" value="<%= fighter.getModernName()%>" editMode="editFighterInfo" /><br>
-                        Address: <cmp:address mode="<%=mode%>" addresses="<%=fighter.getAddress()%>" editMode="editFighterInfo" /><br>
-
-                        SCA Membership: <cmp:input type="text" name="scaMemberNo" size="20" 
-                        mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" editMode="editFighterInfo"/><br>
-
-                        <% String groupName = fighter.getScaGroup() == null ? null : fighter.getScaGroup().getGroupName();%>
-                        Group: <cmp:groupTag mode="<%=mode%>" groupName="<%= groupName%>" editMode="editFighterInfo" /><br>
-                        <% String minorValue = MarshalUtils.isMinor(fighter) ? "true" : "false";%>
-                        Minor: <cmp:input type="viewonly" mode="<%=mode%>" value="<%= minorValue%>" editMode="editFighterInfo"/><br>
-                        DOB: <cmp:input type="text" name="dateOfBirth"  id="dateOfBirth"
-                        mode="<%=mode%>" value="<%=fighter.getDateOfBirth()%>" editMode="editFighterInfo" /><br>
-                        Phone Number: <cmp:phone mode="<%=mode%>" numbers="<%=fighter.getPhone()%>" editMode="editFighterInfo" /><br>
-                        Email Address: <cmp:email mode="<%=mode%>" emails="<%=fighter.getEmail()%>" editMode="editFighterInfo"  /><br>
-
+                        <table>
+                            <tr>
+                                <td class="label">Modern Name:</td>
+                                <td class="data"><cmp:input type="text" name="modernName"
+                                    mode ="<%=mode%>" value="<%= fighter.getModernName()%>" editMode="editFighterInfo" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label">Address:</td>
+                                <td class="data"><cmp:address mode="<%=mode%>" addresses="<%=fighter.getAddress()%>" editMode="editFighterInfo" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label">SCA Membership:</td>
+                                <td class="data"><cmp:input type="text" name="scaMemberNo" size="20" 
+                                    mode="<%= mode%>" value="<%= fighter.getScaMemberNo()%>" editMode="editFighterInfo" /></td>
+                            </tr>
+                            <tr>
+                                <% String groupName = fighter.getScaGroup() == null ? null : fighter.getScaGroup().getGroupName();%>
+                                <td class="label">Group:</td>
+                                <td class="data"><cmp:groupTag mode="<%=mode%>" groupName="<%= groupName%>" editMode="editFighterInfo" /></td>
+                            </tr>
+                            <tr>
+                                <% String minorValue = MarshalUtils.isMinor(fighter) ? "true" : "false";%>
+                                <td class="label">Minor:</td>
+                                <td class="data"><cmp:input type="viewonly" mode="<%=mode%>" value="<%= minorValue%>" editMode="editFighterInfo"/></td>
+                            </tr>
+                            <tr><td class="label">DOB:</td>
+                                <td class="data"><cmp:input type="text" name="dateOfBirth"  id="dateOfBirth"
+                                    mode="<%=mode%>" value="<%=fighter.getDateOfBirth()%>" editMode="editFighterInfo" /></td>
+                            </tr>
+                            <tr><td class="label">Phone Number:</td>
+                                <td class="data"><cmp:phone mode="<%=mode%>" numbers="<%=fighter.getPhone()%>" editMode="editFighterInfo" /></td>
+                            </tr>
+                            <tr><td class="label">Email Address:</td>
+                                <td class="data"><cmp:email mode="<%=mode%>" emails="<%=fighter.getEmail()%>" editMode="editFighterInfo"  /></td>
+                        </table>
                     </div>
                     <div><cmp:input type="submit" value="Add Fighter" mode="<%= mode%>" /></div>
                 </div>
-
             </div>
+            <% }%>
         </form>
-    </div>
-</body>
+    </body>
 </html>

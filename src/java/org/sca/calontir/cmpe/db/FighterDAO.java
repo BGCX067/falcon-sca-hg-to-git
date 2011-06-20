@@ -58,8 +58,9 @@ public class FighterDAO {
         return retArray;
     }
 
-    public org.sca.calontir.cmpe.dto.Fighter saveFighter(org.sca.calontir.cmpe.dto.Fighter fighter) {
+    public Long saveFighter(org.sca.calontir.cmpe.dto.Fighter fighter) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
+        Long keyValue = null;
 
         Fighter f = null;
         if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
@@ -70,9 +71,14 @@ public class FighterDAO {
         try {
             f = pm.makePersistent(f);
             pm.flush();
+            if (f.getFighterId() == null) {
+                System.out.println("Key not updated.");
+            } else {
+                keyValue = f.getFighterId().getId();
+            }
         } finally {
             pm.close();
         }
-        return DataTransfer.convert(f);
+        return keyValue;
     }
 }

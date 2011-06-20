@@ -71,6 +71,12 @@ a:hover.buttonLink {text-decoration: none}
     border-radius: 15px;
 }
 
+.figherIdBox {
+    margin-bottom: .25em;
+    margin-left: 1em;
+    margin-top: .25em;
+}
+
 .dataBox {
     background-color: lightblue;
     display: block;
@@ -114,4 +120,12 @@ a:hover.buttonLink {text-decoration: none}
 
 .dataBody {
     padding: .5em;
+}
+
+.dataBody table .label {
+    vertical-align: top;
+}
+
+.dataBody table .data {
+    vertical-align: top;
 }
