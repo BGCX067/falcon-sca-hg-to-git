@@ -73,9 +73,9 @@
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
             </div>
             <div class="dataBox">
-                <div class="dataHeader">Authorizations</div>
+                <div class="dataHeader">Authorizations <cmp:editButton mode="<%=mode%>" target="Authorizations" form="document.fighterInfoForm" /></div>
                 <div class="dataBody">
-                    <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"/>
+                    <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"  editMode="editAuthorizations"/>
                 </div>
             </div>
             <% if (userService.isUserLoggedIn()) {%>
@@ -87,7 +87,7 @@
                             <tr>
                                 <td class="label">Modern Name:</td>
                                 <td class="data"><cmp:input type="text" name="modernName"
-                                    mode ="<%=mode%>" value="<%= fighter.getModernName()%>" editMode="editFighterInfo" /></td>
+                                    mode ="<%=mode%>" value="<%= fighter.getModernName()%>" /></td>
                             </tr>
                             <tr>
                                 <td class="label">Address:</td>

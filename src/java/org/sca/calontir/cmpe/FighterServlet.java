@@ -45,7 +45,11 @@ public class FighterServlet extends HttpServlet {
             fighter = dao.getFighter(fighterId);
             System.out.println("Got fighter " + fighter.getFighterId() + ": " + fighter.getScaName());
             if(mode.startsWith("save")) {
-                fighter = FighterUpdater.infoFromRequest(request, fighter);
+                if(mode.equals("saveAuthorizations")) {
+                    fighter = FighterUpdater.authFromRequest(request, fighter);
+                } else {
+                    fighter = FighterUpdater.infoFromRequest(request, fighter);
+                }
                 Long key = dao.saveFighter(fighter);
                 fighter.setFighterId(key);
                 mode = "view";
