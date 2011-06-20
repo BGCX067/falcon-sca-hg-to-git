@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Address;
 import org.sca.calontir.cmpe.dto.Authorization;
@@ -85,6 +86,11 @@ public class FighterUpdater {
         }
 
         fighter.setEmail(emailList);
+        
+        fighter.setGoogleId(request.getParameter("googleId"));
+        
+        String userRole = request.getParameter("userRole");
+        fighter.setRole(UserRoles.valueOf(userRole));
 
         return fighter;
     }

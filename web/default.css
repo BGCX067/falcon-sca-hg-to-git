@@ -129,3 +129,11 @@ a:hover.buttonLink {text-decoration: none}
 .dataBody table .data {
     vertical-align: top;
 }
+
+#fighterInfo {
+    display: inline;
+}
+
+#adminInfo {
+    border: 3px double #666666 
+}

@@ -32,13 +32,10 @@ public class FighterServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
 
         FighterDAO dao = new FighterDAO();
-        AuthTypeDAO atDao = new AuthTypeDAO();
-        ScaGroupDAO groupDao = new ScaGroupDAO();
 
         String fighterIdStr = request.getParameter("fighterId");
         int fighterId = (fighterIdStr == null || fighterIdStr.equalsIgnoreCase("null")) ? 0 : Integer.parseInt(fighterIdStr);

@@ -7,47 +7,40 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
+import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
  *
  * @author rik
  */
-@PersistenceCapable(detachable="true")
+@PersistenceCapable(detachable = "true")
 public class Fighter {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key fighterId;
-
     @Persistent
     private String scaName;
-
     @Persistent
     private String scaMemberNo;
-    
     @Persistent
     private String modernName;
-    
     @Persistent
     private Date dateOfBirth;
-
     @Persistent
     private String googleId;
-
     @Persistent
     private List<Email> email;
-
     @Persistent
     private List<Address> address;
-
     @Persistent
     private List<Phone> phone;
-
     @Persistent
     private List<Authorization> authorization;
-
     @Persistent
     private Key scaGroup;
+    @Persistent
+    private UserRoles role;
 
     public Key getFighterId() {
         return fighterId;
@@ -56,7 +49,6 @@ public class Fighter {
     public void setFighterId(Key fighterId) {
         this.fighterId = fighterId;
     }
-
 
     public String getScaName() {
         return scaName;
@@ -136,5 +128,13 @@ public class Fighter {
 
     public void setScaGroup(Key scaGroup) {
         this.scaGroup = scaGroup;
-    }   
+    }
+
+    public UserRoles getRole() {
+        return role;
+    }
+
+    public void setRole(UserRoles role) {
+        this.role = role;
+    }
 }

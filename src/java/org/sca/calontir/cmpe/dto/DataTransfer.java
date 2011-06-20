@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 
@@ -54,7 +55,12 @@ public class DataTransfer {
             ScaGroupDAO groupDao = new ScaGroupDAO();
             fighter.setScaGroup(groupDao.getScaGroup(fighterDO.getScaGroup().getId()));
         }
-
+        
+        fighter.setGoogleId(fighterDO.getGoogleId());
+        
+        if (fighterDO.getRole() != null) {
+            fighter.setRole(fighterDO.getRole());
+        }
 
         return fighter;
     }
@@ -167,6 +173,12 @@ public class DataTransfer {
         if (fighter.getScaGroup() != null) {
             org.sca.calontir.cmpe.data.ScaGroup scaGroupDO = lookup(fighter.getScaGroup());
             fighterDO.setScaGroup(scaGroupDO.getScaGroupId());
+        }
+        
+        fighterDO.setGoogleId(fighter.getGoogleId());
+        
+        if (fighter.getRole() != null) {
+            fighterDO.setRole(fighter.getRole());
         }
 
         return fighterDO;

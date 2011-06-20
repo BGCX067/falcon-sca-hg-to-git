@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.dto;
 
 import java.util.Date;
 import java.util.List;
+import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
  *
@@ -19,6 +20,7 @@ public class Fighter {
     private List<Phone> phone;
     private List<Authorization> authorization;
     private ScaGroup scaGroup;
+    private UserRoles role;
 
     public List<Address> getAddress() {
         return address;
@@ -106,6 +108,14 @@ public class Fighter {
 
     public void setScaName(String scaName) {
         this.scaName = scaName;
+    }
+
+    public UserRoles getRole() {
+        return role;
+    }
+
+    public void setRole(UserRoles role) {
+        this.role = role;
     }
     
 }

@@ -82,7 +82,7 @@
             <div class="dataBox" name="fighterInfoBox">
                 <div class="dataHeader">Fighter Info <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" /></div>
                 <div class="dataBody">
-                    <div>
+                    <div id="fighterInfo">
                         <table>
                             <tr>
                                 <td class="label">Modern Name:</td>
@@ -119,6 +119,23 @@
                                 <td class="data"><cmp:email mode="<%=mode%>" emails="<%=fighter.getEmail()%>" editMode="editFighterInfo"  /></td>
                         </table>
                     </div>
+                        <% if (userService.isUserAdmin()) {%>
+                    <div id="adminInfo">
+                        <table>
+                            <tr>
+                                <td class="label">Google ID:</td>
+                                <td class="data"><cmp:input type="text" name="googleId" id="googleId" mode="<%=mode%>" value="<%=fighter.getGoogleId()%>" editMode="editFighterInfo"  /></td>
+                            </tr>
+                            <tr>
+                                <td class="label">User Role:</td>
+                                <td class="data">
+                                    <cmp:rolesTag mode="<%=mode%>" userRole="<%=fighter.getRole()%>" editMode="editFighterInfo" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                        <%}%>
                     <div><cmp:input type="submit" value="Add Fighter" mode="<%= mode%>" /></div>
                 </div>
             </div>
