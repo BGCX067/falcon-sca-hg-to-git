@@ -49,7 +49,7 @@ public class GroupTag extends CMPExtendedTagSupport {
         out.println("<select name=\"scaGroup\">");
         for (ScaGroup group : groups) {
             out.print("<option ");
-            if (groupName != null) {
+            if (groupName != null && group.getGroupName() != null) {
                 if (group.getGroupName().equals(groupName)) {
                     out.print(" selected ");
                 }
