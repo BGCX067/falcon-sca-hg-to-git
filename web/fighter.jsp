@@ -87,7 +87,7 @@
                             <tr>
                                 <td class="label">Modern Name:</td>
                                 <td class="data"><cmp:input type="text" name="modernName"
-                                    mode ="<%=mode%>" value="<%= fighter.getModernName()%>" /></td>
+                                    mode ="<%=mode%>" value="<%= fighter.getModernName()%>"  editMode="editFighterInfo" /></td>
                             </tr>
                             <tr>
                                 <td class="label">Address:</td>
