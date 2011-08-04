@@ -21,7 +21,7 @@
         <script type="text/javascript" src="jscmpe-1.0.0.js"></script>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />	
         <script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.14.custom.min.js"></script>
         <%
             FighterDAO fighterDao = new FighterDAO();
             List<Fighter> fighters = fighterDao.getFighters();
@@ -34,21 +34,24 @@
                 });
                 var availableTags = [];
             <% for (int i = 0; i < fighters.size(); ++i) {%>
-                        availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
+                    availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
             <% }%>
-        $( "#search" ).autocomplete({
-            source: availableTags
-        });
-    });
+                    $( "#search" ).autocomplete({
+                        source: availableTags,
+                        mustMatch:true,
+                        autoFill:true,           
+                        focus: function(event, ui) { this.value = ui.item.value }     
+                    });
+                });
         </script>
     </head>
     <body>
-    <%@include file="WEB-INF/jspf/userbox.jspf" %>
-    <%@include file="WEB-INF/jspf/searchbox.jspf" %>
-    
- 
-         
-        
+        <%@include file="WEB-INF/jspf/userbox.jspf" %>
+        <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
-</body>
+
+
+
+
+    </body>
 </html>

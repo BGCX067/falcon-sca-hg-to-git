@@ -14,10 +14,13 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
  * @author rik
  */
 public class FighterDAO {
+    private final PersistenceManager pm = PMF.get().getPersistenceManager();
+    
+    public FighterDAO() {
+    }
 
     public org.sca.calontir.cmpe.dto.Fighter getFighter(long fighterId) {
         Fighter fighter = null;
-        PersistenceManager pm = PMF.get().getPersistenceManager();
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
         fighter = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
 
@@ -26,7 +29,6 @@ public class FighterDAO {
 
     public Fighter getFighterDO(long fighterId) {
         Fighter fighter = null;
-        PersistenceManager pm = PMF.get().getPersistenceManager();
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
         fighter = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
 
@@ -34,7 +36,6 @@ public class FighterDAO {
     }
 
     public List<org.sca.calontir.cmpe.dto.Fighter> queryFightersByScaName(String scaName) {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
         Query query = pm.newQuery(Fighter.class);
         query.setFilter("scaName == scaNameParam");
         query.declareParameters("String scaNameParam");
@@ -47,7 +48,6 @@ public class FighterDAO {
     }
 
     public List<org.sca.calontir.cmpe.dto.Fighter> getFighters() {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
         Query query = pm.newQuery(Fighter.class);
         query.setOrdering("scaName");
         List<Fighter> fighters = (List<Fighter>) query.execute();
@@ -59,7 +59,6 @@ public class FighterDAO {
     }
 
     public Long saveFighter(org.sca.calontir.cmpe.dto.Fighter fighter) {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
         Long keyValue = null;
 
         Fighter f = null;

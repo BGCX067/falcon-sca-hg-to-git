@@ -25,7 +25,7 @@
         <script type="text/javascript" src="jscmpe-1.0.0.js"></script>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />	
         <script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.14.custom.min.js"></script>
         <%
             FighterDAO fighterDao = new FighterDAO();
             List<Fighter> fighters = fighterDao.getFighters();
@@ -43,7 +43,10 @@
                     availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
             <% }%>
                     $( "#search" ).autocomplete({
-                        source: availableTags
+                        source: availableTags,
+                        mustMatch:true,
+                        autoFill:true,           
+                        focus: function(event, ui) { this.value = ui.item.value }     
                     });
                 });
         </script>
@@ -119,7 +122,7 @@
                                 <td class="data"><cmp:email mode="<%=mode%>" emails="<%=fighter.getEmail()%>" editMode="editFighterInfo"  /></td>
                         </table>
                     </div>
-                        <% if (userService.isUserAdmin()) {%>
+                    <% if (userService.isUserAdmin()) {%>
                     <div id="adminInfo">
                         <table>
                             <tr>
@@ -135,7 +138,7 @@
                         </table>
                     </div>
 
-                        <%}%>
+                    <%}%>
                     <div><cmp:input type="submit" value="Add Fighter" mode="<%= mode%>" /></div>
                 </div>
             </div>
