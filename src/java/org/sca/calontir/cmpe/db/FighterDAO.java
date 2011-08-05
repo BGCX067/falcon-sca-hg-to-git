@@ -14,27 +14,40 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
  * @author rik
  */
 public class FighterDAO {
+
     private final PersistenceManager pm = PMF.get().getPersistenceManager();
     
     public FighterDAO() {
     }
-
+    
     public org.sca.calontir.cmpe.dto.Fighter getFighter(long fighterId) {
         Fighter fighter = null;
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
         fighter = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
-
+        
         return DataTransfer.convert(fighter);
     }
-
+    
     public Fighter getFighterDO(long fighterId) {
         Fighter fighter = null;
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
         fighter = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
-
+        
         return fighter;
     }
-
+    
+    public org.sca.calontir.cmpe.dto.Fighter getFighterByGoogleId(String userId) {
+        Query query = pm.newQuery(Fighter.class);
+        query.setFilter("googleId == googleIdParam");
+        query.declareParameters("String googleIdParam");
+        List<Fighter> fighters = (List<Fighter>) query.execute(userId);
+        org.sca.calontir.cmpe.dto.Fighter retval = null;
+        if (fighters != null && fighters.size() > 0) {
+            retval = DataTransfer.convert(fighters.get(0));
+        }
+        return retval;
+    }
+    
     public List<org.sca.calontir.cmpe.dto.Fighter> queryFightersByScaName(String scaName) {
         Query query = pm.newQuery(Fighter.class);
         query.setFilter("scaName == scaNameParam");
@@ -46,7 +59,7 @@ public class FighterDAO {
         }
         return retArray;
     }
-
+    
     public List<org.sca.calontir.cmpe.dto.Fighter> getFighters() {
         Query query = pm.newQuery(Fighter.class);
         query.setOrdering("scaName");
@@ -57,10 +70,10 @@ public class FighterDAO {
         }
         return retArray;
     }
-
+    
     public Long saveFighter(org.sca.calontir.cmpe.dto.Fighter fighter) {
         Long keyValue = null;
-
+        
         Fighter f = null;
         if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
             Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighter.getFighterId());
