@@ -72,7 +72,7 @@ public class SecurityTest {
         boolean result = instance.isRoleOrGreater(UserRoles.CARD_MARSHAL);
         assertEquals(expResult, result);
         
-        result = instance.isRoleOrGreater(UserRoles.KNIGHTS_MARSHAL);
+        result = instance.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL);
         assertTrue(result);
     }
 

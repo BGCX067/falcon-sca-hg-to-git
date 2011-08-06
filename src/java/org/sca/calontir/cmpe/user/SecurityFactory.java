@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.user;
 
 import com.google.appengine.api.users.User;
@@ -23,11 +19,13 @@ public class SecurityFactory {
         Security security = new Security();
         UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
-        security.setAeUser(user);
-        
-        FighterDAO fighterDao = new FighterDAO();
-        Fighter fighter = fighterDao.getFighterByGoogleId(user.getUserId());
-        security.setUser(fighter);
+        if (user != null) {
+            security.setAeUser(user);
+
+            FighterDAO fighterDao = new FighterDAO();
+            Fighter fighter = fighterDao.getFighterByGoogleId(user.getEmail());
+            security.setUser(fighter);
+        }
 
         return security;
     }

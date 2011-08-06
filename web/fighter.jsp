@@ -1,3 +1,6 @@
+<%@page import="org.sca.calontir.cmpe.common.UserRoles"%>
+<%@page import="org.sca.calontir.cmpe.user.SecurityFactory"%>
+<%@page import="org.sca.calontir.cmpe.user.Security"%>
 <!DOCTYPE html>
 <%-- 
     Document   : fighter
@@ -63,6 +66,8 @@
 
             AuthTypeDAO atDao = new AuthTypeDAO();
             List<AuthType> authTypes = atDao.getAuthType();
+            
+            Security security = SecurityFactory.getSecurity();
         %>
 
         <%@include file="WEB-INF/jspf/userbox.jspf" %>
@@ -81,10 +86,11 @@
                     <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"  editMode="editAuthorizations"/>
                 </div>
             </div>
-            <% if (userService.isUserLoggedIn()) {%>
+            <% if (userService.isUserLoggedIn() && (userService.isUserAdmin() || security.isRoleOrGreater(UserRoles.CARD_MARSHAL))) {%>
             <div class="dataBox" name="fighterInfoBox">
                 <div class="dataHeader">Fighter Info <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" /></div>
                 <div class="dataBody">
+                    <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
                     <div id="fighterInfo">
                         <table>
                             <tr>
@@ -122,6 +128,7 @@
                                 <td class="data"><cmp:email mode="<%=mode%>" emails="<%=fighter.getEmail()%>" editMode="editFighterInfo"  /></td>
                         </table>
                     </div>
+                    <%}%>
                     <% if (userService.isUserAdmin()) {%>
                     <div id="adminInfo">
                         <table>

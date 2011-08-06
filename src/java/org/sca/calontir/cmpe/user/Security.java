@@ -17,11 +17,15 @@ public class Security {
     }
 
     public boolean isRole(UserRoles userRole) {
-        return user.getRole().equals(userRole);
+        return user == null ? false : user.getRole().equals(userRole);
     }
     
     public boolean isRoleOrGreater(UserRoles userRole) {
-        return user.getRole().compareTo(userRole) >= 0;
+        if(user != null)
+        System.out.println("Comparing user " + user.getScaName() + " with role " + user.getRole());
+        else
+            System.out.println("User null");
+        return user == null ? false : user.getRole().compareTo(userRole) >= 0;
     }
 
     protected User getAeUser() {

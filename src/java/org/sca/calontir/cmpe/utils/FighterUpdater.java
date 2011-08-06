@@ -31,14 +31,25 @@ public class FighterUpdater {
     }
 
     public static Fighter infoFromRequest(HttpServletRequest request, Fighter fighter) {
-        fighter.setScaName(request.getParameter("scaName"));
-        fighter.setScaMemberNo(request.getParameter("scaMemberNo"));
-        fighter.setModernName(request.getParameter("modernName"));
+        String scaName = request.getParameter("scaName");
+        if (StringUtils.isNotBlank(scaName)) {
+            fighter.setScaName(scaName);
+        }
+        String scaMemberNo = request.getParameter("scaMemberNo");
+        if (StringUtils.isNotBlank(scaMemberNo)) {
+            fighter.setScaMemberNo(scaMemberNo);
+        }
+        String modernName = request.getParameter("modernName");
+        if (StringUtils.isNotBlank(modernName)) {
+            fighter.setModernName(modernName);
+        }
 
         String groupStr = request.getParameter("scaGroup");
-        ScaGroup group = new ScaGroup();
-        group.setGroupName(groupStr);
-        fighter.setScaGroup(group);
+        if (StringUtils.isNotBlank(groupStr)) {
+            ScaGroup group = new ScaGroup();
+            group.setGroupName(groupStr);
+            fighter.setScaGroup(group);
+        }
 
         String dob = request.getParameter("dateOfBirth");
         if (StringUtils.isNotBlank(dob)) {
@@ -53,44 +64,54 @@ public class FighterUpdater {
         String[] postalCode = request.getParameterValues("postalCode");
         String[] state = request.getParameterValues("state");
         List<Address> addresses = fighter.getAddress() != null ? fighter.getAddress() : new LinkedList<Address>();
-        for (int i = 0; i < address1.length; ++i) {
-            Address address = addresses.size() > i ? addresses.get(i) : new Address();
-            address.setAddress1(address1[i]);
-            address.setAddress2(address2[i]);
-            address.setCity(city[i]);
-            address.setPostalCode(postalCode[i]);
-            address.setState(state[i]);
-            addresses.add(address);
+        if (address1 != null) {
+            for (int i = 0; i < address1.length; ++i) {
+                Address address = addresses.size() > i ? addresses.get(i) : new Address();
+                address.setAddress1(address1[i]);
+                address.setAddress2(address2[i]);
+                address.setCity(city[i]);
+                address.setPostalCode(postalCode[i]);
+                address.setState(state[i]);
+                addresses.add(address);
+            }
+            fighter.setAddress(addresses);
         }
-        fighter.setAddress(addresses);
 
         String[] phoneNumbers = request.getParameterValues("phoneNumber");
         List<Phone> phones = fighter.getPhone() != null ? fighter.getPhone() : new LinkedList<Phone>();
-        for (int i = 0; i < phoneNumbers.length; ++i) {
-            String phoneNumber = phoneNumbers[i];
-            Phone phone = phones.size() > i ? phones.get(i) : new Phone();
-            phone.setPhoneNumber(phoneNumber);
-            phone.setType("home");
-            phones.add(phone);
+        if (phoneNumbers != null) {
+            for (int i = 0; i < phoneNumbers.length; ++i) {
+                String phoneNumber = phoneNumbers[i];
+                Phone phone = phones.size() > i ? phones.get(i) : new Phone();
+                phone.setPhoneNumber(phoneNumber);
+                phone.setType("home");
+                phones.add(phone);
+            }
+            fighter.setPhone(phones);
         }
-        fighter.setPhone(phones);
 
         String[] emailArray = request.getParameterValues("email");
         List<Email> emailList = fighter.getEmail() != null ? fighter.getEmail() : new LinkedList<Email>();
-        for (int i = 0; i < emailArray.length; ++i) {
-            String emailStr = emailArray[i];
-            Email email = emailList.size() > i ? emailList.get(i) : new Email();
-            email.setEmailAddress(emailStr);
-            email.setType("home");
-            emailList.add(email);
+        if (emailArray != null) {
+            for (int i = 0; i < emailArray.length; ++i) {
+                String emailStr = emailArray[i];
+                Email email = emailList.size() > i ? emailList.get(i) : new Email();
+                email.setEmailAddress(emailStr);
+                email.setType("home");
+                emailList.add(email);
+            }
+            fighter.setEmail(emailList);
         }
 
-        fighter.setEmail(emailList);
-        
-        fighter.setGoogleId(request.getParameter("googleId"));
-        
+        String googleId = request.getParameter("googleId");
+        if (StringUtils.isNotBlank(googleId)) {
+            fighter.setGoogleId(googleId);
+        }
+
         String userRole = request.getParameter("userRole");
-        fighter.setRole(UserRoles.valueOf(userRole));
+        if (StringUtils.isNotBlank(userRole)) {
+            fighter.setRole(UserRoles.valueOf(userRole));
+        }
 
         return fighter;
     }
@@ -99,15 +120,17 @@ public class FighterUpdater {
         AuthTypeDAO atDao = new AuthTypeDAO();
         List<Authorization> authorizations = new LinkedList<Authorization>();
         String[] authCodes = request.getParameterValues("authorization");
-        for (String authCode : authCodes) {
-            AuthType at = atDao.getAuthTypeByCode(authCode);
-            Authorization a = new Authorization();
-            a.setCode(at.getCode());
-            a.setDescription(at.getDescription());
-            a.setDate(new Date());
-            authorizations.add(a);
+        if (authCodes != null) {
+            for (String authCode : authCodes) {
+                AuthType at = atDao.getAuthTypeByCode(authCode);
+                Authorization a = new Authorization();
+                a.setCode(at.getCode());
+                a.setDescription(at.getDescription());
+                a.setDate(new Date());
+                authorizations.add(a);
+            }
+            fighter.setAuthorization(authorizations);
         }
-        fighter.setAuthorization(authorizations);
 
         return fighter;
     }
