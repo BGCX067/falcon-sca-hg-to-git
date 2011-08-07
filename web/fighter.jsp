@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.sca.calontir.cmpe.common.UserRoles"%>
 <%@page import="org.sca.calontir.cmpe.user.SecurityFactory"%>
 <%@page import="org.sca.calontir.cmpe.user.Security"%>
@@ -71,6 +72,13 @@
         %>
 
         <%@include file="WEB-INF/jspf/userbox.jspf" %>
+        <%  String error = (String) request.getAttribute("error"); 
+            if (StringUtils.isNotBlank(error)) {
+        %>
+        <div id="error">
+            <%= error %>
+        </div>
+        <% } %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
         <form action="/FighterServlet" method="post" name="fighterInfoForm">
@@ -146,7 +154,9 @@
                     </div>
 
                     <%}%>
+                    <% if (mode.equalsIgnoreCase("Add")) { %>
                     <div><cmp:input type="submit" value="Add Fighter" mode="<%= mode%>" /></div>
+                    <%}%>
                 </div>
             </div>
             <% }%>

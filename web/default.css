@@ -71,6 +71,22 @@ a:hover.buttonLink {text-decoration: none}
     border-radius: 15px;
 }
 
+#error {
+    background-color: #FF3030;
+    display: block;
+    border: 1px solid #8B1A1A;
+    text-align: left;
+    vertical-align: middle;
+    margin-bottom: .25em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: .25em;
+    padding: .5em;
+    width: 25em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
 .figherIdBox {
     margin-bottom: .25em;
     margin-left: 1em;

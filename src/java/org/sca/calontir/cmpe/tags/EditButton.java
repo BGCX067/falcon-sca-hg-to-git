@@ -10,6 +10,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  * @author rik
  */
 public class EditButton extends SimpleTagSupport {
+
     private String mode;
     private String target;
     private String form;
@@ -22,7 +23,7 @@ public class EditButton extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException {
         JspWriter out = getJspContext().getOut();
-        
+
         try {
             if (mode != null && mode.equals("add")) {
                 doAdd(out);
@@ -36,26 +37,28 @@ public class EditButton extends SimpleTagSupport {
             throw new JspException("Error in EditButton tag", ex);
         }
     }
-    
-    private void doView(JspWriter out)  throws IOException {
+
+    private void doView(JspWriter out) throws IOException {
         out.print("<span class=\"editbutton\">"
                 + "<a href=\"#\""
                 + " onClick=\"editthis(" + form + ", '" + target + "');\">edit</a>"
                 + "</span>");
     }
-    
-    private void doEdit(JspWriter out)  throws IOException {
-        out.print("<span class=\"editbutton\">"
-                + "<a href=\"#\""
-                + " onClick=\"savethis(" + form + ", '" + target + "');\">save</a>&nbsp;&nbsp;"
-                + "<a href=\"#\""
-                + " onClick=\"setMode(" + form + ", 'view');" + form + ".submit(); \">cancel</a>"
-                + "</span>");
+
+    private void doEdit(JspWriter out) throws IOException {
+        if (mode.endsWith(target)) {
+            out.print("<span class=\"editbutton\">"
+                    + "<a href=\"#\""
+                    + " onClick=\"savethis(" + form + ", '" + target + "');\">save</a>&nbsp;&nbsp;"
+                    + "<a href=\"#\""
+                    + " onClick=\"setMode(" + form + ", 'view');" + form + ".submit(); \">cancel</a>"
+                    + "</span>");
+        }
     }
-    
-     private void doAdd(JspWriter out)  throws IOException {
-         out.println();
-     }
+
+    private void doAdd(JspWriter out) throws IOException {
+        out.println();
+    }
 
     public void setMode(String mode) {
         this.mode = mode;

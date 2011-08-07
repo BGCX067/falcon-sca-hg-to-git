@@ -5,6 +5,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jdo.Transaction;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,24 +46,34 @@ public class FighterServlet extends HttpServlet {
             String mode = request.getParameter("mode");
             fighter = dao.getFighter(fighterId);
             System.out.println("Got fighter " + fighter.getFighterId() + ": " + fighter.getScaName());
-            if(mode.startsWith("save")) {
-                if(mode.equals("saveAuthorizations")) {
+            if (mode.startsWith("save")) {
+                if (mode.equals("saveAuthorizations")) {
                     fighter = FighterUpdater.authFromRequest(request, fighter);
                 } else {
                     fighter = FighterUpdater.infoFromRequest(request, fighter);
                 }
-                Long key = dao.saveFighter(fighter);
-                fighter.setFighterId(key);
+                try {
+                    Long key = dao.saveFighter(fighter, false);
+                    fighter.setFighterId(key);
+                } catch (ValidationException ex) {
+                }
                 mode = "view";
             }
             request.setAttribute("mode", mode);
         } else {
             fighter = new Fighter();
 
-            fighter = FighterUpdater.fromRequest(request, fighter);            
-
-            dao.saveFighter(fighter);
-            request.setAttribute("mode", "view");
+            fighter = FighterUpdater.fromRequest(request, fighter);
+            try {
+                dao.saveFighter(fighter);
+                request.setAttribute("mode", "view");
+            } catch (ValidationException ex) {
+                Logger.getLogger(FighterServlet.class.getName()).log(Level.SEVERE, null, ex);
+                String mode = request.getParameter("mode");
+                request.setAttribute("mode", "add");
+                request.setAttribute("error", ex.getMessage());
+            }
+           
         }
         request.setAttribute("fighter", fighter);
         //response.sendRedirect("/fighter.jsp");

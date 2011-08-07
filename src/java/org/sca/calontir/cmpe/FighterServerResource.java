@@ -1,6 +1,7 @@
 package org.sca.calontir.cmpe;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.restlet.data.Form;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
@@ -48,7 +49,11 @@ public class FighterServerResource extends ServerResource implements FighterReso
 
     @Put
     public void store(Fighter fighter) {
-        dao.saveFighter(fighter);
+        try {
+            dao.saveFighter(fighter);
+        } catch (ValidationException ex) {
+            getLogger().severe(ex.getMessage());
+        }
     }
 
     @Delete
