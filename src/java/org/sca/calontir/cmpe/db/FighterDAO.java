@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import org.apache.commons.lang.StringUtils;
 import org.sca.calontir.cmpe.ValidationException;
+import org.sca.calontir.cmpe.data.Address;
 import org.sca.calontir.cmpe.data.Fighter;
 import org.sca.calontir.cmpe.dto.DataTransfer;
 
@@ -109,6 +111,40 @@ public class FighterDAO {
         List<Fighter> fighters = (List<Fighter>) query.execute(fighter.getScaName());
         if (fighters != null && fighters.size() > 0) {
             throw new ValidationException(fighter.getScaName() + " already exists in the database");
+        }
+        if (StringUtils.isNotBlank(fighter.getScaMemberNo())) {
+            query = pm.newQuery(Fighter.class);
+            query.setFilter("scaMemberNo == scaMemberNoParam");
+            query.declareParameters("String scaMemberNoParam");
+            fighters = (List<Fighter>) query.execute(fighter.getScaMemberNo());
+            if (fighters != null && fighters.size() > 0) {
+                throw new ValidationException("A fighter with member no " + fighter.getScaMemberNo() + " already exists in the database");
+            }
+        }
+        if (StringUtils.isNotBlank(fighter.getGoogleId())) {
+            query = pm.newQuery(Fighter.class);
+            query.setFilter("googleId == googleIdParam");
+            query.declareParameters("String googleIdParam");
+            fighters = (List<Fighter>) query.execute(fighter.getGoogleId());
+            if (fighters != null && fighters.size() > 0) {
+                throw new ValidationException("A fighter with Google Id " + fighter.getGoogleId() + " already exists in the database");
+            }
+        }
+        if (fighter.getAddress() != null && fighter.getAddress().size() > 0) {
+            Address address = fighter.getAddress().get(0);
+            query = pm.newQuery("select from " + Fighter.class.getName()
+                    + " where modernName == '" + fighter.getModernName() + "'");
+            fighters = (List<Fighter>) query.execute();
+            if (fighters != null && fighters.size() > 0) {
+                for (Fighter f : fighters) {
+                    Address a = f.getAddress().get(0);
+                    if (StringUtils.equals(a.getAddress1(), address.getAddress1())
+                            && StringUtils.equals(a.getCity(), address.getCity())
+                            && StringUtils.equals(a.getState(), address.getState())) {
+                        throw new ValidationException("A fighter with that modern name and address already exists in the database");
+                    }
+                }
+            }
         }
         return true;
     }
