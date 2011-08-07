@@ -21,10 +21,6 @@ public class Security {
     }
     
     public boolean isRoleOrGreater(UserRoles userRole) {
-        if(user != null)
-        System.out.println("Comparing user " + user.getScaName() + " with role " + user.getRole());
-        else
-            System.out.println("User null");
         return user == null ? false : user.getRole().compareTo(userRole) >= 0;
     }
 

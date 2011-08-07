@@ -32,19 +32,26 @@ public class FighterSearchServlet extends HttpServlet {
             fighter = new Fighter();
         } else {
             String search = request.getParameter("search");
-            
+
             List<Fighter> ret = dao.queryFightersByScaName(search);
-            
-            if(ret.isEmpty()) 
+
+            if (ret.isEmpty()) {
                 fighter = null;
-            else
+            } else {
                 fighter = ret.get(0);
+            }
         }
-        request.setAttribute("mode", mode);
-        request.setAttribute("fighter", fighter);
-        //response.sendRedirect("/fighter.jsp");
-        this.getServletContext().getRequestDispatcher("/fighter.jsp").
-                include(request, response);
+        if (fighter == null) {
+            request.setAttribute("error", "That fighter not found, please retry your search");
+            this.getServletContext().getRequestDispatcher("/index.jsp").
+                    include(request, response);
+        } else {
+            request.setAttribute("mode", mode);
+            request.setAttribute("fighter", fighter);
+            //response.sendRedirect("/fighter.jsp");
+            this.getServletContext().getRequestDispatcher("/fighter.jsp").
+                    include(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

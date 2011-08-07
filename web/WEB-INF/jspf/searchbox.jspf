@@ -8,6 +8,7 @@
      function callSearch() {
          setMode(this.form, 'search');
          alert("hit");
+         return false;
      }
  </script>
  <% Security s = SecurityFactory.getSecurity(); %>
@@ -17,7 +18,7 @@
         <input type="text" name="search" id="search" value="Search SCA name" 
                onfocus="if (this.value==this.defaultValue) this.value=''; else this.select()" 
                />
-        <input type="submit" value="Lookup" onClick="callSearch(); "/>
+        <input type="submit" value="Lookup" onClick="return callSearch(); "/>
         <% if (s.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
         <input type="submit" value="Add" onClick="setMode(this.form, 'add');" />
         <% } %>

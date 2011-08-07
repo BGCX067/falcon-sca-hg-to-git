@@ -8,9 +8,19 @@
         UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
         if (user != null) {
+            String baseUrl;
+            if ((request.getServerPort() == 80)
+                    || (request.getServerPort() == 443)) {
+                baseUrl = request.getScheme() + "://"
+                        + request.getServerName()
+                        + request.getContextPath();
+            } else {
+                baseUrl = request.getScheme() + "://"
+                        + request.getServerName() + ":" + request.getServerPort()
+                        + request.getContextPath();
+            }
     %>
-    Logged in, Nickname <%= user.getNickname()%>
-    <a href="<%= userService.createLogoutURL(request.getRequestURI())%>" class="buttonLink">logout</a>
+    <a href="<%= userService.createLogoutURL(baseUrl)%>" class="buttonLink">logout</a>
     <%
     } else {
     %>
