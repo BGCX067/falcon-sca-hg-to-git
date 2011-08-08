@@ -4,19 +4,14 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.jdo.Transaction;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.sca.calontir.cmpe.dto.Fighter;
-import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
-import org.sca.calontir.cmpe.db.PMF;
-import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.utils.FighterUpdater;
 
 /**
@@ -60,26 +55,28 @@ public class FighterServlet extends HttpServlet {
                 mode = "view";
             }
             request.setAttribute("mode", mode);
+            request.setAttribute("fighter", fighter);
+            this.getServletContext().getRequestDispatcher("/fighter.jsp").
+                    include(request, response);
         } else {
-            fighter = new Fighter();
-
-            fighter = FighterUpdater.fromRequest(request, fighter);
+            fighter = FighterUpdater.fromRequest(request, new Fighter());
+            boolean success = false;
             try {
                 dao.saveFighter(fighter);
                 request.setAttribute("mode", "view");
+                success = true;
             } catch (ValidationException ex) {
                 Logger.getLogger(FighterServlet.class.getName()).log(Level.SEVERE, null, ex);
-                String mode = request.getParameter("mode");
                 request.setAttribute("mode", "add");
                 request.setAttribute("error", ex.getMessage());
+                request.setAttribute("fighter", fighter);
+                this.getServletContext().getRequestDispatcher("/fighter.jsp").
+                        include(request, response);
             }
-           
+            if (success) {
+                response.sendRedirect("/index.jsp");
+            }
         }
-        request.setAttribute("fighter", fighter);
-        //response.sendRedirect("/fighter.jsp");
-        this.getServletContext().getRequestDispatcher("/fighter.jsp").
-                include(request, response);
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
