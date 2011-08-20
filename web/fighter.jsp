@@ -52,11 +52,34 @@
                         autoFill:true,           
                         focus: function(event, ui) { this.value = ui.item.value }     
                     });
+                
+                $( "#dialog-confirm" ).dialog({
+			resizable: false,
+			autoOpen: false,
+			height: 300,
+			width: 350,
+			modal: false,
+			buttons: {
+				"Delete Fighter": function() {
+                                    var form = document.getElementById("fighterInfoForm");
+                                    form.mode.value = "deleteFighter";
+                                    form.submit();
+				    //$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
                 });
         </script>
 
     </head>
     <body>
+        <div id="dialog-confirm" title="Delete this fighter?">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This fighter will be permanently and cannot be undone . Are you sure?</p>
+</div>
+
         <jsp:useBean id="fighter" scope="request" class="org.sca.calontir.cmpe.dto.Fighter" /> 
 
         <% String mode = (String) request.getAttribute("mode");
@@ -81,12 +104,15 @@
         <% } %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
-        <form action="/FighterServlet" method="post" name="fighterInfoForm">
+        <form action="/FighterServlet" method="post" name="fighterInfoForm" id="fighterInfoForm">
             <input type="hidden" name="mode" value="<%= mode%>"/>
             <% Long fighterId = fighter.getFighterId() == null ? null : fighter.getFighterId();%>
             <input type="hidden" name="fighterId" value="<%=fighterId%>"/>
             <div class="figherIdBox">
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
+                 <% if (s.isRoleOrGreater(UserRoles.CARD_MARSHAL) && fighter.getFighterId() != null && fighter.getFighterId() > 0) {%>
+                    <cmp:deleteFighterButton mode="<%=mode%>" />
+                <% } %>
             </div>
             <div class="dataBox">
                 <div class="dataHeader">Authorizations <cmp:editButton mode="<%=mode%>" target="Authorizations" form="document.fighterInfoForm" /></div>
@@ -96,7 +122,9 @@
             </div>
             <% if (userService.isUserLoggedIn() && (userService.isUserAdmin() || security.isRoleOrGreater(UserRoles.CARD_MARSHAL))) {%>
             <div class="dataBox" name="fighterInfoBox">
-                <div class="dataHeader">Fighter Info <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" /></div>
+                <div class="dataHeader">Fighter Info 
+                    <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" />
+                </div>
                 <div class="dataBody">
                     <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
                     <div id="fighterInfo">

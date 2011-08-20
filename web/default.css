@@ -90,7 +90,15 @@ a:hover.buttonLink {text-decoration: none}
 .figherIdBox {
     margin-bottom: .25em;
     margin-left: 1em;
-    margin-top: .25em;
+    margin-right: 1em;
+    margin-top: 1em;
+    border: 1px solid #FFFAFA;
+    background-color: whitesmoke;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    display: block;
+    padding: .5em;
+    width: 60%;
 }
 
 .dataBox {
@@ -152,4 +160,24 @@ a:hover.buttonLink {text-decoration: none}
 
 #adminInfo {
     border: 3px double #666666 
+}
+
+a.Delete:active, a.Delete:visited, a.Delete:link {
+    border-style: solid;
+    border-width : 2px;
+    text-decoration : none;
+    padding : 4px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-left: .5em;
+    margin-bottom: 2px;
+    border-color: #898989 #000000 #000000 #898989 ;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+     background-color: whitesmoke;
+     font-size: smaller;
+}
+
+a.Delete:hover {
+    background-color: white;
 }

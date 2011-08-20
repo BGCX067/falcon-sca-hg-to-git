@@ -53,11 +53,20 @@ public class FighterServlet extends HttpServlet {
                 } catch (ValidationException ex) {
                 }
                 mode = "view";
+                request.setAttribute("mode", mode);
+                request.setAttribute("fighter", fighter);
+                this.getServletContext().getRequestDispatcher("/fighter.jsp").
+                        include(request, response);
+            } else if (mode.equals("deleteFighter")) {
+                System.out.println("Delete was called for " + fighter.getFighterId() + ": " + fighter.getScaName());
+                dao.deleteFighter(fighter.getFighterId());
+                response.sendRedirect("/index.jsp");
+            } else {
+                request.setAttribute("mode", mode);
+                request.setAttribute("fighter", fighter);
+                this.getServletContext().getRequestDispatcher("/fighter.jsp").
+                        include(request, response);
             }
-            request.setAttribute("mode", mode);
-            request.setAttribute("fighter", fighter);
-            this.getServletContext().getRequestDispatcher("/fighter.jsp").
-                    include(request, response);
         } else {
             fighter = FighterUpdater.fromRequest(request, new Fighter());
             boolean success = false;

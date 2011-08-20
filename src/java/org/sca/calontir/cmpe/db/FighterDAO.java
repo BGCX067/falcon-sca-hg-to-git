@@ -104,6 +104,17 @@ public class FighterDAO {
         return keyValue;
     }
 
+    public void deleteFighter(Long fighterId) {
+        Fighter f = null;
+        Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
+        f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
+        try {
+            pm.deletePersistent(f);
+        } finally {
+            pm.close();
+        }
+    }
+
     protected boolean validate(Fighter fighter) throws ValidationException {
         Query query = pm.newQuery(Fighter.class);
         query.setFilter("scaName == scaNameParam");

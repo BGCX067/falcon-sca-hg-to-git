@@ -205,6 +205,17 @@
       <type>java.lang.String</type>
     </attribute>
   </tag>
+    <tag>
+    <name>deleteFighterButton</name>
+    <tag-class>org.sca.calontir.cmpe.tags.DeleteFighterButton</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>mode</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
   <tag>
     <name>rolesTag</name>
     <tag-class>org.sca.calontir.cmpe.tags.RolesTag</tag-class>
