@@ -1,4 +1,6 @@
 <%-- any content can be specified here e.g.: --%>
+<%@page import="org.sca.calontir.cmpe.dto.Fighter"%>
+<%@page import="org.sca.calontir.cmpe.db.FighterDAO"%>
 <%@page import="com.google.appengine.api.users.User"%>
 <%@page import="com.google.appengine.api.users.UserServiceFactory"%>
 <%@page import="com.google.appengine.api.users.UserService"%>
@@ -19,12 +21,16 @@
                         + request.getServerName() + ":" + request.getServerPort()
                         + request.getContextPath();
             }
+            FighterDAO fDao = new FighterDAO();
+            Fighter f_ub = fDao.getFighterByGoogleId(user.getEmail());
     %>
-    <a href="<%= userService.createLogoutURL(baseUrl)%>" class="buttonLink">logout</a>
+    <a href="<%= userService.createLogoutURL(baseUrl)%>" class="buttonLink" title="Click to logout">
+        <%= f_ub == null ? user.getNickname() : f_ub.getScaName() %>
+    </a>
     <%
     } else {
     %>
-    <a href="<%= userService.createLoginURL(request.getRequestURI())%>" class="buttonLink">login</a>
+    <a href="<%= userService.createLoginURL(request.getRequestURI())%>" class="buttonLink" title="Click to login">login</a>
     <%
         }
     %>

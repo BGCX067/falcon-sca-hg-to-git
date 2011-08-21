@@ -39,9 +39,8 @@ root {
     border: 1px solid darkblue;
     text-align: center;
     vertical-align: middle;
-    margin: .25em;
+    margin: .2em 1.5em;
     padding: .25em;
-    width: 15em;
     background-color: lightblue;
     color: white;
 }
@@ -75,6 +74,22 @@ a:hover.buttonLink {text-decoration: none}
     background-color: #FF3030;
     display: block;
     border: 1px solid #8B1A1A;
+    text-align: left;
+    vertical-align: middle;
+    margin-bottom: .25em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: .25em;
+    padding: .5em;
+    width: 25em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+#uimessage {
+    background-color: whitesmoke;
+    display: block;
+    border: 1px solid darkblue;
     text-align: left;
     vertical-align: middle;
     margin-bottom: .25em;

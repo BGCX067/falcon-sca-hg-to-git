@@ -48,13 +48,7 @@
     </head>
     <body>
         <%@include file="WEB-INF/jspf/userbox.jspf" %>
-        <%  String error = (String) request.getAttribute("error"); 
-            if (StringUtils.isNotBlank(error)) {
-        %>
-        <div id="error">
-            <%= error %>
-        </div>
-        <% } %>
+        <%@include file="WEB-INF/jspf/messagebox.jspf" %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
 

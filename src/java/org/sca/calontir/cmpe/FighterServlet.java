@@ -55,12 +55,15 @@ public class FighterServlet extends HttpServlet {
                 mode = "view";
                 request.setAttribute("mode", mode);
                 request.setAttribute("fighter", fighter);
+                request.setAttribute("uimessage", fighter.getScaName() + " saved");
                 this.getServletContext().getRequestDispatcher("/fighter.jsp").
                         include(request, response);
             } else if (mode.equals("deleteFighter")) {
                 System.out.println("Delete was called for " + fighter.getFighterId() + ": " + fighter.getScaName());
                 dao.deleteFighter(fighter.getFighterId());
-                response.sendRedirect("/index.jsp");
+                request.setAttribute("uimessage", fighter.getScaName() + " deleted");
+                this.getServletContext().getRequestDispatcher("/index.jsp").
+                        include(request, response);
             } else {
                 request.setAttribute("mode", mode);
                 request.setAttribute("fighter", fighter);
@@ -83,7 +86,9 @@ public class FighterServlet extends HttpServlet {
                         include(request, response);
             }
             if (success) {
-                response.sendRedirect("/index.jsp");
+                request.setAttribute("uimessage", fighter.getScaName() + " added");
+                this.getServletContext().getRequestDispatcher("/index.jsp").
+                        include(request, response);
             }
         }
     }
