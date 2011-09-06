@@ -189,10 +189,60 @@ a.Delete:active, a.Delete:visited, a.Delete:link {
     border-color: #898989 #000000 #000000 #898989 ;
     -moz-border-radius: 5px;
     border-radius: 5px;
-     background-color: whitesmoke;
-     font-size: smaller;
+    background-color: whitesmoke;
+    font-size: smaller;
 }
 
 a.Delete:hover {
     background-color: white;
+}
+
+.list {
+    background-color: lightblue;
+    display: block;
+    border: 1px solid darkblue;
+    text-align: left;
+    vertical-align: middle;
+    margin-bottom: .25em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 4em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.header {
+    background-color: purple;
+    color: white;
+    margin: 0,0,0,0;
+    padding: 0,0,0,0;
+    border-top: 1px solid darkblue;
+    border-left: 1px solid darkblue;
+    border-right: 1px solid darkblue;
+    -moz-border-right-radius: 15px;
+    -moz-border-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+.listRow {
+    display: block;
+    border-bottom: 1px solid darkblue;
+    width: 100%;
+}
+
+.listRow .rowElement { 
+    display: inline-block;
+    margin-right: 1em;
+    margin-left: 1em;
+}
+
+.listRow a:active, a:visited, a:link {
+    text-decoration : none;
+    color: black;
+}
+
+.listRow a:hover {
+    background-color: white;
+    color: blue;
 }

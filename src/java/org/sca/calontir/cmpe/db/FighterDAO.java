@@ -52,21 +52,50 @@ public class FighterDAO {
     }
 
     public List<org.sca.calontir.cmpe.dto.Fighter> queryFightersByScaName(String scaName) {
+        List<org.sca.calontir.cmpe.dto.Fighter> retArray = new ArrayList<org.sca.calontir.cmpe.dto.Fighter>();
+        if (StringUtils.isBlank(scaName)) {
+            return retArray;
+        }
         Query query = pm.newQuery(Fighter.class);
         query.setFilter("scaName == scaNameParam");
         query.declareParameters("String scaNameParam");
         List<Fighter> fighters = (List<Fighter>) query.execute(scaName);
-        List<org.sca.calontir.cmpe.dto.Fighter> retArray = new ArrayList<org.sca.calontir.cmpe.dto.Fighter>();
+        if (fighters == null || fighters.isEmpty()) {
+            List<Fighter> allFighters = returnAllFighters();
+            fighters = filterByScaName(allFighters, scaName);
+        }
         for (Fighter f : fighters) {
             retArray.add(DataTransfer.convert(f));
         }
         return retArray;
     }
 
-    public List<org.sca.calontir.cmpe.dto.Fighter> getFighters() {
+    private List<Fighter> filterByScaName(List<Fighter> allFighters, String scaName) {
+        List<Fighter> retList = new ArrayList<Fighter>();
+        if (scaName == null || StringUtils.isBlank(scaName)) {
+            return retList;
+        }
+
+        for (Fighter f : allFighters) {
+            if (f.getScaName() != null) {
+                if (f.getScaName().toUpperCase().contains(scaName.toUpperCase())) {
+                    retList.add(f);
+                }
+            }
+        }
+        return retList;
+    }
+
+    private List<Fighter> returnAllFighters() {
+        // add memcache here
         Query query = pm.newQuery(Fighter.class);
         query.setOrdering("scaName");
         List<Fighter> fighters = (List<Fighter>) query.execute();
+        return fighters;
+    }
+
+    public List<org.sca.calontir.cmpe.dto.Fighter> getFighters() {
+        List<Fighter> fighters = returnAllFighters();
         List<org.sca.calontir.cmpe.dto.Fighter> retArray = new ArrayList<org.sca.calontir.cmpe.dto.Fighter>();
         for (Fighter f : fighters) {
             retArray.add(DataTransfer.convert(f));

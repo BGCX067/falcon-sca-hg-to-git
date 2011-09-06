@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.db.FighterDAO;
 
@@ -30,19 +31,35 @@ public class FighterSearchServlet extends HttpServlet {
         String mode = request.getParameter("mode");
         if (mode != null && mode.equals("add")) {
             fighter = new Fighter();
+        } else if(mode != null && mode.equals("lookup")) {
+            String idStr = request.getParameter("fid");
+            Long id = Long.valueOf(idStr);
+            fighter = dao.getFighter(id);
         } else {
             String search = request.getParameter("search");
 
-            List<Fighter> ret = dao.queryFightersByScaName(search);
+            List<Fighter> ret = null;
+            
+            if(!StringUtils.isBlank(search))
+                ret = dao.queryFightersByScaName(search);
 
-            if (ret.isEmpty()) {
+            if (ret !=null && ret.isEmpty()) {
                 fighter = null;
             } else {
-                fighter = ret.get(0);
+                if (ret !=null && ret.size() == 1) {
+                    fighter = ret.get(0);
+                } else {
+                    if(ret == null)
+                        ret = dao.getFighters();
+                    request.setAttribute("fighters", ret);
+                    this.getServletContext().getRequestDispatcher("/fighterList.jsp").
+                            include(request, response);
+                    return;
+                }
             }
         }
         if (fighter == null) {
-            request.setAttribute("error", "That fighter not found, please retry your search");
+            request.setAttribute("error", "No fighters were found, please retry your search");
             this.getServletContext().getRequestDispatcher("/index.jsp").
                     include(request, response);
         } else {
