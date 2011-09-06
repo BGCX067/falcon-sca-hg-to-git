@@ -104,7 +104,7 @@
             <input type="hidden" name="fighterId" value="<%=fighterId%>"/>
             <div class="figherIdBox">
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
-                 <% if (s.isRoleOrGreater(UserRoles.CARD_MARSHAL) && fighter.getFighterId() != null && fighter.getFighterId() > 0) {%>
+                 <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL) && fighter.getFighterId() != null && fighter.getFighterId() > 0) {%>
                     <cmp:deleteFighterButton mode="<%=mode%>" />
                 <% } %>
             </div>

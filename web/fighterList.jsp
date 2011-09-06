@@ -52,14 +52,21 @@
         <%@include file="WEB-INF/jspf/messagebox.jspf" %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
-        <% List<Fighter> fighterList = (List<Fighter>) request.getAttribute("fighters");%>
+        <% List<Fighter> fighterList = (List<Fighter>) request.getAttribute("fighters");
+
+            Security security = SecurityFactory.getSecurity();
+        %>
 
         <div class="list">
             <div class="listRow header">
                 <span class="rowElement" style="width: 20%;">SCA Name</span>
                 <span class="rowElement" style="width: 25%;">Authorizations</span>
+                <% if (security.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL)) {%>
                 <span class="rowElement" style="width: 25%;">Group </span>
-                <span class="rowElement" style="width: 10%;">Minor</span>    
+                <% }%>
+                <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
+                <span class="rowElement" style="width: 10%;">Minor</span>   
+                <% }%>
             </div>
             <% for (Fighter f : fighterList) {%>
             <div class="listRow">
@@ -67,8 +74,12 @@
                 <a href="/FighterSearchServlet?mode=lookup&fid=<%=f.getFighterId()%>" >
                     <span class="rowElement" style="width: 20%;"><%= f.getScaName()%></span>
                     <span class="rowElement" style="width: 25%;"><%= MarshalUtils.getAuthsAsString(f.getAuthorization())%></span>
+                    <% if (security.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL)) {%>
                     <span class="rowElement" style="width: 25%;"><%= f.getScaGroup() == null ? "" : f.getScaGroup().getGroupName()%> </span>
+                    <% }%>
+                    <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
                     <span class="rowElement" style="width: 10%;"><%= MarshalUtils.isMinor(f)%></span>
+                    <% }%>
                 </a>
                 <% }%>
             </div>
