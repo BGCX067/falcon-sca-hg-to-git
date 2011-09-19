@@ -27,52 +27,71 @@ public class FighterSearchServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Fighter fighter = null;
-        FighterDAO dao = new FighterDAO();
         String mode = request.getParameter("mode");
         if (mode != null && mode.equals("add")) {
-            fighter = new Fighter();
-        } else if(mode != null && mode.equals("lookup")) {
-            String idStr = request.getParameter("fid");
-            Long id = Long.valueOf(idStr);
-            fighter = dao.getFighter(id);
-        } else {
-            String search = request.getParameter("search");
-
-            List<FighterListItem> ret = null;
-            
-            // TODO: Move logic to dao.
-            // The logic below is based on a limitation in Googles database.
-            // I don't want to tie the front end to that.
-            // Get list items and rotate through them to get fighters.
-            if(!StringUtils.isBlank(search))
-                ret = dao.getFighterListByScaName(search);
-
-            if (ret !=null && ret.isEmpty()) {
-                fighter = null;
-            } else {
-                if (ret !=null && ret.size() == 1) {
-                    fighter = dao.getFighter(ret.get(0).getFighterId());
-                } else {
-                    if(ret == null)
-                        ret = dao.getFighterListItems();
-                    request.setAttribute("fighters", ret);
-                    this.getServletContext().getRequestDispatcher("/fighterList.jsp").
-                            include(request, response);
-                    return;
-                }
-            }
-        }
-        if (fighter == null) {
-            request.setAttribute("error", "No fighters were found, please retry your search");
-            this.getServletContext().getRequestDispatcher("/index.jsp").
+            Fighter fighter = new Fighter();
+            request.setAttribute("mode", mode);
+            request.setAttribute("fighter", fighter);
+            this.getServletContext().getRequestDispatcher("/fighter.jsp").
                     include(request, response);
+        } else if (mode != null && mode.equals("lookup")) {
+            lookup(mode, request, response);
+        } else {
+            search(mode, request, response);
+        }
+
+    }
+
+    private void lookup(String mode, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        FighterDAO dao = new FighterDAO();
+        String idStr = request.getParameter("fid");
+        Long id = Long.valueOf(idStr);
+        Fighter fighter = dao.getFighter(id);
+        if (fighter == null) {
+            noneFound(request, response);
         } else {
             request.setAttribute("mode", mode);
             request.setAttribute("fighter", fighter);
-            //response.sendRedirect("/fighter.jsp");
             this.getServletContext().getRequestDispatcher("/fighter.jsp").
                     include(request, response);
+        }
+    }
+
+    private void noneFound(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("error", "No fighters were found, please retry your search");
+        this.getServletContext().getRequestDispatcher("/index.jsp").
+                include(request, response);
+    }
+
+    private void search(String mode, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        FighterDAO dao = new FighterDAO();
+        String search = request.getParameter("search");
+
+        List<FighterListItem> ret = null;
+
+        if (!StringUtils.isBlank(search)) {
+            ret = dao.getFighterListByScaName(search);
+        }
+
+        if (ret != null && ret.isEmpty()) {
+            noneFound(request, response);
+        } else {
+            if (ret != null && ret.size() == 1) {
+                Fighter fighter = dao.getFighter(ret.get(0).getFighterId());
+                request.setAttribute("mode", mode);
+                request.setAttribute("fighter", fighter);
+                //response.sendRedirect("/fighter.jsp");
+                this.getServletContext().getRequestDispatcher("/fighter.jsp").
+                        include(request, response);
+            } else {
+                if (ret == null) {
+                    ret = dao.getFighterListItems();
+                }
+                request.setAttribute("fighters", ret);
+                this.getServletContext().getRequestDispatcher("/fighterList.jsp").
+                        include(request, response);
+            }
         }
     }
 
