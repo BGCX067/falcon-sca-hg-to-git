@@ -1,5 +1,6 @@
 package org.sca.calontir.cmpe.utils;
 
+import java.util.Date;
 import java.util.List;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -14,10 +15,17 @@ import org.sca.calontir.cmpe.dto.Fighter;
 public class MarshalUtils {
 
     public static boolean isMinor(Fighter fighter) {
-        if (fighter == null || fighter.getDateOfBirth() == null) {
+        if (fighter == null) {
             return false;
         }
-        DateMidnight birthday = new DateMidnight(fighter.getDateOfBirth());
+        return isMinor(fighter.getDateOfBirth());
+    }
+    
+    public static boolean isMinor(Date fightersBirthDate) {
+        if (fightersBirthDate == null) {
+            return false;
+        }
+        DateMidnight birthday = new DateMidnight(fightersBirthDate);
         DateTime today = new DateTime();
         Years age = Years.yearsBetween(birthday, today);
         boolean retVal = false;

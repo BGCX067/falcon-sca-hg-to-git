@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.dto.FighterListItem;
 
 /**
  * Servlet called from the fighter search box.
@@ -38,19 +39,23 @@ public class FighterSearchServlet extends HttpServlet {
         } else {
             String search = request.getParameter("search");
 
-            List<Fighter> ret = null;
+            List<FighterListItem> ret = null;
             
+            // TODO: Move logic to dao.
+            // The logic below is based on a limitation in Googles database.
+            // I don't want to tie the front end to that.
+            // Get list items and rotate through them to get fighters.
             if(!StringUtils.isBlank(search))
-                ret = dao.queryFightersByScaName(search);
+                ret = dao.getFighterListByScaName(search);
 
             if (ret !=null && ret.isEmpty()) {
                 fighter = null;
             } else {
                 if (ret !=null && ret.size() == 1) {
-                    fighter = ret.get(0);
+                    fighter = dao.getFighter(ret.get(0).getFighterId());
                 } else {
                     if(ret == null)
-                        ret = dao.getFighters();
+                        ret = dao.getFighterListItems();
                     request.setAttribute("fighters", ret);
                     this.getServletContext().getRequestDispatcher("/fighterList.jsp").
                             include(request, response);

@@ -5,6 +5,8 @@ import java.util.List;
 import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
+import org.sca.calontir.cmpe.utils.FighterUpdater;
+import org.sca.calontir.cmpe.utils.MarshalUtils;
 
 /**
  *
@@ -55,9 +57,9 @@ public class DataTransfer {
             ScaGroupDAO groupDao = new ScaGroupDAO();
             fighter.setScaGroup(groupDao.getScaGroup(fighterDO.getScaGroup().getId()));
         }
-        
+
         fighter.setGoogleId(fighterDO.getGoogleId());
-        
+
         if (fighterDO.getRole() != null) {
             fighter.setRole(fighterDO.getRole());
         }
@@ -174,9 +176,9 @@ public class DataTransfer {
             org.sca.calontir.cmpe.data.ScaGroup scaGroupDO = lookup(fighter.getScaGroup());
             fighterDO.setScaGroup(scaGroupDO.getScaGroupId());
         }
-        
+
         fighterDO.setGoogleId(fighter.getGoogleId());
-        
+
         if (fighter.getRole() != null) {
             fighterDO.setRole(fighter.getRole());
         }
@@ -254,5 +256,29 @@ public class DataTransfer {
         at.setCode(authType.getCode());
         at.setDescription(authType.getDescription());
         return at;
+    }
+
+    public static FighterListItem convertToListItem(org.sca.calontir.cmpe.data.Fighter f) {
+        FighterListItem fli = new FighterListItem();
+        if (f.getFighterId() != null) {
+            fli.setFighterId(f.getFighterId().getId());
+        }
+        fli.setScaName(f.getScaName());
+        if (f.getScaGroup() != null) {
+            ScaGroupDAO groupDao = new ScaGroupDAO();
+            ScaGroup group = groupDao.getScaGroup(f.getScaGroup().getId());
+            fli.setGroup(group.getGroupName());
+        }
+        if (f.getAuthorization() != null) {
+            List<Authorization> authorizations = new ArrayList<Authorization>();
+            for (org.sca.calontir.cmpe.data.Authorization authorization : f.getAuthorization()) {
+                authorizations.add(convert(authorization));
+            }
+            String s = MarshalUtils.getAuthsAsString(authorizations);
+            fli.setAuthorizations(s);
+        }
+
+        fli.setMinor(MarshalUtils.isMinor(f.getDateOfBirth()));
+        return fli;
     }
 }

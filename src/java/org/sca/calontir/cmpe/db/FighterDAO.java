@@ -11,6 +11,7 @@ import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.data.Address;
 import org.sca.calontir.cmpe.data.Fighter;
 import org.sca.calontir.cmpe.dto.DataTransfer;
+import org.sca.calontir.cmpe.dto.FighterListItem;
 
 /**
  *
@@ -51,6 +52,9 @@ public class FighterDAO {
         return retval;
     }
 
+    /*
+     * TODO: Should return fighters if name is contained (may be wildcard)
+     */
     public List<org.sca.calontir.cmpe.dto.Fighter> queryFightersByScaName(String scaName) {
         List<org.sca.calontir.cmpe.dto.Fighter> retArray = new ArrayList<org.sca.calontir.cmpe.dto.Fighter>();
         if (StringUtils.isBlank(scaName)) {
@@ -66,6 +70,25 @@ public class FighterDAO {
         }
         for (Fighter f : fighters) {
             retArray.add(DataTransfer.convert(f));
+        }
+        return retArray;
+    }
+    
+    public List<FighterListItem> getFighterListByScaName(String scaName) {
+        List<FighterListItem> retArray = new ArrayList<FighterListItem>();
+        if (StringUtils.isBlank(scaName)) {
+            return retArray;
+        }
+        Query query = pm.newQuery(Fighter.class);
+        query.setFilter("scaName == scaNameParam");
+        query.declareParameters("String scaNameParam");
+        List<Fighter> fighters = (List<Fighter>) query.execute(scaName);
+        if (fighters == null || fighters.isEmpty()) {
+            List<Fighter> allFighters = returnAllFighters();
+            fighters = filterByScaName(allFighters, scaName);
+        }
+        for (Fighter f : fighters) {
+            retArray.add(DataTransfer.convertToListItem(f));
         }
         return retArray;
     }
@@ -86,8 +109,17 @@ public class FighterDAO {
         return retList;
     }
 
+    public List<FighterListItem> getFighterListItems() {
+        // Move all access to fighter list to memcache.
+        List<Fighter> fighters = returnAllFighters();
+        List<FighterListItem> retArray = new ArrayList<FighterListItem>();
+        for (Fighter f : fighters) {
+            retArray.add(DataTransfer.convertToListItem(f));
+        }
+        return retArray;
+    }
+    
     private List<Fighter> returnAllFighters() {
-        // add memcache here
         Query query = pm.newQuery(Fighter.class);
         query.setOrdering("scaName");
         List<Fighter> fighters = (List<Fighter>) query.execute();

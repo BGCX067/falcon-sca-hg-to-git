@@ -1,3 +1,4 @@
+<%@page import="org.sca.calontir.cmpe.dto.FighterListItem"%>
 <%@page import="org.sca.calontir.cmpe.utils.MarshalUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <!DOCTYPE html>
@@ -52,7 +53,7 @@
         <%@include file="WEB-INF/jspf/messagebox.jspf" %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
-        <% List<Fighter> fighterList = (List<Fighter>) request.getAttribute("fighters");
+        <% List<FighterListItem> fighterList = (List<FighterListItem>) request.getAttribute("fighters");
 
             Security security = SecurityFactory.getSecurity();
         %>
@@ -68,17 +69,17 @@
                 <span class="rowElement" style="width: 10%;">Minor</span>   
                 <% }%>
             </div>
-            <% for (Fighter f : fighterList) {%>
+            <% for (FighterListItem f : fighterList) {%>
             <div class="listRow">
                 <% if (f != null) {%>
                 <a href="/FighterSearchServlet?mode=lookup&fid=<%=f.getFighterId()%>" >
                     <span class="rowElement" style="width: 20%;"><%= f.getScaName()%></span>
-                    <span class="rowElement" style="width: 25%;"><%= MarshalUtils.getAuthsAsString(f.getAuthorization())%></span>
+                    <span class="rowElement" style="width: 25%;"><%= f.getAuthorizations()%></span>
                     <% if (security.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL)) {%>
-                    <span class="rowElement" style="width: 25%;"><%= f.getScaGroup() == null ? "" : f.getScaGroup().getGroupName()%> </span>
+                    <span class="rowElement" style="width: 25%;"><%= f.getGroup()%> </span>
                     <% }%>
                     <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
-                    <span class="rowElement" style="width: 10%;"><%= MarshalUtils.isMinor(f)%></span>
+                    <span class="rowElement" style="width: 10%;"><%= f.isMinor() %></span>
                     <% }%>
                 </a>
                 <% }%>
