@@ -110,7 +110,7 @@ public class FighterDAO {
     }
 
     public List<FighterListItem> getFighterListItems() {
-        // Move all access to fighter list to memcache.
+        // TODO: Move all access to fighter list to memcache.
         List<Fighter> fighters = returnAllFighters();
         List<FighterListItem> retArray = new ArrayList<FighterListItem>();
         for (Fighter f : fighters) {
