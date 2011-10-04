@@ -162,12 +162,12 @@ public class DataTransfer {
             List<org.sca.calontir.cmpe.data.Authorization> authorizations = new ArrayList<org.sca.calontir.cmpe.data.Authorization>();
             for (int i = 0; i < fighter.getAuthorization().size(); ++i) {
                 Authorization authorization = fighter.getAuthorization().get(i);
-                if (fighterDO.getAuthorization() != null && i < fighterDO.getAuthorization().size()) {
-                    org.sca.calontir.cmpe.data.Authorization origAuthorization = fighterDO.getAuthorization().get(i);
-                    authorizations.add(convert(authorization, origAuthorization));
-                } else {
+//                if (fighterDO.getAuthorization() != null && i < fighterDO.getAuthorization().size()) {
+//                    org.sca.calontir.cmpe.data.Authorization origAuthorization = fighterDO.getAuthorization().get(i);
+//                    authorizations.add(convert(authorization, origAuthorization));
+//                } else {
                     authorizations.add(convert(authorization, null));
-                }
+//                }
             }
             fighterDO.setAuthorization(authorizations);
         }

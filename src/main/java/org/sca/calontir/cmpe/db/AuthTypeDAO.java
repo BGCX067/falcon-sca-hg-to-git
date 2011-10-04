@@ -73,6 +73,8 @@ public class AuthTypeDAO {
         if (authType.getAuthTypeId() != null && authType.getAuthTypeId() > 0) {
             Key authTypeKey = KeyFactory.createKey(AuthType.class.getSimpleName(), authType.getAuthTypeId());
             at = (AuthType) pm.getObjectById(AuthType.class, authTypeKey);
+        } else {
+            at = new AuthType();
         }
         at = DataTransfer.convert(authType, at);
         try {

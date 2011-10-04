@@ -73,22 +73,17 @@ public class FighterDAO {
         }
         return retArray;
     }
-    
+
     public List<FighterListItem> getFighterListByScaName(String scaName) {
         List<FighterListItem> retArray = new ArrayList<FighterListItem>();
+        List<FighterListItem> fighters = getFighterListItems();
         if (StringUtils.isBlank(scaName)) {
-            return retArray;
+            return fighters;
         }
-        Query query = pm.newQuery(Fighter.class);
-        query.setFilter("scaName == scaNameParam");
-        query.declareParameters("String scaNameParam");
-        List<Fighter> fighters = (List<Fighter>) query.execute(scaName);
-        if (fighters == null || fighters.isEmpty()) {
-            List<Fighter> allFighters = returnAllFighters();
-            fighters = filterByScaName(allFighters, scaName);
-        }
-        for (Fighter f : fighters) {
-            retArray.add(DataTransfer.convertToListItem(f));
+        for (FighterListItem f : fighters) {
+            if (f.getScaName().contains(scaName)) {
+                retArray.add(f);
+            }
         }
         return retArray;
     }
@@ -118,7 +113,7 @@ public class FighterDAO {
         }
         return retArray;
     }
-    
+
     private List<Fighter> returnAllFighters() {
         Query query = pm.newQuery(Fighter.class);
         query.setOrdering("scaName");
