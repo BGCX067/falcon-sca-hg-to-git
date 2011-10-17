@@ -1,11 +1,8 @@
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.jsp.JspWriter;
 import org.sca.calontir.cmpe.common.UserRoles;
-import org.sca.calontir.cmpe.dto.ScaGroup;
-import org.sca.calontir.cmpe.db.ScaGroupDAO;
 
 /**
  *
@@ -14,6 +11,7 @@ import org.sca.calontir.cmpe.db.ScaGroupDAO;
 public class RolesTag extends CMPExtendedTagSupport {
     private UserRoles userRole;
 
+    @Override
     protected void doAdd(JspWriter out) throws IOException {
         out.println("<select name=\"userRole\">");
         for (UserRoles role : UserRoles.values()) {
@@ -22,6 +20,7 @@ public class RolesTag extends CMPExtendedTagSupport {
         out.println("</select>");
     }
 
+    @Override
     protected void doView(JspWriter out) throws IOException {
         if (userRole != null) {
             out.println("<input type=\"hidden\" name=\"userRole\" value=\"" + userRole + "\"/>");
@@ -29,6 +28,7 @@ public class RolesTag extends CMPExtendedTagSupport {
         }
     }
 
+    @Override
     protected void doEdit(JspWriter out) throws IOException {
         out.println("<select name=\"userRole\">");
         for (UserRoles role : UserRoles.values()) {

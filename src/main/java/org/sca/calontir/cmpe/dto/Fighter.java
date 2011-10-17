@@ -1,5 +1,6 @@
 package org.sca.calontir.cmpe.dto;
 
+import org.sca.calontir.cmpe.common.FighterStatus;
 import java.util.Date;
 import java.util.List;
 import org.sca.calontir.cmpe.common.UserRoles;
@@ -21,6 +22,7 @@ public class Fighter {
     private List<Authorization> authorization;
     private ScaGroup scaGroup;
     private UserRoles role;
+    private FighterStatus status = FighterStatus.ACTIVE;
 
     public List<Address> getAddress() {
         return address;
@@ -116,6 +118,14 @@ public class Fighter {
 
     public void setRole(UserRoles role) {
         this.role = role;
+    }
+
+    public FighterStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(FighterStatus status) {
+        this.status = status;
     }
     
 }

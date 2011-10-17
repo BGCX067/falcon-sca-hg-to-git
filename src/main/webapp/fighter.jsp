@@ -9,6 +9,7 @@
     Author     : rik
 --%>
 <%@page import="org.sca.calontir.cmpe.dto.Fighter"%>
+<%@page import="org.sca.calontir.cmpe.common.FighterStatus"%>
 <%@page import="org.sca.calontir.cmpe.db.FighterDAO"%>
 <%@page import="org.sca.calontir.cmpe.utils.MarshalUtils"%>
 <%@page import="org.sca.calontir.cmpe.dto.AuthType"%>
@@ -104,9 +105,12 @@
             <input type="hidden" name="fighterId" value="<%=fighterId%>"/>
             <div class="figherIdBox">
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
+                <% if (security.isRoleOrGreater(UserRoles.USER)) { %>
+                <br/>
+                <cmp:fighterStatusTag mode="<%= mode%>" status="<%= fighter.getStatus() %>" editMode="editFighterInfo" /> 
                  <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL) && fighter.getFighterId() != null && fighter.getFighterId() > 0) {%>
                     <cmp:deleteFighterButton mode="<%=mode%>" />
-                <% } %>
+                <% } } %>
             </div>
             <div class="dataBox">
                 <div class="dataHeader">Authorizations <cmp:editButton mode="<%=mode%>" target="Authorizations" form="document.fighterInfoForm" /></div>

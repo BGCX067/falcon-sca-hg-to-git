@@ -41,6 +41,8 @@ public class Fighter {
     private Key scaGroup;
     @Persistent
     private UserRoles role;
+    @Persistent
+    private String status;
 
     public Key getFighterId() {
         return fighterId;
@@ -137,4 +139,14 @@ public class Fighter {
     public void setRole(UserRoles role) {
         this.role = role;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
 }

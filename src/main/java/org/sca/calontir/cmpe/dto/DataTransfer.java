@@ -1,11 +1,11 @@
 package org.sca.calontir.cmpe.dto;
 
+import org.sca.calontir.cmpe.common.FighterStatus;
 import java.util.ArrayList;
 import java.util.List;
-import org.sca.calontir.cmpe.common.UserRoles;
+import org.apache.commons.lang.StringUtils;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
-import org.sca.calontir.cmpe.utils.FighterUpdater;
 import org.sca.calontir.cmpe.utils.MarshalUtils;
 
 /**
@@ -63,6 +63,12 @@ public class DataTransfer {
         if (fighterDO.getRole() != null) {
             fighter.setRole(fighterDO.getRole());
         }
+
+        if (StringUtils.isBlank(fighterDO.getStatus())) { // for now set to Active
+            fighter.setStatus(FighterStatus.ACTIVE);
+        } else {
+            fighter.setStatus(FighterStatus.valueOf(fighterDO.getStatus()));
+        } 
 
         return fighter;
     }
@@ -166,7 +172,7 @@ public class DataTransfer {
 //                    org.sca.calontir.cmpe.data.Authorization origAuthorization = fighterDO.getAuthorization().get(i);
 //                    authorizations.add(convert(authorization, origAuthorization));
 //                } else {
-                    authorizations.add(convert(authorization, null));
+                authorizations.add(convert(authorization, null));
 //                }
             }
             fighterDO.setAuthorization(authorizations);
@@ -182,6 +188,10 @@ public class DataTransfer {
         if (fighter.getRole() != null) {
             fighterDO.setRole(fighter.getRole());
         }
+
+        fighterDO.setStatus(fighter.getStatus().toString());
+        
+        System.out.println("fighter status set to " + fighterDO.getStatus());
 
         return fighterDO;
     }

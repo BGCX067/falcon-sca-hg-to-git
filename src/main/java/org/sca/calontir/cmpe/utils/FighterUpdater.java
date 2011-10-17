@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Address;
@@ -111,6 +112,11 @@ public class FighterUpdater {
         String userRole = request.getParameter("userRole");
         if (StringUtils.isNotBlank(userRole)) {
             fighter.setRole(UserRoles.valueOf(userRole));
+        }
+        
+        String fighterStatus = request.getParameter("fighterStatus");
+        if (StringUtils.isNotBlank(fighterStatus)) {
+            fighter.setStatus(FighterStatus.valueOf(fighterStatus));
         }
 
         return fighter;
