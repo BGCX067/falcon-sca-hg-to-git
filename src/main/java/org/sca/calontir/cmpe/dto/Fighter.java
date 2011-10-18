@@ -23,6 +23,8 @@ public class Fighter {
     private ScaGroup scaGroup;
     private UserRoles role;
     private FighterStatus status = FighterStatus.ACTIVE;
+    private Treaty treaty;
+    private Note note;
 
     public List<Address> getAddress() {
         return address;
@@ -127,5 +129,22 @@ public class Fighter {
     public void setStatus(FighterStatus status) {
         this.status = status;
     }
+
+    public Note getNote() {
+        return note;
+    }
+
+    public void setNote(Note note) {
+        this.note = note;
+    }
+
+    public Treaty getTreaty() {
+        return treaty;
+    }
+
+    public void setTreaty(Treaty treaty) {
+        this.treaty = treaty;
+    }
+    
     
 }

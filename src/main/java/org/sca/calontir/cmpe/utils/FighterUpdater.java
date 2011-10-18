@@ -18,6 +18,7 @@ import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.Phone;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
+import org.sca.calontir.cmpe.dto.Note;
 
 /**
  *
@@ -117,6 +118,14 @@ public class FighterUpdater {
         String fighterStatus = request.getParameter("fighterStatus");
         if (StringUtils.isNotBlank(fighterStatus)) {
             fighter.setStatus(FighterStatus.valueOf(fighterStatus));
+        }
+        
+        String note = request.getParameter("notes");
+        if(StringUtils.isNotBlank(note)) {
+            Note fighterNote = new Note();
+            fighterNote.setBody(note);
+            fighterNote.setUpdated(new Date());
+            fighter.setNote(fighterNote);
         }
 
         return fighter;

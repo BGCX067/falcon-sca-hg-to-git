@@ -54,32 +54,32 @@
                         focus: function(event, ui) { this.value = ui.item.value }     
                     });
                 
-                $( "#dialog-confirm" ).dialog({
-			resizable: false,
-			autoOpen: false,
-			height: 300,
-			width: 350,
-			modal: false,
-			buttons: {
-				"Delete Fighter": function() {
-                                    var form = document.getElementById("fighterInfoForm");
-                                    form.mode.value = "deleteFighter";
-                                    form.submit();
-				    //$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
+                    $( "#dialog-confirm" ).dialog({
+                        resizable: false,
+                        autoOpen: false,
+                        height: 300,
+                        width: 350,
+                        modal: false,
+                        buttons: {
+                            "Delete Fighter": function() {
+                                var form = document.getElementById("fighterInfoForm");
+                                form.mode.value = "deleteFighter";
+                                form.submit();
+                                //$( this ).dialog( "close" );
+                            },
+                            Cancel: function() {
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                    });
                 });
         </script>
 
     </head>
     <body>
         <div id="dialog-confirm" title="Delete this fighter?">
-	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This fighter will be permanently and cannot be undone . Are you sure?</p>
-</div>
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This fighter will be permanently and cannot be undone . Are you sure?</p>
+        </div>
 
         <jsp:useBean id="fighter" scope="request" class="org.sca.calontir.cmpe.dto.Fighter" /> 
 
@@ -91,7 +91,7 @@
 
             AuthTypeDAO atDao = new AuthTypeDAO();
             List<AuthType> authTypes = atDao.getAuthType();
-            
+
             Security security = SecurityFactory.getSecurity();
         %>
 
@@ -105,12 +105,13 @@
             <input type="hidden" name="fighterId" value="<%=fighterId%>"/>
             <div class="figherIdBox">
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
-                <% if (security.isRoleOrGreater(UserRoles.USER)) { %>
+                <% if (security.isRoleOrGreater(UserRoles.USER)) {%>
                 <br/>
-                <cmp:fighterStatusTag mode="<%= mode%>" status="<%= fighter.getStatus() %>" editMode="editFighterInfo" /> 
-                 <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL) && fighter.getFighterId() != null && fighter.getFighterId() > 0) {%>
-                    <cmp:deleteFighterButton mode="<%=mode%>" />
-                <% } } %>
+                <cmp:fighterStatusTag mode="<%= mode%>" status="<%= fighter.getStatus()%>" editMode="editFighterInfo" /> 
+                <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL) && fighter.getFighterId() != null && fighter.getFighterId() > 0) {%>
+                <cmp:deleteFighterButton mode="<%=mode%>" />
+                <% }
+                    }%>
             </div>
             <div class="dataBox">
                 <div class="dataHeader">Authorizations <cmp:editButton mode="<%=mode%>" target="Authorizations" form="document.fighterInfoForm" /></div>
@@ -163,7 +164,7 @@
                         </table>
                     </div>
                     <%}%>
-                    <% if (userService.isUserAdmin()) {%>
+                    <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL) || userService.isUserAdmin()) {%>
                     <div id="adminInfo">
                         <table>
                             <tr>
@@ -178,13 +179,22 @@
                             </tr>
                         </table>
                     </div>
-
-                    <%}%>
-                    <% if (mode.equalsIgnoreCase("Add")) { %>
+                    <% }%>
+                    <% if (mode.equalsIgnoreCase("Add")) {%>
                     <div><cmp:input type="submit" value="Add Fighter" mode="<%= mode%>" /></div>
                     <%}%>
                 </div>
             </div>
+            <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
+            <div class="dataBoxShort" name="fighterInfoBox">
+                <div class="dataHeader">Notes</div>
+                <div class="dataBody">
+                    <% String note = fighter.getNote() == null ? null : fighter.getNote().getBody(); %>
+                    <cmp:textAreaTag name="notes" mode="<%= mode%>" editMode="editFighterInfo" 
+                        value="<%= note %>" />
+                </div>
+            </div>
+            <%}%>
             <% }%>
         </form>
     </body>

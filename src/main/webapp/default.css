@@ -131,6 +131,26 @@ a:hover.buttonLink {text-decoration: none}
     border-radius: 15px;
 }
 
+.dataBoxShort {
+    background-color: lightblue;
+    display: block;
+    border: 1px solid darkblue;
+    text-align: left;
+    vertical-align: middle;
+    margin-bottom: .25em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 1em;
+    width: 35%;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.dataBoxShort textarea {
+    width: 100%;
+    height: 100%;
+}
+
 .dataHeader {
     background-color: purple;
     color: white;

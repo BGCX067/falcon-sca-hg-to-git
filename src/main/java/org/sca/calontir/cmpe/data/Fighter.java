@@ -43,6 +43,10 @@ public class Fighter {
     private UserRoles role;
     @Persistent
     private String status;
+    @Persistent
+    private Key treatyKey;
+    @Persistent
+    private Note note;
 
     public Key getFighterId() {
         return fighterId;
@@ -146,6 +150,22 @@ public class Fighter {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Key getTreatyKey() {
+        return treatyKey;
+    }
+
+    public void setTreatyKey(Key treatyKey) {
+        this.treatyKey = treatyKey;
+    }
+
+    public Note getNote() {
+        return note;
+    }
+
+    public void setNote(Note note) {
+        this.note = note;
     }
     
     

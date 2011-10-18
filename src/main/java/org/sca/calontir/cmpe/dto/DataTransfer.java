@@ -1,11 +1,13 @@
 package org.sca.calontir.cmpe.dto;
 
+import com.google.appengine.api.datastore.Key;
 import org.sca.calontir.cmpe.common.FighterStatus;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
+import org.sca.calontir.cmpe.db.TreatyDao;
 import org.sca.calontir.cmpe.utils.MarshalUtils;
 
 /**
@@ -68,9 +70,38 @@ public class DataTransfer {
             fighter.setStatus(FighterStatus.ACTIVE);
         } else {
             fighter.setStatus(FighterStatus.valueOf(fighterDO.getStatus()));
-        } 
+        }
+
+        if (fighterDO.getTreatyKey() != null) {
+            TreatyDao treatyDao = new TreatyDao();
+            Treaty treaty = treatyDao.getTreaty(fighterDO.getTreatyKey().getId());
+            fighter.setTreaty(treaty);
+        }
+
+        if (fighterDO.getNote() != null) {
+            fighter.setNote(convert(fighterDO.getNote()));
+        }
 
         return fighter;
+    }
+
+    public static Note convert(org.sca.calontir.cmpe.data.Note noteDO) {
+        Note note = new Note();
+        note.setBody(noteDO.getBody());
+        note.setUpdated(noteDO.getUpdated());
+        return note;
+    }
+
+    public static Treaty convert(org.sca.calontir.cmpe.data.Treaty treatyDO) {
+        Treaty treaty = new Treaty();
+        List<Fighter> fighters = new ArrayList<Fighter>();
+        for (org.sca.calontir.cmpe.data.Fighter fDO : treatyDO.getFighters()) {
+            fighters.add(convert(fDO));
+        }
+        treaty.setFighters(fighters);
+        treaty.setName(treatyDO.getName());
+        treaty.setTreatyId(treatyDO.getTreatyId().getId());
+        return treaty;
     }
 
     public static Email convert(org.sca.calontir.cmpe.data.Email emailDO) {
@@ -190,10 +221,33 @@ public class DataTransfer {
         }
 
         fighterDO.setStatus(fighter.getStatus().toString());
-        
-        System.out.println("fighter status set to " + fighterDO.getStatus());
+
+        if (fighter.getTreaty() != null) {
+            TreatyDao treatyDao = new TreatyDao();
+            Key k = treatyDao.getTreatyId(fighter.getTreaty().getTreatyId());
+            fighterDO.setTreatyKey(k);
+        }
+
+        if (fighter.getNote() != null) {
+//            System.err.println("setting note to " + fighter.getNote().getBody());
+            org.sca.calontir.cmpe.data.Note note = fighterDO.getNote();
+            fighterDO.setNote(convert(fighter.getNote(), note));
+        }
+
+//        System.out.println("fighter note set to " + fighterDO.getNote().getBody());
 
         return fighterDO;
+    }
+
+    public static org.sca.calontir.cmpe.data.Note convert(Note note, org.sca.calontir.cmpe.data.Note origNote) {
+        if (origNote == null) {
+            origNote = new org.sca.calontir.cmpe.data.Note();
+        }
+        if (origNote.getBody() == null || !origNote.getBody().equals(note.getBody())) {
+            origNote.setBody(note.getBody());
+            origNote.setUpdated(note.getUpdated());
+        }
+        return origNote;
     }
 
     public static org.sca.calontir.cmpe.data.Email convert(Email email, org.sca.calontir.cmpe.data.Email origEmail) {
