@@ -81,7 +81,7 @@ public class FighterDAO {
             return fighters;
         }
         for (FighterListItem f : fighters) {
-            if (f.getScaName().contains(scaName)) {
+            if (f.getScaName() != null && f.getScaName().contains(scaName)) {
                 retArray.add(f);
             }
         }
