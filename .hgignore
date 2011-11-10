@@ -1,2 +1,9 @@
 ^build.xml$
 nbproject
+\.orig\..*$
+\.orig$
+\.chg\..*$
+\.rej$
+\.conflict\~$
+target
+pw.txt
