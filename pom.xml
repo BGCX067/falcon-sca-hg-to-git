@@ -28,7 +28,7 @@
         <dependency>
             <groupId>net.kindleit</groupId>
             <artifactId>gae-runtime</artifactId>
-            <version>${gae.version}</version>
+            <version>${kindleit.version}</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>
@@ -269,7 +269,7 @@
             <plugin>
                 <groupId>net.kindleit</groupId>
                 <artifactId>maven-gae-plugin</artifactId>
-                <version>0.9.0</version>
+                <version>0.9.2</version>
                 <configuration>
                     <serverId>appengine.google.com</serverId>
                     <sdkDir>${appengine.sdk.root}</sdkDir>
@@ -328,7 +328,8 @@
 			version pointed to by ${gae.home} property (Typically, one used by
 			your Eclipse plug-in)
 		-->
-        <gae.version>1.6.0</gae.version>
+	<kindleit.version>1.5.5</kindleit.version>
+        <gae.version>1.5.5</gae.version>
 
 		<!--
 			Upload to http://test.latest.<applicationName>.appspot.com by default
