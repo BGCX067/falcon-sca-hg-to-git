@@ -105,13 +105,9 @@
             <input type="hidden" name="fighterId" value="<%=fighterId%>"/>
             <div class="figherIdBox">
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
-                <% if (security.isRoleOrGreater(UserRoles.USER)) {%>
-                <br/>
-                <cmp:fighterStatusTag mode="<%= mode%>" status="<%= fighter.getStatus()%>" editMode="editFighterInfo" /> 
                 <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL) && fighter.getFighterId() != null && fighter.getFighterId() > 0) {%>
                 <cmp:deleteFighterButton mode="<%=mode%>" />
-                <% }
-                    }%>
+                <% } %>
             </div>
             <div class="dataBox">
                 <div class="dataHeader">Authorizations <cmp:editButton mode="<%=mode%>" target="Authorizations" form="document.fighterInfoForm" /></div>
@@ -127,11 +123,16 @@
                 <div class="dataBody">
                     <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
                     <div id="fighterInfo">
-                        <table>
+                        <table class="wide-table">
                             <tr>
                                 <td class="label">Modern Name:</td>
                                 <td class="data"><cmp:input type="text" name="modernName"
                                     mode ="<%=mode%>" value="<%= fighter.getModernName()%>"  editMode="editFighterInfo" /></td>
+                                <% if (security.isRoleOrGreater(UserRoles.USER)) {%>
+                                <td class="rightCol">
+                                <cmp:fighterStatusTag mode="<%= mode%>" status="<%= fighter.getStatus()%>" editMode="editFighterInfo" /> 
+                                </td>
+                                <% } %>
                             </tr>
                             <tr>
                                 <td class="label">Address:</td>

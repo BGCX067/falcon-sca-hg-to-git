@@ -266,3 +266,11 @@ a.Delete:hover {
     background-color: white;
     color: blue;
 }
+
+.rightCol {
+    text-align: right;
+}
+
+table.wide-table {
+   width: 100%;
+}
