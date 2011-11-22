@@ -224,8 +224,23 @@ public class DataTransfer {
 
         if (fighter.getTreaty() != null) {
             TreatyDao treatyDao = new TreatyDao();
-            Key k = treatyDao.getTreatyId(fighter.getTreaty().getTreatyId());
+            Key k = null;
+            if (fighter.getTreaty().getTreatyId() != null) {
+                k = treatyDao.getTreatyId(fighter.getTreaty().getTreatyId());
+            } else {
+                List<org.sca.calontir.cmpe.data.Treaty> treaties = treatyDao.getTreaties();
+                if (treaties.isEmpty()) {
+                    org.sca.calontir.cmpe.data.Treaty t = new org.sca.calontir.cmpe.data.Treaty();
+                    t.setName("Treaty");
+                    treatyDao.saveTreaty(t);
+                } else {
+                    k = treaties.get(0).getTreatyId();
+                }
+            }
+
             fighterDO.setTreatyKey(k);
+        } else {
+            fighterDO.setTreatyKey(null);
         }
 
         if (fighter.getNote() != null) {

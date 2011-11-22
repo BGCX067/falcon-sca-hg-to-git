@@ -14,11 +14,13 @@ public class FighterStatusTag extends CMPExtendedTagSupport {
 
     @Override
     protected void doView(JspWriter out) throws IOException {
+        out.println("Status: ");
         out.print(status.toString());
     }
 
     @Override
     protected void doEdit(JspWriter out) throws IOException {
+        out.println("Status: ");
         out.println("<select name=\"fighterStatus\">");
         for (FighterStatus f_status : FighterStatus.values()) {
             out.print("<option ");
@@ -34,6 +36,7 @@ public class FighterStatusTag extends CMPExtendedTagSupport {
 
     @Override
     protected void doAdd(JspWriter out) throws IOException {
+        out.println("Status: ");
         out.println("<select name=\"fighterStatus\">");
         for (FighterStatus status : FighterStatus.values()) {
             out.println("<option value=\"" + status.toString() + "\">" + status.toString() + "</option>");

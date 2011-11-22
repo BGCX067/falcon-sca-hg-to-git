@@ -10,15 +10,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.common.UserRoles;
-import org.sca.calontir.cmpe.dto.AuthType;
-import org.sca.calontir.cmpe.dto.Address;
-import org.sca.calontir.cmpe.dto.Authorization;
-import org.sca.calontir.cmpe.dto.Email;
-import org.sca.calontir.cmpe.dto.Fighter;
-import org.sca.calontir.cmpe.dto.Phone;
-import org.sca.calontir.cmpe.dto.ScaGroup;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
-import org.sca.calontir.cmpe.dto.Note;
+import org.sca.calontir.cmpe.dto.*;
 
 /**
  *
@@ -118,6 +111,15 @@ public class FighterUpdater {
         String fighterStatus = request.getParameter("fighterStatus");
         if (StringUtils.isNotBlank(fighterStatus)) {
             fighter.setStatus(FighterStatus.valueOf(fighterStatus));
+        }
+        
+        String treaty = request.getParameter("treaty");
+        if (StringUtils.isNotBlank(treaty)) {
+            Treaty t = new Treaty();
+            t.setName("Treaty");
+            fighter.setTreaty(t);
+        } else {
+            fighter.setTreaty(null);
         }
         
         String note = request.getParameter("notes");

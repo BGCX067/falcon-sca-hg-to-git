@@ -288,6 +288,27 @@
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
-
     </tag>
+    <tag>
+        <name>treatyTag</name>
+        <tag-class>org.sca.calontir.cmpe.tags.TreatyTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>mode</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>treaty</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.sca.calontir.cmpe.dto.Treaty</type>
+        </attribute>
+        <attribute>
+            <name>editMode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag> 
 </taglib>

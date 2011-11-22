@@ -137,6 +137,9 @@
                             <tr>
                                 <td class="label">Address:</td>
                                 <td class="data"><cmp:address mode="<%=mode%>" addresses="<%=fighter.getAddress()%>" editMode="editFighterInfo" /></td>
+                                <td class="rightCol" style="vertical-align: top;">
+                                    <cmp:treatyTag mode="<%= mode %>" treaty="<%= fighter.getTreaty() %>" editMode="editFighterInfo" /></td>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="label">SCA Membership:</td>
