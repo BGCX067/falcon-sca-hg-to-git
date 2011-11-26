@@ -2,10 +2,7 @@ package org.sca.calontir.cmpe;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.*;
 import org.sca.calontir.cmpe.common.FighterResource;
 import static org.junit.Assert.*;
 import org.restlet.resource.ClientResource;
@@ -36,6 +33,11 @@ public class FighterServerResourceTest {
 
     @After
     public void tearDown() {
+    }
+    
+    @Test
+    public void testFighter() {
+        Fighter f = new Fighter();
     }
 
     /**
