@@ -3,15 +3,20 @@ package org.sca.calontir.cmpe;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.print.CardMaker;
 import org.sca.calontir.cmpe.utils.FighterUpdater;
 
 /**
@@ -20,8 +25,11 @@ import org.sca.calontir.cmpe.utils.FighterUpdater;
  */
 public class FighterServlet extends HttpServlet {
 
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+    /**
+     * Processes requests for both HTTP
+     * <code>GET</code> and
+     * <code>POST</code> methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -64,6 +72,29 @@ public class FighterServlet extends HttpServlet {
                 request.setAttribute("uimessage", fighter.getScaName() + " deleted");
                 this.getServletContext().getRequestDispatcher("/index.jsp").
                         include(request, response);
+            } else if (mode.equals("printFighter")) {
+                Fighter f = dao.getFighter(fighter.getFighterId());
+                ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
+                CardMaker cardMaker = new CardMaker();
+                List<Fighter> flist = new ArrayList<Fighter>();
+                flist.add(f);
+                try {
+                    cardMaker.build(baosPDF, flist);
+                } catch (Exception ex) {
+                    Logger.getLogger(FighterServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new IOException("Error building the cards", ex);
+                }
+                StringBuilder sb = new StringBuilder();
+                sb.append("attachment; filename=");
+                sb.append("FighterCard ");
+                sb.append(f.getScaName());
+                sb.append(".pdf");
+                response.setHeader("Content-disposition", sb.toString());
+                response.setContentType("application/pdf");
+                response.setContentLength(baosPDF.size());
+                ServletOutputStream sos = response.getOutputStream();
+                baosPDF.writeTo(sos);
+                sos.flush();
             } else {
                 request.setAttribute("mode", mode);
                 request.setAttribute("fighter", fighter);

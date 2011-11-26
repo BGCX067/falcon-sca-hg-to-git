@@ -20,3 +20,8 @@ function savethis(theForm, target) {
     setMode(theForm, targetMode)
     theForm.submit();
 }
+
+function printThis(theForm) {
+    setMode(theForm, "printFighter")
+    theForm.submit();
+}

@@ -65,10 +65,12 @@ public class CardMaker {
         Rectangle size = document.getPageSize();
         PdfContentByte cbunder = writer.getDirectContentUnder();
         Image img = loadBackground();
-        img.setAbsolutePosition(0, 0);
-        img.scaleAbsoluteWidth(size.getRight());
-        img.scaleAbsoluteHeight(size.getTop());
-        cbunder.addImage(img);
+        if (img != null) {
+            img.setAbsolutePosition(0, 0);
+            img.scaleAbsoluteWidth(size.getRight());
+            img.scaleAbsoluteHeight(size.getTop());
+            cbunder.addImage(img);
+        }
 
     }
 
@@ -99,32 +101,32 @@ public class CardMaker {
         cell = new PdfPCell(new Phrase("\n\n\n", largFont));
         cell.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell);
-        
+
         cell = new PdfPCell(new Phrase("The Society for Creative Anachronism, Inc\nKingdom of Calontir\n", largFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
-        
+
         cell = new PdfPCell(new Phrase("Combat Authorizations", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
-        
+
         cell = new PdfPCell(new Phrase(String.format("%s is a fighter in good standing and authorized in the following:\n", fighter.getScaName()), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
-        
+
         cell = new PdfPCell(new Phrase(MarshalUtils.getAuthDescriptionAsString(fighter.getAuthorization()), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
-        
-        
+
+
         document.add(table);
     }
 

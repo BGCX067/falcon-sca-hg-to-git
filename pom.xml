@@ -286,7 +286,7 @@
                     <dependency>
                         <groupId>net.kindleit</groupId>
                         <artifactId>gae-runtime</artifactId>
-                        <version>${gae.version}</version>
+                        <version>${kindleit.version}</version>
                         <type>pom</type>
                     </dependency>
 

@@ -7,3 +7,8 @@ nbproject
 \.conflict\~$
 target
 pw.txt
+^bulkloader*
+dldata.sh
+nbactions.xml
+upldev.sh
+cmpedata
