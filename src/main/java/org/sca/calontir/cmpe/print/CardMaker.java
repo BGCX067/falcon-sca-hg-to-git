@@ -1,29 +1,18 @@
 package org.sca.calontir.cmpe.print;
 
-import com.itextpdf.text.BadElementException;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.BarcodeQRCode;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 import java.awt.Toolkit;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.sca.calontir.cmpe.dto.Authorization;
 import org.sca.calontir.cmpe.dto.Fighter;
@@ -75,20 +64,21 @@ public class CardMaker {
     }
 
     private Image loadBackground() throws BadElementException, IOException {
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
         String name = "border.gif";
 
-        if (loader != null) {
-            URL url = loader.getResource(name);
-            if (url == null) {
-                url = loader.getResource("/" + name);
-            }
-            if (url != null) {
-                Toolkit tk = Toolkit.getDefaultToolkit();
-                java.awt.Image img = tk.getImage(url);
-                return Image.getInstance(img, null);
-            }
+        URL url = getClass().getResource(name);
+        if (url == null) {
+            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, "Didn't find as border.gif, looking for /border.gif");
+            url = getClass().getResource("/" + name);
         }
+        if (url != null) {
+            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, "Found gif, loading");
+//             Toolkit tk = Toolkit.getDefaultToolkit();
+//                java.awt.Image img = tk.getImage(url);
+            return Image.getInstance(url);
+        }
+        
+        Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, "Could not get border.gif from classpath");
         return null;
     }
 
