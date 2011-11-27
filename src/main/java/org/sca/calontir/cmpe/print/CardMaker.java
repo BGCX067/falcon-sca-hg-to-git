@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -139,7 +138,6 @@ public class CardMaker {
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
-//        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -147,7 +145,6 @@ public class CardMaker {
         cell = new PdfPCell(new Phrase("", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
-//        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -272,7 +269,6 @@ public class CardMaker {
         Image img = qrcode.getImage();
         img.setAlignment(Image.RIGHT | Image.TEXTWRAP);
         img.setAbsolutePosition(500, 190);
-//        img.scalePercent(20.0f);
         document.add(img);
     }
 }
