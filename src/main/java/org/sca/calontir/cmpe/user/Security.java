@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.user;
 
 import com.google.appengine.api.users.User;
 import org.sca.calontir.cmpe.common.UserRoles;
+import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.dto.Fighter;
 
 /**
@@ -41,8 +42,35 @@ public class Security {
     }
 
     public boolean canPrintFighter(Long fighterId) {
+        if (user == null) {
+            return false;
+        }
+        
         if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
             return true;
+        }
+
+        if (user.getFighterId() != null && user.getFighterId().longValue() == fighterId.longValue()) {
+            return true;
+        }
+
+        FighterDAO fighterDao = new FighterDAO();
+        Fighter fighter = fighterDao.getFighter(fighterId);
+
+        if (isRole(UserRoles.KNIGHTS_MARSHAL)) {
+            if (user.getScaGroup() != null && fighter.getScaGroup() != null) {
+                if (user.getScaGroup().getGroupName().equals(fighter.getScaGroup().getGroupName())) {
+                    return true;
+                }
+            }
+        }
+        
+        if (isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
+            if (user.getScaGroup() != null && fighter.getScaGroup() != null) {
+                if (user.getScaGroup().getGroupLocation().equals(fighter.getScaGroup().getGroupLocation())) {
+                    return true;
+                }
+            }
         }
 
         return false;
