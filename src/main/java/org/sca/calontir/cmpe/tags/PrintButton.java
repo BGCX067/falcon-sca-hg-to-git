@@ -3,6 +3,9 @@ package org.sca.calontir.cmpe.tags;
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
+import org.sca.calontir.cmpe.common.UserRoles;
+import org.sca.calontir.cmpe.user.Security;
+import org.sca.calontir.cmpe.user.SecurityFactory;
 
 /**
  *
@@ -10,31 +13,20 @@ import javax.servlet.jsp.JspWriter;
  */
 public class PrintButton extends CMPExtendedTagSupport {
 
-    @Override
-    public void doTag() throws JspException {
-        JspWriter out = getJspContext().getOut();
-
-        try {
-            init();
-
-            if (mode != null && mode.equals("add")) {
-                doAdd(out);
-            } else if (mode.startsWith("edit")) {
-                doEdit(out);
-            } else {
-                doView(out);
-            }
-        } catch (java.io.IOException ex) {
-            throw new JspException("Error in PrintButton tag", ex);
-        }
-    }
+    private Long fighterId;
 
     @Override
     protected void doView(JspWriter out) throws IOException {
-        out.print("<span class=\"printButton\">"
-                + "<a href=\"#\" id=\"BPrint\" class=\"BPrint\""
-                + " onClick=\"printThis(document.fighterInfoForm);\">Print</a>"
-                + "</span>");
+        Security security = SecurityFactory.getSecurity();
+
+        if (security.canPrintFighter(fighterId)) {
+            out.print("<span class=\"printButton\">"
+                    + "<a href=\"#\" id=\"BPrint\" class=\"BPrint\""
+                    + " onClick=\"printThis(document.fighterInfoForm);\">Print</a>"
+                    + "</span>");
+        } else {
+            out.println();
+        }
     }
 
     @Override
@@ -45,5 +37,9 @@ public class PrintButton extends CMPExtendedTagSupport {
     @Override
     protected void doAdd(JspWriter out) throws IOException {
         out.print("");
+    }
+
+    public void setFighterId(Long fighterId) {
+        this.fighterId = fighterId;
     }
 }

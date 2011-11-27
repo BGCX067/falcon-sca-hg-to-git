@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -25,7 +26,8 @@ public abstract class CMPExtendedTagSupport extends SimpleTagSupport {
 
             if (mode != null && mode.equals("add")) {
                 doAdd(out);
-            } else if (mode.equals(editMode)) {
+            } else if ((StringUtils.isBlank(editMode) && mode.startsWith("edit"))
+                    || (mode.equals(editMode))) {
                 doEdit(out);
             } else {
                 doView(out);
@@ -36,7 +38,6 @@ public abstract class CMPExtendedTagSupport extends SimpleTagSupport {
     }
 
     protected void init() {
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Mode = " + mode);
     }
 
     abstract protected void doView(JspWriter out) throws IOException;

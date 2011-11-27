@@ -64,17 +64,29 @@ public class CardMaker {
     private Image loadBackground() throws BadElementException, IOException {
         String name = "border.gif";
 
-        URL url = getClass().getResource(name);
+        return loadImage(name);
+    }
+
+    private Image loadSignature() throws BadElementException, IOException {
+        return loadImage("sig.gif");
+    }
+
+    private Image loadImage(String filename) throws BadElementException, IOException {
+
+        URL url = getClass().getResource(filename);
         if (url == null) {
-            Logger.getLogger(CardMaker.class.getName()).log(Level.FINE, "Didn't find as border.gif, looking for /border.gif");
-            url = getClass().getResource("/" + name);
+            Logger.getLogger(CardMaker.class.getName()).log(Level.FINE,
+                    String.format("Didn't find as %s, looking for /%s", filename, filename));
+            url = getClass().getResource("/" + filename);
         }
         if (url != null) {
             Logger.getLogger(CardMaker.class.getName()).log(Level.FINE, "Found gif, loading");
             return Image.getInstance(url);
         }
 
-        Logger.getLogger(CardMaker.class.getName()).log(Level.FINE, "Could not get border.gif from classpath");
+        Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE,
+                String.format("Could not get %s from classpath", filename));
+
         return null;
     }
 
@@ -135,31 +147,39 @@ public class CardMaker {
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
-        
+
         cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of the Calontir Marshal of Cards this Day %s",
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
-        cell.setPaddingRight(40f);
+        cell.setPaddingRight(170f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
-        
-        cell = new PdfPCell(new Phrase("", normalFont));
-        cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingLeft(40f);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
-        table.addCell(cell);
-        
-        cell = new PdfPCell(new Phrase(String.format("\n%s\nSignature _______________", 
+
+        try {
+            Image sig = loadSignature();
+            cell = new PdfPCell(sig);
+            cell.setBorder(Rectangle.NO_BORDER);
+            cell.setPaddingLeft(40f);
+            cell.setPaddingRight(170f);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+            table.addCell(cell);
+        } catch (BadElementException ex) {
+            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        cell = new PdfPCell(new Phrase(String.format("\n%s\nSignature _______________",
                 fighter.getModernName()), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
         cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
-        table.addCell(cell);       
+        table.addCell(cell);
 
 
         document.add(table);

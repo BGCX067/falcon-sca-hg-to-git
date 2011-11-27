@@ -19,7 +19,7 @@ public class Security {
     public boolean isRole(UserRoles userRole) {
         return user == null ? false : user.getRole().equals(userRole);
     }
-    
+
     public boolean isRoleOrGreater(UserRoles userRole) {
         return user == null ? false : user.getRole().compareTo(userRole) >= 0;
     }
@@ -39,6 +39,12 @@ public class Security {
     protected void setUser(Fighter user) {
         this.user = user;
     }
-    
-    
+
+    public boolean canPrintFighter(Long fighterId) {
+        if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            return true;
+        }
+
+        return false;
+    }
 }
