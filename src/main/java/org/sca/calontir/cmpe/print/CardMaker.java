@@ -1,6 +1,5 @@
 package org.sca.calontir.cmpe.print;
 
-
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import java.awt.Toolkit;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.dto.Authorization;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.utils.MarshalUtils;
@@ -73,11 +73,9 @@ public class CardMaker {
         }
         if (url != null) {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, "Found gif, loading");
-//             Toolkit tk = Toolkit.getDefaultToolkit();
-//                java.awt.Image img = tk.getImage(url);
             return Image.getInstance(url);
         }
-        
+
         Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, "Could not get border.gif from classpath");
         return null;
     }
@@ -104,17 +102,55 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(String.format("%s is a fighter in good standing and authorized in the following:\n", fighter.getScaName()), normalFont));
+        String p1 = String.format("Let it be known that %s, also known in the modern world as %s "
+                + "hailing from the lands of %s, is Authorized to fight within the Kingdom of Calontir "
+                + "using the following weapon systems %s. This combatant by age %s a minor according to modern law.",
+                fighter.getScaName(),
+                fighter.getModernName(),
+                fighter.getScaGroup().getGroupName(),
+                MarshalUtils.getAuthDescriptionAsString(fighter.getAuthorization()),
+                MarshalUtils.isMinor(fighter) ? "is" : "is not");
+        cell = new PdfPCell(new Phrase(p1, normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(MarshalUtils.getAuthDescriptionAsString(fighter.getAuthorization()), normalFont));
+        cell = new PdfPCell(new Phrase("This writ is your authorization to participate on the field at SCA "
+                + "activities.  It must be presented to the list officials at all SCA events to register for "
+                + "participation in any martial activity. You may be required to present "
+                + "this writ at any time, and to any marshal upon request.", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(String.format("This writ is valid between the dates of %s and %s, Gregorian",
+                "August 10th, 2010", "August 31st, 2012"), normalFont));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of the Calontir Marshal of Cards this Day %s",
+                new DateTime().toString("MMMM dd yyyy")), normalFont));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("", normalFont));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.format("%s Signature _______________________", 
+                fighter.getModernName()), normalFont));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);       
 
 
         document.add(table);
