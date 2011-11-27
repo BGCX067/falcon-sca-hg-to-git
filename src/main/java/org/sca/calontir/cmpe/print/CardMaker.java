@@ -86,7 +86,7 @@ public class CardMaker {
         PdfPCell cell;
 
         table.setTotalWidth(size.getRight());
-        cell = new PdfPCell(new Phrase("\n\n\n", largFont));
+        cell = new PdfPCell(new Phrase("\n\n", largFont));
         cell.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell);
 
@@ -112,8 +112,9 @@ public class CardMaker {
                 MarshalUtils.isMinor(fighter) ? "is" : "is not");
         cell = new PdfPCell(new Phrase(p1, normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("This writ is your authorization to participate on the field at SCA "
@@ -121,35 +122,40 @@ public class CardMaker {
                 + "participation in any martial activity. You may be required to present "
                 + "this writ at any time, and to any marshal upon request.", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPaddingRight(210f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase(String.format("This writ is valid between the dates of %s and %s, Gregorian",
-                "August 10th, 2010", "August 31st, 2012"), normalFont));
+                new DateTime(2010, 8, 10, 0, 0, 0, 0).toString("MMM dd yyyy"), new DateTime(2012, 8, 31, 0, 0, 0, 0).toString("MMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPaddingRight(210f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
         
         cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of the Calontir Marshal of Cards this Day %s",
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPaddingRight(210f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
         
         cell = new PdfPCell(new Phrase("", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPaddingRight(210f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
         
-        cell = new PdfPCell(new Phrase(String.format("%s Signature _______________________", 
+        cell = new PdfPCell(new Phrase(String.format("%s Signature __________________", 
                 fighter.getModernName()), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPaddingRight(210f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);       
 
 
