@@ -217,6 +217,27 @@ a.Delete:hover {
     background-color: white;
 }
 
+
+a.BPrint:active, a.BPrint:visited, a.BPrint:link {
+    border-style: solid;
+    border-width : 2px;
+    text-decoration : none;
+    padding : 4px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-left: .5em;
+    margin-bottom: 2px;
+    border-color: #898989 #000000 #000000 #898989 ;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: whitesmoke;
+    font-size: smaller;
+}
+
+a.BPrint:hover {
+    background-color: white;
+}
+
 .list {
     background-color: lightblue;
     display: block;

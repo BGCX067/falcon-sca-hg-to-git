@@ -66,15 +66,15 @@ public class CardMaker {
 
         URL url = getClass().getResource(name);
         if (url == null) {
-            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, "Didn't find as border.gif, looking for /border.gif");
+            Logger.getLogger(CardMaker.class.getName()).log(Level.FINE, "Didn't find as border.gif, looking for /border.gif");
             url = getClass().getResource("/" + name);
         }
         if (url != null) {
-            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, "Found gif, loading");
+            Logger.getLogger(CardMaker.class.getName()).log(Level.FINE, "Found gif, loading");
             return Image.getInstance(url);
         }
 
-        Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, "Could not get border.gif from classpath");
+        Logger.getLogger(CardMaker.class.getName()).log(Level.FINE, "Could not get border.gif from classpath");
         return null;
     }
 
@@ -90,12 +90,14 @@ public class CardMaker {
 
         cell = new PdfPCell(new Phrase("The Society for Creative Anachronism, Inc\nKingdom of Calontir\n", largFont));
         cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPaddingLeft(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("Combat Authorizations", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPaddingLeft(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
@@ -129,7 +131,7 @@ public class CardMaker {
                 new DateTime(2010, 8, 10, 0, 0, 0, 0).toString("MMMM dd yyyy"), new DateTime(2012, 8, 31, 0, 0, 0, 0).toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
-        cell.setPaddingRight(40f);
+//        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -138,6 +140,7 @@ public class CardMaker {
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
+        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);

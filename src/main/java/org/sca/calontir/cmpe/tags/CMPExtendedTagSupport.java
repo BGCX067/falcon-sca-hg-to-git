@@ -1,6 +1,8 @@
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -29,11 +31,12 @@ public abstract class CMPExtendedTagSupport extends SimpleTagSupport {
                 doView(out);
             }
         } catch (java.io.IOException ex) {
-            throw new JspException("Error in PhoneTag tag", ex);
+            throw new JspException(String.format("Error in %s tag", getClass().getName()), ex);
         }
     }
 
     protected void init() {
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Mode = " + mode);
     }
 
     abstract protected void doView(JspWriter out) throws IOException;

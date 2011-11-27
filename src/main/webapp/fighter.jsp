@@ -106,12 +106,12 @@
             <div class="figherIdBox">
                 SCA Name: <cmp:input type="text" name="scaName" id="scaName" mode="<%= mode%>" value="<%= fighter.getScaName()%>" editMode="editFighterInfo"/>
                 <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL) && fighter.getFighterId() != null && fighter.getFighterId() > 0) {%>
-                <cmp:deleteFighterButton mode="<%=mode%>" />
+                <cmp:deleteFighterButton mode="<%= mode%>" />
                 <% } %>
-                <a href="#" onClick="printThis(document.fighterInfoForm);">print</a>
+                <cmp:printButton mode="<%= mode%>" />
             </div>
             <div class="dataBox">
-                <div class="dataHeader">Authorizations <cmp:editButton mode="<%=mode%>" target="Authorizations" form="document.fighterInfoForm" /></div>
+                <div class="dataHeader">Authorizations <cmp:editButton mode="<%= mode%>" target="Authorizations" form="document.fighterInfoForm" /></div>
                 <div class="dataBody">
                     <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"  editMode="editAuthorizations"/>
                 </div>
