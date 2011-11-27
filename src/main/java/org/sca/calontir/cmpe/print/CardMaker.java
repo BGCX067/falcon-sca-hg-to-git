@@ -2,7 +2,6 @@ package org.sca.calontir.cmpe.print;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import java.awt.Toolkit;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,7 +26,7 @@ public class CardMaker {
 
     public void build(final OutputStream os, final List<Fighter> data) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Document document = new Document(PageSize.A4.rotate());
+        Document document = new Document();
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         document.open();
         addMetaData(document);
@@ -112,7 +111,7 @@ public class CardMaker {
                 MarshalUtils.isMinor(fighter) ? "is" : "is not");
         cell = new PdfPCell(new Phrase(p1, normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingRight(40f);
+        cell.setPaddingLeft(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -122,15 +121,16 @@ public class CardMaker {
                 + "participation in any martial activity. You may be required to present "
                 + "this writ at any time, and to any marshal upon request.", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingRight(210f);
+        cell.setPaddingLeft(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase(String.format("This writ is valid between the dates of %s and %s, Gregorian",
-                new DateTime(2010, 8, 10, 0, 0, 0, 0).toString("MMM dd yyyy"), new DateTime(2012, 8, 31, 0, 0, 0, 0).toString("MMM dd yyyy")), normalFont));
+                new DateTime(2010, 8, 10, 0, 0, 0, 0).toString("MMMM dd yyyy"), new DateTime(2012, 8, 31, 0, 0, 0, 0).toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingRight(210f);
+        cell.setPaddingLeft(40f);
+        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -138,22 +138,25 @@ public class CardMaker {
         cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of the Calontir Marshal of Cards this Day %s",
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingRight(210f);
+        cell.setPaddingLeft(40f);
+//        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
         
         cell = new PdfPCell(new Phrase("", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingRight(210f);
+        cell.setPaddingLeft(40f);
+//        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
         
-        cell = new PdfPCell(new Phrase(String.format("%s Signature __________________", 
+        cell = new PdfPCell(new Phrase(String.format("\n%s\nSignature _______________", 
                 fighter.getModernName()), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingRight(210f);
+        cell.setPaddingLeft(40f);
+        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);       
@@ -235,7 +238,7 @@ public class CardMaker {
         } else {
             p.add(new Phrase(String.format("SCA Name %s\n", fighter.getScaName()), smallFont));
         }
-        p.add(new Phrase(String.format("Date Issued %s\n", new Date().toString()), smallFont));
+        p.add(new Phrase(String.format("Date Issued %s\n", new DateTime().toString("MMMM dd yyyy")), smallFont));
         p.add(new Phrase(String.format("Issuing Official: %s\n", "Sir Ashir"), smallFont));
         cell = new PdfPCell(p);
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
@@ -255,7 +258,7 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
 
-        table.writeSelectedRows(0, -1, 520, 300, cb);
+        table.writeSelectedRows(0, -1, 340, 330, cb);
 
         StringBuilder sb = new StringBuilder(fighter.getScaName());
         sb.append(" - ");
@@ -268,7 +271,7 @@ public class CardMaker {
         BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
         Image img = qrcode.getImage();
         img.setAlignment(Image.RIGHT | Image.TEXTWRAP);
-        img.setAbsolutePosition(670, 160);
+        img.setAbsolutePosition(500, 190);
 //        img.scalePercent(20.0f);
         document.add(img);
     }
