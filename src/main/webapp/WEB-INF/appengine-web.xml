@@ -4,7 +4,7 @@
     <version>1</version>
     
     <static-error-handlers>
-    <!-- handler file="default_error.html"/ -->
-    <handler file="over_quota.html" error-code="over_quota"/>
-  </static-error-handlers>
+      <handler file="default_error.html"/>
+      <handler file="over_quota.html" error-code="over_quota"/>
+    </static-error-handlers>
 </appengine-web-app>

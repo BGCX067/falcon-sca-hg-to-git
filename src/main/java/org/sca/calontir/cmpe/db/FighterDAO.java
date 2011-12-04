@@ -4,6 +4,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.apache.commons.lang.StringUtils;
@@ -147,6 +149,7 @@ public class FighterDAO {
             validate(f);
         }
         try {
+	    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving " + f.getScaName());
             f = pm.makePersistent(f);
             pm.flush();
             if (f.getFighterId() == null) {

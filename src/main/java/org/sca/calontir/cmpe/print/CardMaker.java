@@ -140,10 +140,9 @@ public class CardMaker {
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase(String.format("This writ is valid between the dates of %s and %s, Gregorian",
-                new DateTime(2010, 8, 10, 0, 0, 0, 0).toString("MMMM dd yyyy"), new DateTime(2012, 8, 31, 0, 0, 0, 0).toString("MMMM dd yyyy")), normalFont));
+                new DateTime(2010, 8, 10, 0, 0, 0, 0).toString("MMMM dd yyyy"), new DateTime(2011, 8, 31, 0, 0, 0, 0).toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
-//        cell.setPaddingRight(40f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -152,7 +151,6 @@ public class CardMaker {
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
-        cell.setPaddingRight(170f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -162,7 +160,6 @@ public class CardMaker {
             cell = new PdfPCell(sig);
             cell.setBorder(Rectangle.NO_BORDER);
             cell.setPaddingLeft(40f);
-            cell.setPaddingRight(170f);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
             table.addCell(cell);
@@ -188,22 +185,22 @@ public class CardMaker {
     private void tearOff(PdfWriter writer, Document document, Fighter fighter) throws BadElementException, DocumentException {
         PdfContentByte cb = writer.getDirectContent();
         PdfPTable table = new PdfPTable(1);
-        table.setTotalWidth(200);
+        table.setTotalWidth(250);
         PdfPCell cell;
 
         // Back of card
         Paragraph p = new Paragraph();
         p.add(new Phrase("          Kingdom Specific Authorizations      \n", smallFont));
-        p.add(new Phrase(String.format("  %s All      %s WSH     %s PA\n",
-                MarshalUtils.hasAll(fighter) ? "X" : "",
-                MarshalUtils.hasAuth("WSH", fighter) ? "X" : "",
-                MarshalUtils.hasAuth("PA", fighter) ? "X" : ""), smallFont));
-        p.add(new Phrase(String.format("  %s THS      %s TW      %s SP\n",
-                MarshalUtils.hasAuth("THS", fighter) ? "X" : "",
-                MarshalUtils.hasAuth("TW", fighter) ? "X" : "",
-                MarshalUtils.hasAuth("SP", fighter) ? "X" : ""), smallFont));
-        p.add(new Phrase(String.format("                         %s Marshal\n",
-                MarshalUtils.hasAuth("Marshal", fighter) ? "X" : ""), smallFont));
+        int x = 1;
+        StringBuilder authSb = new StringBuilder();
+        for(Authorization a : fighter.getAuthorization()) {
+            authSb.append("    ");
+            authSb.append(a.getCode());
+            if(x++ >= 3) {
+                authSb.append("\n");
+            }
+        }
+        p.add(new Phrase(authSb.toString(), smallFont));
         cell = new PdfPCell(p);
         cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setRotation(180);
@@ -278,7 +275,7 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
 
-        table.writeSelectedRows(0, -1, 340, 330, cb);
+        table.writeSelectedRows(0, -1, 340, 190, cb);
 
         StringBuilder sb = new StringBuilder(fighter.getScaName());
         sb.append(" - ");
@@ -291,7 +288,7 @@ public class CardMaker {
         BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
         Image img = qrcode.getImage();
         img.setAlignment(Image.RIGHT | Image.TEXTWRAP);
-        img.setAbsolutePosition(500, 190);
+        img.setAbsolutePosition(560, 70);
         document.add(img);
     }
 }

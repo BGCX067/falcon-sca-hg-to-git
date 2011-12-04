@@ -39,7 +39,8 @@
             $(function(){
                 // Datepicker
                 $('#dateOfBirth').datepicker({
-                    inline: true
+                    changeMonth: true,
+			changeYear: true
                 });
                 
                 

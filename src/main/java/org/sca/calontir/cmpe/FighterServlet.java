@@ -109,7 +109,7 @@ public class FighterServlet extends HttpServlet {
                 request.setAttribute("mode", "view");
                 success = true;
             } catch (ValidationException ex) {
-                Logger.getLogger(FighterServlet.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
                 request.setAttribute("mode", "add");
                 request.setAttribute("error", ex.getMessage());
                 request.setAttribute("fighter", fighter);
