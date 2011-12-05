@@ -11,6 +11,7 @@ import javax.jdo.Query;
 import org.apache.commons.lang.StringUtils;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.data.Address;
+import org.sca.calontir.cmpe.data.Authorization;
 import org.sca.calontir.cmpe.data.Fighter;
 import org.sca.calontir.cmpe.dto.DataTransfer;
 import org.sca.calontir.cmpe.dto.FighterListItem;
@@ -149,7 +150,7 @@ public class FighterDAO {
             validate(f);
         }
         try {
-	    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving " + f.getScaName());
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving " + f.getScaName());
             f = pm.makePersistent(f);
             pm.flush();
             if (f.getFighterId() == null) {
@@ -172,6 +173,11 @@ public class FighterDAO {
         } finally {
             pm.close();
         }
+    }
+
+    public void deleteAuthorization(Authorization authorization) {
+        authorization = (Authorization) pm.getObjectById(authorization.getAuthorizatoinId());
+        pm.deletePersistent(authorization);
     }
 
     protected boolean validate(Fighter fighter) throws ValidationException {

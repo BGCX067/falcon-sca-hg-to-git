@@ -147,7 +147,7 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of the Calontir Marshal of Cards this Day %s",
+        cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of Sir Ashir, the Calontir Marshal of Cards. this Day %s",
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(40f);
@@ -190,32 +190,13 @@ public class CardMaker {
 
         // Back of card
         Paragraph p = new Paragraph();
-        p.add(new Phrase("          Kingdom Specific Authorizations      \n", smallFont));
-        int x = 1;
-        StringBuilder authSb = new StringBuilder();
-        for(Authorization a : fighter.getAuthorization()) {
-            authSb.append("    ");
-            authSb.append(a.getCode());
-            if(x++ >= 3) {
-                authSb.append("\n");
-            }
-        }
-        p.add(new Phrase(authSb.toString(), smallFont));
+        p.add(new Phrase("Kingdom Specific Authorizations\n", smallFont));
+        p.add(new Phrase(MarshalUtils.getAuthsAsString(fighter.getAuthorization()), smallFont));
         cell = new PdfPCell(p);
         cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setRotation(180);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell(cell);
-
-        p = new Paragraph();
-        p.add(new Phrase(String.format("Group: %20s  Minor %s\n", fighter.getScaGroup().getGroupName(),
-                MarshalUtils.isMinor(fighter) ? "X" : ""), smallFont));
-        cell = new PdfPCell(p);
-        cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
-        cell.setRotation(180);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
 
         p = new Paragraph();
@@ -275,7 +256,7 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
 
-        table.writeSelectedRows(0, -1, 340, 190, cb);
+        table.writeSelectedRows(0, -1, 340, 200, cb);
 
         StringBuilder sb = new StringBuilder(fighter.getScaName());
         sb.append(" - ");
@@ -288,7 +269,7 @@ public class CardMaker {
         BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
         Image img = qrcode.getImage();
         img.setAlignment(Image.RIGHT | Image.TEXTWRAP);
-        img.setAbsolutePosition(560, 70);
+        img.setAbsolutePosition(550, 90);
         document.add(img);
     }
 }

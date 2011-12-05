@@ -56,12 +56,29 @@ public class CardMakerTest {
         fighter.setGoogleId("riksca@gmail.com");
         fighter.setScaMemberNo("38910");
         
+        List <Authorization> auths = new ArrayList<Authorization>();
         Authorization auth = new Authorization();
         auth.setCode("WSH");
         auth.setDescription("Weapon and Shield");
         auth.setDate(new Date());
+        auths.add(auth);
+
+        auth = new Authorization();
+        auth.setCode("SP");
+        auth.setDescription("Spear");
+        auth.setDate(new Date());
+        auths.add(auth);
+
+        auth = new Authorization();
+        auth.setCode("TW");
+        auth.setDescription("Two Weapon");
+        auth.setDate(new Date());
+        auths.add(auth);
         
-        List <Authorization> auths = new ArrayList<Authorization>();
+        auth = new Authorization();
+        auth.setCode("Marshal");
+        auth.setDescription("Marshal");
+        auth.setDate(new Date());
         auths.add(auth);
         
         fighter.setAuthorization(auths);
