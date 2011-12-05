@@ -116,7 +116,7 @@ public class CardMaker {
 
         String p1 = String.format("Let it be known that %s, also known in the modern world as %s "
                 + "hailing from the lands of %s, is Authorized to fight within the Kingdom of Calontir "
-                + "using the following weapon systems %s. This combatant by age %s a minor according to modern law.",
+                + "using the following weapon systems: %s. This combatant by age %s a minor according to modern law.",
                 fighter.getScaName(),
                 fighter.getModernName(),
                 fighter.getScaGroup().getGroupName(),
