@@ -23,6 +23,14 @@ import org.sca.calontir.cmpe.dto.FighterListItem;
 public class FighterDAO {
 
     private final PersistenceManager pm = PMF.get().getPersistenceManager();
+    Cache cache = null;
+
+    try {
+        CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
+        cache = cacheFactory.createCache(Collections.emptyMap());
+    } catch (CacheException e) {
+        cache = null;
+    }
 
     public FighterDAO() {
     }
@@ -109,8 +117,11 @@ public class FighterDAO {
 
     public List<FighterListItem> getFighterListItems() {
         // TODO: Move all access to fighter list to memcache.
+        List<FighterListItem> retArray = (List<FighterListItem>) cache.get("fighterList");
+        if(retArray != null)
+          return retArray;
         List<Fighter> fighters = returnAllFighters();
-        List<FighterListItem> retArray = new ArrayList<FighterListItem>();
+        retArray = new ArrayList<FighterListItem>();
         for (Fighter f : fighters) {
             retArray.add(DataTransfer.convertToListItem(f));
         }
@@ -141,6 +152,7 @@ public class FighterDAO {
         Long keyValue = null;
 
         Fighter f = null;
+        cache.remove("fighterList");
         if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
             Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighter.getFighterId());
             f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
@@ -166,6 +178,7 @@ public class FighterDAO {
 
     public void deleteFighter(Long fighterId) {
         Fighter f = null;
+        cache.remove("fighterList");
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
         f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
         try {
