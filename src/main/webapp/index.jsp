@@ -1,4 +1,4 @@
-<%@page import="org.apache.commons.lang.StringUtils"%>
+
 <!DOCTYPE html>
 <%-- 
     Document   : index
@@ -6,7 +6,8 @@
     Author     : rik
 --%>
 
-<%@page import="org.sca.calontir.cmpe.dto.Fighter"%>
+<%@page import="org.sca.calontir.cmpe.dto.FighterListItem"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="java.util.List"%>
 <%@page import="org.sca.calontir.cmpe.db.FighterDAO"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -25,7 +26,7 @@
         <script type="text/javascript" src="js/jquery-ui-1.8.14.custom.min.js"></script>
         <%
             FighterDAO fighterDao = new FighterDAO();
-            List<Fighter> fighters = fighterDao.getFighters();
+            List<FighterListItem> fighters = fighterDao.getFighterListItems();
         %>
         <script type="text/javascript">
             $(function(){

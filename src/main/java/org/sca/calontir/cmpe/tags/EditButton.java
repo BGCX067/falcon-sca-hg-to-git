@@ -1,9 +1,11 @@
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
-import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
+import org.sca.calontir.cmpe.user.Security;
+import org.sca.calontir.cmpe.user.SecurityFactory;
 
 /**
  *
@@ -14,6 +16,8 @@ public class EditButton extends SimpleTagSupport {
     private String mode;
     private String target;
     private String form;
+    private Long fighterId;
+    private Security security;
 
     /**
      * Called by the container to invoke this tag. 
@@ -23,17 +27,21 @@ public class EditButton extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException {
         JspWriter out = getJspContext().getOut();
-
+        security = SecurityFactory.getSecurity();
         try {
-            if (mode != null && mode.equals("add")) {
-                doAdd(out);
-            } else if (mode != null && mode.startsWith("edit")) {
-                doEdit(out);
-            } else {
-                doView(out);
-            }
+            if (security.canEditFighter(fighterId)) {
+                if (mode != null && mode.equals("add")) {
+                    doAdd(out);
+                } else if (mode != null && mode.startsWith("edit")) {
+                    doEdit(out);
+                } else {
+                    doView(out);
+                }
 
-        } catch (java.io.IOException ex) {
+            } else {
+                out.println();
+            }
+        } catch (IOException ex) {
             throw new JspException("Error in EditButton tag", ex);
         }
     }
@@ -70,5 +78,9 @@ public class EditButton extends SimpleTagSupport {
 
     public void setForm(String form) {
         this.form = form;
+    }
+
+    public void setFighterId(Long fighterId) {
+        this.fighterId = fighterId;
     }
 }

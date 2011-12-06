@@ -8,7 +8,7 @@
     Created on : May 8, 2011, 12:23:19 PM
     Author     : rik
 --%>
-<%@page import="org.sca.calontir.cmpe.dto.Fighter"%>
+<%@page import="org.sca.calontir.cmpe.dto.FighterListItem"%>
 <%@page import="org.sca.calontir.cmpe.common.FighterStatus"%>
 <%@page import="org.sca.calontir.cmpe.db.FighterDAO"%>
 <%@page import="org.sca.calontir.cmpe.utils.MarshalUtils"%>
@@ -33,7 +33,7 @@
         <script type="text/javascript" src="js/jquery-ui-1.8.14.custom.min.js"></script>
         <%
             FighterDAO fighterDao = new FighterDAO();
-            List<Fighter> fighters = fighterDao.getFighters();
+            List<FighterListItem> fighters = fighterDao.getFighterListItems();
         %>
         <script type="text/javascript">
             $(function(){
@@ -112,18 +112,18 @@
                 <cmp:printButton mode="<%= mode%>" fighterId="<%= fighterId %>" />
             </div>
             <div class="dataBox">
-                <div class="dataHeader">Authorizations <cmp:editButton mode="<%= mode%>" target="Authorizations" form="document.fighterInfoForm" /></div>
+                <div class="dataHeader">Authorizations <cmp:editButton mode="<%= mode%>" target="Authorizations" form="document.fighterInfoForm" fighterId="<%= fighterId %>" /></div>
                 <div class="dataBody">
                     <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"  editMode="editAuthorizations"/>
                 </div>
             </div>
-            <% if (userService.isUserLoggedIn() && (userService.isUserAdmin() || security.isRoleOrGreater(UserRoles.CARD_MARSHAL))) {%>
+            <% if (userService.isUserLoggedIn() && (userService.isUserAdmin() || security.canEditFighter(fighterId))) {%>
             <div class="dataBox" name="fighterInfoBox">
                 <div class="dataHeader">Fighter Info 
-                    <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" />
+                    <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" fighterId="<%= fighterId %>" />
                 </div>
                 <div class="dataBody">
-                    <% if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {%>
+                    <% if (security.canEditFighter(fighterId)) {%>
                     <div id="fighterInfo">
                         <table class="wide-table">
                             <tr>

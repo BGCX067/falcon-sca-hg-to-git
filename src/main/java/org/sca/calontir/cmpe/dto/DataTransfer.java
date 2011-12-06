@@ -143,7 +143,7 @@ public class DataTransfer {
     public static ScaGroup convert(org.sca.calontir.cmpe.data.ScaGroup scaGroupDO) {
         ScaGroup scaGroup = new ScaGroup();
         scaGroup.setGroupName(scaGroupDO.getGroupName());
-        scaGroup.setGroupLocation(scaGroup.getGroupLocation());
+        scaGroup.setGroupLocation(scaGroupDO.getGroupLocation());
         return scaGroup;
     }
 

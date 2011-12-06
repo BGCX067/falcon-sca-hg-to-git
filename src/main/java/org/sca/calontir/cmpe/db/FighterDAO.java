@@ -3,9 +3,14 @@ package org.sca.calontir.cmpe.db;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.cache.Cache;
+import javax.cache.CacheException;
+import javax.cache.CacheFactory;
+import javax.cache.CacheManager;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.apache.commons.lang.StringUtils;
@@ -25,14 +30,13 @@ public class FighterDAO {
     private final PersistenceManager pm = PMF.get().getPersistenceManager();
     Cache cache = null;
 
-    try {
-        CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-        cache = cacheFactory.createCache(Collections.emptyMap());
-    } catch (CacheException e) {
-        cache = null;
-    }
-
     public FighterDAO() {
+        try {
+            CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
+            cache = cacheFactory.createCache(Collections.emptyMap());
+        } catch (CacheException e) {
+            cache = null;
+        }
     }
 
     public org.sca.calontir.cmpe.dto.Fighter getFighter(long fighterId) {
@@ -118,8 +122,9 @@ public class FighterDAO {
     public List<FighterListItem> getFighterListItems() {
         // TODO: Move all access to fighter list to memcache.
         List<FighterListItem> retArray = (List<FighterListItem>) cache.get("fighterList");
-        if(retArray != null)
-          return retArray;
+        if (retArray != null) {
+            return retArray;
+        }
         List<Fighter> fighters = returnAllFighters();
         retArray = new ArrayList<FighterListItem>();
         for (Fighter f : fighters) {
