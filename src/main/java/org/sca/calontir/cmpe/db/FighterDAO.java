@@ -28,12 +28,14 @@ import org.sca.calontir.cmpe.dto.FighterListItem;
 public class FighterDAO {
 
     private final PersistenceManager pm = PMF.get().getPersistenceManager();
-    Cache cache = null;
+    static private Cache cache = null;
 
     public FighterDAO() {
         try {
+          if(cache == null) {
             CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
             cache = cacheFactory.createCache(Collections.emptyMap());
+          }
         } catch (CacheException e) {
             cache = null;
         }
