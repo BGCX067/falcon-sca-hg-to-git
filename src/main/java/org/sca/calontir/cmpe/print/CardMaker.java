@@ -195,6 +195,7 @@ public class CardMaker {
         cell = new PdfPCell(p);
         cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setRotation(180);
+        cell.setFixedHeight(20.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
@@ -211,6 +212,7 @@ public class CardMaker {
         cell = new PdfPCell(p);
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
         cell.setRotation(180);
+        cell.setFixedHeight(50.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         table.addCell(cell);
@@ -218,6 +220,7 @@ public class CardMaker {
         cell = new PdfPCell(new Phrase("The Society for Creative Anachronism, Inc\nKingdom of Calontir\nCombat Authorization Card", smallFont));
         cell.setBorder(Rectangle.BOTTOM + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setRotation(180);
+        cell.setFixedHeight(40.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
@@ -228,6 +231,7 @@ public class CardMaker {
         cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setFixedHeight(50.0f);
         table.addCell(cell);
 
         p = new Paragraph();
@@ -242,21 +246,24 @@ public class CardMaker {
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setFixedHeight(20.0f);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("This car is your authorization to participate on the field at SCA activities.  It must be presented to the list officials at all SCA events to register for participation in any martial activity. You may be requested to show this card to any marshal and/or list official at any time.", smallerFont));
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setFixedHeight(20.0f);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("Signature: _________________________\n", smallFont));
         cell.setBorder(Rectangle.BOTTOM + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setFixedHeight(20.0f);
         table.addCell(cell);
 
-        table.writeSelectedRows(0, -1, 340, 200, cb);
+        table.writeSelectedRows(0, -1, 340, 240, cb);
 
         StringBuilder sb = new StringBuilder(fighter.getScaName());
         sb.append(" - ");
