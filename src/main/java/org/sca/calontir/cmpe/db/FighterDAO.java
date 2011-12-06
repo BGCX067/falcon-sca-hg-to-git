@@ -132,6 +132,7 @@ public class FighterDAO {
         for (Fighter f : fighters) {
             retArray.add(DataTransfer.convertToListItem(f));
         }
+        cache.put("fighterList", retArray);
         return retArray;
     }
 
