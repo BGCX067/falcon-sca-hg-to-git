@@ -231,7 +231,7 @@ public class CardMaker {
         cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setFixedHeight(50.0f);
+        cell.setFixedHeight(40.0f);
         table.addCell(cell);
 
         p = new Paragraph();
@@ -253,7 +253,7 @@ public class CardMaker {
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell.setFixedHeight(20.0f);
+        cell.setFixedHeight(30.0f);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("Signature: _________________________\n", smallFont));
