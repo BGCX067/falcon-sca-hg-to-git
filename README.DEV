@@ -1,0 +1,21 @@
+To download the entire database
+<path to python appengine>/appcfg.py download_data --application=calon-marshal-project-engine --url=http://calon-marshal-project-engine.appspot.com/remote_api --filename=cmpedata
+
+
+To upload it to your local instance. It must be running
+<path to python appengine>/appcfg.py upload_data --application=calon-marshal-project-engine --filename=cmpedata --url=http://localhost:8080/remote_api
+
+
+To download only the reference data
+<path to python appengine>/appcfg.py download_data --application=calon-marshal-project-engine --kind=AuthType --url=http://calon-marshal-project-engine.appspot.com/remote_api --filename=authtype
+
+<path to python appengine>/appcfg.py download_data --application=calon-marshal-project-engine --kind=ScaGroup --url=http://calon-marshal-project-engine.appspot.com/remote_api --filename=scagroup
+
+<path to python appengine>/appcfg.py download_data --application=calon-marshal-project-engine --kind=Treaty --url=http://calon-marshal-project-engine.appspot.com/remote_api --filename=treaty
+
+To upload only the reference data
+<path to python appengine>/appcfg.py upload_data --application=calon-marshal-project-engine --filename=authtype --url=http://localhost:8080/remote_api
+
+<path to python appengine>/appcfg.py upload_data --application=calon-marshal-project-engine --filename=scagroup --url=http://localhost:8080/remote_api
+
+<path to python appengine>/appcfg.py upload_data --application=calon-marshal-project-engine --filename=treaty --url=http://localhost:8080/remote_api
