@@ -3,11 +3,10 @@ package org.sca.calontir.cmpe.db;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import javax.cache.Cache;
-import javax.cache.CacheException;
-import javax.cache.CacheFactory;
-import javax.cache.CacheManager;
+import java.util.Map;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.sca.calontir.cmpe.data.AuthType;
@@ -19,25 +18,51 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
  */
 public class AuthTypeDAO {
 
-    static private Cache cache = null;
-    
-    public AuthTypeDAO () {
-        try {
-          if(cache == null) {
-            CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-            cache = cacheFactory.createCache(Collections.emptyMap());
-          }
-        } catch (CacheException e) {
-            cache = null;
+    public static class LocalCacheImpl implements LocalCache {
+        private static LocalCacheImpl _instance = new LocalCacheImpl();
+
+        private Map<Object, Object> data = new HashMap<Object, Object>();
+
+        private LocalCacheImpl() {
+        }
+
+        public static LocalCache getInstance() {
+            return _instance;
+        }
+
+        public Object getValue(Object key) {
+            return data.get(key);
+        }
+
+        public void put(Object key, Object value) {
+            data.put(key, value);
+        }
+
+        @Override
+        public void clear() {
+            data.clear();
+        }
+
+        @Override
+        public int getCount() {
+            return data.size();
         }
     }
-    
-    public org.sca.calontir.cmpe.dto.AuthType  getAuthType(long authTypeId) {
-        AuthType authType = null;
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        //Key authTypeKey = KeyFactory.createKey(AuthType.class.getSimpleName(), authTypeId);
-        authType = (AuthType) pm.getObjectById(AuthType.class, authTypeId);
+    static private LocalCacheImpl localCache;
 
+    public AuthTypeDAO() {
+        if (localCache == null) {
+            localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
+        }
+    }
+
+    public org.sca.calontir.cmpe.dto.AuthType getAuthType(long authTypeId) {
+        AuthType authType = (AuthType) localCache.getValue(new Long(authTypeId));
+        if (authType == null) {
+            PersistenceManager pm = PMF.get().getPersistenceManager();
+            authType = (AuthType) pm.getObjectById(AuthType.class, authTypeId);
+            localCache.put(new Long(authTypeId), authType);
+        }
         org.sca.calontir.cmpe.dto.AuthType at = DataTransfer.convert(authType);
         return at;
     }
@@ -48,31 +73,31 @@ public class AuthTypeDAO {
     }
 
     public AuthType getAuthTypeDOByCode(String code) {
-        AuthType at = (AuthType) cache.get(code);
+        AuthType at = (AuthType) localCache.getValue(code);
         if (at == null) {
-          PersistenceManager pm = PMF.get().getPersistenceManager();
-          Query query = pm.newQuery(AuthType.class);
-          query.setFilter("code == authTypeCode");
-          query.declareParameters("String authTypeCode");
-          List<AuthType> atList = (List<AuthType>) query.execute(code);
-          if (atList.size() > 0) {
-              at = atList.get(0);
-          }
-          cache.put(code, at);
+            PersistenceManager pm = PMF.get().getPersistenceManager();
+            Query query = pm.newQuery(AuthType.class);
+            query.setFilter("code == authTypeCode");
+            query.declareParameters("String authTypeCode");
+            List<AuthType> atList = (List<AuthType>) query.execute(code);
+            if (atList.size() > 0) {
+                at = atList.get(0);
+            }
+            localCache.put(code, at);
         }
         return at;
     }
 
     public List<org.sca.calontir.cmpe.dto.AuthType> getAuthType() {
-        List<AuthType> atList = (List<AuthType>) cache.get("atlist");
+        List<AuthType> atList = (List<AuthType>) localCache.getValue("atlist");
         if (atList == null) {
-          PersistenceManager pm = PMF.get().getPersistenceManager();
-          Query query = pm.newQuery(AuthType.class);
-          List<AuthType> atList = (List<AuthType>) query.execute();
-          cache.put("atlist", atList);
+            PersistenceManager pm = PMF.get().getPersistenceManager();
+            Query query = pm.newQuery(AuthType.class);
+            atList = (List<AuthType>) query.execute();
+            localCache.put("atlist", atList);
         }
         List<org.sca.calontir.cmpe.dto.AuthType> retList = new ArrayList<org.sca.calontir.cmpe.dto.AuthType>();
-        for(AuthType at : atList) {
+        for (AuthType at : atList) {
             org.sca.calontir.cmpe.dto.AuthType newAt = new org.sca.calontir.cmpe.dto.AuthType();
             newAt.setAuthTypeId(at.getAuthTypeId().getId());
             newAt.setCode(at.getCode());
@@ -84,7 +109,7 @@ public class AuthTypeDAO {
 
     public void saveAuthType(org.sca.calontir.cmpe.dto.AuthType authType) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
-        cache.clear();
+        localCache.clear();
 
         AuthType at = null;
         if (authType.getAuthTypeId() != null && authType.getAuthTypeId() > 0) {
