@@ -7,10 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.cache.Cache;
-import javax.cache.CacheException;
-import javax.cache.CacheFactory;
-import javax.cache.CacheManager;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.apache.commons.lang.StringUtils;
@@ -28,17 +24,8 @@ import org.sca.calontir.cmpe.dto.FighterListItem;
 public class FighterDAO {
 
     private final PersistenceManager pm = PMF.get().getPersistenceManager();
-    static private Cache cache = null;
 
     public FighterDAO() {
-        try {
-          if(cache == null) {
-            CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-            cache = cacheFactory.createCache(Collections.emptyMap());
-          }
-        } catch (CacheException e) {
-            cache = null;
-        }
     }
 
     public org.sca.calontir.cmpe.dto.Fighter getFighter(long fighterId) {
@@ -123,12 +110,8 @@ public class FighterDAO {
 
     public List<FighterListItem> getFighterListItems() {
         // TODO: Move all access to fighter list to memcache.
-        List<FighterListItem> retArray = (List<FighterListItem>) cache.get("fighterList");
-        if (retArray != null) {
-            return retArray;
-        }
         List<Fighter> fighters = returnAllFighters();
-        retArray = new ArrayList<FighterListItem>();
+        List<FighterListItem> retArray = new ArrayList<FighterListItem>();
         for (Fighter f : fighters) {
             retArray.add(DataTransfer.convertToListItem(f));
         }
@@ -159,7 +142,6 @@ public class FighterDAO {
         Long keyValue = null;
 
         Fighter f = null;
-        cache.remove("fighterList");
         if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
             Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighter.getFighterId());
             f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
@@ -185,7 +167,6 @@ public class FighterDAO {
 
     public void deleteFighter(Long fighterId) {
         Fighter f = null;
-        cache.remove("fighterList");
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
         f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
         try {
