@@ -1,10 +1,12 @@
 package org.sca.calontir.cmpe.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rik
  */
-public class AuthType {
+public class AuthType implements Serializable {
     private Long authTypeId;
     private String code;
     private String description;
@@ -32,6 +34,4 @@ public class AuthType {
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    
 }

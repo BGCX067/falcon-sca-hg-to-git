@@ -1,15 +1,16 @@
 package org.sca.calontir.cmpe.dto;
 
-import org.sca.calontir.cmpe.common.FighterStatus;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
  *
  * @author rik
  */
-public class Fighter {
+public class Fighter implements Serializable {
     private Long fighterId;
     private String scaName;
     private String scaMemberNo;

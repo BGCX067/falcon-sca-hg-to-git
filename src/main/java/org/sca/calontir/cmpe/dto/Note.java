@@ -1,12 +1,13 @@
 package org.sca.calontir.cmpe.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author rik
  */
-public class Note {
+public class Note implements Serializable {
     private String body;
     private Date updated;
 

@@ -17,44 +17,15 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
  * @author rik
  */
 public class AuthTypeDAO {
-
-    public static class LocalCacheImpl implements LocalCache {
+    public static class LocalCacheImpl extends LocalCacheAbImpl {
         private static LocalCacheImpl _instance = new LocalCacheImpl();
 
-        private Map<Object, Object> data = new HashMap<Object, Object>();
-
-        private LocalCacheImpl() {
-        }
-
-        public static LocalCache getInstance() {
+        public static LocalCacheImpl getInstance() {
             return _instance;
         }
-
-        public Object getValue(Object key) {
-            return data.get(key);
-        }
-
-        public void put(Object key, Object value) {
-            data.put(key, value);
-        }
-
-        @Override
-        public void clear() {
-            data.clear();
-        }
-
-        @Override
-        public int getCount() {
-            return data.size();
-        }
     }
-    static private LocalCacheImpl localCache;
+    static private LocalCacheImpl localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
 
-    public AuthTypeDAO() {
-        if (localCache == null) {
-            localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
-        }
-    }
 
     public org.sca.calontir.cmpe.dto.AuthType getAuthType(long authTypeId) {
         AuthType authType = (AuthType) localCache.getValue(new Long(authTypeId));

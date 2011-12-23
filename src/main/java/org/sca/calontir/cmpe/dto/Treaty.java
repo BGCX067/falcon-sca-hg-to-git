@@ -4,13 +4,14 @@
  */
 package org.sca.calontir.cmpe.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author rik
  */
-public class Treaty {
+public class Treaty implements Serializable {
     private Long treatyId;
     private String name;
     private List<Fighter> fighters;

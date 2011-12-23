@@ -1,6 +1,7 @@
 package org.sca.calontir.cmpe.data;
 
 import com.google.appengine.api.datastore.Key;
+import java.io.Serializable;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -10,8 +11,8 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * @author rik
  */
-@PersistenceCapable(detachable = "true")
-public class Phone {
+@PersistenceCapable()
+public class Phone implements Serializable {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

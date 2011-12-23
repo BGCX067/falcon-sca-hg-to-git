@@ -1,10 +1,12 @@
 package org.sca.calontir.cmpe.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rik
  */
-public class Email {
+public class Email implements Serializable {
     private String emailAddress;
     private String type;
 

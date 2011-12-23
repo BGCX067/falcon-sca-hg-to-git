@@ -1,10 +1,12 @@
 package org.sca.calontir.cmpe.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rik
  */
-public class Phone {
+public class Phone implements Serializable {
     private String phoneNumber;
     private String type;
 

@@ -10,7 +10,7 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * @author rik
  */
-@PersistenceCapable(detachable="true")
+@PersistenceCapable()
 public class ScaGroup {
 
     @PrimaryKey

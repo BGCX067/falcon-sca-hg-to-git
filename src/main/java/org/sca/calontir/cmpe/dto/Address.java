@@ -1,10 +1,12 @@
 package org.sca.calontir.cmpe.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rik
  */
-public class Address {
+public class Address implements Serializable {
     private String address1;
     private String address2;
     private String city;

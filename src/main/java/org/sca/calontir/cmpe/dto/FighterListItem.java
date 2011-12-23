@@ -1,10 +1,12 @@
 package org.sca.calontir.cmpe.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rik
  */
-public class FighterListItem {
+public class FighterListItem implements Serializable {
     private Long fighterId;
     private String scaName;
     private String authorizations;
