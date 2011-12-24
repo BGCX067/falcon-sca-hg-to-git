@@ -10,7 +10,7 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * @author rik
  */
-@PersistenceCapable()
+@PersistenceCapable(detachable = "true")
 public class AuthType {
 
     @PrimaryKey

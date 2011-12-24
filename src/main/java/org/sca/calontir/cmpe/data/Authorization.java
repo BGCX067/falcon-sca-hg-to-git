@@ -1,7 +1,6 @@
 package org.sca.calontir.cmpe.data;
 
 import com.google.appengine.api.datastore.Key;
-import java.io.Serializable;
 import java.util.Date;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -12,8 +11,8 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * @author rik
  */
-@PersistenceCapable()
-public class Authorization implements Serializable {
+@PersistenceCapable(detachable = "true")
+public class Authorization {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

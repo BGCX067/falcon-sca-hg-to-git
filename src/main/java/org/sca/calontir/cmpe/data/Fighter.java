@@ -1,7 +1,6 @@
 package org.sca.calontir.cmpe.data;
 
 import com.google.appengine.api.datastore.Key;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -14,8 +13,8 @@ import org.sca.calontir.cmpe.common.UserRoles;
  *
  * @author rik
  */
-@PersistenceCapable()
-public class Fighter implements Serializable {
+@PersistenceCapable(detachable = "true")
+public class Fighter {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
