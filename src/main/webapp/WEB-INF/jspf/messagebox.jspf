@@ -2,12 +2,32 @@
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/tld/cmp.tld" prefix="cmp" %>
+
+<script type="text/javascript">
+
+    var intervalCounter = 0;
+
+    function hideMessage(element){
+        var alert = document.getElementById(element);
+        alert.style.opacity = 0;
+        clearInterval(intervalCounter);
+    }
+	
+    function viewMessage(element){		
+        var alert = document.getElementById(element);
+        alert.style.opacity = .9;
+        intervalCounter = setInterval("hideMessage('" + element + "')", 1000);
+    }
+</script>
+
+
 <%  String error = (String) request.getAttribute("error");
     if (StringUtils.isNotBlank(error)) {
 %>
 <div id="error">
     <%= error%>
 </div>
+    <script type="text/javascript">viewMessage('error');</script>
 <% }%>
 <%  String msg = (String) request.getAttribute("uimessage");
     if (StringUtils.isNotBlank(msg)) {
@@ -15,4 +35,5 @@
 <div id="uimessage">
     <%= msg%>
 </div>
+    <script type="text/javascript">viewMessage('uimessage');</script>
 <% }%>

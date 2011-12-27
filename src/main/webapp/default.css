@@ -72,34 +72,45 @@ a:hover.buttonLink {text-decoration: none}
 
 #error {
     background-color: #FF3030;
-    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
     border: 1px solid #8B1A1A;
-    text-align: left;
+    text-align: center;
     vertical-align: middle;
-    margin-bottom: .25em;
-    margin-left: 1em;
-    margin-right: 1em;
-    margin-top: .25em;
+    margin-left: -100px;
     padding: .5em;
     width: 25em;
+    opacity: .9;
     -moz-border-radius: 15px;
     border-radius: 15px;
+    -webkit-transition: opacity 0.5s ease-out;  /* Saf3.2+, Chrome */
+    -moz-transition: opacity 0.5s ease-out;  /* FF4+ */
+    -ms-transition: opacity 0.5s ease-out;  /* IE10? */
+    -o-transition: opacity 0.5s ease-out;  /* Opera 10.5+ */
+    transition: opacity 0.5s ease-out;      
 }
 
 #uimessage {
     background-color: whitesmoke;
-    display: block;
     border: 1px solid darkblue;
-    text-align: left;
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    border: 1px solid #8B1A1A;
+    text-align: center;
     vertical-align: middle;
-    margin-bottom: .25em;
-    margin-left: 1em;
-    margin-right: 1em;
-    margin-top: .25em;
+    margin-left: -100px;
     padding: .5em;
     width: 25em;
+    opacity: .9;
     -moz-border-radius: 15px;
     border-radius: 15px;
+    -webkit-transition: opacity 0.5s ease-out;  /* Saf3.2+, Chrome */
+    -moz-transition: opacity 0.5s ease-out;  /* FF4+ */
+    -ms-transition: opacity 0.5s ease-out;  /* IE10? */
+    -o-transition: opacity 0.5s ease-out;  /* Opera 10.5+ */
+    transition: opacity 0.5s ease-out;  
 }
 
 .figherIdBox {
@@ -293,5 +304,5 @@ a.BPrint:hover {
 }
 
 table.wide-table {
-   width: 100%;
+    width: 100%;
 }
