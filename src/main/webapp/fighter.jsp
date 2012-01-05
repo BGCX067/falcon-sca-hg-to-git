@@ -25,7 +25,7 @@
 <html>
     <head>
         <title>Calontir Marshals UI</title>
-        <style type="text/css" media="all">@import "default.css";</style>
+        <link rel="stylesheet" href="default.css" type="text/css" media="all" />
         <link rel="SHORTCUT ICON" href="images/Marshal.ico">
         <script type="text/javascript" src="jscmpe-1.0.0.js"></script>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />	
