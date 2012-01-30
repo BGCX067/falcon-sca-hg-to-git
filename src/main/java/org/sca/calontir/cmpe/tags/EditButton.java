@@ -29,7 +29,7 @@ public class EditButton extends SimpleTagSupport {
         JspWriter out = getJspContext().getOut();
         security = SecurityFactory.getSecurity();
         try {
-            if (security.canEditFighter(fighterId)) {
+            if (security.canEdit(fighterId, target)) {
                 if (mode != null && mode.equals("add")) {
                     doAdd(out);
                 } else if (mode != null && mode.startsWith("edit")) {

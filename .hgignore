@@ -5,6 +5,9 @@ nbproject
 \.chg\..*$
 \.rej$
 \.conflict\~$
+\.pdf$
+\.sh$
+\.csv$
 target
 pw.txt
 ^bulkloader*

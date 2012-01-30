@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.jsp.JspWriter;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Authorization;
+import org.sca.calontir.cmpe.user.Security;
+import org.sca.calontir.cmpe.user.SecurityFactory;
 
 /**
  *
@@ -17,6 +19,7 @@ public class AuthorizationsTag extends CMPExtendedTagSupport {
 
     private List<Authorization> authorizations;
     private List<AuthType> authTypes;
+    private Long fighterId;
     // internal for lookup;
     private List<String> authorizationIds;
     private Map<String, AuthType> authTypeMap;
@@ -33,14 +36,20 @@ public class AuthorizationsTag extends CMPExtendedTagSupport {
 
     @Override
     protected void doEdit(JspWriter out) throws IOException {
-        for (AuthType at : this.authTypes) {
-            out.print("<input type=\"checkbox\" name=\"authorization\" value=\"");
-            out.print(at.getCode() + "\" ");
-            if (authorizationIds.contains(at.getCode())) {
-                out.print(" checked ");
+        Security security = SecurityFactory.getSecurity();
+
+        if (security.canEditAuthorizations(fighterId)) {
+            for (AuthType at : this.authTypes) {
+                out.print("<input type=\"checkbox\" name=\"authorization\" value=\"");
+                out.print(at.getCode() + "\" ");
+                if (authorizationIds.contains(at.getCode())) {
+                    out.print(" checked ");
+                }
+                out.print(" />");
+                out.print(at.getCode());
             }
-            out.print(" />");
-            out.print(at.getCode());
+        } else {
+            doView(out);
         }
     }
 
@@ -77,5 +86,9 @@ public class AuthorizationsTag extends CMPExtendedTagSupport {
                 authTypeMap.put(at.getCode(), at);
             }
         }
+    }
+
+    public void setFighterId(Long fighterId) {
+        this.fighterId = fighterId;
     }
 }

@@ -40,12 +40,32 @@ public class Security {
     protected void setUser(Fighter user) {
         this.user = user;
     }
+    
+    public boolean canEdit(Long fighterId, String target) {
+        if("Authorizations".equals(target)) {
+            return canEditAuthorizations(fighterId);
+        }
+        
+        return canEditFighter(fighterId);
+    }
 
-       public boolean canEditFighter(Long fighterId) {
+    public boolean canEditAuthorizations(Long fighterId) {
         if (user == null) {
             return false;
         }
+
+        if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            return true;
+        }
         
+        return false;
+    }
+
+    public boolean canEditFighter(Long fighterId) {
+        if (user == null) {
+            return false;
+        }
+
         if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
             return true;
         }
@@ -64,7 +84,7 @@ public class Security {
                 }
             }
         }
-        
+
         if (isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
             if (user.getScaGroup() != null && fighter.getScaGroup() != null) {
                 if (user.getScaGroup().getGroupLocation().equals(fighter.getScaGroup().getGroupLocation())) {
@@ -75,12 +95,12 @@ public class Security {
 
         return false;
     }
-       
+
     public boolean canPrintFighter(Long fighterId) {
         if (user == null) {
             return false;
         }
-        
+
         if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
             return true;
         }
@@ -99,7 +119,7 @@ public class Security {
                 }
             }
         }
-        
+
         if (isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
             if (user.getScaGroup() != null && fighter.getScaGroup() != null) {
                 if (user.getScaGroup().getGroupLocation().equals(fighter.getScaGroup().getGroupLocation())) {

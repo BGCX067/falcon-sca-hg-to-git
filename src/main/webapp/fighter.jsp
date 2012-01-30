@@ -114,7 +114,8 @@
             <div class="dataBox">
                 <div class="dataHeader">Authorizations <cmp:editButton mode="<%= mode%>" target="Authorizations" form="document.fighterInfoForm" fighterId="<%= fighterId %>" /></div>
                 <div class="dataBody">
-                    <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"  editMode="editAuthorizations"/>
+                    <cmp:auths mode="<%= mode%>" authTypes="<%=authTypes%>" authorizations="<%= fighter.getAuthorization()%>"  
+                                                                    editMode="editAuthorizations"  fighterId="<%= fighterId %>" />
                 </div>
             </div>
             <% if (userService.isUserLoggedIn() && (userService.isUserAdmin() || security.canEditFighter(fighterId))) {%>
@@ -130,11 +131,9 @@
                                 <td class="label">Modern Name:</td>
                                 <td class="data"><cmp:input type="text" name="modernName"
                                     mode ="<%=mode%>" value="<%= fighter.getModernName()%>"  editMode="editFighterInfo" /></td>
-                                <% if (security.isRoleOrGreater(UserRoles.USER)) {%>
                                 <td class="rightCol">
                                 <cmp:fighterStatusTag mode="<%= mode%>" status="<%= fighter.getStatus()%>" editMode="editFighterInfo" /> 
                                 </td>
-                                <% } %>
                             </tr>
                             <tr>
                                 <td class="label">Address:</td>

@@ -1,9 +1,7 @@
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.user.Security;
 import org.sca.calontir.cmpe.user.SecurityFactory;
 
@@ -23,7 +21,7 @@ public class PrintButton extends CMPExtendedTagSupport {
             out.print("<span class=\"printButton\">"
                     + "<a href=\"#\" id=\"BPrint\" class=\"BPrint\""
                     + " onClick=\"printThis(document.fighterInfoForm);\">Print</a>"
-                    + "</span>");
+                        + "</span>");
         } else {
             out.println();
         }
