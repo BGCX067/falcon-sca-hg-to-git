@@ -99,7 +99,8 @@ public class FighterDAO {
             return fighters;
         }
         for (FighterListItem f : fighters) {
-            if (f.getScaName() != null && f.getScaName().contains(scaName)) {
+            if (f.getScaName() != null
+                    && f.getScaName().toUpperCase().contains(scaName.toUpperCase())) {
                 retArray.add(f);
             }
         }
