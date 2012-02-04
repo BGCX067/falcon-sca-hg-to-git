@@ -1,0 +1,56 @@
+/* 
+    Document   : calonbar
+    Created on : Feb 3, 2012, 7:53:09 AM
+    Author     : rik
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#calonbar {
+    background-color:#800080;
+    position: fixed;
+    width: 100%;
+    top:0;
+    left:0;
+    margin: 0;
+    font-weight:bold;
+    color:#FFE766;
+    text-align:center;
+    padding:4px;
+    font-size: 100%;
+}
+#calonbar ol {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    float:right;
+}
+#calonbar li {
+    padding-left: 4px;
+    padding-right: 4px;
+    display: inline-block;
+}
+#calonbar #leftmenu {
+    float:left;
+    display:block;
+}
+#calonbar #rightmenu {
+    float:right;
+    display:block;
+}
+a.calonbarlink:link, a.calonbarlink:visited {
+/*    display:block;*/
+/*    width:5em;*/
+    background-color:#800080;
+    text-align:center;
+    color:#FFE766;
+    text-decoration:none;
+    font-weight:bold;
+    font-size: 100%;
+}
+a.calonbarlink:hover, a.calonbarlink:active {
+    background-color:#993399;
+}
+
+

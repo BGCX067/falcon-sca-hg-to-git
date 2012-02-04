@@ -20,6 +20,7 @@
     <head>
         <title>Calontir Marshals UI</title>
         <link rel="stylesheet" href="default.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="css/calonbar.css" type="text/css" media="all" />
         <link rel="SHORTCUT ICON" href="images/Marshal.ico">
         <script type="text/javascript" src="jscmpe-1.0.0.js"></script>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />	
@@ -49,7 +50,7 @@
         </script>
     </head>
     <body>
-        <%@include file="WEB-INF/jspf/userbox.jspf" %>
+        <%@include file="WEB-INF/jspf/calonbar.jspf" %>
         <%@include file="WEB-INF/jspf/messagebox.jspf" %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
