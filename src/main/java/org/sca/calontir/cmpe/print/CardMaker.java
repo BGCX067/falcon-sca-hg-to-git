@@ -207,8 +207,11 @@ public class CardMaker {
             p.add(new Phrase(String.format("SCA Name %s\n", fighter.getScaName()), smallFont));
         }
         p.add(new Phrase(String.format("Modern Name %s\n", fighter.getModernName()), smallFont));
-        p.add(new Phrase(String.format("Group: %s  Minor %s\n", fighter.getScaGroup().getGroupName(),
-                MarshalUtils.isMinor(fighter) ? "X" : ""), smallFont));
+        if(MarshalUtils.isMinor(fighter)) {
+            p.add(new Phrase(String.format("Group: %s  Minor X\n", fighter.getScaGroup().getGroupName()), smallFont));
+        } else {
+            p.add(new Phrase(String.format("Group: %s\n", fighter.getScaGroup().getGroupName()), smallFont));
+        }
         cell = new PdfPCell(p);
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
         cell.setRotation(180);
