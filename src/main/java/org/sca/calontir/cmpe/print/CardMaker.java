@@ -68,7 +68,7 @@ public class CardMaker {
     }
 
     private Image loadSignature() throws BadElementException, IOException {
-        return loadImage("sig.gif");
+        return loadImage("sig.png");
     }
 
     private Image loadImage(String filename) throws BadElementException, IOException {

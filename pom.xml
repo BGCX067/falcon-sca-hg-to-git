@@ -336,13 +336,13 @@
 			your Eclipse plug-in)
 		-->
 	<kindleit.version>1.5.5</kindleit.version>
-        <gae.version>1.6.1</gae.version>
+        <gae.version>1.6.1.1</gae.version>
 
 		<!--
 			Upload to http://test.latest.<applicationName>.appspot.com by default
 		-->
         <appengine.sdk.root>
-            /usr/local/appengine-java-sdk-${gae.version}
+            ${user.home}/.m2/repository/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}
         </appengine.sdk.root>
     
         <gae.application.version>test</gae.application.version>

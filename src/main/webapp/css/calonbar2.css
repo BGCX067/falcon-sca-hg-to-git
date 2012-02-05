@@ -19,12 +19,13 @@ root {
     float: right;
     margin-left: 2em;
     font-weight:bold;
-    color:#800080;
+    color:#FFE766;
     padding:4px;
+    padding-right: 10%;
     font-size: 100%;
 }
 
-a.calonbarlink:link,a.calonbarlink:visited {
+a.calonbarlink:link, a.calonbarlink:visited {
     width:5em;
     color:#800080;
     text-align:center;
@@ -33,5 +34,5 @@ a.calonbarlink:link,a.calonbarlink:visited {
     font-size: 100%;
 }
 
-a.calonbarlink:hover,a.calonbarlink:active {
+a.calonbarlink:hover, a.calonbarlink:active {
 }
