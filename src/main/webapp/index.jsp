@@ -15,11 +15,32 @@
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 
+<%
+    String cookieName = "calonbar";
+    Cookie cookies[] = request.getCookies();
+    Cookie calonbarCookie = null;
+    if (cookies != null) {
+        for (int i = 0; i < cookies.length; i++) {
+            if (cookies[i].getName().equals(cookieName)) {
+                calonbarCookie = cookies[i];
+                break;
+            }
+        }
+    }
+    String cbar = (calonbarCookie == null ? "0" : calonbarCookie.getValue());
+    if (cbar == null) {
+        cbar = "0";
+    }
+%>
 <html>
     <head>
         <title>Calontir Marshals UI</title>
         <link rel="stylesheet" href="default.css" type="text/css" media="all" />
-        <link rel="stylesheet" href="css/calonbar.css" type="text/css" media="all" />
+        <% if (cbar.equals("0")) {%>
+        <link type="text/css" href="css/calonbar.css" rel="stylesheet" />
+        <% } else {%>
+        <link type="text/css" href="css/calonbar2.css" rel="stylesheet" />
+        <% }%>
         <link rel="SHORTCUT ICON" href="images/Marshal.ico">
         <script type="text/javascript" src="jscmpe-1.0.0.js"></script>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />	
@@ -49,7 +70,15 @@
         </script>
     </head>
     <body>
+        <%
+            UserService userService = UserServiceFactory.getUserService();
+            User user = userService.getCurrentUser();
+        %>
+        <% if (cbar.equals("0")) {%>
         <%@include file="WEB-INF/jspf/calonbar.jspf" %>
+        <% } else {%>
+        <%@include file="WEB-INF/jspf/calonbar2.jspf" %>
+        <% }%>
         <%@include file="WEB-INF/jspf/messagebox.jspf" %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 

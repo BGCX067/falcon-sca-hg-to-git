@@ -11,35 +11,34 @@
 
     <ol id="rightmenu">
         <li>
-    <%
-        UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
-        if (user != null) {
-            String baseUrl;
-            if ((request.getServerPort() == 80)
-                    || (request.getServerPort() == 443)) {
-                baseUrl = request.getScheme() + "://"
-                        + request.getServerName()
-                        + request.getContextPath();
+            <%
+
+                if (user != null) {
+                    String baseUrl;
+                    if ((request.getServerPort() == 80)
+                            || (request.getServerPort() == 443)) {
+                        baseUrl = request.getScheme() + "://"
+                                + request.getServerName()
+                                + request.getContextPath();
+                    } else {
+                        baseUrl = request.getScheme() + "://"
+                                + request.getServerName() + ":" + request.getServerPort()
+                                + request.getContextPath();
+                    }
+                    FighterDAO fDao = new FighterDAO();
+                    Fighter f_ub = fDao.getFighterByGoogleId(user.getEmail());
+            %>    
+            <a href="<%= userService.createLogoutURL(baseUrl)%>" title="Click to logout" class="calonbarlink">
+                <%= f_ub == null ? user.getNickname() : f_ub.getScaName()%>
+            </a>
+            <%
             } else {
-                baseUrl = request.getScheme() + "://"
-                        + request.getServerName() + ":" + request.getServerPort()
-                        + request.getContextPath();
-            }
-            FighterDAO fDao = new FighterDAO();
-            Fighter f_ub = fDao.getFighterByGoogleId(user.getEmail());
-    %>    
-    <a href="<%= userService.createLogoutURL(baseUrl)%>" title="Click to logout" class="calonbarlink">
-        <%= f_ub == null ? user.getNickname() : f_ub.getScaName() %>
-    </a>
-    <%
-    } else {
-    %>
-    <a href="<%= userService.createLoginURL(request.getRequestURI())%>" title="Click to login" class="calonbarlink">login</a>
-    <%
-        }
-    %>
+            %>
+            <a href="<%= userService.createLoginURL(request.getRequestURI())%>" title="Click to login" class="calonbarlink">login</a>
+            <%
+                }
+            %>
         </li>
-        <li><a href="#" class="calonbarlink" title="Switch Calonbar">[*]</a></li>
+        <li><a href="/AdminServlet?calonbar=1" class="calonbarlink" title="Switch Calonbar">[*]</a></li>
     </ol>
 </div>

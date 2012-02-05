@@ -6,10 +6,9 @@ package org.sca.calontir.cmpe;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.LocalCache;
 import org.sca.calontir.cmpe.db.LocalCacheAbImpl;
@@ -32,40 +31,40 @@ public class AdminServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
+        String message = "";
         String clearcache = request.getParameter("clearcache");
-        
-        if(clearcache.equals("AuthType")) {
+
+        if (clearcache != null && clearcache.equals("AuthType")) {
             LocalCache atCache = AuthTypeDAO.LocalCacheImpl.getInstance();
-            
+
             System.out.print("Size before clearing:");
             System.out.println(atCache.getCount());
             atCache.clear();
             System.out.print("Size after clearing:");
             System.out.println(atCache.getCount());
+            message += "Cache cleared";
         }
-        
-        
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
 
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Admin</title>");
-            out.println("<body>");
-            out.println("<h1>Servlet AdminServlet</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String calonbar = request.getParameter("calonbar");
+        if (calonbar != null) {
+            Date now = new Date();
+//            String timestamp = now.toString();
 
-        } finally {
-            out.close();
+            Cookie cookie = new Cookie("calonbar", calonbar.equals("0") ? "0" : "1");
+
+            cookie.setMaxAge(365 * 24 * 60 * 60);
+            response.addCookie(cookie);
         }
+
+        response.sendRedirect("/index.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -77,8 +76,10 @@ public class AdminServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -90,8 +91,9 @@ public class AdminServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
