@@ -336,7 +336,7 @@
 			your Eclipse plug-in)
 		-->
 	<kindleit.version>1.5.5</kindleit.version>
-        <gae.version>1.6.1.1</gae.version>
+        <gae.version>1.6.2.1</gae.version>
 
 		<!--
 			Upload to http://test.latest.<applicationName>.appspot.com by default
