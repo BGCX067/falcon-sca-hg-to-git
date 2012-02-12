@@ -6,6 +6,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.sca.calontir.cmpe.user.Security;
 import org.sca.calontir.cmpe.user.SecurityFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 /**
  *
@@ -28,8 +30,9 @@ public class EditButton extends SimpleTagSupport {
     public void doTag() throws JspException {
         JspWriter out = getJspContext().getOut();
         security = SecurityFactory.getSecurity();
+        UserService userService = UserServiceFactory.getUserService();
         try {
-            if (security.canEdit(fighterId, target)) {
+            if (userService.isUserAdmin() || security.canEdit(fighterId, target)) {
                 if (mode != null && mode.equals("add")) {
                     doAdd(out);
                 } else if (mode != null && mode.startsWith("edit")) {

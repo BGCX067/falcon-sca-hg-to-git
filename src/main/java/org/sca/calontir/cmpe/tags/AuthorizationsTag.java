@@ -63,7 +63,11 @@ public class AuthorizationsTag extends CMPExtendedTagSupport {
                 } else {
                     out.print(" ; ");
                 }
+                out.print("<span title=\"");
+                out.print(a.getDate());
+                out.print("\">");
                 out.print(a.getCode());
+                out.print("</span>");
             }
         }
     }

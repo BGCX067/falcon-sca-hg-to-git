@@ -148,4 +148,10 @@ public class Fighter implements Serializable {
     }
     
     
+    @Override
+    public String toString() {
+        return "Fighter{" + "fighterId=" + fighterId + ", scaName=" + scaName + ", scaMemberNo=" + scaMemberNo + ", modernName=" + modernName + ", dateOfBirth=" + dateOfBirth + ", googleId=" + googleId + ", email=" + email + ", address=" + address + ", phone=" + phone + ", authorization=" + authorization + ", scaGroup=" + scaGroup + ", role=" + role + ", status=" + status + ", treaty=" + treaty + ", note=" + note + '}';
+    }
+
+    
 }

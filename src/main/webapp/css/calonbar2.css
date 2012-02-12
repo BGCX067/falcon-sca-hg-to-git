@@ -23,6 +23,7 @@ root {
     padding:4px;
     padding-right: 10%;
     font-size: 100%;
+    background-color: WHITE;
 }
 
 a.calonbarlink:link, a.calonbarlink:visited {

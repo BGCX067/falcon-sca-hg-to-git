@@ -232,16 +232,19 @@ public class FighterDAO {
         }
         if (fighter.getAddress() != null && fighter.getAddress().size() > 0) {
             Address address = fighter.getAddress().get(0);
-            query = pm.newQuery("select from " + Fighter.class.getName()
-                    + " where modernName == '" + fighter.getModernName() + "'");
-            fighters = (List<Fighter>) query.execute();
+            query = pm.newQuery(Fighter.class);
+            query.setFilter("modernName == modernNameParam");
+            query.declareParameters("String modernNameParam");
+            fighters = (List<Fighter>) query.execute(fighter.getModernName());
             if (fighters != null && fighters.size() > 0) {
                 for (Fighter f : fighters) {
-                    Address a = f.getAddress().get(0);
-                    if (StringUtils.equals(a.getAddress1(), address.getAddress1())
-                            && StringUtils.equals(a.getCity(), address.getCity())
-                            && StringUtils.equals(a.getState(), address.getState())) {
-                        throw new ValidationException("A fighter with that modern name and address already exists in the database");
+                    if (f.getAddress() != null && f.getAddress().size() > 0) {
+                        Address a = f.getAddress().get(0);
+                        if (StringUtils.equals(a.getAddress1(), address.getAddress1())
+                                && StringUtils.equals(a.getCity(), address.getCity())
+                                && StringUtils.equals(a.getState(), address.getState())) {
+                            throw new ValidationException("A fighter with that modern name and address already exists in the database");
+                        }
                     }
                 }
             }

@@ -58,8 +58,11 @@
                     inline: true
                 });
                 var availableTags = [];
-            <% for (int i = 0; i < fighters.size(); ++i) {%>
-                    availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
+            <% for (int i = 0; i < fighters.size(); ++i) {
+                  String scaName = fighters.get(i).getScaName();
+                  scaName = scaName.replace("\"", "\\\"");
+            %>
+                availableTags[<%= i%>] = "<%=scaName%>";
             <% }%>
                     $( "#search" ).autocomplete({
                         source: availableTags,

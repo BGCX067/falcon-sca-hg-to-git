@@ -67,8 +67,11 @@
                 
                 
                 var availableTags = [];
-            <% for (int i = 0; i < fighters.size(); ++i) {%>
-                    availableTags[<%= i%>] = "<%= fighters.get(i).getScaName()%>";
+            <% for (int i = 0; i < fighters.size(); ++i) {
+                  String scaName = fighters.get(i).getScaName();
+                  scaName = scaName.replace("\"", "\\\"");
+            %>
+                availableTags[<%= i%>] = "<%=scaName%>";
             <% }%>
                     $( "#search" ).autocomplete({
                         source: availableTags,
@@ -101,7 +104,7 @@
     </head>
     <body>
         <div id="dialog-confirm" title="Delete this fighter?">
-            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This fighter will be permanently and cannot be undone . Are you sure?</p>
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This fighter will be permanently deleted and cannot be undone . Are you sure?</p>
         </div>
 
         <jsp:useBean id="fighter" scope="request" class="org.sca.calontir.cmpe.dto.Fighter" /> 
@@ -153,7 +156,7 @@
                     <cmp:editButton mode="<%=mode%>" target="FighterInfo" form="document.fighterInfoForm" fighterId="<%= fighterId %>" />
                 </div>
                 <div class="dataBody">
-                    <% if (security.canEditFighter(fighterId)) {%>
+                    <% if (userService.isUserAdmin() || security.canEditFighter(fighterId)) {%>
                     <div id="fighterInfo">
                         <table class="wide-table">
                             <tr>

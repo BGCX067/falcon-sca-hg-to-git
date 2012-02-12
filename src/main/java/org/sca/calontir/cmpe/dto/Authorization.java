@@ -35,4 +35,11 @@ public class Authorization implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Authorization{" + "code=" + code + ", description=" + description + ", date=" + date + '}';
+    }
+    
+    
 }
