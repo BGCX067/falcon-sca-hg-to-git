@@ -150,7 +150,7 @@ public class FighterServerResourceTest {
         return groups;
     }
 
-    @Test
+    //@Test
     public void testLoadData() {
         CSVReader reader;
         Map<String, ScaGroup> groups = getGroupMap();
