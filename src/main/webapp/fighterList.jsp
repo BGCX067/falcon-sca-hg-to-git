@@ -32,6 +32,7 @@
     if (cbar == null) {
         cbar = "0";
     }
+    cbar = "1";
 %>
 <html>
     <head>
