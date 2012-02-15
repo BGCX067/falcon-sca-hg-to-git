@@ -35,6 +35,6 @@
         }
     %>
     |
-    <a href="/AdminServlet?calonbar=0" class="calonbarlink" title="Switch Calonbar">[*]</a>
+    <a href="/about.jsp" class="calonbarlink" title="About">About</a>
 
 </div>

@@ -32,7 +32,9 @@ public class EditButton extends SimpleTagSupport {
         security = SecurityFactory.getSecurity();
         UserService userService = UserServiceFactory.getUserService();
         try {
-            if (userService.isUserAdmin() || security.canEdit(fighterId, target)) {
+            if (userService.isUserLoggedIn() &&
+                    (userService.isUserAdmin() || 
+                    security.canEdit(fighterId, target))) {
                 if (mode != null && mode.equals("add")) {
                     doAdd(out);
                 } else if (mode != null && mode.startsWith("edit")) {

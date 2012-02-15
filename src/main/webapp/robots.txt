@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /index.jsp
+Disallow: /fighter.jsp
+Disallow: /fighterList.jsp
+Disallow: /FighterServlet
+Disallow: /FighterSearchServlet
+Disallow: /AdminServlet
+Disallow: /remote_api
+Disallow: /js/
+Disallow: /css/
+Disallow: /ws/
