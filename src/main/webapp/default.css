@@ -306,8 +306,9 @@ a.BPrint:hover {
 table.wide-table {
     width: 100%;
 }
-.about {
-    margin-top: 2.5em;
+
+#about {
+    margin-top: 5em;
     margin-right: 1.5em;
     margin-left: 1.5em;
     margin-bottom: 1.5em;
