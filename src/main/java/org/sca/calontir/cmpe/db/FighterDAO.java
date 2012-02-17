@@ -2,18 +2,13 @@ package org.sca.calontir.cmpe.db;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.cache.Cache;
-import javax.cache.CacheException;
-import javax.cache.CacheFactory;
-import javax.cache.CacheManager;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.data.Address;
 import org.sca.calontir.cmpe.data.Authorization;
@@ -28,25 +23,18 @@ import org.sca.calontir.cmpe.dto.FighterListItem;
 public class FighterDAO {
 
     private final PersistenceManager pm = PMF.get().getPersistenceManager();
-    private Cache cache;
+    private FighterCache fCache = FighterCache.getInstance();
 
     public FighterDAO() {
-
-        try {
-            CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-            cache = cacheFactory.createCache(Collections.emptyMap());
-        } catch (CacheException e) {
-            // ...
-        }
     }
 
     public org.sca.calontir.cmpe.dto.Fighter getFighter(long fighterId) {
-        org.sca.calontir.cmpe.dto.Fighter retVal = (org.sca.calontir.cmpe.dto.Fighter) cache.get(fighterId);
+        org.sca.calontir.cmpe.dto.Fighter retVal = fCache.getFighter(fighterId);
         if (retVal == null) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, String.format("Getting %d from datastore", fighterId));
             Fighter fighter = getFighterDO(fighterId);
             retVal = DataTransfer.convert(fighter);
-            cache.put(fighterId, retVal);
+            fCache.put(retVal);
         }
 
         return retVal;
@@ -124,24 +112,37 @@ public class FighterDAO {
     }
 
     public List<FighterListItem> getFighterListItems() {
-        // TODO: Move all access to fighter list to memcache.
-        List<FighterListItem> retArray = (List<FighterListItem>) cache.get("fighterList");
-        if (retArray == null) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Getting fighter list from datastore");
-            List<Fighter> fighters = returnAllFighters();
-            retArray = new ArrayList<FighterListItem>();
-            for (Fighter f : fighters) {
-                retArray.add(DataTransfer.convertToListItem(f));
-            }
-            cache.put("fighterList", retArray);
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Getting fighter list from datastore as of {0}", fCache.getLastUpdate());
+        List<Fighter> fighters = getAllFightersAsOf(fCache.getLastUpdate());
+        Map<Long, FighterListItem> fighterListMap = new HashMap<Long, FighterListItem>();
+        for (Fighter f : fighters) {
+            FighterListItem fli = DataTransfer.convertToListItem(f);
+            fighterListMap.put(fli.getFighterId(), fli);
         }
-        return retArray;
+        fCache.putAll(fighterListMap);
+        return fCache.getFighterList();
+    }
+
+    private List<Fighter> getAllFightersAsOf(DateTime dt) {
+        if(dt == null)
+            return returnAllFighters();
+        Query query = pm.newQuery("select from Fighter " +
+                              "where lastUpdated > lastUpdateParam " +
+//                              "or lastUpdated == null " +
+                              "parameters Date lastUpdateParam " +
+                              "order by scaName");
+        List<Fighter> fighters = (List<Fighter>) query.execute(dt.toDate());
+        
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, 
+                "Getting updated fighters: {0} as of {1}", new Object[] {fighters.size(), dt.toString()});
+        return fighters;
     }
 
     private List<Fighter> returnAllFighters() {
         Query query = pm.newQuery(Fighter.class);
         query.setOrdering("scaName");
         List<Fighter> fighters = (List<Fighter>) query.execute();
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Getting all fighters: {0}", fighters.size());
         return fighters;
     }
 
@@ -162,17 +163,19 @@ public class FighterDAO {
         Long keyValue = null;
 
         Fighter f = null;
-        cache.clear();
+
         if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
             Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighter.getFighterId());
             f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
+            fCache.remove(fighter.getFighterId());
         }
         f = DataTransfer.convert(fighter, f);
         if (validate) {
             validate(f);
         }
         try {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving " + f.getScaName());
+            f.setLastUpdated(new Date());
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving {0}", f.getScaName());
             f = pm.makePersistent(f);
             pm.flush();
             if (f.getFighterId() == null) {
@@ -180,6 +183,7 @@ public class FighterDAO {
             } else {
                 keyValue = f.getFighterId().getId();
             }
+            // TODO: Cache is "dirty", at least one fighter is missing.
         } finally {
             pm.close();
         }
@@ -187,10 +191,9 @@ public class FighterDAO {
     }
 
     public void deleteFighter(Long fighterId) {
-        Fighter f = null;
-        cache.clear();
+        fCache.remove(fighterId);
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
-        f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
+        Fighter f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
         try {
             pm.deletePersistent(f);
         } finally {
@@ -198,8 +201,8 @@ public class FighterDAO {
         }
     }
 
-    public void deleteAuthorization(Authorization authorization) {
-        cache.clear();
+    public void deleteAuthorization(Long fighterId, Authorization authorization) {
+        fCache.remove(fighterId);
         authorization = (Authorization) pm.getObjectById(authorization.getAuthorizatoinId());
         pm.deletePersistent(authorization);
     }

@@ -6,7 +6,7 @@ import java.io.Serializable;
  *
  * @author rik
  */
-public class FighterListItem implements Serializable {
+public class FighterListItem implements Serializable, Comparable<FighterListItem> {
     private Long fighterId;
     private String scaName;
     private String authorizations;
@@ -51,6 +51,11 @@ public class FighterListItem implements Serializable {
 
     public void setScaName(String scaName) {
         this.scaName = scaName;
+    }
+
+    @Override
+    public int compareTo(FighterListItem o) {
+        return this.scaName.compareTo(o.getScaName());
     }
     
 }

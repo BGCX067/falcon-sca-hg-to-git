@@ -47,6 +47,10 @@ public class Fighter {
     private Key treatyKey;
     @Persistent
     private Note note;
+    @Persistent
+    private Date lastUpdated;
+    @Persistent
+    private Key userUpdated;
 
     public Key getFighterId() {
         return fighterId;
@@ -166,6 +170,22 @@ public class Fighter {
 
     public void setNote(Note note) {
         this.note = note;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Key getUserUpdated() {
+        return userUpdated;
+    }
+
+    public void setUserUpdated(Key userUpdated) {
+        this.userUpdated = userUpdated;
     }
     
     
