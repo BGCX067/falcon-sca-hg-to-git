@@ -126,11 +126,10 @@ public class FighterDAO {
     private List<Fighter> getAllFightersAsOf(DateTime dt) {
         if(dt == null)
             return returnAllFighters();
-        Query query = pm.newQuery("select from Fighter " +
-                              "where lastUpdated > lastUpdateParam " +
-//                              "or lastUpdated == null " +
-                              "parameters Date lastUpdateParam " +
-                              "order by scaName");
+        Query query = pm.newQuery(Fighter.class);
+        query.setFilter("lastUpdated > lastUpdateParam");
+        query.declareImports("import java.util.Date");
+        query.declareParameters("Date lastUpdateParam");
         List<Fighter> fighters = (List<Fighter>) query.execute(dt.toDate());
         
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, 
