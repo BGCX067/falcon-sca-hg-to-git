@@ -31,6 +31,7 @@
     if (cbar == null) {
         cbar = "0";
     }
+    cbar = "1";
 %>
 <html>
     <head>
@@ -58,10 +59,10 @@
                 });
                 var availableTags = [];
             <% for (int i = 0; i < fighters.size(); ++i) {
-                  String scaName = fighters.get(i).getScaName();
-                  scaName = scaName.replace("\"", "\\\"");
+                    String scaName = fighters.get(i).getScaName();
+                    scaName = scaName.replace("\"", "\\\"");
             %>
-                availableTags[<%= i%>] = "<%=scaName%>";
+                    availableTags[<%= i%>] = "<%=scaName%>";
             <% }%>
                     $( "#search" ).autocomplete({
                         source: availableTags,
@@ -85,7 +86,20 @@
         <%@include file="WEB-INF/jspf/messagebox.jspf" %>
         <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
+        <div class="dataBox">
+            <div class="dataBody">
+                <p>Not registered? Sign up now!</p>
 
+                <p>Registering with the Calontir Marshalallate system allows you 
+                    review your own authorizations, update your contact information, 
+                    and print your own fighter card at home.</p>
+
+                <div style="text-align: center;">
+                    <iframe src="https://docs.google.com/spreadsheet/embeddedform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ" 
+                            width="760" height="853" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+                </div>
+            </div>
+        </div>
 
 
 

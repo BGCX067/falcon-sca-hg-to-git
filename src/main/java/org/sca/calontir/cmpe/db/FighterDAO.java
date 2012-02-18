@@ -47,13 +47,16 @@ public class FighterDAO {
     }
 
     public org.sca.calontir.cmpe.dto.Fighter getFighterByGoogleId(String userId) {
-        Query query = pm.newQuery(Fighter.class);
-        query.setFilter("googleId == googleIdParam");
-        query.declareParameters("String googleIdParam");
-        List<Fighter> fighters = (List<Fighter>) query.execute(userId);
-        org.sca.calontir.cmpe.dto.Fighter retval = null;
-        if (fighters != null && fighters.size() > 0) {
-            retval = DataTransfer.convert(fighters.get(0));
+        org.sca.calontir.cmpe.dto.Fighter retval = fCache.getFighterByGoogleId(userId);
+        if (retval == null) {
+            Query query = pm.newQuery(Fighter.class);
+            query.setFilter("googleId == googleIdParam");
+            query.declareParameters("String googleIdParam");
+            List<Fighter> fighters = (List<Fighter>) query.execute(userId);
+
+            if (fighters != null && fighters.size() > 0) {
+                retval = DataTransfer.convert(fighters.get(0));
+            }
         }
         return retval;
     }
@@ -121,16 +124,17 @@ public class FighterDAO {
     }
 
     private List<Fighter> getAllFightersAsOf(DateTime dt) {
-        if(dt == null)
+        if (dt == null) {
             return returnAllFighters();
+        }
         Query query = pm.newQuery(Fighter.class);
         query.setFilter("lastUpdated > lastUpdateParam");
         query.declareImports("import java.util.Date");
         query.declareParameters("Date lastUpdateParam");
         List<Fighter> fighters = (List<Fighter>) query.execute(dt.toDate());
-        
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, 
-                "Getting updated fighters: {0} as of {1}", new Object[] {fighters.size(), dt.toString()});
+
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+                "Getting updated fighters: {0} as of {1}", new Object[]{fighters.size(), dt.toString()});
         return fighters;
     }
 
