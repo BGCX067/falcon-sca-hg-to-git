@@ -58,9 +58,6 @@ public class FighterDAO {
         return retval;
     }
 
-    /*
-     * TODO: Should return fighters if name is contained (may be wildcard)
-     */
     public List<org.sca.calontir.cmpe.dto.Fighter> queryFightersByScaName(String scaName) {
         List<org.sca.calontir.cmpe.dto.Fighter> retArray = new ArrayList<org.sca.calontir.cmpe.dto.Fighter>();
         if (StringUtils.isBlank(scaName)) {
@@ -154,11 +151,11 @@ public class FighterDAO {
         return retArray;
     }
 
-    public Long saveFighter(org.sca.calontir.cmpe.dto.Fighter fighter) throws ValidationException {
-        return this.saveFighter(fighter, true);
+    public Long saveFighter(org.sca.calontir.cmpe.dto.Fighter fighter, Long userId) throws ValidationException {
+        return this.saveFighter(fighter, userId, true);
     }
 
-    public Long saveFighter(org.sca.calontir.cmpe.dto.Fighter fighter, boolean validate) throws ValidationException {
+    public Long saveFighter(org.sca.calontir.cmpe.dto.Fighter fighter, Long userId, boolean validate) throws ValidationException {
         Long keyValue = null;
 
         Fighter f = null;
@@ -174,6 +171,7 @@ public class FighterDAO {
         }
         try {
             f.setLastUpdated(new Date());
+            f.setUserUpdated(userId);
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving {0}", f.getScaName());
             f = pm.makePersistent(f);
             pm.flush();
@@ -181,8 +179,10 @@ public class FighterDAO {
                 System.out.println("Key not updated.");
             } else {
                 keyValue = f.getFighterId().getId();
+                fCache.put(DataTransfer.convert(f));
+                fCache.put(DataTransfer.convertToListItem(f));
             }
-            // TODO: Cache is "dirty", at least one fighter is missing.
+
         } finally {
             pm.close();
         }

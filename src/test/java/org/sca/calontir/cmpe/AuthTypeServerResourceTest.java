@@ -94,7 +94,5 @@ public class AuthTypeServerResourceTest {
         System.out.println("remove");
         AuthTypeServerResource instance = new AuthTypeServerResource();
         instance.remove();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 }

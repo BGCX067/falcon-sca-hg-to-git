@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.print.CardMaker;
+import org.sca.calontir.cmpe.user.Security;
+import org.sca.calontir.cmpe.user.SecurityFactory;
 import org.sca.calontir.cmpe.utils.FighterUpdater;
 
 /**
@@ -37,8 +39,7 @@ public class FighterServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
+        Security security = SecurityFactory.getSecurity();
 
         FighterDAO dao = new FighterDAO();
 
@@ -56,7 +57,7 @@ public class FighterServlet extends HttpServlet {
                     fighter = FighterUpdater.infoFromRequest(request, fighter);
                 }
                 try {
-                    Long key = dao.saveFighter(fighter, false);
+                    Long key = dao.saveFighter(fighter, security.getUser().getFighterId(), false);
                     fighter.setFighterId(key);
                 } catch (ValidationException ex) {
                 }
@@ -105,7 +106,7 @@ public class FighterServlet extends HttpServlet {
             fighter = FighterUpdater.fromRequest(request, new Fighter());
             boolean success = false;
             try {
-                dao.saveFighter(fighter);
+                dao.saveFighter(fighter, security.getUser().getFighterId());
                 request.setAttribute("mode", "view");
                 success = true;
             } catch (ValidationException ex) {

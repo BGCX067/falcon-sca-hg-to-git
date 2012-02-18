@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.restlet.security.User;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.user.Security;
+import org.sca.calontir.cmpe.user.SecurityFactory;
 
 /**
  *
@@ -50,7 +52,8 @@ public class FighterServerResource extends ServerResource implements FighterReso
     @Put
     public void store(Fighter fighter) {
         try {
-            dao.saveFighter(fighter);
+            Security security = SecurityFactory.getSecurity();
+            dao.saveFighter(fighter, security.getUser().getFighterId());
         } catch (ValidationException ex) {
             getLogger().severe(ex.getMessage());
         }

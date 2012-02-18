@@ -64,8 +64,6 @@ public class FighterServerResourceTest {
         List<Fighter> result = fighterResource.retrieve();
         System.out.println(result);
 //        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
     }
 
     /**
@@ -128,8 +126,6 @@ public class FighterServerResourceTest {
         System.out.println("remove");
         FighterServerResource instance = new FighterServerResource();
         instance.remove();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     private Map<String, ScaGroup> getGroupMap() {

@@ -50,7 +50,7 @@ public class Fighter {
     @Persistent
     private Date lastUpdated;
     @Persistent
-    private Key userUpdated;
+    private Long userUpdated;
 
     public Key getFighterId() {
         return fighterId;
@@ -180,11 +180,11 @@ public class Fighter {
         this.lastUpdated = lastUpdated;
     }
 
-    public Key getUserUpdated() {
+    public Long getUserUpdated() {
         return userUpdated;
     }
 
-    public void setUserUpdated(Key userUpdated) {
+    public void setUserUpdated(Long userUpdated) {
         this.userUpdated = userUpdated;
     }
     

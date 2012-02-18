@@ -25,7 +25,7 @@ public class Security {
         return user == null ? false : user.getRole().compareTo(userRole) >= 0;
     }
 
-    protected User getAeUser() {
+    public User getAeUser() {
         return aeUser;
     }
 
@@ -33,7 +33,7 @@ public class Security {
         this.aeUser = aeUser;
     }
 
-    protected Fighter getUser() {
+    public Fighter getUser() {
         return user;
     }
 
