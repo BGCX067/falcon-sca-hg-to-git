@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.db;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import static com.google.appengine.api.datastore.FetchOptions.Builder.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -211,6 +212,10 @@ public class FighterDAO {
     }
 
     protected boolean validate(Fighter fighter) throws ValidationException {
+        if (fighter.getScaGroup() == null) {
+            throw new ValidationException( "Please select SCA Group");                  
+        }
+        
         Query query = pm.newQuery(Fighter.class);
         query.setFilter("scaName == scaNameParam");
         query.declareParameters("String scaNameParam");

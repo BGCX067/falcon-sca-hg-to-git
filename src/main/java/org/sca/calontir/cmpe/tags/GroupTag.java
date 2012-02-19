@@ -1,6 +1,7 @@
 package org.sca.calontir.cmpe.tags;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.jsp.JspWriter;
 import org.sca.calontir.cmpe.dto.ScaGroup;
@@ -28,8 +29,10 @@ public class GroupTag extends CMPExtendedTagSupport {
 
     protected void doAdd(JspWriter out) throws IOException {
         List<ScaGroup> groups = groupDao.getScaGroup();
+        Collections.sort(groups);
 
         out.println("<select name=\"scaGroup\">");
+        out.println("<option value=\"SELECTGROUP\">Select a group</option>");
         for (ScaGroup group : groups) {
             out.println("<option value=\"" + group.getGroupName() + "\">" + group.getGroupName() + "</option>");
         }
@@ -45,6 +48,7 @@ public class GroupTag extends CMPExtendedTagSupport {
 
     protected void doEdit(JspWriter out) throws IOException {
         List<ScaGroup> groups = groupDao.getScaGroup();
+        Collections.sort(groups);
 
         out.println("<select name=\"scaGroup\">");
         for (ScaGroup group : groups) {

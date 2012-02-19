@@ -40,7 +40,7 @@ public class FighterUpdater {
         }
 
         String groupStr = request.getParameter("scaGroup");
-        if (StringUtils.isNotBlank(groupStr)) {
+        if (StringUtils.isNotBlank(groupStr) && !groupStr.equals("SELECTGROUP")) {
             ScaGroup group = new ScaGroup();
             group.setGroupName(groupStr);
             fighter.setScaGroup(group);
