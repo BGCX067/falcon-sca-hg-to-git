@@ -66,6 +66,16 @@
         <url-pattern>/AdminServlet</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>loginService</servlet-name>
+        <servlet-class>org.sca.calontir.cmpe.server.LoginServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>loginService</servlet-name>
+        <url-pattern>/fighter/login</url-pattern>
+    </servlet-mapping>
+    
         
     <!-- The Gaelyk Groovlet servlet -->
     <servlet>
