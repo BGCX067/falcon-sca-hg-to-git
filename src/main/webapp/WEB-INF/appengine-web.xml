@@ -7,4 +7,8 @@
       <handler file="default_error.html"/>
       <handler file="over_quota.html" error-code="over_quota"/>
     </static-error-handlers>
+    
+    <static-files>
+        <exclude path="/WEB-INF/**.groovy" />
+    </static-files>
 </appengine-web-app>
