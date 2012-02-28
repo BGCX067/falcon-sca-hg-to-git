@@ -305,7 +305,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>1.2</version>
+                <version>2.4.0</version>
                 <configuration>
                     <logLevel>INFO</logLevel>
 
@@ -420,7 +420,7 @@
         <gae.version>1.6.2.1</gae.version>
 
     <!-- GWT version -->
-        <gwt.version>1.7.1</gwt.version>
+        <gwt.version>2.4.0</gwt.version>
         
         <gaelyk.version>0.7.0</gaelyk.version>
 		<!--

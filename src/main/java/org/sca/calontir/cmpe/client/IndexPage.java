@@ -4,6 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import org.sca.calontir.cmpe.client.ui.CalonBar;
+import org.sca.calontir.cmpe.client.ui.SearchBar;
 
 public class IndexPage implements EntryPoint {
 
@@ -21,5 +22,8 @@ public class IndexPage implements EntryPoint {
         CalonBar calonBar = new CalonBar();
         
         RootPanel.get().add(calonBar);
+        
+        SearchBar searchBar = new SearchBar();
+        RootPanel.get().add(searchBar);
     }
 }

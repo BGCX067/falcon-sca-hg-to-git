@@ -34,7 +34,6 @@ public class CalonBar extends Composite {
 
     public CalonBar() {
 
-//        barPanel.setStyleName(CALONBAR);
         DOM.setElementAttribute(barPanel.getElement(), "id", CALONBAR);
 
         homeLink.setHref(INDEXHTML);

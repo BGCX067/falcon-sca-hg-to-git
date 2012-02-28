@@ -93,7 +93,7 @@
     </filter>
     <filter-mapping>
         <filter-name>RoutesFilter</filter-name>
-        <url-pattern>/gv/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
     
     <security-constraint>
