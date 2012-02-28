@@ -21,24 +21,13 @@ root {
     font-weight:bold;
     color:#FFE766;
     padding:4px;
-    padding-right: 10%;
+    margin-right: 10%;
     font-size: 100%;
     background-color: WHITE;
 }
 
-.calonbar {
-    position: fixed;
-    top:0;
-    right:0;
-    min-width: 10%;
-    float: right;
-    margin-left: 2em;
-    font-weight:bold;
-    color:#FFE766;
-    padding:4px;
-    padding-right: 10%;
-    font-size: 100%;
-    background-color: WHITE;
+.calonbarlink {
+   display: inline;
 }
 
 a.calonbarlink:link, a.calonbarlink:visited {
