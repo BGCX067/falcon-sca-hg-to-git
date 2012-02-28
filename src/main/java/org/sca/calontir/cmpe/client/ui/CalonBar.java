@@ -48,9 +48,11 @@ public class CalonBar extends Composite {
         LoginServiceAsync loginService = GWT.create(LoginService.class);
         loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
 
+            @Override
             public void onFailure(Throwable error) {
             }
 
+            @Override
             public void onSuccess(LoginInfo result) {
                 loginInfo = result;
                 if (loginInfo.isLoggedIn()) {
