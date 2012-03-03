@@ -4,13 +4,22 @@
  */
 package org.sca.calontir.cmpe.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.storage.client.Storage;
+import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import java.lang.reflect.Array;
+import java.util.List;
+import org.sca.calontir.cmpe.client.FighterListInfo;
+import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.client.FighterServiceAsync;
 
 /**
  *
@@ -18,6 +27,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
  */
 public class SearchBar extends Composite {
 
+    private Storage stockStore = null;
     private Hidden mode = new Hidden("mode");
 
     public SearchBar() {
@@ -34,11 +44,7 @@ public class SearchBar extends Composite {
         mode.setID("mode");
         mode.setDefaultValue("");
 
-        MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-        oracle.add("Rik");
-        oracle.add("Brendan");
-        oracle.add("Brendan Mac");
-        SuggestBox box = new SuggestBox(oracle);
+        SuggestBox box = buildSuggestBox();
         DOM.setElementAttribute(box.getElement(), "id", "search");
 
         searchPanel.add(box);
@@ -57,7 +63,6 @@ public class SearchBar extends Composite {
 
             @Override
             public void onSubmitComplete(SubmitCompleteEvent event) {
-
             }
         });
 
@@ -70,5 +75,28 @@ public class SearchBar extends Composite {
         });
 
         initWidget(searchForm);
+    }
+
+    private SuggestBox buildSuggestBox() {
+        final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
+        stockStore = Storage.getLocalStorageIfSupported();
+        if (stockStore != null) {
+            String scaNameListStr = stockStore.getItem("scaNameList");
+            if (scaNameListStr != null && scaNameListStr.trim().length() > 0) {
+                String[] scaNameArray = scaNameListStr.split(";");
+                String test = "";
+                for (int i = 0; i < scaNameArray.length; ++i) {
+                    oracle.add(scaNameArray[i]);
+                    test += scaNameArray[i] + "\n";
+                }
+                Window.alert(test);
+            } else {
+                Window.alert("Data not found");
+            }
+        }
+
+
+
+        return new SuggestBox(oracle);
     }
 }

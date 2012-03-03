@@ -76,6 +76,16 @@
         <url-pattern>/fighter/login</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>fighterService</servlet-name>
+        <servlet-class>org.sca.calontir.cmpe.server.FighterServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>fighterService</servlet-name>
+        <url-pattern>/fighter/fighter</url-pattern>
+    </servlet-mapping>
+    
         
     <!-- The Gaelyk Groovlet servlet -->
     <servlet>
