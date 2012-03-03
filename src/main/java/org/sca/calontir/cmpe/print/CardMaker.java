@@ -62,7 +62,7 @@ public class CardMaker {
     }
 
     private Image loadBackground() throws BadElementException, IOException {
-        String name = "border.gif";
+        String name = "background.jpg";
 
         return loadImage(name);
     }
@@ -80,7 +80,7 @@ public class CardMaker {
             url = getClass().getResource("/" + filename);
         }
         if (url != null) {
-            Logger.getLogger(CardMaker.class.getName()).log(Level.FINE, "Found gif, loading");
+            Logger.getLogger(CardMaker.class.getName()).log(Level.FINE, "Found image, loading");
             return Image.getInstance(url);
         }
 
@@ -96,7 +96,7 @@ public class CardMaker {
         PdfPCell cell;
 
         table.setTotalWidth(size.getRight());
-        cell = new PdfPCell(new Phrase("\n\n", largFont));
+        cell = new PdfPCell(new Phrase("\n\n\n", largFont));
         cell.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell);
 
