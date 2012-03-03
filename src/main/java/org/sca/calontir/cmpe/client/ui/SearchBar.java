@@ -46,6 +46,7 @@ public class SearchBar extends Composite {
 
         SuggestBox box = buildSuggestBox();
         DOM.setElementAttribute(box.getElement(), "id", "search");
+        DOM.setElementAttribute(box.getElement(), "autocomplete", "off");
 
         searchPanel.add(box);
 
@@ -84,14 +85,9 @@ public class SearchBar extends Composite {
             String scaNameListStr = stockStore.getItem("scaNameList");
             if (scaNameListStr != null && scaNameListStr.trim().length() > 0) {
                 String[] scaNameArray = scaNameListStr.split(";");
-                String test = "";
                 for (int i = 0; i < scaNameArray.length; ++i) {
                     oracle.add(scaNameArray[i]);
-                    test += scaNameArray[i] + "\n";
                 }
-                Window.alert(test);
-            } else {
-                Window.alert("Data not found");
             }
         }
 
