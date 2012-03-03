@@ -4,22 +4,13 @@
  */
 package org.sca.calontir.cmpe.client.ui;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import java.lang.reflect.Array;
-import java.util.List;
-import org.sca.calontir.cmpe.client.FighterListInfo;
-import org.sca.calontir.cmpe.client.FighterService;
-import org.sca.calontir.cmpe.client.FighterServiceAsync;
+import com.google.gwt.user.client.ui.*;
 
 /**
  *

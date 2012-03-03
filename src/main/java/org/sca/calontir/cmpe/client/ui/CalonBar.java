@@ -74,7 +74,7 @@ public class CalonBar extends Composite {
 
     private Label getDivBar() {
         Label divBar = new Label();
-        divBar.setText("|");
+        divBar.setText(" | ");
         divBar.setStyleName(CALONBARLINK);
         return divBar;
     }

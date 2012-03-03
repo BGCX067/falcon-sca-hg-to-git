@@ -7,7 +7,7 @@ import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.*;
 import java.util.List;
 import org.sca.calontir.cmpe.client.ui.CalonBar;
 import org.sca.calontir.cmpe.client.ui.SearchBar;
@@ -26,8 +26,7 @@ public class IndexPage implements EntryPoint {
 
     private void buildIndexPage() {
         // remove Loading-Message from page
-        RootPanel.getBodyElement().removeChild(
-                DOM.getElementById("Loading-Message"));
+        RootPanel.getBodyElement().removeChild(DOM.getElementById("Loading-Message"));
 
 
         CalonBar calonBar = new CalonBar();
@@ -35,6 +34,38 @@ public class IndexPage implements EntryPoint {
 
         SearchBar searchBar = new SearchBar();
         RootPanel.get().add(searchBar);
+
+
+        // if index page
+        onIndexPage();
+
+    }
+
+    private void onIndexPage() {
+        Panel signupPanel = new FlowPanel();
+        signupPanel.setStyleName("dataBox");
+        DOM.setElementAttribute(signupPanel.getElement(), "id", "Signup-Form");
+
+        Panel innerSignupPanel = new FlowPanel();
+        innerSignupPanel.setStyleName("dataBody");
+
+        signupPanel.add(innerSignupPanel);
+
+        Label p = new Label();
+        p.setText("Not registered? Sign up now!");
+
+        Label p2 = new Label();
+        p2.setText("Registering with the Calontir Marshalallate system allows you review your own authorizations, "
+                + "update your contact information, and print your own fighter card at home.");
+
+        HTML form = new HTML("<iframe src=\"https://docs.google.com/spreadsheet/embeddedform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ\" "
+                + "width=\"700\" height=\"853\" frameborder=\"0\" marginheight=\"0\" marginwidth=\0\">Loading Signup Form...</iframe>");
+
+        innerSignupPanel.add(p);
+        innerSignupPanel.add(p2);
+        innerSignupPanel.add(form);
+
+        RootPanel.get().add(signupPanel);
 
     }
 
