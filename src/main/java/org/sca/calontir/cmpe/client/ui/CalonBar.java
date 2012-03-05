@@ -19,7 +19,7 @@ import org.sca.calontir.cmpe.client.LoginServiceAsync;
 public class CalonBar extends Composite {
 
     protected static final String CALONBAR = "calonbar";
-    protected static final String INDEXHTML = "/index.html";
+    protected static final String INDEXHTML = "/";
     protected static final String ABOUT_PAGE = "/about.jsp";
     protected static final String CALONBARLINK = "calonbarlink";
     protected static final String SIGN_IN_TEXT = "Please sign in to your Google Account.";

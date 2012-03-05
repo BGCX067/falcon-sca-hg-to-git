@@ -4,10 +4,12 @@
  */
 package org.sca.calontir.cmpe.client.ui;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.*;
@@ -20,12 +22,12 @@ public class SearchBar extends Composite {
 
     private Storage stockStore = null;
     private Hidden mode = new Hidden("mode");
+    private Button submit;
 
     public SearchBar() {
         final FormPanel searchForm = new FormPanel();
-        searchForm.setAction("/FighterSearchServlet");
+        searchForm.setAction("/fighterg");
         searchForm.setMethod(FormPanel.METHOD_POST);
-
 
 
         FlowPanel searchPanel = new FlowPanel();
@@ -41,20 +43,25 @@ public class SearchBar extends Composite {
 
         searchPanel.add(box);
 
-        searchPanel.add(new Button("Submit", new ClickHandler() {
+        submit = new Button("Submit", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
                 mode.setValue("search");
                 searchForm.submit();
             }
-        }));
+        });
+
+        searchPanel.add(submit);
 
 
         searchForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 
             @Override
             public void onSubmitComplete(SubmitCompleteEvent event) {
+                Window.alert(event.getResults());
+                DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.INLINE);
+                submit.setEnabled(true);
             }
         });
 
@@ -62,7 +69,8 @@ public class SearchBar extends Composite {
 
             @Override
             public void onSubmit(SubmitEvent event) {
-                // Verify here.
+                submit.setEnabled(false);
+                DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
             }
         });
 

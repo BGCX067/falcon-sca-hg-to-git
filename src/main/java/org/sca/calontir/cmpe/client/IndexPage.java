@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.client.DOM;
@@ -38,13 +39,14 @@ public class IndexPage implements EntryPoint {
 
         // if index page
         onIndexPage();
+        foundMultibleResults();
 
     }
 
     private void onIndexPage() {
         Panel signupPanel = new FlowPanel();
         signupPanel.setStyleName("dataBox");
-        DOM.setElementAttribute(signupPanel.getElement(), "id", "Signup-Form");
+        signupPanel.getElement().setId("Signup-Form");
 
         Panel innerSignupPanel = new FlowPanel();
         innerSignupPanel.setStyleName("dataBody");
@@ -67,6 +69,25 @@ public class IndexPage implements EntryPoint {
 
         RootPanel.get().add(signupPanel);
 
+    }
+    
+    private void foundMultibleResults() {
+        Panel listPanel = new FlowPanel();
+        listPanel.setStyleName("list");
+        listPanel.getElement().setId("List-Box");
+
+        Panel listHeader = new FlowPanel();
+        listHeader.setStyleName("listRow");
+        listHeader.addStyleName("header");
+
+        listPanel.add(listHeader);
+        listPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
+        
+        Label scaNameHeader = new Label();
+        scaNameHeader.setText("SCA Name");
+        
+        RootPanel.get().add(listPanel);
+        
     }
 
     private void loadData() {

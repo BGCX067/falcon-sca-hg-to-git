@@ -1,0 +1,1 @@
+post "/fighterg", forward: "/FighterGService.groovy"
