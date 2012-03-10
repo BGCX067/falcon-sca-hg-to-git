@@ -8,6 +8,8 @@ nbproject
 \.pdf$
 \.sh$
 \.csv$
+\.swp$
+\.DS_Store$
 target
 pw.txt
 ^bulkloader*

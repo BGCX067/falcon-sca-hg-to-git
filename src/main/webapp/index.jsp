@@ -96,7 +96,7 @@
 
                 <div style="text-align: center;">
                     <iframe src="https://docs.google.com/spreadsheet/embeddedform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ" 
-                            width="760" height="853" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+                            width="620" height="820" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
                 </div>
             </div>
         </div>
