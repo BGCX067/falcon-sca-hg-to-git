@@ -8,6 +8,8 @@ nbproject
 \.pdf$
 \.sh$
 \.csv$
+\.swp$
+\.DS_Store$
 target
 pw.txt
 ^bulkloader*
@@ -15,3 +17,4 @@ dldata.sh
 nbactions.xml
 upldev.sh
 cmpedata
+^nb-configuration\.xml$

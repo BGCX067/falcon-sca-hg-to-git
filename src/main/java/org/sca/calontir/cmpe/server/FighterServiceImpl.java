@@ -14,14 +14,19 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     public List<FighterListInfo> getListItems() {
         FighterDAO fighterDao = new FighterDAO();
         List<FighterListItem> fighters = fighterDao.getFighterListItems();
-        
+
         List<FighterListInfo> retValList = new ArrayList<FighterListInfo>();
-        for(FighterListItem fli : fighters) {
-            FighterListInfo info = new FighterListInfo();
-            info.setScaName(fli.getScaName());
-            retValList.add(info);
+        for (FighterListItem fli : fighters) {
+            if (fli != null) {
+                FighterListInfo info = new FighterListInfo();
+                info.setFighterId(fli.getFighterId() == null ? 0 : fli.getFighterId());
+                info.setScaName(fli.getScaName() == null ? "" : fli.getScaName());
+                info.setAuthorizations(fli.getAuthorizations() == null ? "" : fli.getAuthorizations());
+                info.setGroup(fli.getGroup() == null ? "" : fli.getGroup());
+                retValList.add(info);
+            }
         }
-        
+
         return retValList;
     }
 }

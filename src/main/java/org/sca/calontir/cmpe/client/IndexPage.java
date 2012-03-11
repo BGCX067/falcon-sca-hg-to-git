@@ -3,12 +3,18 @@ package org.sca.calontir.cmpe.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import java.util.LinkedList;
 import java.util.List;
 import org.sca.calontir.cmpe.client.ui.CalonBar;
 import org.sca.calontir.cmpe.client.ui.SearchBar;
@@ -61,7 +67,7 @@ public class IndexPage implements EntryPoint {
                 + "update your contact information, and print your own fighter card at home.");
 
         HTML form = new HTML("<iframe src=\"https://docs.google.com/spreadsheet/embeddedform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ\" "
-                + "width=\"700\" height=\"853\" frameborder=\"0\" marginheight=\"0\" marginwidth=\0\">Loading Signup Form...</iframe>");
+                + "width=\"620\" height=\"820\" frameborder=\"0\" marginheight=\"0\" marginwidth=\0\">Loading Signup Form...</iframe>");
 
         innerSignupPanel.add(p);
         innerSignupPanel.add(p2);
@@ -76,15 +82,7 @@ public class IndexPage implements EntryPoint {
         listPanel.setStyleName("list");
         listPanel.getElement().setId("List-Box");
 
-        Panel listHeader = new FlowPanel();
-        listHeader.setStyleName("listRow");
-        listHeader.addStyleName("header");
-
-        listPanel.add(listHeader);
-        listPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
-        
-        Label scaNameHeader = new Label();
-        scaNameHeader.setText("SCA Name");
+//        final CellTable<Contact> table = new CellTable<Contact>();
         
         RootPanel.get().add(listPanel);
         
@@ -107,17 +105,24 @@ public class IndexPage implements EntryPoint {
 
                     @Override
                     public void onSuccess(List<FighterListInfo> result) {
-                        StringBuilder scaNameListStr = new StringBuilder();
+                        JSONObject scaNameList = new JSONObject();
                         boolean first = true;
+                        JSONArray scaNameObjs = new JSONArray();
+                        int i = 0;
                         for (FighterListInfo fli : result) {
-                            if (first) {
-                                first = false;
-                            } else {
-                                scaNameListStr.append(";");
-                            }
-                            scaNameListStr.append(fli.getScaName());
+                            JSONString scaName = new JSONString(fli.getScaName());
+                            JSONNumber id = new JSONNumber(fli.getFighterId());
+                            JSONString auths = new JSONString(fli.getAuthorizations());
+                            JSONString group = new JSONString(fli.getGroup());
+                            JSONObject scaNameObj = new JSONObject();
+                            scaNameObj.put("scaName", scaName);
+                            scaNameObj.put("id", id);
+                            scaNameObj.put("authorizations", auths);
+                            scaNameObj.put("group", group);
+                            scaNameObjs.set(i++, scaNameObj);
                         }
-                        stockStore.setItem("scaNameList", scaNameListStr.toString());
+                        scaNameList.put("scaNames", scaNameObjs);
+                        stockStore.setItem("scaNameList", scaNameList.toString());
                         buildIndexPage();
                     }
                 });

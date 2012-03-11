@@ -3,6 +3,7 @@
 <module rename-to="fighter">
     <inherits name="com.google.gwt.user.User" />
     <inherits name="com.google.gwt.user.theme.standard.Standard" />
+    <inherits name="com.google.gwt.json.JSON" />
 
     <source path="data"/>
     <source path="client"/>
