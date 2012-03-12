@@ -2,7 +2,6 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -10,11 +9,16 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import java.util.LinkedList;
+import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.List;
 import org.sca.calontir.cmpe.client.ui.CalonBar;
 import org.sca.calontir.cmpe.client.ui.SearchBar;
@@ -22,6 +26,8 @@ import org.sca.calontir.cmpe.client.ui.SearchBar;
 public class IndexPage implements EntryPoint {
 
     private Storage stockStore = null;
+    final private ListDataProvider<FighterListInfo> dataProvider = new ListDataProvider<FighterListInfo>();
+    final CellTable<FighterListInfo> table = new CellTable<FighterListInfo>();
 
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
@@ -39,7 +45,7 @@ public class IndexPage implements EntryPoint {
         CalonBar calonBar = new CalonBar();
         RootPanel.get().add(calonBar);
 
-        SearchBar searchBar = new SearchBar();
+        SearchBar searchBar = new SearchBar(table, dataProvider);
         RootPanel.get().add(searchBar);
 
 
@@ -76,16 +82,70 @@ public class IndexPage implements EntryPoint {
         RootPanel.get().add(signupPanel);
 
     }
-    
+
     private void foundMultibleResults() {
         Panel listPanel = new FlowPanel();
         listPanel.setStyleName("list");
         listPanel.getElement().setId("List-Box");
 
-//        final CellTable<Contact> table = new CellTable<Contact>();
-        
+        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+        SimplePager pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 10, true);
+        pager.setDisplay(table);
+
+        TextColumn<FighterListInfo> scaNameColumn = new TextColumn<FighterListInfo>() {
+
+            @Override
+            public String getValue(FighterListInfo fli) {
+                return fli.getScaName();
+            }
+        };
+        //TODO: Turning off sorting for now. Once everything else is settled,
+        //      revisit this.
+        scaNameColumn.setSortable(false);
+
+        TextColumn<FighterListInfo> authorizationColumn = new TextColumn<FighterListInfo>() {
+
+            @Override
+            public String getValue(FighterListInfo fli) {
+                return fli.getAuthorizations();
+            }
+        };
+
+        TextColumn<FighterListInfo> groupColumn = new TextColumn<FighterListInfo>() {
+
+            @Override
+            public String getValue(FighterListInfo fli) {
+                return fli.getGroup();
+            }
+        };
+        groupColumn.setSortable(false);
+        table.addColumn(scaNameColumn, "SCA Name");
+        table.addColumn(authorizationColumn, "Authorizations");
+        table.addColumn(groupColumn, "Group");
+
+        final SingleSelectionModel<FighterListInfo> selectionModel = new SingleSelectionModel<FighterListInfo>();
+        table.setSelectionModel(selectionModel);
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+
+            public void onSelectionChange(SelectionChangeEvent event) {
+                FighterListInfo selected = selectionModel.getSelectedObject();
+                if (selected != null) {
+                    Window.open("/FighterSearchServlet?mode=lookup&fid=" + selected.getFighterId(), "_self", "");
+                }
+            }
+        });
+
+
+        dataProvider.addDataDisplay(table);
+
+
+
+        listPanel.add(table);
+        listPanel.add(pager);
+//        listPanel.add(new HTML("&nbsp;"));
+
         RootPanel.get().add(listPanel);
-        
+
     }
 
     private void loadData() {
