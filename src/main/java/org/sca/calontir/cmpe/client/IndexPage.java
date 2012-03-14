@@ -48,7 +48,6 @@ public class IndexPage implements EntryPoint {
         RootPanel.get().add(searchBar);
 
 
-        // if index page
         onIndexPage();
         foundMultibleResults();
 

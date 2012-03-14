@@ -1,3 +1,6 @@
+<%@page import="org.sca.calontir.cmpe.user.SecurityFactory"%>
+<%@page import="org.sca.calontir.cmpe.common.UserRoles"%>
+<%@page import="org.sca.calontir.cmpe.user.Security"%>
 <%@page import="org.sca.calontir.cmpe.dto.FighterListItem"%>
 <%@page import="org.sca.calontir.cmpe.utils.MarshalUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
