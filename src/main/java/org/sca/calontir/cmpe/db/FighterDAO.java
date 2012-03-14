@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.data.Address;
@@ -112,6 +113,23 @@ public class FighterDAO {
         return retList;
     }
 
+    public List<FighterListItem> getFighterListItems(DateTime dt) {
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Getting fighter list from datastore as of {0}", dt);
+        if (dt == null || dt.getYear() == 1966) {
+            return getFighterListItems();
+        }
+
+        List<Fighter> fighters = getAllFightersAsOf(dt);
+        Map<Long, FighterListItem> fighterListMap = new HashMap<Long, FighterListItem>();
+        for (Fighter f : fighters) {
+            FighterListItem fli = DataTransfer.convertToListItem(f);
+            fighterListMap.put(fli.getFighterId(), fli);
+        }
+        List<FighterListItem> retVal = new ArrayList<FighterListItem>(fighterListMap.values());
+        Collections.sort(retVal);
+        return retVal;
+    }
+
     public List<FighterListItem> getFighterListItems() {
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Getting fighter list from datastore as of {0}", fCache.getLastUpdate());
         List<Fighter> fighters = getAllFightersAsOf(fCache.getLastUpdate());
@@ -125,7 +143,7 @@ public class FighterDAO {
     }
 
     private List<Fighter> getAllFightersAsOf(DateTime dt) {
-        if (dt == null) {
+        if (dt == null || dt.toDateMidnight().equals(new DateMidnight(1966, 3, 1))) {
             return returnAllFighters();
         }
         Query query = pm.newQuery(Fighter.class);
@@ -213,9 +231,9 @@ public class FighterDAO {
 
     protected boolean validate(Fighter fighter) throws ValidationException {
         if (fighter.getScaGroup() == null) {
-            throw new ValidationException( "Please select SCA Group");                  
+            throw new ValidationException("Please select SCA Group");
         }
-        
+
         Query query = pm.newQuery(Fighter.class);
         query.setFilter("scaName == scaNameParam");
         query.declareParameters("String scaNameParam");

@@ -2,12 +2,8 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.*;
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
@@ -19,6 +15,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import java.util.Date;
 import java.util.List;
 import org.sca.calontir.cmpe.client.ui.CalonBar;
 import org.sca.calontir.cmpe.client.ui.SearchBar;
@@ -28,12 +25,14 @@ public class IndexPage implements EntryPoint {
     private Storage stockStore = null;
     final private ListDataProvider<FighterListInfo> dataProvider = new ListDataProvider<FighterListInfo>();
     final CellTable<FighterListInfo> table = new CellTable<FighterListInfo>();
+//    private SecurityService security = null;
 
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
      */
     @Override
     public void onModuleLoad() {
+//        security = GWT.create(SecurityService.class);
         loadData();
     }
 
@@ -130,7 +129,9 @@ public class IndexPage implements EntryPoint {
             public void onSelectionChange(SelectionChangeEvent event) {
                 FighterListInfo selected = selectionModel.getSelectedObject();
                 if (selected != null) {
+//                    if (security.canEditFighter(selected.getFighterId())) {
                     Window.open("/FighterSearchServlet?mode=lookup&fid=" + selected.getFighterId(), "_self", "");
+//                    }
                 }
             }
         });
@@ -152,23 +153,38 @@ public class IndexPage implements EntryPoint {
 
         stockStore = Storage.getLocalStorageIfSupported();
         if (stockStore != null) {
-            StorageMap stockMap = new StorageMap(stockStore);
-            if (stockMap.containsValue("scaNameList") != true) {
-                FighterServiceAsync fighterService = GWT.create(FighterService.class);
-                fighterService.getListItems(new AsyncCallback<List<FighterListInfo>>() {
+            FighterServiceAsync fighterService = GWT.create(FighterService.class);
+            final String scaNameListStr = stockStore.getItem("scaNameList");
+            String timeStampStr = stockStore.getItem("scaNameUpdated");
+            Date targetDate = null;
+            if (timeStampStr == null || timeStampStr.trim().isEmpty()) {
+                targetDate = null;
+            } else {
+                long timeStamp = Long.valueOf(timeStampStr);
+                targetDate = new Date(timeStamp);
+            }
+            fighterService.getListItems(targetDate, new AsyncCallback<List<FighterListInfo>>() {
 
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Window.alert("Failed lookup " + caught.getMessage());
-                        buildIndexPage();
+                @Override
+                public void onFailure(Throwable caught) {
+                    Window.alert("Failed lookup " + caught.getMessage());
+                    buildIndexPage();
+                }
+
+                @Override
+                public void onSuccess(List<FighterListInfo> result) {
+                    JSONArray scaNameObjs;
+                    if (scaNameListStr == null) {
+                        scaNameObjs = new JSONArray();
+                    } else {
+                        JSONValue value = JSONParser.parseStrict(scaNameListStr);
+                        JSONObject scaNameObj = value.isObject();
+                        scaNameObjs = scaNameObj.get("scaNames").isArray();
                     }
+                    JSONObject scaNameList = new JSONObject();
 
-                    @Override
-                    public void onSuccess(List<FighterListInfo> result) {
-                        JSONObject scaNameList = new JSONObject();
-                        boolean first = true;
-                        JSONArray scaNameObjs = new JSONArray();
-                        int i = 0;
+                    int i = scaNameObjs.size();
+                    if (result.size() > 0) {
                         for (FighterListInfo fli : result) {
                             JSONString scaName = new JSONString(fli.getScaName());
                             JSONNumber id = new JSONNumber(fli.getFighterId());
@@ -182,11 +198,15 @@ public class IndexPage implements EntryPoint {
                             scaNameObjs.set(i++, scaNameObj);
                         }
                         scaNameList.put("scaNames", scaNameObjs);
+                        stockStore.removeItem("scaNameList");
                         stockStore.setItem("scaNameList", scaNameList.toString());
-                        buildIndexPage();
+                        Date now = new Date();
+                        stockStore.setItem("scaNameUpdated", Long.toString(now.getTime()));
                     }
-                });
-            }
+                    buildIndexPage();
+                }
+            });
+
         }
     }
 }

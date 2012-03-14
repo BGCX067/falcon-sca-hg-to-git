@@ -85,7 +85,6 @@
         <%@include file="WEB-INF/jspf/calonbar2.jspf" %>
         <% }%>
         <%@include file="WEB-INF/jspf/messagebox.jspf" %>
-        <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
         <% List<FighterListItem> fighterList = (List<FighterListItem>) request.getAttribute("fighters");
 
