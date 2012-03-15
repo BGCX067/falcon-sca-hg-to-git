@@ -12,13 +12,10 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 
 /**
@@ -40,12 +37,13 @@ public class SearchBar extends Composite {
 
         searchPanel.add(box);
 
-        submit = new Button("Submit", new ClickHandler() {
+        submit = new Button("Lookup", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
                 submit.setEnabled(false);
                 DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
+                DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.BLOCK);
 
                 String searchName = box.getText();
                 String foundName = null;
@@ -64,8 +62,8 @@ public class SearchBar extends Composite {
                             JSONNumber id = scaNameObj.get("id").isNumber();
                             JSONString auths = scaNameObj.get("authorizations").isString();
                             JSONString group = scaNameObj.get("group").isString();
-                            if (searchName == null || searchName.isEmpty() ||
-                                scaName.stringValue().toUpperCase().contains(searchName.toUpperCase())) {
+                            if (searchName == null || searchName.isEmpty()
+                                    || scaName.stringValue().toUpperCase().contains(searchName.toUpperCase())) {
                                 FighterListInfo fli = new FighterListInfo();
                                 fli.setFighterId(new Double(id.doubleValue()).longValue());
                                 fli.setScaName(scaName.stringValue());
@@ -83,11 +81,10 @@ public class SearchBar extends Composite {
                 table.setRowCount(fighterList.size());
                 List data = dataProvider.getList();
                 data.clear();
-                for(FighterListInfo fli : fighterList) {
+                for (FighterListInfo fli : fighterList) {
                     data.add(fli);
                 }
 
-                DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.INLINE_BLOCK);
                 submit.setEnabled(true);
             }
         });

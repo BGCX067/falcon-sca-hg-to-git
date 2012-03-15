@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.json.client.*;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -85,6 +86,7 @@ public class IndexPage implements EntryPoint {
         Panel listPanel = new FlowPanel();
         listPanel.setStyleName("list");
         listPanel.getElement().setId("List-Box");
+        listPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
 
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         SimplePager pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 10, true);

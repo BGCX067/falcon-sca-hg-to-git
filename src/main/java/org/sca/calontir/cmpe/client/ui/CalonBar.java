@@ -5,6 +5,8 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -38,6 +40,13 @@ public class CalonBar extends Composite {
 
         homeLink.setHref(INDEXHTML);
         homeLink.setStyleName(CALONBARLINK);
+        homeLink.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                DOM.getElementById("List-Box");
+            }
+        });
         barPanel.add(homeLink);
 
         barPanel.add(getDivBar());
