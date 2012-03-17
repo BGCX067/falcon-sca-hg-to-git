@@ -8,46 +8,28 @@ import java.util.List;
  * @author rikscarborough
  */
 public class FighterListInfo implements Serializable {
+    
+    //TODO: Change to containing a list of the following information
+    // and a flag to represent if the client should update or replace the data.
 
-    private Long fighterId;
-    private String scaName;
-    private String authorizations;
-    private String group;
+    List<FighterInfo> fighterInfo;
+    boolean updateInfo;
 
-    public String getScaName() {
-        return scaName;
+    public List<FighterInfo> getFighterInfo() {
+        return fighterInfo;
     }
 
-    public void setScaName(String scaName) {
-        this.scaName = scaName;
+    public void setFighterInfo(List<FighterInfo> fighterInfo) {
+        this.fighterInfo = fighterInfo;
     }
 
-    public String getAuthorizations() {
-        return authorizations;
+    public boolean isUpdateInfo() {
+        return updateInfo;
     }
 
-    public void setAuthorizations(String authorizations) {
-        this.authorizations = authorizations;
+    public void setUpdateInfo(boolean updateInfo) {
+        this.updateInfo = updateInfo;
     }
+    
 
-    public Long getFighterId() {
-        return fighterId;
-    }
-
-    public void setFighterId(Long fighterId) {
-        this.fighterId = fighterId;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
-    @Override
-    public String toString() {
-        return "FighterListInfo{" + "fighterId=" + fighterId + ", scaName=" + scaName + ", authorizations=" + authorizations + ", group=" + group + '}';
-    }
 }

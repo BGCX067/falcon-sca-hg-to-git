@@ -4,29 +4,39 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.data.TableUpdates;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.db.TableUpdatesDao;
 import org.sca.calontir.cmpe.dto.FighterListItem;
 
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
 
     @Override
-    public List<FighterListInfo> getListItems(Date targetDate) {
+    public FighterListInfo getListItems(Date targetDate) {
+        FighterListInfo retval = new FighterListInfo();
         FighterDAO fighterDao = new FighterDAO();
+        TableUpdatesDao tuDao = new TableUpdatesDao();
+        TableUpdates tu = tuDao.getTableUpdates("Fighter");
         List<FighterListItem> fighters;
-        if (targetDate == null) {
+        if (targetDate == null
+                || (tu != null
+                && tu.getLastDeletion() != null
+                && new DateTime(tu.getLastDeletion()).isAfter(new DateTime(targetDate)))) {
             fighters = fighterDao.getFighterListItems();
+            retval.setUpdateInfo(false);
         } else {
-            fighters = fighterDao.getFighterListItems(new DateTime(targetDate.getTime()));
+            fighters = fighterDao.getFighterListItems(new DateTime(targetDate));
+            retval.setUpdateInfo(true);
         }
 
-        List<FighterListInfo> retValList = new ArrayList<FighterListInfo>();
+        List<FighterInfo> retValList = new ArrayList<FighterInfo>();
         for (FighterListItem fli : fighters) {
             if (fli != null) {
-                FighterListInfo info = new FighterListInfo();
+                FighterInfo info = new FighterInfo();
                 info.setFighterId(fli.getFighterId() == null ? 0 : fli.getFighterId());
                 info.setScaName(fli.getScaName() == null ? "" : fli.getScaName());
                 info.setAuthorizations(fli.getAuthorizations() == null ? "" : fli.getAuthorizations());
@@ -34,7 +44,8 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
                 retValList.add(info);
             }
         }
+        retval.setFighterInfo(retValList);
 
-        return retValList;
+        return retval;
     }
 }

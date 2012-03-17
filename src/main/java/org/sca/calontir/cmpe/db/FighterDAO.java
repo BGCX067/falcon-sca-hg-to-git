@@ -15,6 +15,7 @@ import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.data.Address;
 import org.sca.calontir.cmpe.data.Authorization;
 import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.data.TableUpdates;
 import org.sca.calontir.cmpe.dto.DataTransfer;
 import org.sca.calontir.cmpe.dto.FighterListItem;
 
@@ -197,6 +198,14 @@ public class FighterDAO {
             f.setUserUpdated(userId);
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving {0}", f.getScaName());
             f = pm.makePersistent(f);
+            TableUpdatesDao tuDao = new TableUpdatesDao();
+            TableUpdates tu = tuDao.getTableUpdates("Fighter");
+            if (tu == null) {
+                tu = new TableUpdates();
+                tu.setTableName("Fighter");
+                tu.setLastUpdated(new Date());
+            }
+            tuDao.saveTableUpdates(tu);
             pm.flush();
             if (f.getFighterId() == null) {
                 System.out.println("Key not updated.");
@@ -218,17 +227,24 @@ public class FighterDAO {
         Fighter f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
         try {
             pm.deletePersistent(f);
+            TableUpdatesDao tuDao = new TableUpdatesDao();
+            TableUpdates tu = tuDao.getTableUpdates("Fighter");
+            if (tu == null) {
+                tu = new TableUpdates();
+                tu.setTableName("Fighter");
+                tu.setLastDeletion(new Date());
+            }
+            tuDao.saveTableUpdates(tu);
         } finally {
             pm.close();
         }
     }
 
-    public void deleteAuthorization(Long fighterId, Authorization authorization) {
-        fCache.remove(fighterId);
-        authorization = (Authorization) pm.getObjectById(authorization.getAuthorizatoinId());
-        pm.deletePersistent(authorization);
-    }
-
+//    public void deleteAuthorization(Long fighterId, Authorization authorization) {
+//        fCache.remove(fighterId);
+//        authorization = (Authorization) pm.getObjectById(authorization.getAuthorizatoinId());
+//        pm.deletePersistent(authorization);
+//    }
     protected boolean validate(Fighter fighter) throws ValidationException {
         if (fighter.getScaGroup() == null) {
             throw new ValidationException("Please select SCA Group");

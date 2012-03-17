@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.LinkedList;
 import java.util.List;
+import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 
 /**
@@ -27,7 +28,7 @@ public class SearchBar extends Composite {
     private Storage stockStore = null;
     private Button submit;
 
-    public SearchBar(final CellTable<FighterListInfo> table, final ListDataProvider<FighterListInfo> dataProvider) {
+    public SearchBar(final CellTable<FighterInfo> table, final ListDataProvider<FighterInfo> dataProvider) {
         FlowPanel searchPanel = new FlowPanel();
         DOM.setElementAttribute(searchPanel.getElement(), "id", "searchBar");
 
@@ -48,7 +49,7 @@ public class SearchBar extends Composite {
                 String searchName = box.getText();
                 String foundName = null;
                 stockStore = Storage.getLocalStorageIfSupported();
-                List<FighterListInfo> fighterList = new LinkedList<FighterListInfo>();
+                List<FighterInfo> fighterList = new LinkedList<FighterInfo>();
                 if (stockStore != null) {
                     String scaNameListStr = stockStore.getItem("scaNameList");
                     JSONValue value = JSONParser.parseStrict(scaNameListStr);
@@ -64,7 +65,7 @@ public class SearchBar extends Composite {
                             JSONString group = scaNameObj.get("group").isString();
                             if (searchName == null || searchName.isEmpty()
                                     || scaName.stringValue().toUpperCase().contains(searchName.toUpperCase())) {
-                                FighterListInfo fli = new FighterListInfo();
+                                FighterInfo fli = new FighterInfo();
                                 fli.setFighterId(new Double(id.doubleValue()).longValue());
                                 fli.setScaName(scaName.stringValue());
                                 fli.setAuthorizations(auths.stringValue());
@@ -81,7 +82,7 @@ public class SearchBar extends Composite {
                 table.setRowCount(fighterList.size());
                 List data = dataProvider.getList();
                 data.clear();
-                for (FighterListInfo fli : fighterList) {
+                for (FighterInfo fli : fighterList) {
                     data.add(fli);
                 }
 

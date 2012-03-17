@@ -17,15 +17,14 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Date;
-import java.util.List;
 import org.sca.calontir.cmpe.client.ui.CalonBar;
 import org.sca.calontir.cmpe.client.ui.SearchBar;
 
 public class IndexPage implements EntryPoint {
 
     private Storage stockStore = null;
-    final private ListDataProvider<FighterListInfo> dataProvider = new ListDataProvider<FighterListInfo>();
-    final CellTable<FighterListInfo> table = new CellTable<FighterListInfo>();
+    final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
+    final CellTable<FighterInfo> table = new CellTable<FighterInfo>();
 //    private SecurityService security = null;
 
     /**
@@ -92,10 +91,10 @@ public class IndexPage implements EntryPoint {
         SimplePager pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 10, true);
         pager.setDisplay(table);
 
-        TextColumn<FighterListInfo> scaNameColumn = new TextColumn<FighterListInfo>() {
+        TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
 
             @Override
-            public String getValue(FighterListInfo fli) {
+            public String getValue(FighterInfo fli) {
                 return fli.getScaName();
             }
         };
@@ -103,18 +102,18 @@ public class IndexPage implements EntryPoint {
         //      revisit this.
         scaNameColumn.setSortable(false);
 
-        TextColumn<FighterListInfo> authorizationColumn = new TextColumn<FighterListInfo>() {
+        TextColumn<FighterInfo> authorizationColumn = new TextColumn<FighterInfo>() {
 
             @Override
-            public String getValue(FighterListInfo fli) {
+            public String getValue(FighterInfo fli) {
                 return fli.getAuthorizations();
             }
         };
 
-        TextColumn<FighterListInfo> groupColumn = new TextColumn<FighterListInfo>() {
+        TextColumn<FighterInfo> groupColumn = new TextColumn<FighterInfo>() {
 
             @Override
-            public String getValue(FighterListInfo fli) {
+            public String getValue(FighterInfo fli) {
                 return fli.getGroup();
             }
         };
@@ -123,12 +122,12 @@ public class IndexPage implements EntryPoint {
         table.addColumn(authorizationColumn, "Authorizations");
         table.addColumn(groupColumn, "Group");
 
-        final SingleSelectionModel<FighterListInfo> selectionModel = new SingleSelectionModel<FighterListInfo>();
+        final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<FighterInfo>();
         table.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 
             public void onSelectionChange(SelectionChangeEvent event) {
-                FighterListInfo selected = selectionModel.getSelectedObject();
+                FighterInfo selected = selectionModel.getSelectedObject();
                 if (selected != null) {
 //                    if (security.canEditFighter(selected.getFighterId())) {
                     Window.open("/FighterSearchServlet?mode=lookup&fid=" + selected.getFighterId(), "_self", "");
@@ -155,6 +154,9 @@ public class IndexPage implements EntryPoint {
         stockStore = Storage.getLocalStorageIfSupported();
         if (stockStore != null) {
             FighterServiceAsync fighterService = GWT.create(FighterService.class);
+            
+            
+            
             final String scaNameListStr = stockStore.getItem("scaNameList");
             String timeStampStr = stockStore.getItem("scaNameUpdated");
             Date targetDate = null;
@@ -164,7 +166,9 @@ public class IndexPage implements EntryPoint {
                 long timeStamp = Long.valueOf(timeStampStr);
                 targetDate = new Date(timeStamp);
             }
-            fighterService.getListItems(targetDate, new AsyncCallback<List<FighterListInfo>>() {
+            //TODO: Change to get a single object back that contains the list and'
+            // a flag to represent if the data should be updated or replaced.
+            fighterService.getListItems(targetDate, new AsyncCallback<FighterListInfo>() {
 
                 @Override
                 public void onFailure(Throwable caught) {
@@ -173,9 +177,9 @@ public class IndexPage implements EntryPoint {
                 }
 
                 @Override
-                public void onSuccess(List<FighterListInfo> result) {
+                public void onSuccess(FighterListInfo result) {
                     JSONArray scaNameObjs;
-                    if (scaNameListStr == null) {
+                    if (scaNameListStr == null || !result.isUpdateInfo()) {
                         scaNameObjs = new JSONArray();
                     } else {
                         JSONValue value = JSONParser.parseStrict(scaNameListStr);
@@ -185,8 +189,8 @@ public class IndexPage implements EntryPoint {
                     JSONObject scaNameList = new JSONObject();
 
                     int i = scaNameObjs.size();
-                    if (result.size() > 0) {
-                        for (FighterListInfo fli : result) {
+                    if (result.getFighterInfo() != null && result.getFighterInfo().size() > 0) {
+                        for (FighterInfo fli : result.getFighterInfo()) {
                             JSONString scaName = new JSONString(fli.getScaName());
                             JSONNumber id = new JSONNumber(fli.getFighterId());
                             JSONString auths = new JSONString(fli.getAuthorizations());
