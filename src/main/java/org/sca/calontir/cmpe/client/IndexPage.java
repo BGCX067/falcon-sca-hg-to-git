@@ -19,13 +19,15 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Date;
 import org.sca.calontir.cmpe.client.ui.CalonBar;
 import org.sca.calontir.cmpe.client.ui.SearchBar;
+import org.sca.calontir.cmpe.client.user.Security;
+import org.sca.calontir.cmpe.client.user.SecurityFactory;
 
 public class IndexPage implements EntryPoint {
 
     private Storage stockStore = null;
     final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
-    final CellTable<FighterInfo> table = new CellTable<FighterInfo>();
-//    private SecurityService security = null;
+    final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
+    final private Security security = SecurityFactory.getSecurity();
 
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
@@ -129,9 +131,9 @@ public class IndexPage implements EntryPoint {
             public void onSelectionChange(SelectionChangeEvent event) {
                 FighterInfo selected = selectionModel.getSelectedObject();
                 if (selected != null) {
-//                    if (security.canEditFighter(selected.getFighterId())) {
-                    Window.open("/FighterSearchServlet?mode=lookup&fid=" + selected.getFighterId(), "_self", "");
-//                    }
+                    if (security.canView(selected.getFighterId())) {
+                        Window.open("/FighterSearchServlet?mode=lookup&fid=" + selected.getFighterId(), "_self", "");
+                    }
                 }
             }
         });
@@ -154,9 +156,9 @@ public class IndexPage implements EntryPoint {
         stockStore = Storage.getLocalStorageIfSupported();
         if (stockStore != null) {
             FighterServiceAsync fighterService = GWT.create(FighterService.class);
-            
-            
-            
+
+
+
             final String scaNameListStr = stockStore.getItem("scaNameList");
             String timeStampStr = stockStore.getItem("scaNameUpdated");
             Date targetDate = null;

@@ -5,6 +5,7 @@
 package org.sca.calontir.cmpe.client;
 
 import java.io.Serializable;
+import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
  *
@@ -18,6 +19,8 @@ public class LoginInfo implements Serializable {
     private String emailAddress;
     private String nickname;
     private String scaName;
+    private UserRoles userRole;
+    private long fighterId;
 
     public boolean isLoggedIn() {
         return loggedIn;
@@ -66,6 +69,23 @@ public class LoginInfo implements Serializable {
     public void setScaName(String scaName) {
         this.scaName = scaName;
     }
+
+    public UserRoles getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRoles userRole) {
+        this.userRole = userRole;
+    }
+
+    public long getFighterId() {
+        return fighterId;
+    }
+
+    public void setFighterId(long fighterId) {
+        this.fighterId = fighterId;
+    }
+    
     
     
 }

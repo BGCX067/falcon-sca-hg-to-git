@@ -6,6 +6,7 @@
     <inherits name="com.google.gwt.json.JSON" />
 
     <source path="client"/>
+    <source path="common"/>
 
     <entry-point class="org.sca.calontir.cmpe.client.IndexPage" />
 </module>

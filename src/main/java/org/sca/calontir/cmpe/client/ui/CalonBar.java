@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.*;
 import org.sca.calontir.cmpe.client.LoginInfo;
 import org.sca.calontir.cmpe.client.LoginService;
 import org.sca.calontir.cmpe.client.LoginServiceAsync;
+import org.sca.calontir.cmpe.client.user.SecurityFactory;
 
 /**
  *
@@ -50,7 +51,7 @@ public class CalonBar extends Composite {
         barPanel.add(homeLink);
 
         barPanel.add(getDivBar());
-        
+
         loginPanel.setStyleName(CALONBARLINK);
         barPanel.add(loginPanel);
 
@@ -69,6 +70,7 @@ public class CalonBar extends Composite {
                 } else {
                     loadLogin();
                 }
+                SecurityFactory.setLoginInfo(loginInfo);
             }
         });
 

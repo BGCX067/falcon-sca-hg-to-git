@@ -25,6 +25,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
             Fighter f_ub = fDao.getFighterByGoogleId(user.getEmail()); // TODO: Change to only returning SCA Name, not entire object.
             if (f_ub != null) {
                 loginInfo.setScaName(f_ub.getScaName());
+                loginInfo.setUserRole(f_ub.getRole());
+                loginInfo.setFighterId(f_ub.getFighterId());
             }
         } else {
             loginInfo.setLoggedIn(false);
