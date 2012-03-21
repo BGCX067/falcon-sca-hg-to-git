@@ -44,10 +44,9 @@ public class SearchBar extends Composite {
             public void onClick(ClickEvent event) {
                 submit.setEnabled(false);
                 DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
-                DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.BLOCK);
+
 
                 String searchName = box.getText();
-                String foundName = null;
                 stockStore = Storage.getLocalStorageIfSupported();
                 List<FighterInfo> fighterList = new LinkedList<FighterInfo>();
                 if (stockStore != null) {
@@ -87,6 +86,7 @@ public class SearchBar extends Composite {
                 }
 
                 submit.setEnabled(true);
+                DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.INLINE_BLOCK);
             }
         });
 

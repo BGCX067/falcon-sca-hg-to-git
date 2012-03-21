@@ -84,10 +84,15 @@ public class IndexPage implements EntryPoint {
     }
 
     private void foundMultibleResults() {
+        Panel listBackground = new FlowPanel();
+        listBackground.getElement().setId("List-Box");
+        listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
+        RootPanel.get().add(listBackground);
+        
         Panel listPanel = new FlowPanel();
         listPanel.setStyleName("list");
-        listPanel.getElement().setId("List-Box");
-        listPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
+//        listPanel.getElement().setId("List-Box");
+//        listPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
 
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         SimplePager pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 10, true);
@@ -147,7 +152,7 @@ public class IndexPage implements EntryPoint {
         listPanel.add(pager);
 //        listPanel.add(new HTML("&nbsp;"));
 
-        RootPanel.get().add(listPanel);
+        listBackground.add(listPanel);
 
     }
 
