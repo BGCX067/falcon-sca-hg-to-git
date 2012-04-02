@@ -3,6 +3,8 @@ package org.sca.calontir.cmpe.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.*;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -13,12 +15,13 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Date;
-import org.sca.calontir.cmpe.client.ui.CalonBar;
-import org.sca.calontir.cmpe.client.ui.SearchBar;
+import org.sca.calontir.cmpe.client.ui.*;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 
@@ -28,6 +31,7 @@ public class IndexPage implements EntryPoint {
     final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
     final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
     final private Security security = SecurityFactory.getSecurity();
+    private FighterIdBoxEdit fighterId = new FighterIdBoxEdit();
 
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
@@ -47,11 +51,13 @@ public class IndexPage implements EntryPoint {
         RootPanel.get().add(calonBar);
 
         SearchBar searchBar = new SearchBar(table, dataProvider);
+        searchBar.addHandler(fighterId, EditViewEvent.TYPE);
         RootPanel.get().add(searchBar);
 
 
         onIndexPage();
         foundMultibleResults();
+        buildFighterForm();
 
     }
 
@@ -84,77 +90,40 @@ public class IndexPage implements EntryPoint {
     }
 
     private void foundMultibleResults() {
-        Panel listBackground = new FlowPanel();
-        listBackground.getElement().setId("List-Box");
-        listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
-        RootPanel.get().add(listBackground);
+        //TODO: move table and dataProvider to flb and use an event to kick this off from SearchPanel
+         FighterListBox flb = new FighterListBox(table, dataProvider);
+         flb.addHandler(fighterId, EditViewEvent.TYPE);
+         RootPanel.get().add(flb);
+    }
+
+    private void buildFighterForm() {
+        final FormPanel fighterForm = new FormPanel();
+        fighterForm.setAction("/fighterg");
+        fighterForm.getElement().setId("FighterForm");
+        fighterForm.getElement().getStyle().setDisplay(Style.Display.NONE);
+        fighterForm.setMethod(FormPanel.METHOD_POST);
         
-        Panel listPanel = new FlowPanel();
-        listPanel.setStyleName("list");
-//        listPanel.getElement().setId("List-Box");
-//        listPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
-
-        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-        SimplePager pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 10, true);
-        pager.setDisplay(table);
-
-        TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
+        fighterForm.add(fighterId);
+        
+        fighterForm.addSubmitHandler(new FormPanel.SubmitHandler() {
 
             @Override
-            public String getValue(FighterInfo fli) {
-                return fli.getScaName();
-            }
-        };
-        //TODO: Turning off sorting for now. Once everything else is settled,
-        //      revisit this.
-        scaNameColumn.setSortable(false);
-
-        TextColumn<FighterInfo> authorizationColumn = new TextColumn<FighterInfo>() {
-
-            @Override
-            public String getValue(FighterInfo fli) {
-                return fli.getAuthorizations();
-            }
-        };
-
-        TextColumn<FighterInfo> groupColumn = new TextColumn<FighterInfo>() {
-
-            @Override
-            public String getValue(FighterInfo fli) {
-                return fli.getGroup();
-            }
-        };
-        groupColumn.setSortable(false);
-        table.addColumn(scaNameColumn, "SCA Name");
-        table.addColumn(authorizationColumn, "Authorizations");
-        table.addColumn(groupColumn, "Group");
-
-        final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<FighterInfo>();
-        table.setSelectionModel(selectionModel);
-        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-
-            public void onSelectionChange(SelectionChangeEvent event) {
-                FighterInfo selected = selectionModel.getSelectedObject();
-                if (selected != null) {
-                    if (security.canView(selected.getFighterId())) {
-                        Window.open("/FighterSearchServlet?mode=lookup&fid=" + selected.getFighterId(), "_self", "");
-                    }
-                }
+            public void onSubmit(FormPanel.SubmitEvent event) {
+                throw new UnsupportedOperationException("Not supported yet.");
             }
         });
+        
+        fighterForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 
-
-        dataProvider.addDataDisplay(table);
-
-
-
-        listPanel.add(table);
-        listPanel.add(pager);
-//        listPanel.add(new HTML("&nbsp;"));
-
-        listBackground.add(listPanel);
-
+            @Override
+            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+        
+        RootPanel.get().add(fighterForm);
     }
+
 
     private void loadData() {
 

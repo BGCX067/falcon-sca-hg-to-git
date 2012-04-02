@@ -7,6 +7,7 @@ package org.sca.calontir.cmpe.client.ui;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.json.client.*;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -44,6 +45,7 @@ public class SearchBar extends Composite {
             public void onClick(ClickEvent event) {
                 submit.setEnabled(false);
                 DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
+                DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.NONE);
 
 
                 String searchName = box.getText();
@@ -91,6 +93,19 @@ public class SearchBar extends Composite {
         });
 
         searchPanel.add(submit);
+        
+        Button add = new Button("Add", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
+                DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.NONE);
+                DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.BLOCK);
+                fireEvent(new EditViewEvent(Mode.ADD));
+            }
+        });
+        
+        searchPanel.add(add);
 
         initWidget(searchPanel);
     }
