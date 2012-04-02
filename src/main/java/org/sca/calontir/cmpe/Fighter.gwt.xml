@@ -7,6 +7,7 @@
 
     <source path="client"/>
     <source path="common"/>
+    <source path="dto"/>
 
     <entry-point class="org.sca.calontir.cmpe.client.IndexPage" />
 </module>

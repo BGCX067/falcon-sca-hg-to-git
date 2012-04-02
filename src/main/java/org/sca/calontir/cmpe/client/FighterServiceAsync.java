@@ -6,6 +6,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import java.util.Date;
+import org.sca.calontir.cmpe.dto.Fighter;
 
 /**
  *
@@ -14,4 +15,5 @@ import java.util.Date;
 public interface FighterServiceAsync {
     public void getListItems(Date targetDate, AsyncCallback<FighterListInfo> async);
 
+    public void getFighter(Long id, AsyncCallback<Fighter> async);
 }

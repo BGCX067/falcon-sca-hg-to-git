@@ -31,7 +31,7 @@ public class IndexPage implements EntryPoint {
     final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
     final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
     final private Security security = SecurityFactory.getSecurity();
-    private FighterIdBoxEdit fighterId = new FighterIdBoxEdit();
+    private FighterIdBox fighterId = new FighterIdBox();
 
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()

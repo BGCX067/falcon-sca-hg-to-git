@@ -11,6 +11,7 @@ import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -19,8 +20,11 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import org.sca.calontir.cmpe.client.FighterInfo;
+import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.dto.Fighter;
 
 /**
  *
@@ -88,7 +92,21 @@ public class FighterListBox extends Composite {
                         DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
                         DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.NONE);
                         DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.BLOCK);
-                        fireEvent(new EditViewEvent(Mode.VIEW, selected));
+                        FighterServiceAsync fighterService = GWT.create(FighterService.class);
+
+                        fighterService.getFighter(selected.getFighterId(), new AsyncCallback<Fighter>() {
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                throw new UnsupportedOperationException("Not supported yet.");
+                            }
+
+                            @Override
+                            public void onSuccess(Fighter result) {
+                                fireEvent(new EditViewEvent(Mode.VIEW, result));
+                            }
+                        });
+                        
 
                     }
                 }

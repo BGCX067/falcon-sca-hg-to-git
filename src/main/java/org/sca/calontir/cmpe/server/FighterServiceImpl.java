@@ -11,6 +11,7 @@ import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.data.TableUpdates;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.TableUpdatesDao;
+import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.FighterListItem;
 
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
@@ -47,5 +48,11 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         retval.setFighterInfo(retValList);
 
         return retval;
+    }
+    
+    public Fighter getFighter(Long id) {
+        FighterDAO fighterDao = new FighterDAO();
+        
+        return fighterDao.getFighter(id);
     }
 }
