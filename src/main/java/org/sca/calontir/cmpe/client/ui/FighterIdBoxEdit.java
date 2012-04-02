@@ -47,9 +47,12 @@ public class FighterIdBoxEdit extends Composite implements EditViewHandler {
         fighterId.setValue(fighter.getFighterId().toString());
         figherIdBoxPanel.add(fighterId);
         
-        Label scaName = new Label();
+        InlineLabel scaName = new InlineLabel();
         scaName.setText(fighter.getScaName());
+        scaName.setStyleName("scaName");
         figherIdBoxPanel.add(scaName);
+        
+        figherIdBoxPanel.add(printButton());
     }
 
     @Override
@@ -62,25 +65,13 @@ public class FighterIdBoxEdit extends Composite implements EditViewHandler {
         tb.setStyleName("scaName");
         figherIdBoxPanel.add(tb);
 
-//        InlineHyperlink printButton = new InlineHyperlink();
-//        printButton.setText("Print");
-//        printButton.setStyleName("printButton");
-//        
-//        figherIdBoxPanel.add(printButton);
-//        
-//        printButton.addClickHandler(new ClickHandler() {
-//
-//            @Override
-//            public void onClick(ClickEvent event) {
-//                Window.alert("click");
-//            }
-//        });
-
+        figherIdBoxPanel.add(printButton());
+    }
+    
+    private Widget printButton() {
         Anchor bPrint = new Anchor("Print");
         bPrint.setStyleName("BPrint");
         bPrint.getElement().setId("BPrint");
-
-        figherIdBoxPanel.add(bPrint);
 
         bPrint.addClickHandler(new ClickHandler() {
 
@@ -89,5 +80,7 @@ public class FighterIdBoxEdit extends Composite implements EditViewHandler {
                 Window.alert("click");
             }
         });
+        
+        return bPrint;
     }
 }
