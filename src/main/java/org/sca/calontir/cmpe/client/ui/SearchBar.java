@@ -7,7 +7,6 @@ package org.sca.calontir.cmpe.client.ui;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.json.client.*;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -18,7 +17,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import java.util.LinkedList;
 import java.util.List;
 import org.sca.calontir.cmpe.client.FighterInfo;
-import org.sca.calontir.cmpe.client.FighterListInfo;
 
 /**
  *
@@ -93,7 +91,7 @@ public class SearchBar extends Composite {
         });
 
         searchPanel.add(submit);
-        
+
         Button add = new Button("Add", new ClickHandler() {
 
             @Override
@@ -104,7 +102,7 @@ public class SearchBar extends Composite {
                 fireEvent(new EditViewEvent(Mode.ADD));
             }
         });
-        
+
         searchPanel.add(add);
 
         initWidget(searchPanel);

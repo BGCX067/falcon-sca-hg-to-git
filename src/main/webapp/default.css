@@ -173,14 +173,14 @@ a:hover.buttonLink {text-decoration: none}
     border-top-left-radius: 15px;
 }
 
-.dataHeader span {
+.dataHeader .button {
     float: right;
 }
 
-.dataHeader span a:link,
-.dataHeader span a:visited,
-.dataHeader span a:hover,
-.dataHeader span a:active {
+.dataHeader .button a:link,
+.dataHeader .button a:visited,
+.dataHeader .button a:hover,
+.dataHeader .button a:active {
     color: lightslategray;
 }
 

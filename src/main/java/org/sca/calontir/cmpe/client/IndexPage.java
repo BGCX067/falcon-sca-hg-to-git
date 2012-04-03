@@ -31,7 +31,7 @@ public class IndexPage implements EntryPoint {
     final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
     final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
     final private Security security = SecurityFactory.getSecurity();
-    private FighterIdBox fighterId = new FighterIdBox();
+    private FighterFormWidget fighterFormWidget = new FighterFormWidget();
 
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
@@ -51,7 +51,7 @@ public class IndexPage implements EntryPoint {
         RootPanel.get().add(calonBar);
 
         SearchBar searchBar = new SearchBar(table, dataProvider);
-        searchBar.addHandler(fighterId, EditViewEvent.TYPE);
+        searchBar.addHandler(fighterFormWidget, EditViewEvent.TYPE);
         RootPanel.get().add(searchBar);
 
 
@@ -92,7 +92,7 @@ public class IndexPage implements EntryPoint {
     private void foundMultibleResults() {
         //TODO: move table and dataProvider to flb and use an event to kick this off from SearchPanel
          FighterListBox flb = new FighterListBox(table, dataProvider);
-         flb.addHandler(fighterId, EditViewEvent.TYPE);
+         flb.addHandler(fighterFormWidget, EditViewEvent.TYPE);
          RootPanel.get().add(flb);
     }
 
@@ -103,7 +103,7 @@ public class IndexPage implements EntryPoint {
         fighterForm.getElement().getStyle().setDisplay(Style.Display.NONE);
         fighterForm.setMethod(FormPanel.METHOD_POST);
         
-        fighterForm.add(fighterId);
+        fighterForm.add(fighterFormWidget);
         
         fighterForm.addSubmitHandler(new FormPanel.SubmitHandler() {
 

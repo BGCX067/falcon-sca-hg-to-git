@@ -5,8 +5,6 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.user.client.Window;
-import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.dto.Fighter;
 
 /**
@@ -37,14 +35,18 @@ public class EditViewEvent extends GwtEvent<EditViewHandler> {
     protected void dispatch(EditViewHandler handler) {
         switch (mode) {
             case ADD:
+                handler.setFighter(null);
                 handler.buildAdd();
                 break;
 
             case VIEW:
-                if (handler instanceof FighterIdBox) {
-                    ((FighterIdBox) handler).setFighter(fighter);
-                }
+                handler.setFighter(fighter);
                 handler.buildView();
+                break;
+                
+            case EDIT:
+                handler.setFighter(fighter);
+                handler.buildEdit();
                 break;
 
             default:
