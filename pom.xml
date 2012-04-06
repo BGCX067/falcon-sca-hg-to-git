@@ -417,7 +417,7 @@
 			your Eclipse plug-in)
 		-->
         <kindleit.version>1.5.5</kindleit.version>
-        <gae.version>1.6.3</gae.version>
+        <gae.version>1.6.4</gae.version>
 
     <!-- GWT version -->
         <gwt.version>2.4.0</gwt.version>

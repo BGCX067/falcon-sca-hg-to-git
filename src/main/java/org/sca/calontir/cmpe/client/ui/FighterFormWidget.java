@@ -6,10 +6,15 @@ package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import java.util.Date;
 import java.util.List;
+import org.sca.calontir.cmpe.client.user.Security;
+import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.Address;
 import org.sca.calontir.cmpe.dto.Authorization;
 import org.sca.calontir.cmpe.dto.Fighter;
@@ -20,10 +25,12 @@ import org.sca.calontir.cmpe.dto.Fighter;
  */
 public class FighterFormWidget extends Composite implements EditViewHandler {
 
+    final private Security security = SecurityFactory.getSecurity();
     private Panel overallPanel = new FlowPanel();
     private Panel fighterIdBoxPanel = new FlowPanel();
     private Panel authPanel = new FlowPanel();
     private Panel infoPanel = new FlowPanel();
+    private Panel notePanel = new FlowPanel();
     private Fighter fighter;
     private String target;
 
@@ -36,6 +43,11 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
 
         infoPanel.setStyleName("dataBox");
         overallPanel.add(infoPanel);
+
+//        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            notePanel.setStyleName("dataBoxShort");
+            overallPanel.add(notePanel);
+//        } hide and turn on during call
 
         initWidget(overallPanel);
     }
@@ -97,7 +109,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
 
         infoPanelView();
 
-
+        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            notePanelView();
+        }
     }
 
     private void infoPanelView() {
@@ -131,11 +145,11 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         formatter.setStyleName(0, 2, "rightCol");
 
         table.setText(1, 0, "Address:");
-        if(fighter.getAddress() != null && !fighter.getAddress().isEmpty()) {
+        if (fighter.getAddress() != null && !fighter.getAddress().isEmpty()) {
             Address address = fighter.getAddress().get(0);
             StringBuilder sb = new StringBuilder();
             sb.append(address.getAddress1());
-            if(address.getAddress2() != null && !address.getAddress2().isEmpty()) {
+            if (address.getAddress2() != null && !address.getAddress2().isEmpty()) {
                 sb.append(", ");
                 sb.append(address.getAddress2());
             }
@@ -147,8 +161,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
             sb.append(address.getPostalCode());
             table.setHTML(1, 1, sb.toString());
         }
-        
-        
+
+
         formatter.setStyleName(1, 0, "label");
         formatter.setStyleName(1, 1, "data");
         if (fighter.getTreaty() != null) {
@@ -156,9 +170,96 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
             formatter.setStyleName(1, 2, "rightCol");
         }
 
+        table.setText(2, 0, "SCA Membership:");
+        table.setText(2, 1, fighter.getScaMemberNo());
+        formatter.setStyleName(2, 0, "label");
+        formatter.setStyleName(2, 1, "data");
+
+        table.setText(3, 0, "Group:");
+        table.setText(3, 1,
+                fighter.getScaGroup() == null ? "" : fighter.getScaGroup().getGroupName());
+        formatter.setStyleName(3, 0, "label");
+        formatter.setStyleName(3, 1, "data");
+
+        table.setText(4, 0, "Minor:");
+        if (fighter.getDateOfBirth() != null) {
+            table.setText(4, 1, isMinor(fighter.getDateOfBirth()) ? "true" : "false");
+        } else {
+            table.setText(4, 1, "false");
+        }
+        formatter.setStyleName(4, 0, "label");
+        formatter.setStyleName(4, 1, "data");
+
+        table.setText(5, 0, "DOB:");
+        if (fighter.getDateOfBirth() != null) {
+            table.setText(5, 1,
+                    DateTimeFormat.getFormat("MM/dd/yyyy").format(fighter.getDateOfBirth()));
+        }
+        formatter.setStyleName(5, 0, "label");
+        formatter.setStyleName(5, 1, "data");
+
+        table.setText(6, 0, "Phone Number:");
+        if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
+            table.setText(6, 1, fighter.getPhone().get(0).getPhoneNumber());
+        }
+        formatter.setStyleName(6, 0, "label");
+        formatter.setStyleName(6, 1, "data");
+
+        table.setText(7, 0, "Email Address:");
+        if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
+            table.setText(7, 1, fighter.getEmail().get(0).getEmailAddress());
+        }
+        formatter.setStyleName(7, 0, "label");
+        formatter.setStyleName(7, 1, "data");
+
         fighterInfo.add(table);
 
+        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) { // or user admin
+            Panel adminInfo = new FlowPanel();
+            adminInfo.getElement().setId("fighterInfo");
+            DOM.setElementAttribute(adminInfo.getElement(), "id", "adminInfo");
+            fighterInfo.add(adminInfo);
+
+            FlexTable adminTable = new FlexTable();
+            FlexTable.FlexCellFormatter adminFormatter = adminTable.getFlexCellFormatter();
+
+            adminTable.setText(0, 0, "Google ID:");
+            adminTable.setText(0, 1, fighter.getGoogleId());
+            adminFormatter.setStyleName(0, 0, "label");
+            adminFormatter.setStyleName(0, 1, "data");
+
+            adminTable.setText(1, 0, "User Role:");
+            if (fighter.getRole() != null) {
+                adminTable.setText(1, 1, fighter.getRole().toString());
+            }
+            adminFormatter.setStyleName(1, 0, "label");
+            adminFormatter.setStyleName(1, 1, "data");
+
+            adminInfo.add(adminTable);
+
+        }
+
         infoPanel.add(dataBody);
+    }
+
+    private void notePanelView() {
+        notePanel.clear();
+
+        Panel dataHeader = new FlowPanel();
+        dataHeader.setStyleName("dataHeader");
+        InlineLabel label = new InlineLabel("Notes");
+        dataHeader.add(label);
+
+        notePanel.add(dataHeader);
+
+        Panel dataBody = new FlowPanel();
+        dataBody.setStyleName("dataBody");
+        Label note = new Label();
+        if (fighter.getNote() != null) {
+            note.setText(fighter.getNote().getBody());
+        }
+        dataBody.add(note);
+        notePanel.add(dataBody);
     }
 
     @Override
@@ -179,6 +280,15 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
     @Override
     public void setFighter(Fighter fighter) {
         this.fighter = fighter;
+    }
+
+    private boolean isMinor(Date dob) {
+        Date now = new Date();
+        Date targetDate = new Date(dob.getYear() + 18, dob.getMonth(), dob.getDate());
+        if (targetDate.after(now)) {
+            return true;
+        }
+        return false;
     }
 
     private Widget printButton() {
