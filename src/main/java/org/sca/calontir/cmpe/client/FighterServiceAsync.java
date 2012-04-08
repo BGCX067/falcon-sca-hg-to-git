@@ -6,7 +6,10 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import java.util.Date;
+import java.util.List;
+import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
  *
@@ -16,4 +19,8 @@ public interface FighterServiceAsync {
     public void getListItems(Date targetDate, AsyncCallback<FighterListInfo> async);
 
     public void getFighter(Long id, AsyncCallback<Fighter> async);
+    
+    public void getAuthTypes(AsyncCallback<List<AuthType>> async);
+    
+    public void getGroups(AsyncCallback<List<ScaGroup>> async);
 }

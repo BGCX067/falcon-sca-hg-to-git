@@ -8,7 +8,7 @@ import org.sca.calontir.cmpe.dto.Fighter;
  * @author rikscarborough
  */
 public interface EditViewHandler extends EventHandler {
-    public void buildEdit();
+//    public void buildEdit();
     
     public void buildView();
     

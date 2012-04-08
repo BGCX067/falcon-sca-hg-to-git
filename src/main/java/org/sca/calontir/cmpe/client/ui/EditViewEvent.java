@@ -44,10 +44,6 @@ public class EditViewEvent extends GwtEvent<EditViewHandler> {
                 handler.buildView();
                 break;
                 
-            case EDIT:
-                handler.setFighter(fighter);
-                handler.buildEdit();
-                break;
 
             default:
                 throw new UnsupportedOperationException("Not supported yet.");

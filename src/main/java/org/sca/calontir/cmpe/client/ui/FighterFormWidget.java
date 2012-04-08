@@ -10,14 +10,14 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.datepicker.client.DateBox;
 import java.util.Date;
 import java.util.List;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.common.UserRoles;
-import org.sca.calontir.cmpe.dto.Address;
-import org.sca.calontir.cmpe.dto.Authorization;
-import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.dto.*;
 
 /**
  *
@@ -32,7 +32,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
     private Panel infoPanel = new FlowPanel();
     private Panel notePanel = new FlowPanel();
     private Fighter fighter;
-    private String target;
+    private LookupController lookupController = LookupController.getInstance();
+
+    private enum Target {
+
+        Info, Auths
+    };
 
     public FighterFormWidget() {
         fighterIdBoxPanel.setStyleName("figherIdBox");
@@ -44,16 +49,18 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         infoPanel.setStyleName("dataBox");
         overallPanel.add(infoPanel);
 
+        // Todo: move the login from calonbar to indexpage and do
+        // before loading data. This will insure that security will
+        // be correct before building the pages.
 //        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-            notePanel.setStyleName("dataBoxShort");
-            overallPanel.add(notePanel);
-//        } hide and turn on during call
+        notePanel.setStyleName("dataBoxShort");
+        overallPanel.add(notePanel);
+//        }
 
         initWidget(overallPanel);
     }
 
-    @Override
-    public void buildEdit() {
+    public void buildInfoEdit() {
         fighterIdBoxPanel.clear();
 
         final Hidden fighterId = new Hidden("fighterId");
@@ -68,6 +75,44 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         tb.setStyleName("scaName");
         tb.setValue(fighter.getScaName());
         fighterIdBoxPanel.add(tb);
+
+        infoPanelView(true);
+
+        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            notePanelView(true);
+        }
+
+    }
+
+    public void buildAuthEdit() {
+        authPanel.clear();
+
+        Panel dataHeader = new FlowPanel();
+        dataHeader.setStyleName("dataHeader");
+        InlineLabel authLabel = new InlineLabel("Authorizations");
+        dataHeader.add(authLabel);
+
+        dataHeader.add(saveButton());
+
+        authPanel.add(dataHeader);
+
+        Panel dataBody = new FlowPanel();
+        dataBody.setStyleName("dataBody");
+        for (AuthType at : lookupController.getAuthType()) {
+            CheckBox cb = new CheckBox(at.getCode());
+            cb.setFormValue(at.getCode());
+            cb.setName(at.getCode());
+            for (Authorization a : fighter.getAuthorization()) {
+                if (a.getCode().equals(at.getCode())) {
+                    cb.setValue(true);
+                    break;
+                }
+            }
+            dataBody.add(cb);
+        }
+        // TODO: Get Authtypes from server, loop through them here.
+        // if fighter has any, make them checked.
+        authPanel.add(dataBody);
     }
 
     @Override
@@ -95,7 +140,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         InlineLabel authLabel = new InlineLabel("Authorizations");
         dataHeader.add(authLabel);
 
-        dataHeader.add(editButton());
+        dataHeader.add(editButton(Target.Auths));
 
         authPanel.add(dataHeader);
 
@@ -107,22 +152,26 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         authPanel.add(dataBody);
 
 
-        infoPanelView();
+        infoPanelView(false);
 
         if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-            notePanelView();
+            notePanelView(false);
         }
     }
 
-    private void infoPanelView() {
+    private void infoPanelView(boolean edit) {
         infoPanel.clear();
 
         Panel dataHeader = new FlowPanel();
         dataHeader.setStyleName("dataHeader");
-        InlineLabel authLabel = new InlineLabel("Fighter Info");
-        dataHeader.add(authLabel);
+        InlineLabel fighterLabel = new InlineLabel("Fighter Info");
+        dataHeader.add(fighterLabel);
 
-        dataHeader.add(editButton());
+        if (edit) {
+            dataHeader.add(saveButton());
+        } else {
+            dataHeader.add(editButton(Target.Info));
+        }
 
         infoPanel.add(dataHeader);
 
@@ -138,8 +187,34 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         FlexTable.FlexCellFormatter formatter = table.getFlexCellFormatter();
         table.setStyleName("wide-table");
         table.setText(0, 0, "Modern Name:");
-        table.setText(0, 1, fighter.getModernName());
-        table.setText(0, 2, fighter.getStatus().toString());
+        if (edit) {
+            TextBox modernName = new TextBox();
+            modernName.setName("modernName");
+            modernName.setVisibleLength(25);
+            modernName.setStyleName("modernName");
+            modernName.setValue(fighter.getModernName());
+            table.setWidget(0, 1, modernName);
+        } else {
+            table.setText(0, 1, fighter.getModernName());
+        }
+
+        if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            ListBox status = new ListBox();
+            status.setName("fighterStatus");
+            for (FighterStatus f_status : FighterStatus.values()) {
+                status.addItem(f_status.toString(), f_status.toString());
+            }
+
+            for (int i = 0; i < status.getItemCount(); ++i) {
+                if (status.getValue(i).equals(fighter.getStatus())) {
+                    status.setSelectedIndex(i);
+                    break;
+                }
+            }
+            table.setWidget(0, 2, status);
+        } else {
+            table.setText(0, 2, fighter.getStatus().toString());
+        }
         formatter.setStyleName(0, 0, "label");
         formatter.setStyleName(0, 1, "data");
         formatter.setStyleName(0, 2, "rightCol");
@@ -147,37 +222,110 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         table.setText(1, 0, "Address:");
         if (fighter.getAddress() != null && !fighter.getAddress().isEmpty()) {
             Address address = fighter.getAddress().get(0);
-            StringBuilder sb = new StringBuilder();
-            sb.append(address.getAddress1());
-            if (address.getAddress2() != null && !address.getAddress2().isEmpty()) {
+            if (edit) {
+                FlexTable addressTable = new FlexTable();
+                addressTable.setText(0, 0, "Street:");
+                TextBox address1 = new TextBox();
+                address1.setName("address1");
+                address1.setValue(address.getAddress1());
+                address1.setVisibleLength(60);
+                addressTable.setWidget(0, 1, address1);
+
+                addressTable.setText(1, 0, "Line 2:");
+                TextBox address2 = new TextBox();
+                address2.setName("address2");
+                address2.setValue(address.getAddress2());
+                address2.setVisibleLength(60);
+                addressTable.setWidget(1, 1, address2);
+
+                addressTable.setText(2, 0, "City:");
+                TextBox city = new TextBox();
+                city.setName("city");
+                city.setValue(address.getCity());
+                city.setVisibleLength(30);
+                addressTable.setWidget(2, 1, city);
+
+                addressTable.setText(3, 0, "State:");
+                TextBox state = new TextBox();
+                state.setName("state");
+                state.setValue(address.getState());
+                state.setVisibleLength(20);
+                addressTable.setWidget(3, 1, state);
+
+                addressTable.setText(4, 0, "Postal Code:");
+                TextBox postalCode = new TextBox();
+                postalCode.setName("postalCode");
+                postalCode.setValue(address.getPostalCode());
+                postalCode.setVisibleLength(30);
+                addressTable.setWidget(4, 1, postalCode);
+
+                table.setWidget(1, 1, addressTable);
+            } else {
+                StringBuilder sb = new StringBuilder();
+                sb.append(address.getAddress1());
+                if (address.getAddress2() != null && !address.getAddress2().isEmpty()) {
+                    sb.append(", ");
+                    sb.append(address.getAddress2());
+                }
                 sb.append(", ");
-                sb.append(address.getAddress2());
+                sb.append(address.getCity());
+                sb.append(", ");
+                sb.append(address.getState());
+                sb.append("&nbsp;&nbsp;");
+                sb.append(address.getPostalCode());
+                table.setHTML(1, 1, sb.toString());
             }
-            sb.append(", ");
-            sb.append(address.getCity());
-            sb.append(", ");
-            sb.append(address.getState());
-            sb.append("&nbsp;&nbsp;");
-            sb.append(address.getPostalCode());
-            table.setHTML(1, 1, sb.toString());
         }
-
-
         formatter.setStyleName(1, 0, "label");
         formatter.setStyleName(1, 1, "data");
-        if (fighter.getTreaty() != null) {
-            table.setText(1, 2, fighter.getTreaty().getName());
-            formatter.setStyleName(1, 2, "rightCol");
+
+        if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            CheckBox treaty = new CheckBox("Treaty");
+            treaty.setName("treaty");
+            if (fighter.getTreaty() != null) {
+                treaty.setValue(true);
+            }
+            table.setWidget(1, 2, treaty);
+        } else {
+            if (fighter.getTreaty() != null) {
+                table.setText(1, 2, "Treaty");
+            }
         }
+        formatter.setStyleName(1, 2, "rightCol");
 
         table.setText(2, 0, "SCA Membership:");
-        table.setText(2, 1, fighter.getScaMemberNo());
+        if (edit) {
+            TextBox scaMemberNo = new TextBox();
+            scaMemberNo.setName("scaMemberNo");
+            scaMemberNo.setVisibleLength(20);
+            scaMemberNo.setStyleName("scaMemberNo");
+            scaMemberNo.setValue(fighter.getScaMemberNo());
+            table.setWidget(2, 1, scaMemberNo);
+        } else {
+            table.setText(2, 1, fighter.getScaMemberNo());
+        }
         formatter.setStyleName(2, 0, "label");
         formatter.setStyleName(2, 1, "data");
 
         table.setText(3, 0, "Group:");
-        table.setText(3, 1,
-                fighter.getScaGroup() == null ? "" : fighter.getScaGroup().getGroupName());
+        if (edit) {
+            ListBox group = new ListBox();
+            group.setName("group");
+            for (ScaGroup g : lookupController.getScaGroups()) {
+                group.addItem(g.getGroupName(), g.getGroupName());
+            }
+
+            for (int i = 0; i < group.getItemCount(); ++i) {
+                if (group.getValue(i).equals(fighter.getScaGroup().getGroupName())) {
+                    group.setSelectedIndex(i);
+                    break;
+                }
+            }
+            table.setWidget(3, 1, group);
+        } else {
+            table.setText(3, 1,
+                    fighter.getScaGroup() == null ? "" : fighter.getScaGroup().getGroupName());
+        }
         formatter.setStyleName(3, 0, "label");
         formatter.setStyleName(3, 1, "data");
 
@@ -191,7 +339,18 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         formatter.setStyleName(4, 1, "data");
 
         table.setText(5, 0, "DOB:");
-        if (fighter.getDateOfBirth() != null) {
+        if (edit) {
+            DateBox dateOfBirth = new DateBox();
+            dateOfBirth.getElement().setId("dateOfBirth");
+            dateOfBirth.setFormat(
+                    new DateBox.DefaultFormat(
+                    DateTimeFormat.getFormat("MM/dd/yyyy")));
+            dateOfBirth.setStyleName("dateOfBirth");
+            if (fighter.getDateOfBirth() != null) {
+                dateOfBirth.setValue(fighter.getDateOfBirth());
+            }
+            table.setWidget(5, 1, dateOfBirth);
+        } else if (fighter.getDateOfBirth() != null) {
             table.setText(5, 1,
                     DateTimeFormat.getFormat("MM/dd/yyyy").format(fighter.getDateOfBirth()));
         }
@@ -199,15 +358,37 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         formatter.setStyleName(5, 1, "data");
 
         table.setText(6, 0, "Phone Number:");
-        if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
-            table.setText(6, 1, fighter.getPhone().get(0).getPhoneNumber());
+        if (edit) {
+            TextBox phoneNumber = new TextBox();
+            phoneNumber.setName("phoneNumber");
+            phoneNumber.setVisibleLength(25);
+            phoneNumber.setStyleName("phoneNumber");
+            if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
+                phoneNumber.setValue(fighter.getPhone().get(0).getPhoneNumber());
+            }
+            table.setWidget(6, 1, phoneNumber);
+        } else {
+            if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
+                table.setText(6, 1, fighter.getPhone().get(0).getPhoneNumber());
+            }
         }
         formatter.setStyleName(6, 0, "label");
         formatter.setStyleName(6, 1, "data");
 
         table.setText(7, 0, "Email Address:");
-        if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
-            table.setText(7, 1, fighter.getEmail().get(0).getEmailAddress());
+        if (edit) {
+            TextBox email = new TextBox();
+            email.setName("email");
+            email.setVisibleLength(25);
+            email.setStyleName("email");
+            if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
+                email.setValue(fighter.getEmail().get(0).getEmailAddress());
+            }
+            table.setWidget(7, 1, email);
+        } else {
+            if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
+                table.setText(7, 1, fighter.getEmail().get(0).getEmailAddress());
+            }
         }
         formatter.setStyleName(7, 0, "label");
         formatter.setStyleName(7, 1, "data");
@@ -224,7 +405,16 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
             FlexTable.FlexCellFormatter adminFormatter = adminTable.getFlexCellFormatter();
 
             adminTable.setText(0, 0, "Google ID:");
-            adminTable.setText(0, 1, fighter.getGoogleId());
+            if (edit) {
+                TextBox googleId = new TextBox();
+                googleId.setName("googleId");
+                googleId.setVisibleLength(25);
+                googleId.setStyleName("googleId");
+                googleId.setValue(fighter.getGoogleId());
+                adminTable.setWidget(0, 1, googleId);
+            } else {
+                adminTable.setText(0, 1, fighter.getGoogleId());
+            }
             adminFormatter.setStyleName(0, 0, "label");
             adminFormatter.setStyleName(0, 1, "data");
 
@@ -242,7 +432,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         infoPanel.add(dataBody);
     }
 
-    private void notePanelView() {
+    private void notePanelView(boolean edit) {
         notePanel.clear();
 
         Panel dataHeader = new FlowPanel();
@@ -254,11 +444,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
 
         Panel dataBody = new FlowPanel();
         dataBody.setStyleName("dataBody");
-        Label note = new Label();
+        TextArea noteTa = new TextArea();
+        noteTa.setName("notes");
+        noteTa.setReadOnly(!edit);
         if (fighter.getNote() != null) {
-            note.setText(fighter.getNote().getBody());
+            noteTa.setText(fighter.getNote().getBody());
         }
-        dataBody.add(note);
+        dataBody.add(noteTa);
         notePanel.add(dataBody);
     }
 
@@ -307,8 +499,30 @@ public class FighterFormWidget extends Composite implements EditViewHandler {
         return bPrint;
     }
 
-    private Widget editButton() {
+    private Widget editButton(final Target target) {
         Anchor editButton = new Anchor("Edit");
+        editButton.setStyleName("button");
+        editButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                switch (target) {
+                    case Auths:
+                        buildAuthEdit();
+                        break;
+                    case Info:
+                        buildInfoEdit();
+                        break;
+                }
+            }
+        });
+
+
+        return editButton;
+    }
+
+    private Widget saveButton() {
+        Anchor editButton = new Anchor("Save");
         editButton.setStyleName("button");
         editButton.addClickHandler(new ClickHandler() {
 

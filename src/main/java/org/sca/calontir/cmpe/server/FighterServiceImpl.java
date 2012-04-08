@@ -9,10 +9,14 @@ import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.data.TableUpdates;
+import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.db.TableUpdatesDao;
+import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.FighterListItem;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
 
@@ -54,5 +58,15 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         FighterDAO fighterDao = new FighterDAO();
         
         return fighterDao.getFighter(id);
+    }
+    
+    public List<AuthType> getAuthTypes(){
+        AuthTypeDAO dao = new AuthTypeDAO();
+        return dao.getAuthType();
+    }
+    
+    public List<ScaGroup> getGroups() {
+        ScaGroupDAO dao = new ScaGroupDAO();
+        return dao.getScaGroup();
     }
 }
