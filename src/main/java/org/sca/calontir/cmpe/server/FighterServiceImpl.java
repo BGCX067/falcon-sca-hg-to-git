@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
-import org.sca.calontir.cmpe.data.TableUpdates;
+import org.sca.calontir.cmpe.dto.TableUpdates;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;

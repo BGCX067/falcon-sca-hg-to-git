@@ -26,22 +26,27 @@ public class TableUpdatesDao {
         Query query = pm.newQuery(TableUpdates.class);
         List<TableUpdates> tableUpdates = (List<TableUpdates>) query.execute();
         for (TableUpdates tu : tableUpdates) {
-            localCache.put(tu.getTableName(), tu);
+            org.sca.calontir.cmpe.dto.TableUpdates dtoTu = new org.sca.calontir.cmpe.dto.TableUpdates();
+            dtoTu.setTableUpdatesId(tu.getTableUpdatesId().getId());
+            dtoTu.setTableName(tu.getTableName());
+            dtoTu.setLastUpdated(tu.getLastUpdated());
+            dtoTu.setLastDeletion(tu.getLastDeletion());
+            localCache.put(dtoTu.getTableName(), dtoTu);
         }
     }
 
-    public TableUpdates getTableUpdates(String table) {
-        TableUpdates rv = (TableUpdates) localCache.getValue(table);
+    public org.sca.calontir.cmpe.dto.TableUpdates getTableUpdates(String table) {
+        org.sca.calontir.cmpe.dto.TableUpdates rv = (org.sca.calontir.cmpe.dto.TableUpdates) localCache.getValue(table);
         if (rv == null) {
             loadTableToCache();
-            rv = (TableUpdates) localCache.getValue(table);
+            rv = (org.sca.calontir.cmpe.dto.TableUpdates) localCache.getValue(table);
         }
 
         return rv;
     }
 
-    public List<TableUpdates> getTableUpdates() {
-        List<TableUpdates> tableUpdates = localCache.getValueList();
+    public List<org.sca.calontir.cmpe.dto.TableUpdates> getTableUpdates() {
+        List<org.sca.calontir.cmpe.dto.TableUpdates> tableUpdates = localCache.getValueList();
         if (tableUpdates == null || tableUpdates.isEmpty()) {
             loadTableToCache();
             tableUpdates = localCache.getValueList();

@@ -89,28 +89,32 @@ public class IndexPage implements EntryPoint {
 
     private void buildFighterForm() {
         final FormPanel fighterForm = new FormPanel();
-        fighterForm.setAction("/fighterg");
+        fighterForm.setAction("/FighterServlet");
         fighterForm.getElement().setId("FighterForm");
         fighterForm.getElement().getStyle().setDisplay(Style.Display.NONE);
         fighterForm.setMethod(FormPanel.METHOD_POST);
         
+        fighterFormWidget.setForm(fighterForm);
         fighterForm.add(fighterFormWidget);
+        fighterForm.addSubmitHandler(fighterFormWidget);
+        fighterForm.addSubmitCompleteHandler(fighterFormWidget);
+              
         
-        fighterForm.addSubmitHandler(new FormPanel.SubmitHandler() {
-
-            @Override
-            public void onSubmit(FormPanel.SubmitEvent event) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-        
-        fighterForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-
-            @Override
-            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
+//        fighterForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+//
+//            @Override
+//            public void onSubmit(FormPanel.SubmitEvent event) {
+//                // Validation here
+//            }
+//        });
+//        
+//        fighterForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+//
+//            @Override
+//            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
+//                //Updates here?
+//            }
+//        });
         
         RootPanel.get().add(fighterForm);
     }
@@ -126,7 +130,7 @@ public class IndexPage implements EntryPoint {
 
             final String scaNameListStr = stockStore.getItem("scaNameList");
             String timeStampStr = stockStore.getItem("scaNameUpdated");
-            Date targetDate = null;
+            Date targetDate;
             if (timeStampStr == null || timeStampStr.trim().isEmpty()) {
                 targetDate = null;
             } else {

@@ -35,7 +35,7 @@ public class EditViewEvent extends GwtEvent<EditViewHandler> {
     protected void dispatch(EditViewHandler handler) {
         switch (mode) {
             case ADD:
-                handler.setFighter(null);
+                handler.setFighter(new Fighter());
                 handler.buildAdd();
                 break;
 

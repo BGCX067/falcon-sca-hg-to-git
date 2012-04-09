@@ -2,7 +2,6 @@ package org.sca.calontir.cmpe.db;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import static com.google.appengine.api.datastore.FetchOptions.Builder.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +12,6 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.data.Address;
-import org.sca.calontir.cmpe.data.Authorization;
 import org.sca.calontir.cmpe.data.Fighter;
 import org.sca.calontir.cmpe.data.TableUpdates;
 import org.sca.calontir.cmpe.dto.DataTransfer;
@@ -198,14 +196,19 @@ public class FighterDAO {
             f.setUserUpdated(userId);
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving {0}", f.getScaName());
             f = pm.makePersistent(f);
-            TableUpdatesDao tuDao = new TableUpdatesDao();
-            TableUpdates tu = tuDao.getTableUpdates("Fighter");
+
+            Query query = pm.newQuery(TableUpdates.class);
+            query.setFilter("tableName == tableNameParam");
+            query.declareParameters("String tableNameParam");
+            List<TableUpdates> tableUpdates = (List<TableUpdates>) query.execute("Fighter");
+
+            TableUpdates tu = tableUpdates.size() > 0 ? tableUpdates.get(0) : null;
             if (tu == null) {
                 tu = new TableUpdates();
                 tu.setTableName("Fighter");
                 tu.setLastUpdated(new Date());
             }
-            tuDao.saveTableUpdates(tu);
+            pm.makePersistent(tu);
             pm.flush();
             if (f.getFighterId() == null) {
                 System.out.println("Key not updated.");
@@ -227,14 +230,18 @@ public class FighterDAO {
         Fighter f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
         try {
             pm.deletePersistent(f);
-            TableUpdatesDao tuDao = new TableUpdatesDao();
-            TableUpdates tu = tuDao.getTableUpdates("Fighter");
+            Query query = pm.newQuery(TableUpdates.class);
+            query.setFilter("tableName == tableNameParam");
+            query.declareParameters("String tableNameParam");
+            List<TableUpdates> tableUpdates = (List<TableUpdates>) query.execute("Fighter");
+
+            TableUpdates tu = tableUpdates.size() > 0 ? tableUpdates.get(0) : null;
             if (tu == null) {
                 tu = new TableUpdates();
                 tu.setTableName("Fighter");
                 tu.setLastDeletion(new Date());
             }
-            tuDao.saveTableUpdates(tu);
+            pm.makePersistent(tu);
         } finally {
             pm.close();
         }

@@ -60,6 +60,7 @@ public class ScaGroupDAO {
         if (retList == null) {
             PersistenceManager pm = PMF.get().getPersistenceManager();
             Query query = pm.newQuery(ScaGroup.class);
+            query.setOrdering("groupName");
             List<ScaGroup> sgList = (List<ScaGroup>) query.execute();
             retList = new ArrayList<org.sca.calontir.cmpe.dto.ScaGroup>();
             for (ScaGroup group : sgList) {
