@@ -173,14 +173,15 @@ a:hover.buttonLink {text-decoration: none}
     border-top-left-radius: 15px;
 }
 
-.dataHeader .button {
+.dataHeader .editButton {
     float: right;
+    display: inline;
 }
 
-.dataHeader .button a:link,
-.dataHeader .button a:visited,
-.dataHeader .button a:hover,
-.dataHeader .button a:active {
+.dataHeader .editButton a:link,
+.dataHeader .editButton a:visited,
+.dataHeader .editButton a:hover,
+.dataHeader .editButton a:active {
     color: lightslategray;
 }
 
@@ -273,32 +274,6 @@ a.BPrint:hover {
     -moz-border-left-radius: 15px;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
-}
-
-.listRow {
-    display: block;
-    border-bottom: 1px solid darkblue;
-    width: 100%;
-}
-
-.listRow .rowElement { 
-    display: inline-block;
-    margin-right: 1em;
-    margin-left: 1em;
-}
-
-.listRow a:active, a:visited, a:link {
-    text-decoration : none;
-    color: black;
-}
-
-.listRow a:hover {
-    background-color: white;
-    color: blue;
-}
-
-.rightCol {
-    text-align: right;
 }
 
 table.wide-table {
