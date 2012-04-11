@@ -64,7 +64,6 @@ public class FighterCache implements LocalCache {
     }
 
     public void put(Fighter fighter) {
-        _updated();
         _fighterMap.put(fighter.getFighterId(), fighter);
         if (!StringUtils.isEmpty(fighter.getGoogleId())) {
             _fighterByGoogleId.put(fighter.getGoogleId(), fighter.getFighterId());

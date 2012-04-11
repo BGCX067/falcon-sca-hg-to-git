@@ -98,11 +98,12 @@ public class FighterServlet extends HttpServlet {
                 ServletOutputStream sos = response.getOutputStream();
                 baosPDF.writeTo(sos);
                 sos.flush();
+                return;
             } else {
                 request.setAttribute("mode", mode);
                 request.setAttribute("fighter", fighter);
-                this.getServletContext().getRequestDispatcher("/fighter.jsp").
-                        include(request, response);
+//                this.getServletContext().getRequestDispatcher("/fighter.jsp").
+//                        include(request, response);
             }
         } else {
             fighter = FighterUpdater.fromRequest(request, new Fighter());

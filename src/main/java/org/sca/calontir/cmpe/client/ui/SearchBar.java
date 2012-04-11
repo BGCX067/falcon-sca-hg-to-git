@@ -14,6 +14,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import org.sca.calontir.cmpe.client.FighterInfo;
@@ -78,6 +80,13 @@ public class SearchBar extends Composite {
 
                 }
 
+                Collections.sort(fighterList, new Comparator<FighterInfo>() {
+
+                    @Override
+                    public int compare(FighterInfo l, FighterInfo r) {
+                        return l.getScaName().compareTo(r.getScaName());
+                    }
+                });
                 table.setRowCount(fighterList.size());
                 List data = dataProvider.getList();
                 data.clear();

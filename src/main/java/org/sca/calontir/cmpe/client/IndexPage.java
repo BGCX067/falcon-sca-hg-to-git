@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
+import java.util.Collections;
 import java.util.Date;
 import org.sca.calontir.cmpe.client.ui.*;
 import org.sca.calontir.cmpe.client.user.Security;
@@ -158,6 +159,7 @@ public class IndexPage implements EntryPoint {
                         scaNameObjs = scaNameObj.get("scaNames").isArray();
                     }
                     JSONObject scaNameList = new JSONObject();
+                    
 
                     int i = scaNameObjs.size();
                     if (result.getFighterInfo() != null && result.getFighterInfo().size() > 0) {
@@ -173,6 +175,7 @@ public class IndexPage implements EntryPoint {
                             scaNameObj.put("group", group);
                             scaNameObjs.set(i++, scaNameObj);
                         }
+                        
                         scaNameList.put("scaNames", scaNameObjs);
                         stockStore.removeItem("scaNameList");
                         stockStore.setItem("scaNameList", scaNameList.toString());

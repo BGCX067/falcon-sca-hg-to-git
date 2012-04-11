@@ -3,7 +3,7 @@
     <head>
         <title>Calontir Marshals UI</title>
         <script language="javascript" src="fighter/fighter.nocache.js"></script>
-        <link rel="stylesheet" href="default.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="css/cmp_001.css" type="text/css" media="all" />
         <link type="text/css" href="css/calonbar2.css" rel="stylesheet" />
         <link rel="SHORTCUT ICON" href="images/Marshal.ico"/>
     </head>

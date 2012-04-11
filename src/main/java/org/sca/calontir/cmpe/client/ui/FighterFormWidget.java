@@ -87,6 +87,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         final Hidden fighterId = new Hidden("fighterId");
         fighterId.setValue(fighter.getFighterId().toString());
         fighterIdBoxPanel.add(fighterId);
+        
+        fighterIdBoxPanel.add(mode);
+                        
 
         fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
 
@@ -115,7 +118,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         dataHeader.add(authLabel);
 
         if (edit) {
-            dataHeader.add(saveButton(Target.Auths));
+            Panel editButton = new FlowPanel();
+            editButton.setStyleName("editButton");
+            editButton.getElement().getStyle().setDisplay(Style.Display.INLINE);
+            editButton.add(saveButton(Target.Auths));
+            editButton.add(cancelButton(Target.Auths));
+            dataHeader.add(editButton);
         }
 
         authPanel.add(dataHeader);
@@ -148,7 +156,11 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         dataHeader.add(authLabel);
 
 
-        dataHeader.add(editButton(Target.Auths));
+        Panel editButton = new FlowPanel();
+        editButton.setStyleName("editButton");
+        editButton.getElement().getStyle().setDisplay(Style.Display.INLINE);
+        editButton.add(editButton(Target.Auths));
+        dataHeader.add(editButton);
 
         authPanel.add(dataHeader);
 
@@ -166,6 +178,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         final Hidden fighterId = new Hidden("fighterId");
         fighterId.setValue(fighter.getFighterId().toString());
         fighterIdBoxPanel.add(fighterId);
+        fighterIdBoxPanel.add(mode);
+                        
 
         fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
 
@@ -199,18 +213,23 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         dataHeader.add(fighterLabel);
 
         boolean edit = false;
+        Panel editButton = new FlowPanel();
+        editButton.setStyleName("editButton");
+        editButton.getElement().getStyle().setDisplay(Style.Display.INLINE);
         switch (dMode) {
             case edit:
                 edit = true;
-                dataHeader.add(saveButton(Target.Info));
+                editButton.add(saveButton(Target.Info));
+                editButton.add(cancelButton(Target.Info));
                 break;
             case view:
-                dataHeader.add(editButton(Target.Info));
+                editButton.add(editButton(Target.Info));
                 break;
             case add:
                 edit = true;
             default:
         }
+        dataHeader.add(editButton);
 
         infoPanel.add(dataHeader);
 
@@ -354,8 +373,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         if (edit) {
             ListBox group = new ListBox();
             group.setName("scaGroup");
-            if(dMode == DisplayMode.add)
+            if (dMode == DisplayMode.add) {
                 group.addItem("Select a group", "SELECTGROUP");
+            }
             for (ScaGroup g : lookupController.getScaGroups()) {
                 group.addItem(g.getGroupName(), g.getGroupName());
             }
@@ -575,7 +595,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
             @Override
             public void onClick(ClickEvent event) {
-                Window.alert("Not Impletmented yet.");
+                mode.setValue("printFighter");
+                form.submit();
             }
         });
 
@@ -583,8 +604,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
     }
 
     private Widget editButton(final Target target) {
-        Anchor editButton = new Anchor("Edit");
-        editButton.setStyleName("button");
+        Anchor editButton = new Anchor("edit");
+//        editButton.setStyleName("button");
         editButton.addClickHandler(new ClickHandler() {
 
             @Override
@@ -604,21 +625,42 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         return editButton;
     }
 
-    private Widget saveButton(final Target target) {
-        Anchor editButton = new Anchor("Save");
-        editButton.setStyleName("button");
-        editButton.addClickHandler(new ClickHandler() {
+    private Widget cancelButton(final Target target) {
+        Anchor cancelButton = new Anchor("cancel");
+//        cancelButton.setStyleName("button");
+        cancelButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
                 switch (target) {
                     case Auths:
-                        fighterIdBoxPanel.add(mode);
+                        buildAuthView();
+                        break;
+                    case Info:
+                        buildInfoView();
+                        break;
+                }
+            }
+        });
+
+
+        return cancelButton;
+    }
+
+    private Widget saveButton(final Target target) {
+        Anchor saveButton = new Anchor("save");
+        saveButton.setStyleName("button");
+        saveButton.getElement().getStyle().setMarginRight(1.5, Style.Unit.EM);
+        saveButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                switch (target) {
+                    case Auths:
                         mode.setValue("saveAuthorizations");
                         form.submit();
                         break;
                     case Info:
-                        fighterIdBoxPanel.add(mode);
                         mode.setValue("saveFighter");
                         form.submit();
                         break;
@@ -627,13 +669,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         });
 
 
-        return editButton;
+        return saveButton;
     }
 
     @Override
     public void onSubmit(SubmitEvent event) {
-        Window.alert("Not Implemented yet!");
-        event.cancel();
+//        Window.alert("Not Implemented yet!");
+//        event.cancel();
     }
 
     @Override
