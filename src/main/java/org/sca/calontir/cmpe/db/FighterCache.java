@@ -11,6 +11,8 @@ import org.sca.calontir.cmpe.dto.FighterListItem;
  * @author rik
  */
 public class FighterCache implements LocalCache {
+  // TODO: Realized that this is not threadsafe. Most methods hear have to be syncorized our we 
+  // are going to be handing different records because of race conditions.
 
     final private static FighterCache _instance = new FighterCache();
     private Map<Long, Fighter> _fighterMap = new HashMap<Long, Fighter>();
