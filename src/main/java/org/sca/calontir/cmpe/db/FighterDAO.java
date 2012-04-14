@@ -214,8 +214,6 @@ public class FighterDAO {
                 System.out.println("Key not updated.");
             } else {
                 keyValue = f.getFighterId().getId();
-                fCache.put(DataTransfer.convert(f));
-                fCache.put(DataTransfer.convertToListItem(f));
             }
 
         } finally {
