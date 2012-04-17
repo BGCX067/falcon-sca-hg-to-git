@@ -11,27 +11,54 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
-import java.util.Collections;
 import java.util.Date;
 import org.sca.calontir.cmpe.client.ui.*;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 
+/**
+ * Entry Point.
+ *
+ * Design: 1. Starts application with information screen "Loading..." 2. Check status of user, i.e. is logged in 3. Async a.
+ * Begin loading data, both from localstorage and server. b. Build screens. Index page in front. Search button disabled. 4.
+ * When data is loaded, enable search button.
+ *
+ * @author Rik Scarborough
+ */
 public class IndexPage implements EntryPoint {
 
     private Storage stockStore = null;
-    final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
-    final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
     final private Security security = SecurityFactory.getSecurity();
     private FighterFormWidget fighterFormWidget = new FighterFormWidget();
-
+    private FighterListBox flb = new FighterListBox();
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
      */
     @Override
     public void onModuleLoad() {
 //        security = GWT.create(SecurityService.class);
-        loadData();
+        // Do login check here;
+        LookupController.getInstance();
+
+        LoginServiceAsync loginService = GWT.create(LoginService.class);
+        loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+
+            @Override
+            public void onFailure(Throwable error) {
+                Window.alert("Error in contacting the server, try later");
+            }
+
+            @Override
+            public void onSuccess(LoginInfo result) {
+                LoginInfo loginInfo = result;
+                if (loginInfo.isLoggedIn()) {
+                }
+                SecurityFactory.setLoginInfo(loginInfo);
+                buildIndexPage();
+            }
+        });
+
+        //Must turn off search button and have the load data started above to turn it back on.
     }
 
     private void buildIndexPage() {
@@ -42,8 +69,10 @@ public class IndexPage implements EntryPoint {
         CalonBar calonBar = new CalonBar();
         RootPanel.get().add(calonBar);
 
-        SearchBar searchBar = new SearchBar(table, dataProvider);
+        SearchBar searchBar = new SearchBar();
         searchBar.addHandler(fighterFormWidget, EditViewEvent.TYPE);
+		searchBar.addHandler(flb, SearchEvent.TYPE);
+        fighterFormWidget.addHandler(searchBar, DataUpdatedEvent.TYPE);
         RootPanel.get().add(searchBar);
 
 
@@ -82,10 +111,8 @@ public class IndexPage implements EntryPoint {
     }
 
     private void foundMultibleResults() {
-        //TODO: move table and dataProvider to flb and use an event to kick this off from SearchPanel
-         FighterListBox flb = new FighterListBox(table, dataProvider);
-         flb.addHandler(fighterFormWidget, EditViewEvent.TYPE);
-         RootPanel.get().add(flb);
+        flb.addHandler(fighterFormWidget, EditViewEvent.TYPE);
+        RootPanel.get().add(flb);
     }
 
     private void buildFighterForm() {
@@ -94,98 +121,13 @@ public class IndexPage implements EntryPoint {
         fighterForm.getElement().setId("FighterForm");
         fighterForm.getElement().getStyle().setDisplay(Style.Display.NONE);
         fighterForm.setMethod(FormPanel.METHOD_POST);
-        
+
         fighterFormWidget.setForm(fighterForm);
         fighterForm.add(fighterFormWidget);
         fighterForm.addSubmitHandler(fighterFormWidget);
         fighterForm.addSubmitCompleteHandler(fighterFormWidget);
-              
-        
-//        fighterForm.addSubmitHandler(new FormPanel.SubmitHandler() {
-//
-//            @Override
-//            public void onSubmit(FormPanel.SubmitEvent event) {
-//                // Validation here
-//            }
-//        });
-//        
-//        fighterForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-//
-//            @Override
-//            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-//                //Updates here?
-//            }
-//        });
-        
+
+
         RootPanel.get().add(fighterForm);
-    }
-
-
-    private void loadData() {
-
-        stockStore = Storage.getLocalStorageIfSupported();
-        if (stockStore != null) {
-            FighterServiceAsync fighterService = GWT.create(FighterService.class);
-
-
-
-            final String scaNameListStr = stockStore.getItem("scaNameList");
-            String timeStampStr = stockStore.getItem("scaNameUpdated");
-            Date targetDate;
-            if (timeStampStr == null || timeStampStr.trim().isEmpty()) {
-                targetDate = null;
-            } else {
-                long timeStamp = Long.valueOf(timeStampStr);
-                targetDate = new Date(timeStamp);
-            }
-            //TODO: Change to get a single object back that contains the list and'
-            // a flag to represent if the data should be updated or replaced.
-            fighterService.getListItems(targetDate, new AsyncCallback<FighterListInfo>() {
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    Window.alert("Failed lookup " + caught.getMessage());
-                    buildIndexPage();
-                }
-
-                @Override
-                public void onSuccess(FighterListInfo result) {
-                    JSONArray scaNameObjs;
-                    if (scaNameListStr == null || !result.isUpdateInfo()) {
-                        scaNameObjs = new JSONArray();
-                    } else {
-                        JSONValue value = JSONParser.parseStrict(scaNameListStr);
-                        JSONObject scaNameObj = value.isObject();
-                        scaNameObjs = scaNameObj.get("scaNames").isArray();
-                    }
-                    JSONObject scaNameList = new JSONObject();
-                    
-
-                    int i = scaNameObjs.size();
-                    if (result.getFighterInfo() != null && result.getFighterInfo().size() > 0) {
-                        for (FighterInfo fli : result.getFighterInfo()) {
-                            JSONString scaName = new JSONString(fli.getScaName());
-                            JSONNumber id = new JSONNumber(fli.getFighterId());
-                            JSONString auths = new JSONString(fli.getAuthorizations());
-                            JSONString group = new JSONString(fli.getGroup());
-                            JSONObject scaNameObj = new JSONObject();
-                            scaNameObj.put("scaName", scaName);
-                            scaNameObj.put("id", id);
-                            scaNameObj.put("authorizations", auths);
-                            scaNameObj.put("group", group);
-                            scaNameObjs.set(i++, scaNameObj);
-                        }
-                        
-                        scaNameList.put("scaNames", scaNameObjs);
-                        stockStore.removeItem("scaNameList");
-                        stockStore.setItem("scaNameList", scaNameList.toString());
-                        Date now = new Date();
-                        stockStore.setItem("scaNameUpdated", Long.toString(now.getTime()));
-                    }
-                    buildIndexPage();
-                }
-            });
-
-        }
     }
 }
