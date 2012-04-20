@@ -19,6 +19,8 @@ public interface FighterServiceAsync {
     public void getListItems(Date targetDate, AsyncCallback<FighterListInfo> async);
 
     public void getFighter(Long id, AsyncCallback<Fighter> async);
+
+	public void getFighterByScaName(String scaName, AsyncCallback<Fighter> async);
     
     public void getAuthTypes(AsyncCallback<List<AuthType>> async);
     

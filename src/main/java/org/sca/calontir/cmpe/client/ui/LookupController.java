@@ -43,10 +43,10 @@ public class LookupController {
 	}
 
 	public void replaceFighter(FighterInfo replacement) {
-		//buildTables();
-		fighterMap.put(replacement.getScaName(), replacement);
-		dirty = true;
-		writeDataToLocal();
+		buildTables();
+		//fighterMap.put(replacement.getScaName(), replacement);
+		//dirty = true;
+		//writeDataToLocal();
 	}
 
 	public List<FighterInfo> getFighterList(String searchName) {

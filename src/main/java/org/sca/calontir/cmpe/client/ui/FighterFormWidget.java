@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -17,7 +18,9 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DateBox;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.user.Security;
@@ -42,6 +45,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	private Fighter fighter;
 	private LookupController lookupController = LookupController.getInstance();
 	private FormPanel form = null;
+	private TextBox scaNameTextBox = new TextBox();
+//	private Map<String, Object> formFields = new HashMap<String, Object>();
 
 	private enum Target {
 
@@ -92,13 +97,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
 
-		final TextBox tb = new TextBox();
-		tb.setName("scaName");
-		tb.getElement().setId("scaName");
-		tb.setVisibleLength(25);
-		tb.setStyleName("scaName");
-		tb.setValue(fighter.getScaName());
-		fighterIdBoxPanel.add(tb);
+		scaNameTextBox = new TextBox();
+		scaNameTextBox.setName("scaName");
+		scaNameTextBox.getElement().setId("scaName");
+		scaNameTextBox.setVisibleLength(25);
+		scaNameTextBox.setStyleName("scaName");
+		scaNameTextBox.setValue(fighter.getScaName());
+		fighterIdBoxPanel.add(scaNameTextBox);
 
 		buildInfoPanel(DisplayMode.edit);
 
@@ -175,7 +180,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		fighterIdBoxPanel.clear();
 
 		final Hidden fighterId = new Hidden("fighterId");
-		fighterId.setValue(fighter.getFighterId().toString());
+		fighterId.setValue(fighter.getFighterId() == null ? "0" : fighter.getFighterId().toString());
 		fighterIdBoxPanel.add(fighterId);
 		fighterIdBoxPanel.add(mode);
 
@@ -673,13 +678,22 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 	@Override
 	public void onSubmit(SubmitEvent event) {
+		String name = scaNameTextBox.getText();
+		Window.alert(name);
+		if (name == null || name.trim().isEmpty()) {
+			Window.alert("Name cannot be empty");
+			event.cancel();
+		}
+//		if (fighter.getFighterId() == null && fighter.getFighterId() == 0) {
+//		}
 //        Window.alert("Not Implemented yet!");
 //        event.cancel();
+		// TODO: create fighter out of form and validate.  Fighter used on add to refill page.
 	}
 
 	@Override
 	public void onSubmitComplete(SubmitCompleteEvent event) {
-		if (fighter.getFighterId() > 0) {
+		if (fighter != null && fighter.getFighterId() != null && fighter.getFighterId() > 0) {
 			FighterServiceAsync fighterService = GWT.create(FighterService.class);
 			fighterService.getFighter(fighter.getFighterId(), new AsyncCallback<Fighter>() {
 
@@ -695,10 +709,36 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				}
 			});
 		} else {
-//			DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.BLOCK);
-//			DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.NONE);
-//			DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.NONE);
-			Window.Location.assign("/");
+			//TODO: gae will not save immediatly, so we will not get the id back. Need to setup a background task
+			// to wait and then go look it up
+			//			DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.BLOCK);
+			//			DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.NONE);
+			//			DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.NONE);
+			Timer t = new Timer() {
+
+				@Override
+				public void run() {
+					String name = scaNameTextBox.getText();
+					FighterServiceAsync fighterService = GWT.create(FighterService.class);
+					Window.alert("Looking up " + name);
+					fighterService.getFighterByScaName(name, new AsyncCallback<Fighter>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							throw new UnsupportedOperationException("Not supported yet.");
+						}
+
+						@Override
+						public void onSuccess(Fighter result) {
+							fireEvent(new DataUpdatedEvent(result));
+							fireEvent(new EditViewEvent(Mode.VIEW, result));
+						}
+					});
+				}
+			};
+
+			t.schedule(500);
+			//fireEvent(new EditViewEvent(Mode.VIEW, fighter));
 		}
 	}
 

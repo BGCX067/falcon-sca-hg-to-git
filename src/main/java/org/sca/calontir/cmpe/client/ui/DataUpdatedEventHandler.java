@@ -14,5 +14,6 @@ import org.sca.calontir.cmpe.dto.Fighter;
 public interface DataUpdatedEventHandler extends EventHandler {
 
 	public void fighterUpdated(Fighter fighter);
+	public void fighterAdded();
 	
 }

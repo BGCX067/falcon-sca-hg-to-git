@@ -112,4 +112,12 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler {
 
         return sb.toString();
     }
+
+	@Override
+	public void fighterAdded() {
+		LookupController.getInstance().replaceFighter(null);
+        searchPanel.clear();
+
+        buildBar();
+	}
 }

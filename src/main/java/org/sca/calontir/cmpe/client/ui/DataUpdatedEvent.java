@@ -16,6 +16,10 @@ public class DataUpdatedEvent extends GwtEvent<DataUpdatedEventHandler> {
 	public static Type<DataUpdatedEventHandler> TYPE = new GwtEvent.Type<DataUpdatedEventHandler>();
 	private Fighter fighter;
 
+	public DataUpdatedEvent() {
+
+	}
+
 	public DataUpdatedEvent(Fighter fighter) {
 		this.fighter = fighter;
 	}
@@ -27,8 +31,10 @@ public class DataUpdatedEvent extends GwtEvent<DataUpdatedEventHandler> {
 
 	@Override
 	protected void dispatch(DataUpdatedEventHandler handler) {
-		if (fighter != null) {
+		if (fighter != null && fighter.getFighterId() != null && fighter.getFighterId() > 0) {
 			handler.fighterUpdated(fighter);
+		} else {
+			handler.fighterAdded();
 		}
 	}
 }

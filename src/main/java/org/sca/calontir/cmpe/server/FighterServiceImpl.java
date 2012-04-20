@@ -71,4 +71,13 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		ScaGroupDAO dao = new ScaGroupDAO();
 		return dao.getScaGroup();
 	}
+
+	@Override
+	public Fighter getFighterByScaName(String scaName) {
+		FighterDAO fighterDao = new FighterDAO();
+		List<Fighter> fList = fighterDao.queryFightersByScaName(scaName);
+		if(fList != null && !fList.isEmpty())
+			return fList.get(0);
+		return null;
+	}
 }

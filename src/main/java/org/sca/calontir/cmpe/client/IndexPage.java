@@ -73,6 +73,7 @@ public class IndexPage implements EntryPoint {
         searchBar.addHandler(fighterFormWidget, EditViewEvent.TYPE);
 		searchBar.addHandler(flb, SearchEvent.TYPE);
         fighterFormWidget.addHandler(searchBar, DataUpdatedEvent.TYPE);
+		fighterFormWidget.addHandler(flb, SearchEvent.TYPE);
         RootPanel.get().add(searchBar);
 
 
