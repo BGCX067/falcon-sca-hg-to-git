@@ -1,1 +1,1 @@
-post "/fighterg", forward: "/FighterGService.groovy"
+post "/storeDatabase", forward: "/StoreDatabase.groovy"
