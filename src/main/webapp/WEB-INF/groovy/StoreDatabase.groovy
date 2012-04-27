@@ -8,6 +8,8 @@ import com.google.appengine.api.datastore.Entity
 
 Security security = SecurityFactory.getSecurity()
 
+// Remove the dao, it will not be able to scan the whole database anymore.
+// also, only return active fighters. Inactive will have another getter.
 dao = new FighterDAO()
 
 fighters = dao.getFighters()

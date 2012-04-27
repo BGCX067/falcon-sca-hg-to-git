@@ -18,6 +18,8 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
 public interface FighterServiceAsync {
     public void getListItems(Date targetDate, AsyncCallback<FighterListInfo> async);
 
+	public void getStoredList(AsyncCallback<StoredFighterList> async);
+
     public void getFighter(Long id, AsyncCallback<Fighter> async);
 
 	public void getFighterByScaName(String scaName, AsyncCallback<Fighter> async);

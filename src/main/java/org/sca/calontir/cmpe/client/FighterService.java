@@ -11,6 +11,8 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
 @RemoteServiceRelativePath("fighter")
 public interface FighterService  extends RemoteService {
     public FighterListInfo getListItems(Date targetDate);
+
+	public StoredFighterList getStoredList();
     
     public Fighter getFighter(Long id);
 

@@ -8,6 +8,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
@@ -97,12 +100,25 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
 
+		//move to inner class
+		//add field value to fighter when user types.
 		scaNameTextBox = new TextBox();
 		scaNameTextBox.setName("scaName");
 		scaNameTextBox.getElement().setId("scaName");
 		scaNameTextBox.setVisibleLength(25);
 		scaNameTextBox.setStyleName("scaName");
 		scaNameTextBox.setValue(fighter.getScaName());
+		scaNameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				//validate
+				fighter.setScaName(event.getValue());
+				Window.alert(event.getValue());
+			}
+		});
+
+
 		fighterIdBoxPanel.add(scaNameTextBox);
 
 		buildInfoPanel(DisplayMode.edit);

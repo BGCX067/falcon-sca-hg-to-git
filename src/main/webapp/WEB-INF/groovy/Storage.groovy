@@ -3,8 +3,6 @@
  * and open the template in the editor.
  */
 
-package org.sca.calontir.cmpe.groovy
-
 import org.sca.calontir.cmpe.dto.Fighter
 import org.sca.calontir.cmpe.dto.FighterListItem
 import org.sca.calontir.cmpe.dto.Authorization
@@ -18,7 +16,7 @@ import org.sca.calontir.cmpe.utils.MarshalUtils
  */
 class Storage {
 	public Map getFighterList() {
-		println("in getFighterList")
+		println("in getFighterList 2")
 		def xml
 		BlobKey blobKey = new BlobKey("WVObekwKG0NAohMCz5hERQ")
 		blobKey.withReader { Reader reader ->

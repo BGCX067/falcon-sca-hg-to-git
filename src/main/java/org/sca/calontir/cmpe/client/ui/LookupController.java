@@ -1,15 +1,15 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.*;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import java.util.*;
-import org.sca.calontir.cmpe.client.FighterInfo;
-import org.sca.calontir.cmpe.client.FighterListInfo;
-import org.sca.calontir.cmpe.client.FighterService;
-import org.sca.calontir.cmpe.client.FighterServiceAsync;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.sca.calontir.cmpe.client.*;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
@@ -27,7 +27,12 @@ public class LookupController {
 	boolean dirty = false;
 
 	private LookupController() {
-		buildTables();
+		try {
+			buildTables();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Window.alert(e.getMessage());
+		}
 	}
 
 	public static LookupController getInstance() {
@@ -56,31 +61,32 @@ public class LookupController {
 			fighterMap = new HashMap<String, FighterInfo>();
 			if (stockStore != null) {
 				String scaNameListStr = stockStore.getItem("scaNameList");
-				JSONValue value = JSONParser.parseStrict(scaNameListStr);
-				JSONObject scaNameObjs = value.isObject();
-				JSONArray scaNameArray = scaNameObjs.get("scaNames").isArray();
+				if (scaNameListStr != null) {
+					try {
+						JSONValue value = JSONParser.parseStrict(scaNameListStr);
+						JSONObject scaNameObjs = value.isObject();
+						JSONArray scaNameArray = scaNameObjs.get("scaNames").isArray();
 
-				try {
-					for (int i = 0; i < scaNameArray.size() - 1; ++i) {
-						JSONObject scaNameObj = scaNameArray.get(i).isObject();
-						JSONString scaName = scaNameObj.get("scaName").isString();
-						JSONNumber id = scaNameObj.get("id").isNumber();
-						JSONString auths = scaNameObj.get("authorizations").isString();
-						JSONString group = scaNameObj.get("group").isString();
-						if (searchName == null || searchName.isEmpty()
-								|| scaName.stringValue().toUpperCase().contains(searchName.toUpperCase())) {
-							FighterInfo fli = new FighterInfo();
-							fli.setFighterId(new Double(id.doubleValue()).longValue());
-							fli.setScaName(scaName.stringValue());
-							fli.setAuthorizations(auths.stringValue());
-							fli.setGroup(group.stringValue());
-							fighterMap.put(fli.getScaName(), fli);
+						for (int i = 0; i < scaNameArray.size() - 1; ++i) {
+							JSONObject scaNameObj = scaNameArray.get(i).isObject();
+							JSONString scaName = scaNameObj.get("scaName").isString();
+							JSONNumber id = scaNameObj.get("id").isNumber();
+							JSONString auths = scaNameObj.get("authorizations").isString();
+							JSONString group = scaNameObj.get("group").isString();
+							if (searchName == null || searchName.isEmpty()
+									|| scaName.stringValue().toUpperCase().contains(searchName.toUpperCase())) {
+								FighterInfo fli = new FighterInfo();
+								fli.setFighterId(new Double(id.doubleValue()).longValue());
+								fli.setScaName(scaName.stringValue());
+								fli.setAuthorizations(auths.stringValue());
+								fli.setGroup(group.stringValue());
+								fighterMap.put(fli.getScaName(), fli);
+							}
 						}
+					} catch (Exception e) {
+						Window.alert(e.getMessage());
 					}
-				} catch (Exception e) {
-					Window.alert(e.getMessage());
 				}
-
 			}
 		}
 		List<FighterInfo> fighterList = new ArrayList<FighterInfo>(fighterMap.values());
@@ -136,23 +142,45 @@ public class LookupController {
 		}
 	}
 
-	private void buildTables() {
-		Storage stockStore = Storage.getLocalStorageIfSupported();
-		String timeStampStr = null;
-		if (stockStore != null) {
-			timeStampStr = stockStore.getItem("scaNameUpdated");
-		}
-		Date targetDate;
-		if (timeStampStr == null || timeStampStr.trim().isEmpty()) {
-			targetDate = null;
-		} else {
-			long timeStamp = Long.valueOf(timeStampStr);
-			targetDate = new Date(timeStamp);
-		}
+	private void getStoredList(final FighterServiceAsync fighterService) {
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "http://localhost:8080/RehydrateDatabase.groovy");
+		try {
+			requestBuilder.sendRequest(null, new RequestCallback() {
 
-		getFighterList(null);
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					String text = response.getText();
+					Storage stockStore = Storage.getLocalStorageIfSupported();
+					if (stockStore != null) {
+						stockStore.removeItem("scaNameList");
+						stockStore.setItem("scaNameList", text);
 
-		FighterServiceAsync fighterService = GWT.create(FighterService.class);
+						JSONValue value = JSONParser.parseStrict(text);
+						JSONObject valueObj = value.isObject();
+						//vv
+						//JSONString saveDate = valueObj.get("dateSaved").isString();
+						JSONNumber saveDate = valueObj.get("dateSaved").isNumber();
+						double d = saveDate.doubleValue();
+						long timeStamp = (new Double(d)).longValue();
+						stockStore.setItem("scaNameUpdated", Long.toString(timeStamp));
+						Date saved = new Date(timeStamp);
+
+						getFighterList(null);
+						getListItems(fighterService, saved);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					Window.alert("Failed lookup " + exception.getMessage());
+				}
+			});
+		} catch (RequestException ex) {
+			Logger.getLogger(LookupController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	private void getListItems(final FighterServiceAsync fighterService, final Date targetDate) {
 		fighterService.getListItems(targetDate, new AsyncCallback<FighterListInfo>() {
 
 			@Override
@@ -177,6 +205,31 @@ public class LookupController {
 				//signal we have the data;
 			}
 		});
+	}
+
+	private void buildTables() {
+		Storage stockStore = Storage.getLocalStorageIfSupported();
+		String timeStampStr = null;
+		if (stockStore != null) {
+			timeStampStr = stockStore.getItem("scaNameUpdated");
+		}
+		Date targetDate;
+		if (timeStampStr == null || timeStampStr.trim().isEmpty()) {
+			targetDate = null;
+		} else {
+			long timeStamp = Long.valueOf(timeStampStr);
+			targetDate = new Date(timeStamp);
+		}
+
+		getFighterList(null);
+
+		FighterServiceAsync fighterService = GWT.create(FighterService.class);
+		if (targetDate == null) {
+			getStoredList(fighterService);
+		} else {
+			getListItems(fighterService, targetDate);
+		}
+
 
 		fighterService.getAuthTypes(new AsyncCallback<List<AuthType>>() {
 
