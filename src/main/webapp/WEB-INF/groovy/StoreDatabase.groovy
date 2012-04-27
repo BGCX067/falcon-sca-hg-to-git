@@ -82,9 +82,13 @@ file.withWriter {writer ->
     }
 }
 
-Entity sysTable = new Entity("SystemTable")
-sysTable.name = "snapshotkey"
-sysTable.property = file.blobKey.keyString
+namespace.of("system") {
+	Entity sysTable = new Entity("properties")
+	sysTable.name = "calontir.snapshotkey"
+	sysTable.property = file.blobKey.keyString
+
+	sysTable.save()
+}
 
 html.html {
     body {
