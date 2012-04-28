@@ -30,7 +30,7 @@ public class LookupController {
 		try {
 			buildTables();
 		} catch (Exception e) {
-			Window.alert(e.getMessage());
+			Window.alert(e.toString());
 		}
 	}
 
@@ -60,7 +60,7 @@ public class LookupController {
 			fighterMap = new HashMap<String, FighterInfo>();
 			if (stockStore != null) {
 				String scaNameListStr = stockStore.getItem("scaNameList");
-				if (scaNameListStr != null) {
+				if (scaNameListStr != null && !scaNameListStr.isEmpty()) {
 					try {
 						JSONValue value = JSONParser.parseStrict(scaNameListStr);
 						JSONObject scaNameObjs = value.isObject();
@@ -142,9 +142,9 @@ public class LookupController {
 	}
 
 	private void getStoredList(final FighterServiceAsync fighterService) {
-		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "http://localhost:8080/RehydrateDatabase.groovy");
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "/RehydrateDatabase.groovy");
 		try {
-			requestBuilder.sendRequest(null, new RequestCallback() {
+			requestBuilder.sendRequest("request", new RequestCallback() {
 
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -208,6 +208,7 @@ public class LookupController {
 
 	private void buildTables() {
 		Storage stockStore = Storage.getLocalStorageIfSupported();
+		int i = 0;
 		String timeStampStr = null;
 		if (stockStore != null) {
 			timeStampStr = stockStore.getItem("scaNameUpdated");
@@ -220,7 +221,10 @@ public class LookupController {
 			targetDate = new Date(timeStamp);
 		}
 
-		getFighterList(null);
+		try {
+		getFighterList("");
+		} catch (Exception e) {
+		}
 
 		FighterServiceAsync fighterService = GWT.create(FighterService.class);
 		if (targetDate == null) {
