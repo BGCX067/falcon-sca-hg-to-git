@@ -25,7 +25,7 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler {
     FlowPanel searchPanel = new FlowPanel();
     private SuggestBox box;
 
-    public SearchBar(/*final CellTable<FighterInfo> table, final ListDataProvider<FighterInfo> dataProvider*/) {
+    public SearchBar() {
         DOM.setElementAttribute(searchPanel.getElement(), "id", "searchBar");
 
         submit = new Button("Lookup", new ClickHandler() {
