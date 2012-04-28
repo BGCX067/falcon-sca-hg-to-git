@@ -30,7 +30,6 @@ public class LookupController {
 		try {
 			buildTables();
 		} catch (Exception e) {
-			e.printStackTrace();
 			Window.alert(e.getMessage());
 		}
 	}

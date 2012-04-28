@@ -3,6 +3,7 @@ import org.sca.calontir.cmpe.user.SecurityFactory
 import org.sca.calontir.cmpe.dto.Fighter
 import org.sca.calontir.cmpe.db.FighterDAO
 import org.sca.calontir.cmpe.utils.MarshalUtils
+import com.google.appengine.api.blobstore.BlobKey
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
@@ -49,7 +50,11 @@ namespace.of("system") {
 	query.addFilter("name", Query.FilterOperator.EQUAL, name)
 	PreparedQuery preparedQuery = datastore.prepare(query)
 	def entities = preparedQuery.asList( withLimit(10) )
-	entities.each { it.delete() }
+	entities.each { 
+		BlobKey blobKey = new BlobKey(it.property)
+		blobKey.delete()
+		it.delete() 
+	}
 
 	Entity sysTable = new Entity("properties")
 	sysTable.name = name
