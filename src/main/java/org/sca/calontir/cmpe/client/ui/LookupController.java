@@ -9,7 +9,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.sca.calontir.cmpe.client.*;
+import org.sca.calontir.cmpe.client.FighterInfo;
+import org.sca.calontir.cmpe.client.FighterListInfo;
+import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
@@ -60,7 +63,7 @@ public class LookupController {
 			fighterMap = new HashMap<String, FighterInfo>();
 			if (stockStore != null) {
 				String scaNameListStr = stockStore.getItem("scaNameList");
-				if (scaNameListStr != null && !scaNameListStr.isEmpty()) {
+				if (scaNameListStr != null && !scaNameListStr.trim().isEmpty()) {
 					try {
 						JSONValue value = JSONParser.parseStrict(scaNameListStr);
 						JSONObject scaNameObjs = value.isObject();
