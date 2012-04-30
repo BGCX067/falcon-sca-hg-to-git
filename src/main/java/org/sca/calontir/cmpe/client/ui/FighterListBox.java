@@ -10,7 +10,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -49,7 +48,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 //        listPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
 
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 10, true);
+		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(table);
 
 		TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
@@ -112,6 +111,8 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 						});
 
 
+					} else {
+						table.redraw();
 					}
 				}
 			}

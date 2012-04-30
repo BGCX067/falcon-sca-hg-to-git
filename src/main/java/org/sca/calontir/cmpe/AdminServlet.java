@@ -5,13 +5,14 @@
 package org.sca.calontir.cmpe;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Date;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.LocalCache;
-import org.sca.calontir.cmpe.db.LocalCacheAbImpl;
 
 /**
  *

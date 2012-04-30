@@ -6,11 +6,12 @@ package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
@@ -21,9 +22,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DateBox;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.user.Security;
@@ -48,8 +47,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	private Fighter fighter;
 	private LookupController lookupController = LookupController.getInstance();
 	private FormPanel form = null;
-	private TextBox scaNameTextBox = new TextBox();
-//	private Map<String, Object> formFields = new HashMap<String, Object>();
 
 	private enum Target {
 
@@ -102,7 +99,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		//move to inner class
 		//add field value to fighter when user types.
-		scaNameTextBox = new TextBox();
+		final TextBox scaNameTextBox = new TextBox();
 		scaNameTextBox.setName("scaName");
 		scaNameTextBox.getElement().setId("scaName");
 		scaNameTextBox.setVisibleLength(25);
@@ -114,7 +111,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			public void onValueChange(ValueChangeEvent<String> event) {
 				//validate
 				fighter.setScaName(event.getValue());
-				Window.alert(event.getValue());
 			}
 		});
 
@@ -176,11 +172,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		dataHeader.add(authLabel);
 
 
-		Panel editButton = new FlowPanel();
-		editButton.setStyleName("editButton");
-		editButton.getElement().getStyle().setDisplay(Style.Display.INLINE);
-		editButton.add(editButton(Target.Auths));
-		dataHeader.add(editButton);
+		if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
+			Panel editButton = new FlowPanel();
+			editButton.setStyleName("editButton");
+			editButton.getElement().getStyle().setDisplay(Style.Display.INLINE);
+			editButton.add(editButton(Target.Auths));
+			dataHeader.add(editButton);
+		}
 
 		authPanel.add(dataHeader);
 
@@ -243,7 +241,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				editButton.add(cancelButton(Target.Info));
 				break;
 			case view:
-				editButton.add(editButton(Target.Info));
+				if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
+					editButton.add(editButton(Target.Info));
+				}
 				break;
 			case add:
 				edit = true;
@@ -391,7 +391,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		table.setText(3, 0, "Group:");
 		if (edit) {
-			ListBox group = new ListBox();
+			final ListBox group = new ListBox();
 			group.setName("scaGroup");
 			if (dMode == DisplayMode.add) {
 				group.addItem("Select a group", "SELECTGROUP");
@@ -408,6 +408,18 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					}
 				}
 			}
+			group.addChangeHandler(new ChangeHandler() {
+
+				@Override
+				public void onChange(ChangeEvent event) {
+					for (ScaGroup g : lookupController.getScaGroups()) {
+						if (g.getGroupName().equals(group.getValue(group.getSelectedIndex()))) {
+							fighter.setScaGroup(g);
+							break;
+						}
+					}
+				}
+			});
 			table.setWidget(3, 1, group);
 		} else {
 			table.setText(3, 1,
@@ -577,12 +589,20 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
 
-		final TextBox tb = new TextBox();
-		tb.setName("scaName");
-		tb.setVisibleLength(25);
-		tb.setStyleName("scaName");
-		tb.setValue(fighter.getScaName());
-		fighterIdBoxPanel.add(tb);
+		final TextBox scaNameTextBox = new TextBox();
+		scaNameTextBox.setName("scaName");
+		scaNameTextBox.setVisibleLength(25);
+		scaNameTextBox.setStyleName("scaName");
+		scaNameTextBox.setValue(fighter.getScaName());
+		scaNameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				//validate
+				fighter.setScaName(event.getValue());
+			}
+		});
+		fighterIdBoxPanel.add(scaNameTextBox);
 
 		buildInfoPanel(DisplayMode.add);
 		buildAuthEdit(false);
@@ -694,10 +714,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 	@Override
 	public void onSubmit(SubmitEvent event) {
-		String name = scaNameTextBox.getText();
-		Window.alert(name);
-		if (name == null || name.trim().isEmpty()) {
-			Window.alert("Name cannot be empty");
+		if (fighter.getScaGroup() == null || fighter.getScaGroup().getGroupName().equalsIgnoreCase("SELECTGROUP")) {
+			Window.alert("Please choose a group");
 			event.cancel();
 		}
 //		if (fighter.getFighterId() == null && fighter.getFighterId() == 0) {
@@ -725,19 +743,19 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				}
 			});
 		} else {
-			//TODO: gae will not save immediatly, so we will not get the id back. Need to setup a background task
-			// to wait and then go look it up
-			//			DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.BLOCK);
-			//			DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.NONE);
-			//			DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.NONE);
-			Timer t = new Timer() {
+			final Timer t = new Timer() {
+
+				String scaName = null;
+
+				Timer setScaName(String scaName) {
+					this.scaName = scaName;
+					return this;
+				}
 
 				@Override
 				public void run() {
-					String name = scaNameTextBox.getText();
 					FighterServiceAsync fighterService = GWT.create(FighterService.class);
-					Window.alert("Looking up " + name);
-					fighterService.getFighterByScaName(name, new AsyncCallback<Fighter>() {
+					fighterService.getFighterByScaName(scaName, new AsyncCallback<Fighter>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -751,18 +769,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 						}
 					});
 				}
-			};
+			}.setScaName(fighter.getScaName());
+			fireEvent(new EditViewEvent(Mode.VIEW, fighter));
 
 			t.schedule(500);
-			//fireEvent(new EditViewEvent(Mode.VIEW, fighter));
 		}
 	}
 
-//    private void updateLocal() {
-//        Element modernName = DOM.getElementById("modernName");
-//        String value = modernName.getNodeValue();
-//        fighter.setModernName(value);
-//    }
 	private String getAuthsAsString(List<Authorization> authorizations) {
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;

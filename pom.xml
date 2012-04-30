@@ -16,11 +16,6 @@
             <url>http://download.java.net/maven/2/</url>
             <layout>default</layout>
         </repository>
-        <repository>  
-            <id>maven-restlet</id>  
-            <name>Public online Restlet repository</name>  
-            <url>http://maven.restlet.org</url>  
-        </repository> 	
         <repository>
             <id>maven-gaelyk-repo</id>
             <name>maven-gaelyk repository</name>
@@ -183,31 +178,6 @@
             <artifactId>jsp-api</artifactId>
             <version>2.0</version>
         </dependency>
-        <dependency>  
-            <groupId>org.restlet.jse</groupId>  
-            <artifactId>org.restlet</artifactId>  
-            <version>2.0.5</version>  
-        </dependency> 
-        <dependency>  
-            <groupId>org.restlet.jee</groupId>  
-            <artifactId>org.restlet.ext.servlet</artifactId>  
-            <version>2.0.5 </version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.restlet.jse</groupId>  
-            <artifactId>org.restlet.ext.jackson</artifactId>  
-            <version>2.0.5 </version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.restlet.jse</groupId>  
-            <artifactId>org.restlet.ext.gwt</artifactId>  
-            <version>2.0.5 </version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.restlet.jse</groupId>  
-            <artifactId>org.restlet.ext.net</artifactId>  
-            <version>2.0.5 </version>  
-        </dependency>  
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>

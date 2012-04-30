@@ -26,7 +26,7 @@ public class LookupController {
 	private static LookupController _instance = new LookupController();
 	private List<AuthType> authTypes = null;
 	private List<ScaGroup> scaGroups = null;
-	private Map<String, FighterInfo> fighterMap = null;
+	private Map<Long, FighterInfo> fighterMap = null;
 	boolean dirty = false;
 
 	private LookupController() {
@@ -59,38 +59,38 @@ public class LookupController {
 	public List<FighterInfo> getFighterList(String searchName) {
 		Storage stockStore;
 		stockStore = Storage.getLocalStorageIfSupported();
-		if (!dirty) {
-			fighterMap = new HashMap<String, FighterInfo>();
-			if (stockStore != null) {
-				String scaNameListStr = stockStore.getItem("scaNameList");
-				if (scaNameListStr != null && !scaNameListStr.trim().isEmpty()) {
-					try {
-						JSONValue value = JSONParser.parseStrict(scaNameListStr);
-						JSONObject scaNameObjs = value.isObject();
-						JSONArray scaNameArray = scaNameObjs.get("scaNames").isArray();
+		//if (!dirty) {
+		fighterMap = new HashMap<Long, FighterInfo>();
+		if (stockStore != null) {
+			String scaNameListStr = stockStore.getItem("scaNameList");
+			if (scaNameListStr != null && !scaNameListStr.trim().isEmpty()) {
+				try {
+					JSONValue value = JSONParser.parseStrict(scaNameListStr);
+					JSONObject scaNameObjs = value.isObject();
+					JSONArray scaNameArray = scaNameObjs.get("scaNames").isArray();
 
-						for (int i = 0; i < scaNameArray.size() - 1; ++i) {
-							JSONObject scaNameObj = scaNameArray.get(i).isObject();
-							JSONString scaName = scaNameObj.get("scaName").isString();
-							JSONNumber id = scaNameObj.get("id").isNumber();
-							JSONString auths = scaNameObj.get("authorizations").isString();
-							JSONString group = scaNameObj.get("group").isString();
-							if (searchName == null || searchName.isEmpty()
-									|| scaName.stringValue().toUpperCase().contains(searchName.toUpperCase())) {
-								FighterInfo fli = new FighterInfo();
-								fli.setFighterId(new Double(id.doubleValue()).longValue());
-								fli.setScaName(scaName.stringValue());
-								fli.setAuthorizations(auths.stringValue());
-								fli.setGroup(group.stringValue());
-								fighterMap.put(fli.getScaName(), fli);
-							}
+					for (int i = 0; i < scaNameArray.size() - 1; ++i) {
+						JSONObject scaNameObj = scaNameArray.get(i).isObject();
+						JSONString scaName = scaNameObj.get("scaName").isString();
+						JSONNumber id = scaNameObj.get("id").isNumber();
+						JSONString auths = scaNameObj.get("authorizations").isString();
+						JSONString group = scaNameObj.get("group").isString();
+						if (searchName == null || searchName.isEmpty()
+								|| scaName.stringValue().toUpperCase().contains(searchName.toUpperCase())) {
+							FighterInfo fli = new FighterInfo();
+							fli.setFighterId(new Double(id.doubleValue()).longValue());
+							fli.setScaName(scaName.stringValue());
+							fli.setAuthorizations(auths.stringValue());
+							fli.setGroup(group.stringValue());
+							fighterMap.put(fli.getFighterId(), fli);
 						}
-					} catch (Exception e) {
-						Window.alert(e.getMessage());
 					}
+				} catch (Exception e) {
+					Window.alert(e.getMessage());
 				}
 			}
 		}
+		//}
 		List<FighterInfo> fighterList = new ArrayList<FighterInfo>(fighterMap.values());
 
 		Collections.sort(fighterList, new Comparator<FighterInfo>() {
@@ -118,7 +118,7 @@ public class LookupController {
 
 					@Override
 					public int compare(FighterInfo l, FighterInfo r) {
-						return l.getScaName().compareTo(r.getScaName());
+						return l.getScaName().compareToIgnoreCase(r.getScaName());
 					}
 				});
 				for (FighterInfo fli : fighterList) {
@@ -195,11 +195,11 @@ public class LookupController {
 			public void onSuccess(FighterListInfo result) {
 				if (result.isUpdateInfo()) {
 					for (FighterInfo fi : result.getFighterInfo()) {
-						fighterMap.put(fi.getScaName(), fi);
+						fighterMap.put(fi.getFighterId(), fi);
 					}
 				} else {
 					for (FighterInfo fi : result.getFighterInfo()) {
-						fighterMap.put(fi.getScaName(), fi);
+						fighterMap.put(fi.getFighterId(), fi);
 					}
 				}
 
@@ -225,7 +225,7 @@ public class LookupController {
 		}
 
 		try {
-		getFighterList("");
+			getFighterList("");
 		} catch (Exception e) {
 		}
 
