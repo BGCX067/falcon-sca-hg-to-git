@@ -16,7 +16,6 @@ public class Security {
     private LoginInfo loginInfo;
 
     protected Security() {
-        this.loginInfo = loginInfo;
     }
 
     public LoginInfo getLoginInfo() {
@@ -28,11 +27,15 @@ public class Security {
     }
 
     public boolean isRole(UserRoles userRole) {
-        return loginInfo == null ? false : loginInfo.getUserRole().equals(userRole);
+		if(loginInfo == null || loginInfo.getUserRole() == null)
+			return false;
+        return loginInfo.getUserRole().equals(userRole);
     }
 
     public boolean isRoleOrGreater(UserRoles userRole) {
-        return loginInfo == null ? false : loginInfo.getUserRole().compareTo(userRole) >= 0;
+		if(loginInfo == null || loginInfo.getUserRole() == null)
+			return false;
+        return loginInfo.getUserRole().compareTo(userRole) >= 0;
     }
 
     public boolean canEdit(Long fighterId) {
