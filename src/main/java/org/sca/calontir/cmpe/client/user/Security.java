@@ -36,7 +36,13 @@ public class Security {
     }
 
     public boolean canEdit(Long fighterId) {
-        return canView(fighterId);
+        if (loginInfo == null) {
+            return false;
+        }
+        if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            return true;
+        }
+		return false;
     }
 
     public boolean canView(Long fighterId) {
