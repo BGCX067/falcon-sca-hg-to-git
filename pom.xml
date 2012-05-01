@@ -433,13 +433,8 @@
 			version pointed to by ${gae.home} property (Typically, one used by
 			your Eclipse plug-in)
 		-->
-<<<<<<< local
-	<kindleit.version>1.5.5</kindleit.version>
-        <gae.version>1.6.3</gae.version>
-=======
         <kindleit.version>1.5.5</kindleit.version>
         <gae.version>1.6.5</gae.version>
->>>>>>> other
 
     <!-- GWT version -->
         <gwt.version>2.4.0</gwt.version>

@@ -1,27 +1,19 @@
 package org.sca.calontir.cmpe.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import groovy.lang.GroovyShell;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import org.codehaus.groovy.control.CompilerConfiguration;
 import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.StoredFighterList;
-import org.sca.calontir.cmpe.dto.TableUpdates;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.db.TableUpdatesDao;
-import org.sca.calontir.cmpe.dto.AuthType;
-import org.sca.calontir.cmpe.dto.Fighter;
-import org.sca.calontir.cmpe.dto.FighterListItem;
-import org.sca.calontir.cmpe.dto.ScaGroup;
-import org.sca.calontir.cmpe.groovy.Storage;
+import org.sca.calontir.cmpe.dto.*;
 
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
 
