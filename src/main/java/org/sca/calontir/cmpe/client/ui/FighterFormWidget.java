@@ -289,7 +289,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			}
 
 			for (int i = 0; i < status.getItemCount(); ++i) {
-				if (status.getValue(i).equals(fighter.getStatus())) {
+				if (status.getValue(i).equals(fighter.getStatus().toString())) {
 					status.setSelectedIndex(i);
 					break;
 				}
