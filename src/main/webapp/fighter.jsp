@@ -56,7 +56,7 @@
         <script type="text/javascript" src="js/jquery-ui-1.8.14.custom.min.js"></script>
         <%
             FighterDAO fighterDao = new FighterDAO();
-            List<FighterListItem> fighters = fighterDao.getFighterListItems();
+            List<FighterListItem> fighters = fighterDao.getFighterListItems(null);
         %>
         <script type="text/javascript">
             $(function(){
@@ -131,7 +131,6 @@
         <%@include file="WEB-INF/jspf/calonbar2.jspf" %>
         <% } %>
         <%@include file="WEB-INF/jspf/messagebox.jspf" %>
-        <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
         <form action="/FighterServlet" method="post" name="fighterInfoForm" id="fighterInfoForm">
             <input type="hidden" name="mode" value="<%= mode%>"/>

@@ -3,8 +3,8 @@ package org.sca.calontir.cmpe.user;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.dto.Fighter;
 
 /**
  *

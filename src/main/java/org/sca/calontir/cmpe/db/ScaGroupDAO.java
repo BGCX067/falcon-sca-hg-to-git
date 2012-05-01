@@ -12,7 +12,9 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
  * @author rik
  */
 public class ScaGroupDAO {
+
     public static class LocalCacheImpl extends LocalCacheAbImpl {
+
         private static LocalCacheImpl _instance = new LocalCacheImpl();
 
         public static LocalCacheImpl getInstance() {
@@ -53,12 +55,18 @@ public class ScaGroupDAO {
     }
 
     public List<org.sca.calontir.cmpe.dto.ScaGroup> getScaGroup() {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        Query query = pm.newQuery(ScaGroup.class);
-        List<ScaGroup> sgList = (List<ScaGroup>) query.execute();
-        List<org.sca.calontir.cmpe.dto.ScaGroup> retList = new ArrayList<org.sca.calontir.cmpe.dto.ScaGroup>();
-        for (ScaGroup group : sgList) {
-            retList.add(DataTransfer.convert(group));
+        List<org.sca.calontir.cmpe.dto.ScaGroup> retList =
+                (List<org.sca.calontir.cmpe.dto.ScaGroup>) localCache.getValue("sgList");
+        if (retList == null) {
+            PersistenceManager pm = PMF.get().getPersistenceManager();
+            Query query = pm.newQuery(ScaGroup.class);
+            query.setOrdering("groupName");
+            List<ScaGroup> sgList = (List<ScaGroup>) query.execute();
+            retList = new ArrayList<org.sca.calontir.cmpe.dto.ScaGroup>();
+            for (ScaGroup group : sgList) {
+                retList.add(DataTransfer.convert(group));
+            }
+            localCache.put("sgList", retList);
         }
         return retList;
     }

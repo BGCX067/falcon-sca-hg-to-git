@@ -17,3 +17,4 @@ dldata.sh
 nbactions.xml
 upldev.sh
 cmpedata
+^nb-configuration\.xml$

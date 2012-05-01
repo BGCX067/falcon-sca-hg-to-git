@@ -5,7 +5,7 @@
   <!-- The Basics -->
     <groupId>org.sca.calontir</groupId>
     <artifactId>cmpe</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.5.0</version>
     <packaging>war</packaging>
 
     <name>cmpe</name>
@@ -16,11 +16,11 @@
             <url>http://download.java.net/maven/2/</url>
             <layout>default</layout>
         </repository>
-        <repository>  
-            <id>maven-restlet</id>  
-            <name>Public online Restlet repository</name>  
-            <url>http://maven.restlet.org</url>  
-        </repository> 
+        <repository>
+            <id>maven-gaelyk-repo</id>
+            <name>maven-gaelyk repository</name>
+            <url>http://maven-gaelyk.googlecode.com/svn/repository</url>
+        </repository>
     </repositories> 
     <dependencies>
 
@@ -65,13 +65,34 @@
             <version>${datanucleus.version}</version>
             <scope>runtime</scope>
         </dependency>
-
+        
+        <dependency>
+            <groupId>groovyx.gaelyk</groupId>
+            <artifactId>gaelyk</artifactId>
+            <version>${gaelyk.version}</version>
+        </dependency>
+        
+    <!-- GWT dependencies -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+            <type>jar</type>
+        </dependency>
+    
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>jta</artifactId>
             <version>1.1</version>
         </dependency>
-
+        
 		<!--
 			J2EE Servlet API. We need it to compile IndexServlet class. You can
 			probably remove it, if you don't explicitly use Servlets
@@ -157,31 +178,6 @@
             <artifactId>jsp-api</artifactId>
             <version>2.0</version>
         </dependency>
-        <dependency>  
-            <groupId>org.restlet.jse</groupId>  
-            <artifactId>org.restlet</artifactId>  
-            <version>2.0.5</version>  
-        </dependency> 
-        <dependency>  
-            <groupId>org.restlet.jee</groupId>  
-            <artifactId>org.restlet.ext.servlet</artifactId>  
-            <version>2.0.5 </version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.restlet.jse</groupId>  
-            <artifactId>org.restlet.ext.jackson</artifactId>  
-            <version>2.0.5 </version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.restlet.jse</groupId>  
-            <artifactId>org.restlet.ext.gwt</artifactId>  
-            <version>2.0.5 </version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.restlet.jse</groupId>  
-            <artifactId>org.restlet.ext.net</artifactId>  
-            <version>2.0.5 </version>  
-        </dependency>  
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
@@ -274,6 +270,56 @@
                 </configuration>
             </plugin>
 
+      <!-- Maven GWT plugin (ex. http://gwt-maven.googlecode.com/svn/docs/maven-googlewebtoolkit2-plugin/index.html)
+        http://mojo.codehaus.org/gwt-maven-plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>2.4.0</version>
+                <configuration>
+                    <logLevel>INFO</logLevel>
+
+          <!-- match -Dgae.port -->
+                    <port>${gae.port}</port>
+
+          <!-- This must point to your GWT modules! -->
+                    <compileTargets>
+                        <value>net.kindleit.gae.example.Messages</value>
+                    </compileTargets>
+
+          <!-- This is for generating Asynch interfaces -->
+          <!-- <servicePattern>**/client/*Service.java</servicePattern> -->
+
+                    <extraJvmArgs>-Xmx512m</extraJvmArgs>
+          <!--<jvm>${JAVA_HOME}/bin/java</jvm> -->
+          <!--<noServer>false</noServer> -->
+
+          <!-- TODO This should help running GAE stuff in hosted mode (when gwt-maven-plugin-1.2
+            is released, see http://jira.codehaus.org/browse/MGWT-112) -->
+                    <server>com.google.appengine.tools.development.gwt.AppEngineLauncher
+                    </server>
+
+                    <runTarget>/index.html</runTarget>
+                    <style>DETAILED</style>
+                    <webXml>war/WEB-INF/web.xml</webXml>
+          <!-- this parameter is VERY important with automatic mode - has to match the version
+            in your declared deps -->
+          <!-- if this is set incorrect (not a match), or left out (default is 1.5.2 for 2.0-beta23)
+            you will have mysterious errors -->
+                    <gwtVersion>${gwt.version}</gwtVersion>
+                </configuration>
+                <executions>
+          <!-- <execution> <id>generateAsynch</id> <phase>generate-sources</phase> <goals>
+            <goal>generateAsync</goal> </goals> </execution> -->
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
 			<!--
 				The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn
 				gae:deploy" to upload to GAE.
@@ -285,7 +331,7 @@
                 <configuration>
                     <serverId>appengine.google.com</serverId>
                     <sdkDir>${appengine.sdk.root}</sdkDir>
-                    <appDir>${basedir}/target/cmpe-1.0-SNAPSHOT</appDir>
+                    <appDir>${basedir}/target/cmpe-${project.version}</appDir>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -319,6 +365,53 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+			<plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="${basedir}/src/main/groovy"/>
+                                <taskdef name="groovyc"
+                                    classname="org.codehaus.groovy.ant.Groovyc">
+                                    <classpath refid="maven.compile.classpath"/>
+                                </taskdef>
+                                <mkdir dir="${project.build.outputDirectory}"/>
+                                <groovyc destdir="${project.build.outputDirectory}"
+                                    srcdir="${basedir}/src/main/groovy/" listfiles="true">
+                                    <classpath refid="maven.compile.classpath"/>
+                                </groovyc>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="${basedir}/src/test/groovy"/>
+                                <taskdef name="groovyc"
+                                    classname="org.codehaus.groovy.ant.Groovyc">
+                                    <classpath refid="maven.test.classpath"/>
+                                </taskdef>
+                                <mkdir dir="${project.build.testOutputDirectory}"/>
+                                <groovyc destdir="${project.build.testOutputDirectory}"
+                                    srcdir="${basedir}/src/test/groovy/" listfiles="true">
+                                    <classpath refid="maven.test.classpath"/>
+                                </groovyc>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -340,9 +433,18 @@
 			version pointed to by ${gae.home} property (Typically, one used by
 			your Eclipse plug-in)
 		-->
+<<<<<<< local
 	<kindleit.version>1.5.5</kindleit.version>
         <gae.version>1.6.3</gae.version>
+=======
+        <kindleit.version>1.5.5</kindleit.version>
+        <gae.version>1.6.5</gae.version>
+>>>>>>> other
 
+    <!-- GWT version -->
+        <gwt.version>2.4.0</gwt.version>
+        
+        <gaelyk.version>1.0.0</gaelyk.version>
 		<!--
 			Upload to http://test.latest.<applicationName>.appspot.com by default
 		-->
@@ -351,7 +453,12 @@
         </appengine.sdk.root>
     
         <gae.application.version>test</gae.application.version>
+    
+    <!-- port defaults to 8080 -->
+        <gae.port>8080</gae.port>
 
+    <!-- Produce detailed JS during GWT compilation for development environment -->
+        <gwt.style>DETAILED</gwt.style>
         <datanucleus.version>1.1.5</datanucleus.version>
     </properties>
 
@@ -365,6 +472,9 @@
             <id>integration-build</id>
             <properties>
                 <gae.application.version>stage</gae.application.version>
+            
+        <!-- Produce pretty JS during GWT compilation for test environment -->
+                <gwt.style>PRETTY</gwt.style>
             </properties>
         </profile>
 
@@ -388,6 +498,9 @@
 					During release, set application version in appengine-web.xml to 2
 				-->
                 <gae.application.version>release</gae.application.version>
+            
+        <!-- Produce compressed JS during GWT compilation for production environment -->
+                <gwt.style>DETAILED</gwt.style>
             </properties>
         </profile>
     </profiles>

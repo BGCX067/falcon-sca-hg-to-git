@@ -173,14 +173,15 @@ a:hover.buttonLink {text-decoration: none}
     border-top-left-radius: 15px;
 }
 
-.dataHeader span {
+.dataHeader .editButton {
     float: right;
+    display: inline;
 }
 
-.dataHeader span a:link,
-.dataHeader span a:visited,
-.dataHeader span a:hover,
-.dataHeader span a:active {
+.dataHeader .editButton a:link,
+.dataHeader .editButton a:visited,
+.dataHeader .editButton a:hover,
+.dataHeader .editButton a:active {
     color: lightslategray;
 }
 
@@ -246,8 +247,8 @@ a.BPrint:hover {
 }
 
 .list {
+    display: inline_block;
     background-color: lightblue;
-    display: block;
     border: 1px solid darkblue;
     text-align: left;
     vertical-align: middle;
@@ -257,6 +258,8 @@ a.BPrint:hover {
     margin-top: 4em;
     -moz-border-radius: 15px;
     border-radius: 15px;
+    min-width: 40%;
+    width: fit-content;
 }
 
 .header {
@@ -271,32 +274,6 @@ a.BPrint:hover {
     -moz-border-left-radius: 15px;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
-}
-
-.listRow {
-    display: block;
-    border-bottom: 1px solid darkblue;
-    width: 100%;
-}
-
-.listRow .rowElement { 
-    display: inline-block;
-    margin-right: 1em;
-    margin-left: 1em;
-}
-
-.listRow a:active, a:visited, a:link {
-    text-decoration : none;
-    color: black;
-}
-
-.listRow a:hover {
-    background-color: white;
-    color: blue;
-}
-
-.rightCol {
-    text-align: right;
 }
 
 table.wide-table {

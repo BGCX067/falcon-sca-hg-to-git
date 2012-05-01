@@ -11,11 +11,13 @@ import org.sca.calontir.cmpe.dto.FighterListItem;
  * @author rik
  */
 public class FighterCache implements LocalCache {
+  // TODO: Realized that this is not threadsafe. Most methods hear have to be syncorized our we 
+  // are going to be handing different records because of race conditions.
 
     final private static FighterCache _instance = new FighterCache();
-    private Map<Long, Fighter> _fighterMap = new HashMap<Long, Fighter>();
-    private Map<String, Long> _fighterByGoogleId = new HashMap<String, Long>();
-    private Map<Long, FighterListItem> _fighterListMap = new HashMap<Long, FighterListItem>();
+    private Map<Long, Fighter> _fighterMap = Collections.synchronizedMap(new HashMap<Long, Fighter>());
+    private Map<String, Long> _fighterByGoogleId = Collections.synchronizedMap(new HashMap<String, Long>());
+    private Map<Long, FighterListItem> _fighterListMap = Collections.synchronizedMap(new HashMap<Long, FighterListItem>());
     private static DateTime lastUpdated = null;
 
     private FighterCache() {
@@ -52,26 +54,27 @@ public class FighterCache implements LocalCache {
         return _fighterListMap.get(id);
     }
 
-    public List<FighterListItem> getFighterList() {
+    public synchronized List<FighterListItem> getFighterList() {
         List<FighterListItem> retVal = new ArrayList<FighterListItem>(_fighterListMap.values());
         Collections.sort(retVal);
         return retVal;
     }
 
-    public void putAll(Map<Long, FighterListItem> fighterMap) {
+    public synchronized void putAll(Map<Long, FighterListItem> fighterMap) {
         _updated();
+	System.out.println("Cache size before " + _fighterListMap.size());
         _fighterListMap.putAll(fighterMap);
+	System.out.println("Cache size after " + _fighterListMap.size());
     }
 
-    public void put(Fighter fighter) {
-        _updated();
+    public synchronized void put(Fighter fighter) {
         _fighterMap.put(fighter.getFighterId(), fighter);
         if (!StringUtils.isEmpty(fighter.getGoogleId())) {
             _fighterByGoogleId.put(fighter.getGoogleId(), fighter.getFighterId());
         }
     }
 
-    public void put(FighterListItem fighter) {
+    public synchronized void put(FighterListItem fighter) {
         _updated();
         _fighterListMap.put(fighter.getFighterId(), fighter);
     }

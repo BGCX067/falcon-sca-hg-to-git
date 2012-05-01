@@ -5,6 +5,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -52,6 +53,7 @@ public class FighterServlet extends HttpServlet {
             System.out.println("Got fighter " + fighter.getFighterId() + ": " + fighter.getScaName());
             if (mode.startsWith("save")) {
                 if (mode.equals("saveAuthorizations")) {
+                    System.out.println("Saving auths");
                     fighter = FighterUpdater.authFromRequest(request, fighter);
                 } else {
                     fighter = FighterUpdater.infoFromRequest(request, fighter);
@@ -65,14 +67,14 @@ public class FighterServlet extends HttpServlet {
                 request.setAttribute("mode", mode);
                 request.setAttribute("fighter", fighter);
                 request.setAttribute("uimessage", fighter.getScaName() + " saved");
-                this.getServletContext().getRequestDispatcher("/fighter.jsp").
-                        include(request, response);
+//                this.getServletContext().getRequestDispatcher("/fighter.jsp").
+//                        include(request, response);
             } else if (mode.equals("deleteFighter")) {
                 System.out.println("Delete was called for " + fighter.getFighterId() + ": " + fighter.getScaName());
                 dao.deleteFighter(fighter.getFighterId());
                 request.setAttribute("uimessage", fighter.getScaName() + " deleted");
-                this.getServletContext().getRequestDispatcher("/index.jsp").
-                        include(request, response);
+//                this.getServletContext().getRequestDispatcher("/index.jsp").
+//                        include(request, response);
             } else if (mode.equals("printFighter")) {
                 Fighter f = dao.getFighter(fighter.getFighterId());
                 ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
@@ -96,11 +98,12 @@ public class FighterServlet extends HttpServlet {
                 ServletOutputStream sos = response.getOutputStream();
                 baosPDF.writeTo(sos);
                 sos.flush();
+                return;
             } else {
                 request.setAttribute("mode", mode);
                 request.setAttribute("fighter", fighter);
-                this.getServletContext().getRequestDispatcher("/fighter.jsp").
-                        include(request, response);
+//                this.getServletContext().getRequestDispatcher("/fighter.jsp").
+//                        include(request, response);
             }
         } else {
             fighter = FighterUpdater.fromRequest(request, new Fighter());
@@ -114,14 +117,31 @@ public class FighterServlet extends HttpServlet {
                 request.setAttribute("mode", "add");
                 request.setAttribute("error", ex.getMessage());
                 request.setAttribute("fighter", fighter);
-                this.getServletContext().getRequestDispatcher("/fighter.jsp").
-                        include(request, response);
+//                this.getServletContext().getRequestDispatcher("/fighter.jsp").
+//                        include(request, response);
             }
             if (success) {
                 request.setAttribute("uimessage", fighter.getScaName() + " added");
-                this.getServletContext().getRequestDispatcher("/index.jsp").
-                        include(request, response);
+//                this.getServletContext().getRequestDispatcher("/index.jsp").
+//                        include(request, response);
             }
+        }
+        
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        try {
+           // /* TODO output your page here
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Fighter Servlet</title>");  
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet at " + request.getContextPath () + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+
+        } finally { 
+            out.close();
         }
     }
 

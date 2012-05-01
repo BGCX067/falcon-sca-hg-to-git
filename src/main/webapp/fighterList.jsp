@@ -1,3 +1,6 @@
+<%@page import="org.sca.calontir.cmpe.user.SecurityFactory"%>
+<%@page import="org.sca.calontir.cmpe.common.UserRoles"%>
+<%@page import="org.sca.calontir.cmpe.user.Security"%>
 <%@page import="org.sca.calontir.cmpe.dto.FighterListItem"%>
 <%@page import="org.sca.calontir.cmpe.utils.MarshalUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -85,7 +88,6 @@
         <%@include file="WEB-INF/jspf/calonbar2.jspf" %>
         <% }%>
         <%@include file="WEB-INF/jspf/messagebox.jspf" %>
-        <%@include file="WEB-INF/jspf/searchbox.jspf" %>
 
         <% List<FighterListItem> fighterList = (List<FighterListItem>) request.getAttribute("fighters");
 

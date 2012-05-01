@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name>Calon Marshal Project Engine servlet</display-name>
-    <servlet>
-        <servlet-name>RestletServlet</servlet-name>
-        <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
-        <init-param>
-            <param-name>org.restlet.application</param-name>
-            <param-value>org.sca.calontir.cmpe.CMPEApplication</param-value>
-        </init-param>
-    </servlet>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>AuthTypesServlet</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.AuthTypesServlet</servlet-class>
@@ -29,10 +24,6 @@
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.AdminServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>RestletServlet</servlet-name>
-        <url-pattern>/ws/*</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AuthTypesServlet</servlet-name>
         <url-pattern>/AuthTypesServlet</url-pattern>
@@ -62,19 +53,53 @@
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/AdminServlet</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>loginService</servlet-name>
+        <servlet-class>org.sca.calontir.cmpe.server.LoginServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>loginService</servlet-name>
+        <url-pattern>/fighter/login</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>fighterService</servlet-name>
+        <servlet-class>org.sca.calontir.cmpe.server.FighterServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>fighterService</servlet-name>
+        <url-pattern>/fighter/fighter</url-pattern>
+    </servlet-mapping>
+    
+        
+    <!-- The Gaelyk Groovlet servlet -->
+    <servlet>
+        <servlet-name>GroovletServlet</servlet-name>
+        <servlet-class>groovyx.gaelyk.GaelykServlet</servlet-class>
+    </servlet>
+    <!-- Specify a mapping between *.groovy URLS and Groovlets -->
+    <servlet-mapping>
+        <servlet-name>GroovletServlet</servlet-name>
+        <url-pattern>*.groovy</url-pattern>
+    </servlet-mapping>
+    <filter>
+        <filter-name>RoutesFilter</filter-name>
+        <filter-class>groovyx.gaelyk.routes.RoutesFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RoutesFilter</filter-name>
+        <url-pattern>/g/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>remoteapi</web-resource-name>
             <url-pattern>/remote_api</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>admin</role-name>
-        </auth-constraint>
-    </security-constraint>
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>ws</web-resource-name>
-            <url-pattern>/ws/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin</role-name>

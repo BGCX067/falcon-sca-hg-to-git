@@ -4,8 +4,7 @@
  */
 package org.sca.calontir.cmpe.db;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -21,6 +20,12 @@ public abstract class LocalCacheAbImpl implements LocalCache {
 
     public void put(Object key, Object value) {
         data.put(key, value);
+    }
+    
+    public List getValueList() {
+        List dataList = new ArrayList(data.values());
+        Collections.sort(dataList);
+        return dataList;
     }
 
     @Override
