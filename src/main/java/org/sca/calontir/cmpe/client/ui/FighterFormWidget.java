@@ -288,7 +288,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				status.addItem(f_status.toString(), f_status.toString());
 			}
 
+			System.out.println(fighter.getStatus().toString());
 			for (int i = 0; i < status.getItemCount(); ++i) {
+				System.out.println(status.getValue(i));
 				if (status.getValue(i).equals(fighter.getStatus().toString())) {
 					status.setSelectedIndex(i);
 					break;

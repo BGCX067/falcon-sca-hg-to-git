@@ -3,8 +3,8 @@
 //		method: 'GET', retryOptions: RetryOptions.Builder.withDefaults()
 
 defaultQueue << [
-	countdownMillis: 1000, url: "/StoreDatabase.groovy",
-	taskName: "storeDatabase",
+	countdownMillis: 1000, url: "/BackupData.groovy",
+	taskName: "backup",
 	method: 'GET',
 	retryOptions: [
 		taskRetryLimit: 10,

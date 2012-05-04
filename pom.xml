@@ -495,7 +495,7 @@
                 <gae.application.version>release</gae.application.version>
             
         <!-- Produce compressed JS during GWT compilation for production environment -->
-                <gwt.style>DETAILED</gwt.style>
+                <gwt.style>OBFUSCATED</gwt.style>
             </properties>
         </profile>
     </profiles>
