@@ -10,6 +10,32 @@ import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
 
+def runToday = false
+
+namespace.of("system") {
+	name = "calontir.lastbackup"
+	def query = new Query("properties")
+	query.addFilter("name", Query.FilterOperator.EQUAL, name)
+	PreparedQuery preparedQuery = datastore.prepare(query)
+	def entities = preparedQuery.asList( withLimit(10) )
+	if(entities != null && entities.size() > 0) {
+		def entity = entities[0]
+		Date savedDate = new Date(entity.property).clearTime()
+		Date today = new Date().clearTime()
+		runToday = savedDate == today
+	}
+}
+
+if(runToday) {
+	html.html {
+		body {
+			p "Back already run today"
+		}
+	}	
+	return
+}
+
+
 Security security = SecurityFactory.getSecurity()
 
 // Remove the dao, it will not be able to scan the whole database anymore.
@@ -101,6 +127,13 @@ namespace.of("system") {
 	Entity sysTable = new Entity("properties")
 	sysTable.name = name
 	sysTable.property = file.blobKey.keyString
+
+	sysTable.save()
+	
+	def lastbackupKey = "calontir.lastbackup"
+	sysTable = new Entity("properties")
+	sysTable.name = lastbackupKey
+	sysTable.property = new Date().time
 
 	sysTable.save()
 }

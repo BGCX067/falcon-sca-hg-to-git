@@ -4,7 +4,7 @@
 
 defaultQueue << [
 	countdownMillis: 1000, url: "/BackupData.groovy",
-	taskName: "backup",
+	taskName: "backup" + String.format('%tY%<tm%<td%<tH%<tM%<tS', new Date()),
 	method: 'GET',
 	retryOptions: [
 		taskRetryLimit: 10,
@@ -19,7 +19,5 @@ defaultQueue << [
 html.html {
     body {
         p "Done"
-        p file.toString()
-        p file.blobKey.keyString
     }
 }

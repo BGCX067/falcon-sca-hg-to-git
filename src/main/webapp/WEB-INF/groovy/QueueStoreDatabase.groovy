@@ -4,7 +4,7 @@
 
 defaultQueue << [
 	countdownMillis: 1000, url: "/StoreDatabase.groovy",
-	taskName: "storeDatabase",
+	taskName: "storeDatabase" + String.format('%tY%<tm%<td%<tH%<tM%<tS', new Date()),
 	method: 'GET',
 	retryOptions: [
 		taskRetryLimit: 10,

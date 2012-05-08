@@ -172,7 +172,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		dataHeader.add(authLabel);
 
 
-		if (security.canEdit(fighter.getFighterId())) {
+		if (security.canEditAuthorizations(fighter.getFighterId())) {
 			if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
 				Panel editButton = new FlowPanel();
 				editButton.setStyleName("editButton");
@@ -243,7 +243,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				editButton.add(cancelButton(Target.Info));
 				break;
 			case view:
-				if (security.canEdit(fighter.getFighterId())) {
+				if (security.canEditFighter(fighter.getFighterId())) {
 					if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
 						editButton.add(editButton(Target.Info));
 					}
