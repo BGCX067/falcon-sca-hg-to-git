@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.core.client.GWT;
@@ -32,6 +28,9 @@ import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.*;
 
 /**
+ * This class displays the fighter view/edit/add page.
+ * It contains the logic to submit the form itself and handle the response.  It will also inform listeners 
+ * if the data is changed.
  *
  * @author rikscarborough
  */
@@ -85,6 +84,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		this.form = form;
 	}
 
+     // TODO: All fields should update the local fighter variable if they change
+     // on both edit and add.
+     // Consider creating each object as a sperate widget to enclose the functionality.
 	public void buildInfoEdit() {
 		fighterIdBoxPanel.clear();
 
