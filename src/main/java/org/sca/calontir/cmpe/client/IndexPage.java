@@ -32,8 +32,11 @@ public class IndexPage implements EntryPoint {
      */
     @Override
     public void onModuleLoad() {
-//        security = GWT.create(SecurityService.class);
-        // Do login check here;
+		String userAgent = Window.Navigator.getUserAgent();
+		if(userAgent.contains("MSIE 7.") || userAgent.contains("MSIE 6.")) {
+			Window.alert("This application will not work with any verison of IE below 8. Please upgrade to a more modern browser such as Chrome, FireFox, or IE8");
+			return;
+		}
         LookupController.getInstance();
 
         LoginServiceAsync loginService = GWT.create(LoginService.class);
