@@ -26,6 +26,7 @@ public class CalonBar extends Composite {
 	protected static final String INDEXHTML = "/";
 	protected static final String ABOUT_PAGE = "/about.jsp";
 	protected static final String CALONBARLINK = "calonbarlink";
+	protected static final String FEEDBACKLINK = "https://docs.google.com/spreadsheet/viewform?formkey=dExnMU0tMDE2UWZyVDY3TE1Ic3lfRHc6MQ#gid=0";
 	protected static final String SIGN_IN_TEXT = "Please sign in to your Google Account.";
 	protected static final String SIGN_OUT_TEXT = "This will log you out of your Google Account.";
 	private Panel barPanel = new FlowPanel();
@@ -35,6 +36,7 @@ public class CalonBar extends Composite {
 	private Anchor aboutLink = new Anchor("About");
 	private Anchor signInLink = new Anchor("Sign In");
 	private Anchor signOutLink = new Anchor("Sign Out");
+	private Anchor feedBackLink = new Anchor("Feedback");
 
 	public CalonBar() {
 
@@ -62,6 +64,12 @@ public class CalonBar extends Composite {
 		} else {
 			loadLogin();
 		}
+
+		barPanel.add(getDivBar());
+
+		feedBackLink.setHref(FEEDBACKLINK);
+		feedBackLink.setStyleName(CALONBARLINK);
+		barPanel.add(feedBackLink);
 
 		barPanel.add(getDivBar());
 

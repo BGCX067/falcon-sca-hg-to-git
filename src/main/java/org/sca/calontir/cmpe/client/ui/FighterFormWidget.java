@@ -722,14 +722,21 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 	@Override
 	public void onSubmit(SubmitEvent event) {
+		StringBuilder errors = new StringBuilder();
+		if (fighter.getScaName() == null || fighter.getScaName().trim().length() == 0) {
+			errors.append("SCA Name cannot be blank");
+		}
 		if (fighter.getScaGroup() == null || fighter.getScaGroup().getGroupName().equalsIgnoreCase("SELECTGROUP")) {
-			Window.alert("Please choose a group");
+			if(errors.length() > 0)
+				errors.append("\n");
+			errors.append("Please choose a group");
+		}
+
+
+		if(errors.length() > 0) {
+			Window.alert("Errors, please fix\n" + errors.toString());
 			event.cancel();
 		}
-//		if (fighter.getFighterId() == null && fighter.getFighterId() == 0) {
-//		}
-//        Window.alert("Not Implemented yet!");
-//        event.cancel();
 		// TODO: create fighter out of form and validate.  Fighter used on add to refill page.
 	}
 
