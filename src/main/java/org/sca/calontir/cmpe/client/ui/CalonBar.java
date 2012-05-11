@@ -76,6 +76,7 @@ public class CalonBar extends Composite {
 		aboutLink.setStyleName(CALONBARLINK);
 		barPanel.add(aboutLink);
 
+		barPanel.add(getDivBar());
 
 		syncLink.addClickHandler(new ClickHandler() {
 
