@@ -4,15 +4,13 @@
  */
 package org.sca.calontir.cmpe.client.ui;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.sca.calontir.cmpe.client.LoginInfo;
-import org.sca.calontir.cmpe.client.LoginService;
-import org.sca.calontir.cmpe.client.LoginServiceAsync;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 
@@ -37,6 +35,7 @@ public class CalonBar extends Composite {
 	private Anchor signInLink = new Anchor("Sign In");
 	private Anchor signOutLink = new Anchor("Sign Out");
 	private Anchor feedBackLink = new Anchor("Feedback");
+	private Anchor syncLink = new Anchor("Sync");
 
 	public CalonBar() {
 
@@ -76,6 +75,22 @@ public class CalonBar extends Composite {
 		aboutLink.setHref(ABOUT_PAGE);
 		aboutLink.setStyleName(CALONBARLINK);
 		barPanel.add(aboutLink);
+
+
+		syncLink.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Storage stockStore = Storage.getLocalStorageIfSupported();
+				if (stockStore != null) {
+					stockStore.removeItem("scaNameList");
+					stockStore.removeItem("scaNameUpdated");
+					Window.Location.assign("/");
+				}
+			}
+		});
+		syncLink.setStyleName(CALONBARLINK);
+		barPanel.add(syncLink);
 
 		initWidget(barPanel);
 	}

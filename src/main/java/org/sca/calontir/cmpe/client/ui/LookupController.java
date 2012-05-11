@@ -69,7 +69,7 @@ public class LookupController {
 					JSONObject scaNameObjs = value.isObject();
 					JSONArray scaNameArray = scaNameObjs.get("scaNames").isArray();
 
-					for (int i = 0; i < scaNameArray.size() - 1; ++i) {
+					for (int i = 0; i < scaNameArray.size(); ++i) {
 						JSONObject scaNameObj = scaNameArray.get(i).isObject();
 						JSONString scaName = scaNameObj.get("scaName").isString();
 						JSONNumber id = scaNameObj.get("id").isNumber();
@@ -97,7 +97,7 @@ public class LookupController {
 
 			@Override
 			public int compare(FighterInfo l, FighterInfo r) {
-				return l.getScaName().compareTo(r.getScaName());
+				return l.getScaName().compareToIgnoreCase(r.getScaName());
 			}
 		});
 		return fighterList;

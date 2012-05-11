@@ -34,7 +34,9 @@ public class IndexPage implements EntryPoint {
     public void onModuleLoad() {
 		String userAgent = Window.Navigator.getUserAgent();
 		if(userAgent.contains("MSIE 7.") || userAgent.contains("MSIE 6.")) {
-			Window.alert("This application will not work with any verison of IE below 8. Please upgrade to a more modern browser such as Chrome, FireFox, or IE8");
+			Window.alert("This application will not work with any verison of IE below 8.\n"
+					+ "Please upgrade to a more modern browser such as Chrome, FireFox, or IE8.\n"
+					+ "The application works best in Chrome.");
 			return;
 		}
         LookupController.getInstance();

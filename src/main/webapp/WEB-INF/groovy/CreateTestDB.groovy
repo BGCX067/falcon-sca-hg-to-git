@@ -53,6 +53,9 @@ marshal.description = "Marshal"
 marshal.save()
 
 
+def json = """
+"""
+
 // add myself so I can use the system
 def fighter = new Entity("Fighter")
 fighter.scaName = "Brendan Mac an tSaoir"
