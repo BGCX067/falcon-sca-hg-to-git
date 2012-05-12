@@ -214,6 +214,7 @@ public class CardMaker {
             p.add(new Phrase(String.format("Group: %s\n", fighter.getScaGroup().getGroupName()), smallFont));
         }
         cell = new PdfPCell(p);
+		cell.setExtraParagraphSpace(1.5f);
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
         cell.setRotation(180);
         cell.setFixedHeight(50.0f);
@@ -222,9 +223,10 @@ public class CardMaker {
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("The Society for Creative Anachronism, Inc\nKingdom of Calontir\nCombat Authorization Card", smallFont));
+		cell.setExtraParagraphSpace(1.5f);
         cell.setBorder(Rectangle.BOTTOM + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setRotation(180);
-        cell.setFixedHeight(40.0f);
+        cell.setFixedHeight(55.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
@@ -232,6 +234,7 @@ public class CardMaker {
 
         // Front of card
         cell = new PdfPCell(new Phrase("Kingdom of Calontir\nFighter Authorizatin Card\n\n", smallFont));
+		cell.setExtraParagraphSpace(1.5f);
         cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -247,6 +250,7 @@ public class CardMaker {
         p.add(new Phrase(String.format("Date Issued %s\n", new DateTime().toString("MMMM dd yyyy")), smallFont));
         p.add(new Phrase(String.format("Issuing Official: %s\n", "Sir Ashir"), smallFont));
         cell = new PdfPCell(p);
+		cell.setExtraParagraphSpace(1.5f);
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -267,16 +271,7 @@ public class CardMaker {
         cell.setFixedHeight(20.0f);
         table.addCell(cell);
 
-        table.writeSelectedRows(0, -1, 340, 240, cb);
-
-        StringBuilder sb = new StringBuilder(fighter.getScaName());
-        sb.append(" - ");
-        for (Iterator<Authorization> it = fighter.getAuthorization().iterator(); it.hasNext();) {
-            sb.append(it.next().getCode());
-            if (it.hasNext()) {
-                sb.append(", ");
-            }
-        }
+        table.writeSelectedRows(0, -1, 250, 280, cb);
 
         try {
             Image calontrava = loadImage("calontrava_black.gif");
@@ -289,6 +284,16 @@ public class CardMaker {
         } catch (IOException ex) {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        StringBuilder sb = new StringBuilder(fighter.getScaName());
+        sb.append(" - ");
+        for (Iterator<Authorization> it = fighter.getAuthorization().iterator(); it.hasNext();) {
+            sb.append(it.next().getCode());
+            if (it.hasNext()) {
+                sb.append(", ");
+            }
+        }
+
 		
         BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
         Image img = qrcode.getImage();
