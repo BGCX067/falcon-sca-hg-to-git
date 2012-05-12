@@ -56,6 +56,24 @@ marshal.save()
 def json = """
 """
 
+namespace.of("system") {
+	def name = "calontir.validStart"
+
+	Entity sysTable = new Entity("properties")
+	sysTable.name = name
+	sysTable.property = "06/01/2012"
+
+	sysTable.save()
+
+	name = "calontir.validEnd"
+
+	sysTable = new Entity("properties")
+	sysTable.name = name
+	sysTable.property = "08/31/2012"
+
+	sysTable.save()
+}
+
 // add myself so I can use the system
 def fighter = new Entity("Fighter")
 fighter.scaName = "Brendan Mac an tSaoir"

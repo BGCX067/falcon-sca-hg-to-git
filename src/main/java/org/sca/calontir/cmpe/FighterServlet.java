@@ -15,6 +15,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.print.CardMaker;
@@ -82,7 +83,7 @@ public class FighterServlet extends HttpServlet {
                 List<Fighter> flist = new ArrayList<Fighter>();
                 flist.add(f);
                 try {
-                    cardMaker.build(baosPDF, flist);
+                    cardMaker.build(baosPDF, flist, new DateTime(), new DateTime());
                 } catch (Exception ex) {
                     Logger.getLogger(FighterServlet.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException("Error building the cards", ex);

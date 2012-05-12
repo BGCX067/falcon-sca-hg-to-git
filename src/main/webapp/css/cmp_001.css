@@ -161,8 +161,8 @@ a:hover.buttonLink {text-decoration: none}
 .dataHeader {
     background-color: purple;
     color: white;
-    margin: 0,0,0,0;
-    padding: 0,0,0,0;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
     border-top: 1px solid darkblue;
     border-left: 1px solid darkblue;
     border-right: 1px solid darkblue;
@@ -265,8 +265,8 @@ a.BPrint:hover {
 .header {
     background-color: purple;
     color: white;
-    margin: 0,0,0,0;
-    padding: 0,0,0,0;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
     border-top: 1px solid darkblue;
     border-left: 1px solid darkblue;
     border-right: 1px solid darkblue;

@@ -644,6 +644,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			@Override
 			public void onClick(ClickEvent event) {
 				mode.setValue("printFighter");
+				form.setAction("/ServePDF.groovy");
 				form.submit();
 			}
 		});
@@ -706,10 +707,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				switch (target) {
 					case Auths:
 						mode.setValue("saveAuthorizations");
+						form.setAction("/FighterServlet");
 						form.submit();
 						break;
 					case Info:
 						mode.setValue("saveFighter");
+						form.setAction("/FighterServlet");
 						form.submit();
 						break;
 				}

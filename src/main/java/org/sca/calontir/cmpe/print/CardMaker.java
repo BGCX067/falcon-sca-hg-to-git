@@ -23,8 +23,12 @@ public class CardMaker {
     private static Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 12f, Font.NORMAL);
     private static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 8f, Font.NORMAL);
     private static Font smallerFont = new Font(Font.FontFamily.TIMES_ROMAN, 6f, Font.NORMAL);
+	private DateTime startDate;
+	private DateTime endDate;
 
-    public void build(final OutputStream os, final List<Fighter> data) throws Exception {
+    public void build(final OutputStream os, final List<Fighter> data, final DateTime startDate, final DateTime endDate) throws Exception {
+		this.startDate = startDate;
+		this.endDate = endDate;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document document = new Document(PageSize.LETTER);
         PdfWriter writer = PdfWriter.getInstance(document, baos);
@@ -142,14 +146,14 @@ public class CardMaker {
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase(String.format("This writ is valid between the dates of %s and %s, Gregorian",
-                new DateTime(2010, 8, 10, 0, 0, 0, 0).toString("MMMM dd yyyy"), new DateTime(2011, 8, 31, 0, 0, 0, 0).toString("MMMM dd yyyy")), normalFont));
+                startDate.toString("MMMM dd yyyy"), endDate.toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of Sir Ashir, the Calontir Marshal of Cards. this Day %s",
+        cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of Sir Ashir, the Calontir Marshal of Cards. this Day %s\n\n",
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(padding);
@@ -171,7 +175,7 @@ public class CardMaker {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        cell = new PdfPCell(new Phrase(String.format("\n%s\nSignature __________________________",
+        cell = new PdfPCell(new Phrase(String.format("\n%s  Signature __________________________",
                 fighter.getModernName()), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(padding);

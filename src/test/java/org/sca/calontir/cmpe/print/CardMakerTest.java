@@ -1,18 +1,12 @@
 package org.sca.calontir.cmpe.print;
 
-import com.google.appengine.api.datastore.Email;
 import java.io.ByteArrayOutputStream;
-
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.sca.calontir.cmpe.dto.AuthType;
+import org.joda.time.DateTime;
+import org.junit.*;
 import org.sca.calontir.cmpe.dto.Authorization;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.ScaGroup;
@@ -92,7 +86,7 @@ public class CardMakerTest {
         List<Fighter> data = new ArrayList<Fighter>();
         data.add(fighter);
         
-        instance.build(baosPDF, data);
+        instance.build(baosPDF, data, new DateTime(), new DateTime());
         FileOutputStream fos = new FileOutputStream("cardtest.pdf");
         baosPDF.writeTo(fos);
         fos.close();
