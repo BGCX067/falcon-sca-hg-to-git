@@ -18,8 +18,8 @@ import org.sca.calontir.cmpe.utils.MarshalUtils;
 
 public class CardMaker {
 
-    private static Font largFont = new Font(Font.FontFamily.TIMES_ROMAN, 24f, Font.NORMAL);
-    private static Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 18f, Font.NORMAL);
+    private static Font largFont = new Font(Font.FontFamily.TIMES_ROMAN, 22f, Font.NORMAL);
+    private static Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 14f, Font.NORMAL);
     private static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 8f, Font.NORMAL);
     private static Font smallerFont = new Font(Font.FontFamily.TIMES_ROMAN, 6f, Font.NORMAL);
 
@@ -53,9 +53,9 @@ public class CardMaker {
         PdfContentByte cbunder = writer.getDirectContentUnder();
         Image img = loadBackground();
         if (img != null) {
-            img.setAbsolutePosition(0, 0);
-            img.scaleAbsoluteWidth(size.getRight());
-            img.scaleAbsoluteHeight(size.getTop());
+            img.setAbsolutePosition(34, 72);
+            //img.scaleAbsoluteWidth(size.getRight());
+            //img.scaleAbsoluteHeight(size.getTop());
             cbunder.addImage(img);
         }
 
@@ -94,22 +94,23 @@ public class CardMaker {
         Rectangle size = document.getPageSize();
         PdfPTable table = new PdfPTable(1);
         PdfPCell cell;
+		float padding = 65.5f;
 
         table.setTotalWidth(size.getRight());
-        cell = new PdfPCell(new Phrase("\n\n\n", largFont));
+        cell = new PdfPCell(new Phrase("\n\n\n\n\n\n", largFont));
         cell.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("The Society for Creative Anachronism, Inc\nKingdom of Calontir\n", largFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingLeft(40f);
+        cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("Combat Authorizations", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingLeft(40f);
+        cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
@@ -124,7 +125,7 @@ public class CardMaker {
                 MarshalUtils.isMinor(fighter) ? "is" : "is not");
         cell = new PdfPCell(new Phrase(p1, normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingLeft(40f);
+        cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -134,7 +135,7 @@ public class CardMaker {
                 + "participation in any martial activity. You may be required to present "
                 + "this writ at any time, and to any marshal upon request.", normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingLeft(40f);
+        cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -142,7 +143,7 @@ public class CardMaker {
         cell = new PdfPCell(new Phrase(String.format("This writ is valid between the dates of %s and %s, Gregorian",
                 new DateTime(2010, 8, 10, 0, 0, 0, 0).toString("MMMM dd yyyy"), new DateTime(2011, 8, 31, 0, 0, 0, 0).toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingLeft(40f);
+        cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -150,7 +151,7 @@ public class CardMaker {
         cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of Sir Ashir, the Calontir Marshal of Cards. this Day %s",
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingLeft(40f);
+        cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -159,7 +160,7 @@ public class CardMaker {
             Image sig = loadSignature();
             cell = new PdfPCell(sig);
             cell.setBorder(Rectangle.NO_BORDER);
-            cell.setPaddingLeft(40f);
+            cell.setPaddingLeft(padding);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
             table.addCell(cell);
@@ -169,11 +170,11 @@ public class CardMaker {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        cell = new PdfPCell(new Phrase(String.format("\n%s\nSignature _______________",
+        cell = new PdfPCell(new Phrase(String.format("\n%s\nSignature __________________________",
                 fighter.getModernName()), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setPaddingLeft(40f);
-        cell.setPaddingRight(40f);
+        cell.setPaddingLeft(padding);
+        //cell.setPaddingRight(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
@@ -252,7 +253,7 @@ public class CardMaker {
         cell.setFixedHeight(20.0f);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase("This car is your authorization to participate on the field at SCA activities.  It must be presented to the list officials at all SCA events to register for participation in any martial activity. You may be requested to show this card to any marshal and/or list official at any time.", smallerFont));
+        cell = new PdfPCell(new Phrase("This card is your authorization to participate on the field at SCA activities.  It must be presented to the list officials at all SCA events to register for participation in any martial activity. You may be requested to show this card to any marshal and/or list official at any time.", smallerFont));
         cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -276,6 +277,19 @@ public class CardMaker {
                 sb.append(", ");
             }
         }
+
+        try {
+            Image calontrava = loadImage("calontrava_black.gif");
+			calontrava.setAlignment(Image.RIGHT | Image.TEXTWRAP);
+			calontrava.setAbsolutePosition(350, 90);
+			calontrava.scaleToFit(40f, 40f);
+			document.add(calontrava);
+        } catch (BadElementException ex) {
+            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+		
         BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
         Image img = qrcode.getImage();
         img.setAlignment(Image.RIGHT | Image.TEXTWRAP);
