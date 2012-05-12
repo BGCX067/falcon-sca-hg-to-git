@@ -18,14 +18,15 @@ import org.sca.calontir.cmpe.utils.MarshalUtils;
 
 public class CardMaker {
 
-    private static Font largFont = new Font(Font.FontFamily.TIMES_ROMAN, 22f, Font.NORMAL);
-    private static Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 14f, Font.NORMAL);
+    private static Font largFont = new Font(Font.FontFamily.TIMES_ROMAN, 18f, Font.NORMAL);
+    private static Font medFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.NORMAL);
+    private static Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 12f, Font.NORMAL);
     private static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 8f, Font.NORMAL);
     private static Font smallerFont = new Font(Font.FontFamily.TIMES_ROMAN, 6f, Font.NORMAL);
 
     public void build(final OutputStream os, final List<Fighter> data) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Document document = new Document();
+        Document document = new Document(PageSize.LETTER);
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         document.open();
         addMetaData(document);
@@ -53,7 +54,7 @@ public class CardMaker {
         PdfContentByte cbunder = writer.getDirectContentUnder();
         Image img = loadBackground();
         if (img != null) {
-            img.setAbsolutePosition(34, 72);
+            img.setAbsolutePosition(36, 36);
             //img.scaleAbsoluteWidth(size.getRight());
             //img.scaleAbsoluteHeight(size.getTop());
             cbunder.addImage(img);
@@ -185,21 +186,23 @@ public class CardMaker {
 
     private void tearOff(PdfWriter writer, Document document, Fighter fighter) throws BadElementException, DocumentException {
         PdfContentByte cb = writer.getDirectContent();
-        PdfPTable table = new PdfPTable(1);
-        table.setTotalWidth(250);
+        PdfPTable table = new PdfPTable(2);
+        table.setTotalWidth(288);
         PdfPCell cell;
 
         // Back of card
+        PdfPTable back = new PdfPTable(3);
+        back.setTotalWidth(144);
         Paragraph p = new Paragraph();
         p.add(new Phrase("Kingdom Specific Authorizations\n", smallFont));
         p.add(new Phrase(MarshalUtils.getAuthsAsString(fighter.getAuthorization()), smallFont));
         cell = new PdfPCell(p);
-        cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.RIGHT);
-        cell.setRotation(180);
-        cell.setFixedHeight(20.0f);
+        cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.BOTTOM);
+        cell.setRotation(-90);
+        cell.setFixedHeight(250.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(cell);
+        back.addCell(cell);
 
         p = new Paragraph();
         if (StringUtils.isBlank(fighter.getScaName())) {
@@ -215,76 +218,55 @@ public class CardMaker {
         }
         cell = new PdfPCell(p);
 		cell.setExtraParagraphSpace(1.5f);
-        cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
-        cell.setRotation(180);
-        cell.setFixedHeight(50.0f);
+        cell.setBorder(Rectangle.TOP + Rectangle.BOTTOM);
+        cell.setRotation(-90);
+        cell.setFixedHeight(250.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        table.addCell(cell);
+        back.addCell(cell);
 
         cell = new PdfPCell(new Phrase("The Society for Creative Anachronism, Inc\nKingdom of Calontir\nCombat Authorization Card", smallFont));
 		cell.setExtraParagraphSpace(1.5f);
-        cell.setBorder(Rectangle.BOTTOM + Rectangle.LEFT + Rectangle.RIGHT);
-        cell.setRotation(180);
-        cell.setFixedHeight(55.0f);
+        cell.setBorder(Rectangle.BOTTOM + Rectangle.TOP + Rectangle.RIGHT);
+        cell.setRotation(-90);
+        cell.setFixedHeight(250.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(cell);
+        back.addCell(cell);
+
+		table.addCell(back);
 
 
         // Front of card
-        cell = new PdfPCell(new Phrase("Kingdom of Calontir\nFighter Authorizatin Card\n\n", smallFont));
-		cell.setExtraParagraphSpace(1.5f);
-        cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.RIGHT);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setFixedHeight(40.0f);
-        table.addCell(cell);
+        PdfPTable front = new PdfPTable(4);
+        front.setTotalWidth(144);
 
-        p = new Paragraph();
-        if (StringUtils.isBlank(fighter.getScaName())) {
-            p.add(new Phrase("SCA Name _________________________\n", smallFont));
-        } else {
-            p.add(new Phrase(String.format("SCA Name %s\n", fighter.getScaName()), smallFont));
-        }
-        p.add(new Phrase(String.format("Date Issued %s\n", new DateTime().toString("MMMM dd yyyy")), smallFont));
-        p.add(new Phrase(String.format("Issuing Official: %s\n", "Sir Ashir"), smallFont));
-        cell = new PdfPCell(p);
-		cell.setExtraParagraphSpace(1.5f);
-        cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell.setFixedHeight(20.0f);
-        table.addCell(cell);
+        PdfPTable headerTable = new PdfPTable(3);
+		headerTable.setWidths(new int[]{ 1, 4, 1 });
 
-        cell = new PdfPCell(new Phrase("This card is your authorization to participate on the field at SCA activities.  It must be presented to the list officials at all SCA events to register for participation in any martial activity. You may be requested to show this card to any marshal and/or list official at any time.", smallerFont));
-        cell.setBorder(Rectangle.LEFT + Rectangle.RIGHT);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell.setFixedHeight(30.0f);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Signature: _________________________\n", smallFont));
-        cell.setBorder(Rectangle.BOTTOM + Rectangle.LEFT + Rectangle.RIGHT);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setFixedHeight(20.0f);
-        table.addCell(cell);
-
-        table.writeSelectedRows(0, -1, 250, 280, cb);
-
+		PdfPCell innerCell = new PdfPCell();
         try {
             Image calontrava = loadImage("calontrava_black.gif");
 			calontrava.setAlignment(Image.RIGHT | Image.TEXTWRAP);
-			calontrava.setAbsolutePosition(350, 90);
+			//calontrava.setAbsolutePosition(350, 90);
 			calontrava.scaleToFit(40f, 40f);
-			document.add(calontrava);
+			innerCell.addElement(calontrava);
+			innerCell.setBorder(Rectangle.NO_BORDER);
+			headerTable.addCell(innerCell);
         } catch (BadElementException ex) {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+		innerCell = new PdfPCell(new Phrase("Kingdom of Calontir\nFighter Authorizatin Card\n\n", smallFont));
+		innerCell.setExtraParagraphSpace(1.5f);
+        innerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        innerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		innerCell.setBorder(Rectangle.NO_BORDER);
+		headerTable.addCell(innerCell);
+
+		innerCell = new PdfPCell();
         StringBuilder sb = new StringBuilder(fighter.getScaName());
         sb.append(" - ");
         for (Iterator<Authorization> it = fighter.getAuthorization().iterator(); it.hasNext();) {
@@ -298,7 +280,54 @@ public class CardMaker {
         BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
         Image img = qrcode.getImage();
         img.setAlignment(Image.RIGHT | Image.TEXTWRAP);
-        img.setAbsolutePosition(550, 90);
-        document.add(img);
+        //img.setAbsolutePosition(550, 90);
+		innerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		innerCell.setBorder(Rectangle.NO_BORDER);
+		innerCell.addElement(img);
+        headerTable.addCell(innerCell);
+
+		cell = new PdfPCell(headerTable);
+        cell.setRotation(90);
+        cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.BOTTOM);
+        cell.setFixedHeight(250.0f);
+        front.addCell(cell);
+
+        p = new Paragraph();
+        if (StringUtils.isBlank(fighter.getScaName())) {
+            p.add(new Phrase("SCA Name _________________________\n", smallFont));
+        } else {
+            p.add(new Phrase(String.format("SCA Name %s\n", fighter.getScaName()), smallFont));
+        }
+        p.add(new Phrase(String.format("Date Issued %s\n", new DateTime().toString("MMMM dd yyyy")), smallFont));
+        p.add(new Phrase(String.format("Issuing Official: %s\n", "Sir Ashir"), smallFont));
+        cell = new PdfPCell(p);
+		//cell.setExtraParagraphSpace(1.5f);
+        cell.setBorder(Rectangle.TOP + Rectangle.BOTTOM);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setRotation(90);
+        cell.setFixedHeight(250.0f);
+        front.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("This card is your authorization to participate on the field at SCA activities.  It must be presented to the list officials at all SCA events to register for participation in any martial activity. You may be requested to show this card to any marshal and/or list official at any time.", smallerFont));
+        cell.setBorder(Rectangle.TOP + Rectangle.BOTTOM);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setFixedHeight(250.0f);
+        cell.setRotation(90);
+        front.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Signature: _________________________\n", smallFont));
+        cell.setBorder(Rectangle.BOTTOM + Rectangle.TOP + Rectangle.RIGHT);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setFixedHeight(250.0f);
+        cell.setRotation(90);
+        front.addCell(cell);
+
+
+		table.addCell(front);
+
+        table.writeSelectedRows(0, -1, 200, 328, cb);
     }
 }
