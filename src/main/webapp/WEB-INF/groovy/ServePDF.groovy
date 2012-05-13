@@ -5,6 +5,7 @@ import org.sca.calontir.cmpe.print.CardMaker
 import org.joda.time.DateTime
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
+import java.util.HashMap
 
 Entity fighter = new Entity("Fighter");
 
@@ -43,8 +44,8 @@ try {
 	throw new IOException("Error building the cards", ex)
 }
 
-response.headers.'Content-disposition' = "attachment; filename=FighterCard " + 
-	f.getScaName() + "-" + String.format('%tF', new Date()) + ".pdf"
+response.setHeader("Content-disposition", "attachment; filename=FighterCard " + 
+	f.getScaName() + "-" + String.format('%tF', new Date()) + ".pdf")
 
 response.contentType = "application/pdf"
 response.contentLength = baosPDF.size()

@@ -554,12 +554,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		}
 
+		infoPanel.add(dataBody);
+
 		if (dMode == DisplayMode.add) {
 			SubmitButton addFighter = new SubmitButton("Add Fighter");
 			infoPanel.add(addFighter);
 		}
-
-		infoPanel.add(dataBody);
 	}
 
 	private void buildNotePanel(boolean edit) {
