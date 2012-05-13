@@ -44,7 +44,7 @@ try {
 }
 
 response.headers.'Content-disposition' = "attachment; filename=FighterCard " + 
-	f.getScaName() + ".pdf"
+	f.getScaName() + "-" + String.format('%tF', new Date()) + ".pdf"
 
 response.contentType = "application/pdf"
 response.contentLength = baosPDF.size()

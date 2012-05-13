@@ -635,7 +635,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	}
 
 	private Widget printButton() {
-		Anchor bPrint = new Anchor("Print");
+		Anchor bPrint = new Anchor("Print Fighter Card");
 		bPrint.setStyleName("BPrint");
 		bPrint.getElement().setId("BPrint");
 

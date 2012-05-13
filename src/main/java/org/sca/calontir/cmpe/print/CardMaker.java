@@ -153,7 +153,7 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of Sir Ashir, the Calontir Marshal of Cards. this Day %s\n\n",
+        cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of Sir Ashir, the Calontir Marshal of Cards. This Day %s\n\n",
                 new DateTime().toString("MMMM dd yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(padding);
