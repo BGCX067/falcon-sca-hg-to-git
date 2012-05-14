@@ -15,21 +15,27 @@ root {
     position: fixed;
     top:0;
     right:0;
-    min-width: 80%;
-    float: right;
+    width: 100%;
     margin-left: 2em;
     font-weight:bold;
     color:#FFE766;
     padding:4px;
-    margin-right: 10%;
     font-size: 100%;
     background-color: WHITE;
 }
 
 #calonbar .title {
-	display: block;
+	display: inline;
 	text-align: left;
     color:#800080;
+	margin-left: 2em;
+}
+
+#calonbar .linkbar {
+	display: inline;
+	text-align: right;
+    float: right;
+	margin-right: 2em;
 }
 
 .calonbarlink {

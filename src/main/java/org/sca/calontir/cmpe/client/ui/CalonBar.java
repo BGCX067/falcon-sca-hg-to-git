@@ -41,31 +41,31 @@ public class CalonBar extends Composite {
 
 		DOM.setElementAttribute(barPanel.getElement(), "id", CALONBAR);
 
-
-		final FlowPanel titlePanel = new FlowPanel();
-		DOM.setElementAttribute(titlePanel.getElement(), "id", "title");
-		titlePanel.setStyleName("title");
-
 		Label titleLabel = new Label("Falcon");
 		titleLabel.setWordWrap(false);
 		titleLabel.setTitle("Fighter Authorization List Calontir Online (FALCON)");
+		titleLabel.setStyleName("title");
 
 		barPanel.add(titleLabel);
 
+		final FlowPanel linkbarPanel = new FlowPanel();
+		linkbarPanel.setStyleName("linkbar");
+
 		homeLink.setHref(INDEXHTML);
 		homeLink.setStyleName(CALONBARLINK);
+		homeLink.setTitle("Click here to return to the home page");
 //		homeLink.addClickHandler(new ClickHandler() {
 //
 //			@Override
 //			public void onClick(ClickEvent event) {
 //			}
 //		});
-		barPanel.add(homeLink);
+		linkbarPanel.add(homeLink);
 
-		barPanel.add(getDivBar());
+		linkbarPanel.add(getDivBar());
 
 		loginPanel.setStyleName(CALONBARLINK);
-		barPanel.add(loginPanel);
+		linkbarPanel.add(loginPanel);
 
 		Security security = SecurityFactory.getSecurity();
 		loginInfo = security.getLoginInfo();
@@ -75,19 +75,19 @@ public class CalonBar extends Composite {
 			loadLogin();
 		}
 
-		barPanel.add(getDivBar());
+		linkbarPanel.add(getDivBar());
 
 		feedBackLink.setHref(FEEDBACKLINK);
 		feedBackLink.setStyleName(CALONBARLINK);
-		barPanel.add(feedBackLink);
+		linkbarPanel.add(feedBackLink);
 
-		barPanel.add(getDivBar());
+		linkbarPanel.add(getDivBar());
 
 		aboutLink.setHref(ABOUT_PAGE);
 		aboutLink.setStyleName(CALONBARLINK);
-		barPanel.add(aboutLink);
+		linkbarPanel.add(aboutLink);
 
-		barPanel.add(getDivBar());
+		linkbarPanel.add(getDivBar());
 
 		syncLink.addClickHandler(new ClickHandler() {
 
@@ -102,7 +102,9 @@ public class CalonBar extends Composite {
 			}
 		});
 		syncLink.setStyleName(CALONBARLINK);
-		barPanel.add(syncLink);
+		linkbarPanel.add(syncLink);
+
+		barPanel.add(linkbarPanel);
 
 		initWidget(barPanel);
 	}

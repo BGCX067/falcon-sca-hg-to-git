@@ -40,16 +40,6 @@ public class Security {
 		return loginInfo.getUserRole().compareTo(userRole) >= 0;
 	}
 
-//	public boolean canEdit(Long fighterId) {
-//		if (loginInfo == null) {
-//			return false;
-//		}
-//		if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-//			return true;
-//		}
-//		return false;
-//	}
-
 	public boolean canEditAuthorizations(Long fighterId) {
 		if (loginInfo == null) {
 			return false;
@@ -99,18 +89,6 @@ public class Security {
 	}
 
 	public boolean canView(Long fighterId) {
-		if (loginInfo == null) {
-			return false;
-		}
-
-		if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			return true;
-		}
-
-		if (loginInfo.getFighterId() == fighterId) {
-			return true;
-		}
-
-		return false;
+		return canEditFighter(fighterId);
 	}
 }

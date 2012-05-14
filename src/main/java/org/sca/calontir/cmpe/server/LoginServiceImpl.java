@@ -4,13 +4,16 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.LoginInfo;
 import org.sca.calontir.cmpe.client.LoginService;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.dto.Fighter;
 
 public class LoginServiceImpl extends RemoteServiceServlet implements LoginService {
+	private static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
+	@Override
     public LoginInfo login(String requestUri) {
         UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
@@ -27,7 +30,9 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                 loginInfo.setScaName(f_ub.getScaName());
                 loginInfo.setUserRole(f_ub.getRole());
                 loginInfo.setFighterId(f_ub.getFighterId());
-            }
+            } else {
+				log.info(String.format("Cannot find a user for %s; Email: %s Federated Id: %s", user.getNickname(), user.getEmail(), user.getFederatedIdentity()));
+			}
         } else {
             loginInfo.setLoggedIn(false);
             loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
