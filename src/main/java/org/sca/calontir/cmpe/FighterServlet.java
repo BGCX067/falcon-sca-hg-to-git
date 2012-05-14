@@ -1,8 +1,5 @@
 package org.sca.calontir.cmpe;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -83,7 +80,7 @@ public class FighterServlet extends HttpServlet {
                 List<Fighter> flist = new ArrayList<Fighter>();
                 flist.add(f);
                 try {
-                    cardMaker.build(baosPDF, flist, new DateTime(), new DateTime());
+                    cardMaker.build(baosPDF, flist, new DateTime(2012, 6, 1, 0, 0, 0, 0), new DateTime(2012, 8, 31, 0, 0, 0, 0));
                 } catch (Exception ex) {
                     Logger.getLogger(FighterServlet.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException("Error building the cards", ex);

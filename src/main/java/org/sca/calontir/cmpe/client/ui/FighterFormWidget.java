@@ -28,9 +28,8 @@ import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.*;
 
 /**
- * This class displays the fighter view/edit/add page.
- * It contains the logic to submit the form itself and handle the response.  It will also inform listeners 
- * if the data is changed.
+ * This class displays the fighter view/edit/add page. It contains the logic to submit the form itself and handle the
+ * response. It will also inform listeners if the data is changed.
  *
  * @author rikscarborough
  */
@@ -84,9 +83,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		this.form = form;
 	}
 
-     // TODO: All fields should update the local fighter variable if they change
-     // on both edit and add.
-     // Consider creating each object as a sperate widget to enclose the functionality.
+	// TODO: All fields should update the local fighter variable if they change
+	// on both edit and add.
+	// Consider creating each object as a sperate widget to enclose the functionality.
 	public void buildInfoEdit() {
 		fighterIdBoxPanel.clear();
 
@@ -210,7 +209,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		scaName.setStyleName("scaName");
 		fighterIdBoxPanel.add(scaName);
 
-		fighterIdBoxPanel.add(printButton());
+		if (this.fighter.getStatus().equals(FighterStatus.ACTIVE)) {
+			fighterIdBoxPanel.add(printButton());
+		}
 
 		buildInfoPanel(DisplayMode.view);
 
@@ -644,7 +645,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			@Override
 			public void onClick(ClickEvent event) {
 				mode.setValue("printFighter");
-				form.setAction("/ServePDF.groovy");
+				//form.setAction("/ServePDF.groovy");
 				form.submit();
 			}
 		});
@@ -707,12 +708,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				switch (target) {
 					case Auths:
 						mode.setValue("saveAuthorizations");
-						form.setAction("/FighterServlet");
+						////form.setAction("/FighterServlet");
 						form.submit();
 						break;
 					case Info:
 						mode.setValue("saveFighter");
-						form.setAction("/FighterServlet");
+						//form.setAction("/FighterServlet");
 						form.submit();
 						break;
 				}
@@ -730,13 +731,14 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			errors.append("SCA Name cannot be blank");
 		}
 		if (fighter.getScaGroup() == null || fighter.getScaGroup().getGroupName().equalsIgnoreCase("SELECTGROUP")) {
-			if(errors.length() > 0)
+			if (errors.length() > 0) {
 				errors.append("\n");
+			}
 			errors.append("Please choose a group");
 		}
 
 
-		if(errors.length() > 0) {
+		if (errors.length() > 0) {
 			Window.alert("Errors, please fix\n" + errors.toString());
 			event.cancel();
 		}

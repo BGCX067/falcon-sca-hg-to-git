@@ -44,7 +44,7 @@ try {
 	throw new IOException("Error building the cards", ex)
 }
 
-response.setHeader("Content-disposition", "attachment; filename=FighterCard " + 
+response.addHeader("Content-disposition", "attachment; filename=FighterCard " + 
 	f.getScaName() + "-" + String.format('%tF', new Date()) + ".pdf")
 
 response.contentType = "application/pdf"

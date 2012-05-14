@@ -41,6 +41,17 @@ public class CalonBar extends Composite {
 
 		DOM.setElementAttribute(barPanel.getElement(), "id", CALONBAR);
 
+
+		final FlowPanel titlePanel = new FlowPanel();
+		DOM.setElementAttribute(titlePanel.getElement(), "id", "title");
+		titlePanel.setStyleName("title");
+
+		Label titleLabel = new Label("Falcon");
+		titleLabel.setWordWrap(false);
+		titleLabel.setTitle("Fighter Authorization List Calontir Online (FALCON)");
+
+		barPanel.add(titleLabel);
+
 		homeLink.setHref(INDEXHTML);
 		homeLink.setStyleName(CALONBARLINK);
 //		homeLink.addClickHandler(new ClickHandler() {

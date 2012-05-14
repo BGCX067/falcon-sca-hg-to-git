@@ -15,7 +15,7 @@ root {
     position: fixed;
     top:0;
     right:0;
-    min-width: 10%;
+    min-width: 80%;
     float: right;
     margin-left: 2em;
     font-weight:bold;
@@ -24,6 +24,12 @@ root {
     margin-right: 10%;
     font-size: 100%;
     background-color: WHITE;
+}
+
+#calonbar .title {
+	display: block;
+	text-align: left;
+    color:#800080;
 }
 
 .calonbarlink {
