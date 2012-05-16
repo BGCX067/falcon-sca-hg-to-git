@@ -98,7 +98,7 @@ public class IndexPage implements EntryPoint {
         p.setText("Not registered? Sign up now!");
 
         Label p2 = new Label();
-        p2.setText("Registering with the Calontir Marshalallate system allows you review your own authorizations, "
+        p2.setText("Registering with Falcon allows you review your own authorizations, "
                 + "update your contact information, and print your own fighter card at home.");
 
         HTML form = new HTML("<iframe src=\"https://docs.google.com/spreadsheet/embeddedform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ\" "

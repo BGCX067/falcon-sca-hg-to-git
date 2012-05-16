@@ -11,6 +11,10 @@
 root { 
 }
 
+.aboutbox {
+	padding: 1.5em;
+}
+
 #calonbar {
     position: fixed;
     top:0;

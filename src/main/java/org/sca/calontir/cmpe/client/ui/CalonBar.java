@@ -4,6 +4,7 @@
  */
 package org.sca.calontir.cmpe.client.ui;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.storage.client.Storage;
@@ -36,6 +37,38 @@ public class CalonBar extends Composite {
 	private Anchor signOutLink = new Anchor("Sign Out");
 	private Anchor feedBackLink = new Anchor("Feedback");
 	private Anchor syncLink = new Anchor("Sync");
+
+	private static class AboutPanel extends PopupPanel {
+
+		public AboutPanel() {
+			super(true);
+			FlowPanel fp = new FlowPanel();
+			fp.add(new HTML("The <strong>Fighter Authorization List Calontir Online (FALCON)</strong> system was designed to better manage Calontir’s fighter card information, issuance and tracking process."));
+			fp.add(new Label("The system allows the Calontir Marshallate to keep and update records in a centralized system as well as allowing Calontir’s fighters to maintain their own point-of-contact information, and print their own fighter cards at home."));
+			fp.add(new HTML("&nbsp;"));
+			fp.add(new Label("The system works best with one of these preferred HTML5 capable browsers:"));
+			fp.add(new HTML("<a href=\"https://www.google.com/intl/en/chrome/\">Google Chrome</a> 18.x.xxx.xxx (or better)"));
+			fp.add(new HTML("<a href=\"http://www.mozilla.org/en-US/firefox/new/\">Firefox 12.0</a>  (or better)"));
+			fp.add(new HTML("<a href=\"http://windows.microsoft.com/en-US/internet-explorer/products/ie/home\">Windows Internet Explorer 8</a>Windows Internet Explorer 8 (or better)"));
+			fp.add(new HTML("You also need <a href=\"http://get.adobe.com/reader/\">Adobe Reader</a>"));
+			fp.add(new HTML("&nbsp;"));
+			fp.add(new HTML("We'd love to hear your feedback on the system. Click the <a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dExnMU0tMDE2UWZyVDY3TE1Ic3lfRHc6MQ#gid=0\">Feedback</a> link on the page header."));
+			fp.add(new HTML("&nbsp;"));
+			fp.add(new Label("This system has been brought to you by:"));
+			fp.add(new HTML("<ol>"));
+			fp.add(new HTML("<li>His Grace Martino Michel Venneri, Earl Marshal of Calontir."));
+			fp.add(new HTML("<li>Sir Gustav Jameson, Project lead and Mastermind."));
+			fp.add(new HTML("<li>His Lordship Brendan Mac an tSaoir, Lead Programer."));
+			fp.add(new HTML("<li>Taiji Bataciqan-nu Ko'un Ashir, Current Card Marshal and Alpha Tester."));
+			fp.add(new HTML("<li>Sir Duncan Bruce of Logan, Programming Consultant."));
+			fp.add(new HTML("<li>Sir Hans Krieger, Programming Consultant."));
+			fp.add(new HTML("<li>Her Ladyship Kalisa Martel, Marshalatte Consultant."));
+			fp.add(new HTML("<li>His Lordship Aiden O'Seaghdma, Graphic Arts and Design of the fighter card imagery."));
+			fp.add(new HTML("<li>Mistress Olga Belobashnia Cherepanova, Contributing artist.  Provider of the Falcon logo."));
+			fp.add(new HTML("</ol>"));
+			setWidget(fp);
+		}
+	}
 
 	public CalonBar() {
 
@@ -70,7 +103,15 @@ public class CalonBar extends Composite {
 		Security security = SecurityFactory.getSecurity();
 		loginInfo = security.getLoginInfo();
 		if (loginInfo.isLoggedIn()) {
-			loadLogout();
+			Label nameLabel = new Label();
+			if (loginInfo.getScaName() == null) {
+				nameLabel.setText(loginInfo.getNickname());
+			} else {
+				nameLabel.setText(loginInfo.getScaName());
+			}
+			nameLabel.getElement().getStyle().setColor("#800080");
+			nameLabel.getElement().getStyle().setDisplay(Style.Display.INLINE);
+			linkbarPanel.add(nameLabel);
 		} else {
 			loadLogin();
 		}
@@ -83,8 +124,29 @@ public class CalonBar extends Composite {
 
 		linkbarPanel.add(getDivBar());
 
-		aboutLink.setHref(ABOUT_PAGE);
+		//aboutLink.setHref(ABOUT_PAGE);
 		aboutLink.setStyleName(CALONBARLINK);
+		aboutLink.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				final AboutPanel ab = new AboutPanel();
+				ab.setTitle("Click outside the About box to close.");
+				ab.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+
+					@Override
+					public void setPosition(int offsetWidth, int offsetHeight) {
+						int left = 50; //(Window.getClientWidth() - offsetWidth);
+						int top = 50; //(Window.getClientHeight() - offsetHeight) - 144;
+						ab.setPopupPosition(left, top);
+						ab.setWidth((offsetWidth - 100) + "px");
+						ab.addStyleName("aboutbox");
+					}
+				});
+
+			}
+		});
+
 		linkbarPanel.add(aboutLink);
 
 		linkbarPanel.add(getDivBar());

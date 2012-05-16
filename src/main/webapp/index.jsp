@@ -10,6 +10,7 @@
     <body>
         <div id="Loading-Message">
 			<div id="Application-Name">Fighter Authorization List Calontir Online</div>
+			<span>This could take several minutes.</span>
             <span>Loading, please wait...</span>
         </div>
     </body>
