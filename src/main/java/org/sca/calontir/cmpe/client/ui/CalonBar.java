@@ -46,10 +46,10 @@ public class CalonBar extends Composite {
 			fp.add(new HTML("The <strong>Fighter Authorization List Calontir Online (FALCON)</strong> system was designed to better manage Calontir’s fighter card information, issuance and tracking process."));
 			fp.add(new Label("The system allows the Calontir Marshallate to keep and update records in a centralized system as well as allowing Calontir’s fighters to maintain their own point-of-contact information, and print their own fighter cards at home."));
 			fp.add(new HTML("&nbsp;"));
-			fp.add(new Label("The system works best with one of these preferred HTML5 capable browsers:"));
+			fp.add(new Label("The system requires one of these preferred HTML5 capable browsers:"));
 			fp.add(new HTML("<a href=\"https://www.google.com/intl/en/chrome/\">Google Chrome</a> 18.x.xxx.xxx (or better)"));
 			fp.add(new HTML("<a href=\"http://www.mozilla.org/en-US/firefox/new/\">Firefox 12.0</a>  (or better)"));
-			fp.add(new HTML("<a href=\"http://windows.microsoft.com/en-US/internet-explorer/products/ie/home\">Windows Internet Explorer 8</a>Windows Internet Explorer 8 (or better)"));
+			fp.add(new HTML("<a href=\"http://windows.microsoft.com/en-US/internet-explorer/products/ie/home\">Windows Internet Explorer 8</a> (or better)"));
 			fp.add(new HTML("You also need <a href=\"http://get.adobe.com/reader/\">Adobe Reader</a>"));
 			fp.add(new HTML("&nbsp;"));
 			fp.add(new HTML("We'd love to hear your feedback on the system. Click the <a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dExnMU0tMDE2UWZyVDY3TE1Ic3lfRHc6MQ#gid=0\">Feedback</a> link on the page header."));
