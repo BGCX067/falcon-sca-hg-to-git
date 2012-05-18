@@ -70,10 +70,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		// Todo: move the login from calonbar to indexpage and do
 		// before loading data. This will insure that security will
 		// be correct before building the pages.
-		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			notePanel.setStyleName("dataBoxShort");
-			overallPanel.add(notePanel);
-		}
+		notePanel.setStyleName("dataBoxShort");
+		notePanel.getElement().getStyle().setDisplay(Style.Display.NONE);
+		overallPanel.add(notePanel);
 
 
 		initWidget(overallPanel);
@@ -272,9 +271,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		FlexTable.FlexCellFormatter formatter = table.getFlexCellFormatter();
 		table.setStyleName("wide-table");
 		table.setText(0, 0, "Modern Name:");
-		if (dMode == DisplayMode.view) {
-			table.setText(0, 1, fighter.getModernName());
-		} else {
+		//if (dMode == DisplayMode.view) {
+		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
 			TextBox modernName = new TextBox();
 			modernName.setName("modernName");
 			DOM.setElementAttribute(modernName.getElement(), "id", "modernName");
@@ -282,6 +280,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			modernName.setStyleName("modernName");
 			modernName.setValue(fighter.getModernName());
 			table.setWidget(0, 1, modernName);
+		} else {
+			table.setText(0, 1, fighter.getModernName());
 		}
 
 		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
@@ -291,9 +291,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				status.addItem(f_status.toString(), f_status.toString());
 			}
 
-			System.out.println(fighter.getStatus().toString());
 			for (int i = 0; i < status.getItemCount(); ++i) {
-				System.out.println(status.getValue(i));
 				if (status.getValue(i).equals(fighter.getStatus().toString())) {
 					status.setSelectedIndex(i);
 					break;
@@ -531,12 +529,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				ListBox userRole = new ListBox();
 				userRole.setName("userRole");
 				for (UserRoles ur : UserRoles.values()) {
-					userRole.addItem(ur.toString());
+					userRole.addItem(ur.toString(), ur.toString());
 				}
 
 				if (fighter.getRole() != null) {
 					for (int i = 0; i < userRole.getItemCount(); ++i) {
-						if (userRole.getValue(i).equals(fighter.getRole())) {
+						if (userRole.getValue(i).equals(fighter.getRole().toString())) {
 							userRole.setSelectedIndex(i);
 							break;
 						}
@@ -565,24 +563,27 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 	private void buildNotePanel(boolean edit) {
 		notePanel.clear();
+		if (security.isRole(UserRoles.CARD_MARSHAL)) {
+			notePanel.getElement().getStyle().setDisplay(Style.Display.BLOCK);
 
-		Panel dataHeader = new FlowPanel();
-		dataHeader.setStyleName("dataHeader");
-		InlineLabel label = new InlineLabel("Notes");
-		dataHeader.add(label);
+			Panel dataHeader = new FlowPanel();
+			dataHeader.setStyleName("dataHeader");
+			InlineLabel label = new InlineLabel("Notes");
+			dataHeader.add(label);
 
-		notePanel.add(dataHeader);
+			notePanel.add(dataHeader);
 
-		Panel dataBody = new FlowPanel();
-		dataBody.setStyleName("dataBody");
-		TextArea noteTa = new TextArea();
-		noteTa.setName("notes");
-		noteTa.setReadOnly(!edit);
-		if (fighter.getNote() != null) {
-			noteTa.setText(fighter.getNote().getBody());
+			Panel dataBody = new FlowPanel();
+			dataBody.setStyleName("dataBody");
+			TextArea noteTa = new TextArea();
+			noteTa.setName("notes");
+			noteTa.setReadOnly(!edit);
+			if (fighter.getNote() != null) {
+				noteTa.setText(fighter.getNote().getBody());
+			}
+			dataBody.add(noteTa);
+			notePanel.add(dataBody);
 		}
-		dataBody.add(noteTa);
-		notePanel.add(dataBody);
 	}
 
 	@Override
@@ -662,9 +663,11 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			public void onClick(ClickEvent event) {
 				switch (target) {
 					case Auths:
+						buildInfoView();
 						buildAuthEdit(true);
 						break;
 					case Info:
+						buildAuthView();
 						buildInfoEdit();
 						break;
 				}
