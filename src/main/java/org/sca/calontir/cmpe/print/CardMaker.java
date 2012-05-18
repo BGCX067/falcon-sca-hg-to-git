@@ -146,7 +146,7 @@ public class CardMaker {
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase(String.format("This writ is valid between the dates of %s and %s, Gregorian",
-                startDate.toString("MMMM dd yyyy"), endDate.toString("MMMM dd yyyy")), normalFont));
+                startDate.toString("MM/dd/yyyy"), endDate.toString("MM/dd/yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -154,7 +154,7 @@ public class CardMaker {
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase(String.format("Signed and Authorized by the hand of Sir Ashir, the Calontir Marshal of Cards. This Day %s\n\n",
-                new DateTime().toString("MMMM dd yyyy")), normalFont));
+                new DateTime().toString("MM/dd/yyyy")), normalFont));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPaddingLeft(padding);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -302,7 +302,7 @@ public class CardMaker {
         } else {
             p.add(new Phrase(String.format("SCA Name %s\n", fighter.getScaName()), smallFont));
         }
-        p.add(new Phrase(String.format("Date Issued %s\n", new DateTime().toString("MMMM dd yyyy")), smallFont));
+        p.add(new Phrase(String.format("Date Issued %s  Expires %s\n", startDate.toString("MM/dd/yyyy"), endDate.toString("MM/dd/yyyy")), smallFont));
         p.add(new Phrase(String.format("Issuing Official: %s\n", "Sir Ashir"), smallFont));
         cell = new PdfPCell(p);
 		//cell.setExtraParagraphSpace(1.5f);
