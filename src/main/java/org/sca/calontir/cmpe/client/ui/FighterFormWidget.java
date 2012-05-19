@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DateBox;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.sca.calontir.cmpe.client.FighterService;
@@ -147,7 +148,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		Panel dataBody = new FlowPanel();
 		dataBody.setStyleName("dataBody");
 		for (AuthType at : lookupController.getAuthType()) {
-			CheckBox cb = new CheckBox(at.getCode());
+			final CheckBox cb = new CheckBox(at.getCode());
 			cb.setFormValue(at.getCode());
 			cb.setName("authorization");
 			if (edit) {
@@ -158,6 +159,30 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					}
 				}
 			}
+			cb.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<Boolean> event) {
+					List<Authorization> auths = fighter.getAuthorization();
+					if (auths == null) {
+						auths = new ArrayList<Authorization>();
+						fighter.setAuthorization(auths);
+					}
+					Authorization a = new Authorization();
+					a.setCode(cb.getFormValue());
+					if(auths.contains(a)) {
+						if(event.getValue()) {
+							auths.add(a);
+						} else {
+							auths.remove(a);
+						}
+					} else {
+						if(event.getValue()) {
+							auths.add(a);
+						}
+					}
+				}
+			});
 			dataBody.add(cb);
 		}
 		authPanel.add(dataBody);
@@ -273,19 +298,26 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		table.setText(0, 0, "Modern Name:");
 		//if (dMode == DisplayMode.view) {
 		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			TextBox modernName = new TextBox();
+			final TextBox modernName = new TextBox();
 			modernName.setName("modernName");
 			DOM.setElementAttribute(modernName.getElement(), "id", "modernName");
 			modernName.setVisibleLength(25);
 			modernName.setStyleName("modernName");
 			modernName.setValue(fighter.getModernName());
+			modernName.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					fighter.setModernName(modernName.getValue());
+				}
+			});
 			table.setWidget(0, 1, modernName);
 		} else {
 			table.setText(0, 1, fighter.getModernName());
 		}
 
 		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			ListBox status = new ListBox();
+			final ListBox status = new ListBox();
 			status.setName("fighterStatus");
 			for (FighterStatus f_status : FighterStatus.values()) {
 				status.addItem(f_status.toString(), f_status.toString());
@@ -297,6 +329,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					break;
 				}
 			}
+			status.addChangeHandler(new ChangeHandler() {
+
+				@Override
+				public void onChange(ChangeEvent event) {
+					fighter.setStatus(FighterStatus.valueOf(status.getValue(status.getSelectedIndex())));
+				}
+			});
 			table.setWidget(0, 2, status);
 		} else {
 			table.setText(0, 2, fighter.getStatus().toString());
@@ -306,47 +345,85 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		formatter.setStyleName(0, 2, "rightCol");
 
 		table.setText(1, 0, "Address:");
-		Address address;
+		final Address address;
 		if (fighter.getAddress() != null && !fighter.getAddress().isEmpty()) {
 			address = fighter.getAddress().get(0);
 		} else {
 			address = new Address();
+			List<Address> addresses = new ArrayList<Address>();
+			addresses.add(address);
+			fighter.setAddress(addresses);
 		}
 		if (edit) {
-			FlexTable addressTable = new FlexTable();
+			final FlexTable addressTable = new FlexTable();
 			addressTable.setText(0, 0, "Street:");
-			TextBox address1 = new TextBox();
+			final TextBox address1 = new TextBox();
 			address1.setName("address1");
 			address1.setValue(address.getAddress1());
 			address1.setVisibleLength(60);
+			address1.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setAddress1(address1.getValue());
+				}
+			});
 			addressTable.setWidget(0, 1, address1);
 
 			addressTable.setText(1, 0, "Line 2:");
-			TextBox address2 = new TextBox();
+			final TextBox address2 = new TextBox();
 			address2.setName("address2");
 			address2.setValue(address.getAddress2());
 			address2.setVisibleLength(60);
+			address2.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setAddress2(address2.getValue());
+				}
+			});
 			addressTable.setWidget(1, 1, address2);
 
 			addressTable.setText(2, 0, "City:");
-			TextBox city = new TextBox();
+			final TextBox city = new TextBox();
 			city.setName("city");
 			city.setValue(address.getCity());
 			city.setVisibleLength(30);
+			city.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setCity(city.getValue());
+				}
+			});
 			addressTable.setWidget(2, 1, city);
 
 			addressTable.setText(3, 0, "State:");
-			TextBox state = new TextBox();
+			final TextBox state = new TextBox();
 			state.setName("state");
 			state.setValue(address.getState());
 			state.setVisibleLength(20);
+			state.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setState(state.getValue());
+				}
+			});
 			addressTable.setWidget(3, 1, state);
 
 			addressTable.setText(4, 0, "Postal Code:");
-			TextBox postalCode = new TextBox();
+			final TextBox postalCode = new TextBox();
 			postalCode.setName("postalCode");
 			postalCode.setValue(address.getPostalCode());
 			postalCode.setVisibleLength(30);
+			postalCode.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setPostalCode(postalCode.getValue());
+				}
+			});
 			addressTable.setWidget(4, 1, postalCode);
 
 			table.setWidget(1, 1, addressTable);
@@ -738,6 +815,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				errors.append("\n");
 			}
 			errors.append("Please choose a group");
+		}
+		if (fighter.getAddress() == null || fighter.getAddress().isEmpty()) {
+			errors.append("An address is required");
 		}
 
 
