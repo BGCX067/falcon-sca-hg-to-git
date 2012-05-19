@@ -208,20 +208,50 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         back.addCell(cell);
 
+        PdfPTable middleTable = new PdfPTable(2);
+		middleTable.setWidths(new int[]{ 3, 2 });
+		
+		PdfPCell innerCell = new PdfPCell();
+		innerCell.setNoWrap(true);
+		innerCell.setVerticalAlignment(Element.ALIGN_TOP);
+
         p = new Paragraph();
         if (StringUtils.isBlank(fighter.getScaName())) {
-            p.add(new Phrase("SCA Name _________________________\n", smallFont));
+            p.add(new Phrase("SCA Name: _________________________\n", smallFont));
         } else {
-            p.add(new Phrase(String.format("SCA Name %s\n", fighter.getScaName()), smallFont));
+            p.add(new Phrase(String.format("SCA Name: %s\n", fighter.getScaName()), smallFont));
         }
-        p.add(new Phrase(String.format("Modern Name %s\n", fighter.getModernName()), smallFont));
+        p.add(new Phrase(String.format("Modern Name: %s\n", fighter.getModernName()), smallFont));
         if(MarshalUtils.isMinor(fighter)) {
             p.add(new Phrase(String.format("Group: %s  Minor X\n", fighter.getScaGroup().getGroupName()), smallFont));
         } else {
             p.add(new Phrase(String.format("Group: %s\n", fighter.getScaGroup().getGroupName()), smallFont));
         }
-        cell = new PdfPCell(p);
-		cell.setExtraParagraphSpace(1.5f);
+		innerCell.setPhrase(p);
+		innerCell.setBorder(Rectangle.NO_BORDER);
+		middleTable.addCell(innerCell);
+
+        StringBuilder sb = new StringBuilder(fighter.getScaName());
+        sb.append(" - ");
+        for (Iterator<Authorization> it = fighter.getAuthorization().iterator(); it.hasNext();) {
+            sb.append(it.next().getCode());
+            if (it.hasNext()) {
+                sb.append(", ");
+            }
+        }
+
+		innerCell = new PdfPCell();
+        BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 4, 4, null);
+        Image img = qrcode.getImage();
+        img.setAlignment(Image.RIGHT);
+		innerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		innerCell.setBorder(Rectangle.NO_BORDER);
+		innerCell.setPadding(0f);
+		innerCell.setPaddingRight(1.5f);
+        innerCell.setImage(img);
+		middleTable.addCell(innerCell);
+
+        cell = new PdfPCell(middleTable);
         cell.setBorder(Rectangle.TOP + Rectangle.BOTTOM);
         cell.setRotation(-90);
         cell.setFixedHeight(250.0f);
@@ -248,7 +278,7 @@ public class CardMaker {
         PdfPTable headerTable = new PdfPTable(3);
 		headerTable.setWidths(new int[]{ 1, 4, 1 });
 
-		PdfPCell innerCell = new PdfPCell();
+		innerCell = new PdfPCell();
         try {
             Image calontrava = loadImage("calontrava_black.gif");
 			calontrava.setAlignment(Image.RIGHT | Image.TEXTWRAP);
@@ -271,23 +301,9 @@ public class CardMaker {
 		headerTable.addCell(innerCell);
 
 		innerCell = new PdfPCell();
-        StringBuilder sb = new StringBuilder(fighter.getScaName());
-        sb.append(" - ");
-        for (Iterator<Authorization> it = fighter.getAuthorization().iterator(); it.hasNext();) {
-            sb.append(it.next().getCode());
-            if (it.hasNext()) {
-                sb.append(", ");
-            }
-        }
-
-		
-        BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
-        Image img = qrcode.getImage();
-        img.setAlignment(Image.RIGHT | Image.TEXTWRAP);
-        //img.setAbsolutePosition(550, 90);
 		innerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 		innerCell.setBorder(Rectangle.NO_BORDER);
-		innerCell.addElement(img);
+		innerCell.addElement(new Phrase());
         headerTable.addCell(innerCell);
 
 		cell = new PdfPCell(headerTable);
@@ -298,11 +314,11 @@ public class CardMaker {
 
         p = new Paragraph();
         if (StringUtils.isBlank(fighter.getScaName())) {
-            p.add(new Phrase("SCA Name _________________________\n", smallFont));
+            p.add(new Phrase("SCA Name: _________________________\n", smallFont));
         } else {
-            p.add(new Phrase(String.format("SCA Name %s\n", fighter.getScaName()), smallFont));
+            p.add(new Phrase(String.format("SCA Name: %s\n", fighter.getScaName()), smallFont));
         }
-        p.add(new Phrase(String.format("Date Issued %s  Expires %s\n", startDate.toString("MM/dd/yyyy"), endDate.toString("MM/dd/yyyy")), smallFont));
+        p.add(new Phrase(String.format("Date Issued: %s  Expires: %s\n", startDate.toString("MM/dd/yyyy"), endDate.toString("MM/dd/yyyy")), smallFont));
         p.add(new Phrase(String.format("Issuing Official: %s\n", "Sir Ashir"), smallFont));
         cell = new PdfPCell(p);
 		//cell.setExtraParagraphSpace(1.5f);
