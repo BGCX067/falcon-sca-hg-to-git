@@ -42,7 +42,7 @@ public class IndexPage implements EntryPoint {
         LookupController.getInstance();
 
         LoginServiceAsync loginService = GWT.create(LoginService.class);
-        loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+        loginService.login(GWT.getHostPageBaseURL() + "loggedin.jsp", new AsyncCallback<LoginInfo>() {
 
             @Override
             public void onFailure(Throwable error) {

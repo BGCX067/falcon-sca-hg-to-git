@@ -13,10 +13,6 @@
         <servlet-class>org.sca.calontir.cmpe.ScaGroupServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>FighterSearchServlet</servlet-name>
-        <servlet-class>org.sca.calontir.cmpe.FighterSearchServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>FighterServlet</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.FighterServlet</servlet-class>
     </servlet>
@@ -31,10 +27,6 @@
     <servlet-mapping>
         <servlet-name>ScaGroupServlet</servlet-name>
         <url-pattern>/ScaGroupServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FighterSearchServlet</servlet-name>
-        <url-pattern>/FighterSearchServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FighterServlet</servlet-name>
