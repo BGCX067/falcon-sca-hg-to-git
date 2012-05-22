@@ -446,11 +446,20 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		formatter.setStyleName(1, 1, "data");
 
 		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			CheckBox treaty = new CheckBox("Treaty");
+			final CheckBox treaty = new CheckBox("Treaty");
 			treaty.setName("treaty");
 			if (fighter.getTreaty() != null) {
 				treaty.setValue(true);
 			}
+			treaty.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<Boolean> event) {
+					Treaty t = new Treaty();
+					t.setName("Treaty");
+					fighter.setTreaty(t);
+				}
+			});
 			table.setWidget(1, 2, treaty);
 		} else {
 			if (fighter.getTreaty() != null) {
@@ -461,11 +470,18 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		formatter.setVerticalAlignment(1, 2, HasVerticalAlignment.ALIGN_TOP);
 		table.setText(2, 0, "SCA Membership:");
 		if (edit) {
-			TextBox scaMemberNo = new TextBox();
+			final TextBox scaMemberNo = new TextBox();
 			scaMemberNo.setName("scaMemberNo");
 			scaMemberNo.setVisibleLength(20);
 			scaMemberNo.setStyleName("scaMemberNo");
 			scaMemberNo.setValue(fighter.getScaMemberNo());
+			scaMemberNo.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					fighter.setScaMemberNo(scaMemberNo.getValue());
+				}
+			});
 			table.setWidget(2, 1, scaMemberNo);
 		} else {
 			table.setText(2, 1, fighter.getScaMemberNo());
@@ -523,7 +539,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		table.setText(5, 0, "DOB:");
 		if (edit) {
-			DateBox dateOfBirth = new DateBox();
+			final DateBox dateOfBirth = new DateBox();
 			dateOfBirth.getTextBox().getElement().setId("dateOfBirth");
 			dateOfBirth.getTextBox().setName("dateOfBirth");
 			dateOfBirth.setFormat(
@@ -533,6 +549,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			if (fighter.getDateOfBirth() != null) {
 				dateOfBirth.setValue(fighter.getDateOfBirth());
 			}
+			dateOfBirth.getTextBox().addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					fighter.setDateOfBirth(DateTimeFormat.getFormat("MM/dd/yyyy").parse(dateOfBirth.getTextBox().getValue()));
+				}
+			});
 			table.setWidget(5, 1, dateOfBirth);
 		} else if (fighter.getDateOfBirth() != null) {
 			table.setText(5, 1,
@@ -543,13 +566,28 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		table.setText(6, 0, "Phone Number:");
 		if (edit) {
-			TextBox phoneNumber = new TextBox();
+			final TextBox phoneNumber = new TextBox();
 			phoneNumber.setName("phoneNumber");
 			phoneNumber.setVisibleLength(25);
 			phoneNumber.setStyleName("phoneNumber");
 			if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
 				phoneNumber.setValue(fighter.getPhone().get(0).getPhoneNumber());
 			}
+			phoneNumber.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
+						Phone phone = new Phone();
+						phone.setPhoneNumber(phoneNumber.getValue());
+						List<Phone> phones = new ArrayList<Phone>();
+						phones.add(phone);
+						fighter.setPhone(phones);
+					} else {
+						fighter.getPhone().get(0).setPhoneNumber(phoneNumber.getValue());
+					}
+				}
+			});
 			table.setWidget(6, 1, phoneNumber);
 		} else {
 			if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
@@ -561,13 +599,28 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		table.setText(7, 0, "Email Address:");
 		if (edit) {
-			TextBox email = new TextBox();
+			final TextBox email = new TextBox();
 			email.setName("email");
 			email.setVisibleLength(25);
 			email.setStyleName("email");
 			if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
 				email.setValue(fighter.getEmail().get(0).getEmailAddress());
 			}
+			email.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
+						Email e = new Email();
+						e.setEmailAddress(email.getValue());
+						List<Email> emails = new ArrayList<Email>();
+						emails.add(e);
+						fighter.setEmail(emails);
+					} else {
+						fighter.getEmail().get(0).setEmailAddress(email.getValue());
+					}
+				}
+			});
 			table.setWidget(7, 1, email);
 		} else {
 			if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
@@ -590,11 +643,18 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 			adminTable.setText(0, 0, "Google ID:");
 			if (edit) {
-				TextBox googleId = new TextBox();
+				final TextBox googleId = new TextBox();
 				googleId.setName("googleId");
 				googleId.setVisibleLength(25);
 				googleId.setStyleName("googleId");
 				googleId.setValue(fighter.getGoogleId());
+				googleId.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+					@Override
+					public void onValueChange(ValueChangeEvent<String> event) {
+						fighter.setGoogleId(googleId.getValue());
+					}
+				});
 				adminTable.setWidget(0, 1, googleId);
 			} else {
 				adminTable.setText(0, 1, fighter.getGoogleId());
@@ -604,7 +664,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 			adminTable.setText(1, 0, "User Role:");
 			if (edit) {
-				ListBox userRole = new ListBox();
+				final ListBox userRole = new ListBox();
 				userRole.setName("userRole");
 				for (UserRoles ur : UserRoles.values()) {
 					userRole.addItem(ur.toString(), ur.toString());
@@ -618,6 +678,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 						}
 					}
 				}
+				userRole.addChangeHandler(new ChangeHandler() {
+
+					@Override
+					public void onChange(ChangeEvent event) {
+						fighter.setRole(UserRoles.valueOf(userRole.getValue(userRole.getSelectedIndex())));
+					}
+				});
 				adminTable.setWidget(1, 1, userRole);
 			} else {
 				if (fighter.getRole() != null) {
