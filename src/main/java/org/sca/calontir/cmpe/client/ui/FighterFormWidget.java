@@ -524,7 +524,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		table.setText(5, 0, "DOB:");
 		if (edit) {
 			DateBox dateOfBirth = new DateBox();
-			dateOfBirth.getElement().setId("dateOfBirth");
+			dateOfBirth.getTextBox().getElement().setId("dateOfBirth");
+			dateOfBirth.getTextBox().setName("dateOfBirth");
 			dateOfBirth.setFormat(
 					new DateBox.DefaultFormat(
 					DateTimeFormat.getFormat("MM/dd/yyyy")));
