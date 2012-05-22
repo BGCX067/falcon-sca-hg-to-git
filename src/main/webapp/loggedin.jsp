@@ -11,7 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Falcon - Calontir's Authorization List Online</title>
         <script language="javascript" src="loggedin/loggedin.nocache.js"></script>
-        <link rel="stylesheet" href="css/cmp_001.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="css/cmp_002.css" type="text/css" media="all" />
         <link type="text/css" href="css/calonbar_01.css" rel="stylesheet" />
         <link rel="SHORTCUT ICON" href="images/Marshal.ico"/>
     </head>
