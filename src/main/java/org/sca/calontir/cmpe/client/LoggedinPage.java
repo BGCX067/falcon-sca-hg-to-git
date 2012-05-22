@@ -5,6 +5,7 @@
 package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Timer;
 
 /**
  *
@@ -19,15 +20,14 @@ public class LoggedinPage implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		reloadParent();
-		/*Button close = new Button("Close Window");
-		close.addClickHandler(new ClickHandler() {
-
+		final Timer t = new Timer() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void run() {
+				closeBrowser();
 			}
-		});
-		RootPanel.get().add(close);
-		* 
-		*/
+		};
+
+		t.schedule(500);
+			
 	}
 }

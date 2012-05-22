@@ -16,6 +16,7 @@
         <link rel="SHORTCUT ICON" href="images/Marshal.ico"/>
     </head>
     <body>
-        <h1>Close this window to proceed.</h1>
+        <h1>Completed</h1>
+		<p>This page should close itself shortly. If it does not, simply close this page to continue</p>
     </body>
 </html>
