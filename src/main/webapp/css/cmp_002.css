@@ -51,7 +51,6 @@ a.buttonLink, a.buttonLink:visited, a.buttonLink:link {
 a.buttonLink:active, a.buttonLink:hover {
     border-color: #000000 #898989 #898989 #000000 ;
     background-color: whitesmoke;
-	font-weight: bold;
 }
 
 #searchBar {

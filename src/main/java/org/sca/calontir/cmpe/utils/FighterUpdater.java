@@ -51,7 +51,9 @@ public class FighterUpdater {
             DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
             DateTime dateOfBirth = fmt.parseDateTime(dob);
             fighter.setDateOfBirth(dateOfBirth.toDate());
-        }
+        } else {
+			fighter.setDateOfBirth(null);
+		}
 
         String[] address1 = request.getParameterValues("address1");
         String[] address2 = request.getParameterValues("address2");
