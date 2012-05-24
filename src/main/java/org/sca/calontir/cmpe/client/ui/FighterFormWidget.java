@@ -747,7 +747,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 	private void buildNotePanel(boolean edit) {
 		notePanel.clear();
-		if (security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
+		if (security.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL)) {
 			notePanel.getElement().getStyle().setDisplay(Style.Display.BLOCK);
 
 			final Panel dataHeader = new FlowPanel();
