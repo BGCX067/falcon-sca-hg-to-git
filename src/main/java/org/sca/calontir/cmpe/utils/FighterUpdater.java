@@ -130,7 +130,9 @@ public class FighterUpdater {
             fighterNote.setBody(note);
             fighterNote.setUpdated(new Date());
             fighter.setNote(fighterNote);
-        }
+        } else {
+			fighter.setNote(null);
+		}
 
         return fighter;
     }

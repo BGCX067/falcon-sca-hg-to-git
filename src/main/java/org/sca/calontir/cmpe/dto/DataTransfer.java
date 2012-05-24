@@ -247,7 +247,7 @@ public class DataTransfer {
 //            System.err.println("setting note to " + fighter.getNote().getBody());
             org.sca.calontir.cmpe.data.Note note = fighterDO.getNote();
             fighterDO.setNote(convert(fighter.getNote(), note));
-        }
+		}
 
 //        System.out.println("fighter note set to " + fighterDO.getNote().getBody());
 

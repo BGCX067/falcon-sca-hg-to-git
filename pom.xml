@@ -5,7 +5,7 @@
   <!-- The Basics -->
     <groupId>org.sca.calontir</groupId>
     <artifactId>cmpe</artifactId>
-    <version>0.5.12</version>
+    <version>0.5.13</version>
     <packaging>war</packaging>
 
     <name>cmpe</name>
@@ -434,7 +434,7 @@
 			your Eclipse plug-in)
 		-->
         <kindleit.version>1.5.5</kindleit.version>
-        <gae.version>1.6.5</gae.version>
+        <gae.version>1.6.6</gae.version>
 
     <!-- GWT version -->
         <gwt.version>2.4.0</gwt.version>

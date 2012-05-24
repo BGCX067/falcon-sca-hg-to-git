@@ -42,6 +42,11 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	private LookupController lookupController = LookupController.getInstance();
 	private FormPanel form = null;
 
+	private class Flag {
+
+		protected boolean value = false;
+	}
+
 	private enum Target {
 
 		Info, Auths
@@ -524,17 +529,20 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		formatter.setStyleName(3, 1, "data");
 
 		table.setText(4, 0, "Minor:");
-		if (fighter.getDateOfBirth() != null) {
-			table.setText(4, 1, isMinor(fighter.getDateOfBirth()) ? "true" : "false");
-		} else {
-			table.setText(4, 1, "false");
-		}
 		formatter.setStyleName(4, 0, "label");
-		formatter.setStyleName(4, 1, "data");
+		if (!edit) {
+			if (fighter.getDateOfBirth() != null) {
+				table.setText(4, 1, isMinor(fighter.getDateOfBirth()) ? "true" : "false");
+			} else {
+				table.setText(4, 1, "false");
+			}
+			formatter.setStyleName(4, 1, "data");
+		}
 
 		table.setText(5, 0, "DOB:");
 		if (edit) {
 			final DateBox dateOfBirth = new DateBox();
+			final Flag ghost = new Flag();
 			dateOfBirth.getTextBox().getElement().setId("dateOfBirth");
 			dateOfBirth.getTextBox().setName("dateOfBirth");
 			dateOfBirth.setFormat(
@@ -548,37 +556,45 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 				@Override
 				public void onValueChange(ValueChangeEvent<Date> event) {
+					ghost.value = false;
 					if (dateOfBirth.getTextBox().getValue().isEmpty()) {
 						fighter.setDateOfBirth(null);
 					} else {
 						fighter.setDateOfBirth(DateTimeFormat.getFormat("MM/dd/yyyy").parse(dateOfBirth.getTextBox().getValue()));
 					}
+//					dateOfBirth.getElement().getStyle().setColor("black");
 				}
 			});
-//            dateOfBirth.getTextBox().addFocusHandler(new FocusHandler() {
+//			dateOfBirth.getTextBox().addFocusHandler(new FocusHandler() {
 //
-//                @Override
-//                public void onFocus(FocusEvent event) {
-//                    if (dateOfBirth.getTextBox().getValue().isEmpty()) {
-//                        Date sixteen = new Date();
-//                        sixteen.setYear(sixteen.getYear() - 16);
-//                        dateOfBirth.setValue(sixteen);
-//                        //dateOfBirth.getDatePicker().setCurrentMonth(sixteen);
-//                    }
-//                }
-//            });
-            dateOfBirth.getTextBox().addBlurHandler(new BlurHandler() {
+//				@Override
+//				public void onFocus(FocusEvent event) {
+//					if (dateOfBirth.getTextBox().getValue().isEmpty()) {
+//						ghost.value = true;
+//						Date sixteen = new Date();
+//						sixteen.setYear(sixteen.getYear() - 16);
+//						dateOfBirth.setValue(sixteen, false);
+//						dateOfBirth.getElement().getStyle().setColor("lightgrey");
+//						//dateOfBirth.getDatePicker().setCurrentMonth(sixteen);
+//					}
+//				}
+//			});
+			dateOfBirth.getTextBox().addBlurHandler(new BlurHandler() {
 
-                @Override
-                public void onBlur(BlurEvent event) {
-					if(dateOfBirth.getTextBox().getValue().isEmpty() && fighter.getDateOfBirth() != null) {
-						Window.alert("hit");
+				@Override
+				public void onBlur(BlurEvent event) {
+					if (dateOfBirth.getTextBox().getValue().isEmpty() && fighter.getDateOfBirth() != null) {
 						fighter.setDateOfBirth(null);
-						dateOfBirth.setValue(null);
+						dateOfBirth.setValue(null, false);
 					}
-                    //dateOfBirth.setValue(fighter.getDateOfBirth());
-                }
-            });
+//					if (ghost.value) {
+//						dateOfBirth.setValue(null, false);
+//						dateOfBirth.getTextBox().setValue("", false);
+//					}
+//					dateOfBirth.getElement().getStyle().setColor("black");
+					//dateOfBirth.setValue(fighter.getDateOfBirth());
+				}
+			});
 			table.setWidget(5, 1, dateOfBirth);
 		} else if (fighter.getDateOfBirth() != null) {
 			table.setText(5, 1,
@@ -734,21 +750,41 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		if (security.isRole(UserRoles.CARD_MARSHAL)) {
 			notePanel.getElement().getStyle().setDisplay(Style.Display.BLOCK);
 
-			Panel dataHeader = new FlowPanel();
+			final Panel dataHeader = new FlowPanel();
 			dataHeader.setStyleName("dataHeader");
-			InlineLabel label = new InlineLabel("Notes");
+			final InlineLabel label = new InlineLabel("Notes");
 			dataHeader.add(label);
 
 			notePanel.add(dataHeader);
 
-			Panel dataBody = new FlowPanel();
+			final Panel dataBody = new FlowPanel();
 			dataBody.setStyleName("dataBody");
-			TextArea noteTa = new TextArea();
+			final TextArea noteTa = new TextArea();
 			noteTa.setName("notes");
 			noteTa.setReadOnly(!edit);
 			if (fighter.getNote() != null) {
 				noteTa.setText(fighter.getNote().getBody());
 			}
+			noteTa.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					if (noteTa.getValue().isEmpty()) {
+						fighter.setNote(null);
+					} else {
+						Note note;
+						if (fighter.getNote() != null) {
+							note = fighter.getNote();
+						} else {
+							note = new Note();
+						}
+						note.setBody(noteTa.getValue());
+						note.setUpdated(new Date());
+
+						fighter.setNote(note);
+					}
+				}
+			});
 			dataBody.add(noteTa);
 			notePanel.add(dataBody);
 		}
@@ -805,9 +841,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	}
 
 	private Widget printButton() {
-		Anchor bPrint = new Anchor("Print Fighter Card");
-		bPrint.setStyleName("BPrint");
-		bPrint.getElement().setId("BPrint");
+		Anchor bPrint = new Anchor("Download Fighter Card");
+		bPrint.setStyleName("buttonLink");
 
 		bPrint.addClickHandler(new ClickHandler() {
 

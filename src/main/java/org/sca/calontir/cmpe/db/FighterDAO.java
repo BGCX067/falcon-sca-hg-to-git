@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.data.Address;
 import org.sca.calontir.cmpe.data.Fighter;
+import org.sca.calontir.cmpe.data.Note;
 import org.sca.calontir.cmpe.data.TableUpdates;
 import org.sca.calontir.cmpe.dto.DataTransfer;
 import org.sca.calontir.cmpe.dto.FighterListItem;
@@ -192,6 +193,11 @@ public class FighterDAO {
             validate(f);
         }
         try {
+			if(f.getNote() != null && fighter.getNote() == null) {
+				Note note = f.getNote();
+				pm.deletePersistent(note);
+				f.setNote(note);
+			}
             f.setLastUpdated(new Date());
             f.setUserUpdated(userId);
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving {0}", f.getScaName());
