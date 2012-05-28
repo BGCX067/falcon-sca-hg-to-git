@@ -11,6 +11,45 @@ root {
     display: block;
 }
 
+body {
+	background-color: #2D1155;
+}
+
+#base {
+	background-color: transparent;
+	border-left: 3px double #ffcc00;
+	border-right: 3px double #ffcc00;
+	border-bottom: 3px double #ffcc00;
+	margin-left: 22px;
+	margin-right: 22px;
+	margin-bottom: 1em;
+}
+
+#tile {
+	background-color: #F8F3E2;
+	border-left: ridge 2px #f8f3e2;
+	border-right: groove 2px #f8f3e2;
+	border-bottom: groove 2px #f8f3e2;
+	border-top: ridge 2px #f8f3e2;
+	margin-left: 1em;
+	margin-right: 1em;
+	margin-top: 0;
+	margin-bottom: 1em;
+}
+
+.title {
+	display: inline;
+	text-align: left;
+    color:#2D1155;
+	font-size: x-large;
+	vertical-align: top;
+}
+
+.titleImage {
+	padding: .25em;
+}
+
+
 .userbox {
     display: inline;
     border: 1px solid darkblue;
@@ -54,9 +93,9 @@ a.buttonLink:active, a.buttonLink:hover {
 }
 
 #searchBar {
-    background-color: lightblue;
+    background-color: #2D1155;
     display: block;
-    border: 1px solid darkblue;
+    border: 1px solid #2D1155;
     text-align: left;
     vertical-align: middle;
     margin-bottom: .25em;
@@ -92,7 +131,6 @@ a.buttonLink:active, a.buttonLink:hover {
 
 #uimessage {
     background-color: whitesmoke;
-    border: 1px solid darkblue;
     position: fixed;
     top: 70%;
     left: 50%;
@@ -127,22 +165,22 @@ a.buttonLink:active, a.buttonLink:hover {
 }
 
 .dataBox {
-    background-color: lightblue;
+    background-color: #F8F3E2;
     display: block;
     border: 1px solid darkblue;
     text-align: left;
     vertical-align: middle;
+	margin-left:auto;
+	margin-right:auto;
     margin-bottom: .25em;
-    margin-left: 1em;
-    margin-right: 1em;
     margin-top: 4em;
-    width: 80%;
+    width: 90%;
     -moz-border-radius: 15px;
     border-radius: 15px;
 }
 
 .dataBoxShort {
-    background-color: lightblue;
+    background-color: #F8F3E2;
     display: block;
     border: 1px solid darkblue;
     text-align: left;
@@ -162,8 +200,8 @@ a.buttonLink:active, a.buttonLink:hover {
 }
 
 .dataHeader {
-    background-color: purple;
-    color: white;
+    background-color: #2D1155;
+    color: #FC0;
     margin: 0 0 0 0;
     padding: 0 0 0 0;
     border-top: 1px solid darkblue;
@@ -251,7 +289,8 @@ a.BPrint:hover {
 
 .list {
     display: inline_block;
-    background-color: lightblue;
+    background-color: #2D1155;
+	color: black;
     border: 1px solid darkblue;
     text-align: left;
     vertical-align: middle;
@@ -266,8 +305,8 @@ a.BPrint:hover {
 }
 
 .header {
-    background-color: purple;
-    color: white;
+    background-color: #2D1155;
+    color: black;
     margin: 0 0 0 0;
     padding: 0 0 0 0;
     border-top: 1px solid darkblue;

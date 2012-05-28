@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.DOM;
@@ -27,6 +28,7 @@ public class IndexPage implements EntryPoint {
     final private Security security = SecurityFactory.getSecurity();
     private FighterFormWidget fighterFormWidget = new FighterFormWidget();
     private FighterListBox flb = new FighterListBox();
+	private Panel tilePanel;
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
      */
@@ -39,7 +41,20 @@ public class IndexPage implements EntryPoint {
 					+ "The application works best in Chrome.");
 			return;
 		}
+		tilePanel = RootPanel.get("tile");
         LookupController.getInstance();
+
+		Image titleImage = new Image();
+		titleImage.setUrl("images/title_image.gif");
+		titleImage.addStyleName("titleImage");
+		tilePanel.add(titleImage);
+		
+		Label titleLabel = new Label("Falcon");
+		titleLabel.setWordWrap(false);
+		titleLabel.setTitle("Fighter Authorization List Calontir Online (FALCON)");
+		titleLabel.setStyleName("title");
+
+		tilePanel.add(titleLabel);
 
         LoginServiceAsync loginService = GWT.create(LoginService.class);
         loginService.login(GWT.getHostPageBaseURL() + "loggedin.jsp", new AsyncCallback<LoginInfo>() {
@@ -64,18 +79,18 @@ public class IndexPage implements EntryPoint {
 
     private void buildIndexPage() {
         // remove Loading-Message from page
-        RootPanel.getBodyElement().removeChild(DOM.getElementById("Loading-Message"));
+        tilePanel.getElement().removeChild(DOM.getElementById("Loading-Message"));
 
 
         CalonBar calonBar = new CalonBar();
-        RootPanel.get().add(calonBar);
+        tilePanel.add(calonBar);
 
         SearchBar searchBar = new SearchBar();
         searchBar.addHandler(fighterFormWidget, EditViewEvent.TYPE);
 		searchBar.addHandler(flb, SearchEvent.TYPE);
         fighterFormWidget.addHandler(searchBar, DataUpdatedEvent.TYPE);
 		fighterFormWidget.addHandler(flb, SearchEvent.TYPE);
-        RootPanel.get().add(searchBar);
+        tilePanel.add(searchBar);
 
 
         onIndexPage();
@@ -108,13 +123,13 @@ public class IndexPage implements EntryPoint {
         innerSignupPanel.add(p2);
         innerSignupPanel.add(form);
 
-        RootPanel.get().add(signupPanel);
+        tilePanel.add(signupPanel);
 
     }
 
     private void foundMultibleResults() {
         flb.addHandler(fighterFormWidget, EditViewEvent.TYPE);
-        RootPanel.get().add(flb);
+        tilePanel.add(flb);
     }
 
     private void buildFighterForm() {
@@ -130,6 +145,6 @@ public class IndexPage implements EntryPoint {
         fighterForm.addSubmitCompleteHandler(fighterFormWidget);
 
 
-        RootPanel.get().add(fighterForm);
+        tilePanel.add(fighterForm);
     }
 }

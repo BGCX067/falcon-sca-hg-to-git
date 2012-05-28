@@ -3,15 +3,18 @@
     <head>
         <title>Falcon - Calontir's Authorization List Online</title>
         <script language="javascript" src="fighter/fighter.nocache.js"></script>
-        <link rel="stylesheet" href="css/cmp_002.css" type="text/css" media="all" />
-        <link type="text/css" href="css/calonbar_01.css" rel="stylesheet" />
+        <link type="text/css" href="css/calonbar_02.css" rel="stylesheet" />
         <link rel="SHORTCUT ICON" href="images/Marshal.ico"/>
     </head>
     <body>
-        <div id="Loading-Message">
-			<div id="Application-Name">Fighter Authorization List Calontir Online</div>
-			<span>This could take several minutes.</span>
-            <span>Loading, please wait...</span>
-        </div>
+		<div id="base">
+			<div id="tile">
+				<div id="Loading-Message">
+					<div id="Application-Name">Fighter Authorization List Calontir Online</div>
+					<span>This could take several minutes.</span>
+					<span>Loading, please wait...</span>
+				</div>
+			</div>
+		</div>
     </body>
 </html>

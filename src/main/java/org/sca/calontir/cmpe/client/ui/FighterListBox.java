@@ -50,6 +50,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(table);
+		table.addStyleName("header");
 
 		TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
 
@@ -78,6 +79,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 			}
 		};
 		groupColumn.setSortable(false);
+
 		table.addColumn(scaNameColumn, "SCA Name");
 		table.addColumn(authorizationColumn, "Authorizations");
 		table.addColumn(groupColumn, "Group");

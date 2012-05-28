@@ -18,21 +18,17 @@ root {
 #calonbar {
     position: fixed;
     top:0;
-    right:0;
-    width: 100%;
+    right: 3.5em;
     margin-left: 2em;
-    font-weight:bold;
-    color:#FFE766;
-    padding:4px;
+    font-weight: bold;
+    padding: 4px;
     font-size: 100%;
-    background-color: WHITE;
-}
-
-#calonbar .title {
-	display: inline;
-	text-align: left;
-    color:#800080;
-	margin-left: 2em;
+    background-color: #F8F3E2;
+	border-top: ridge 2px #F8F3E2;
+	border-bottom: 0;
+	border-left: 0;
+	border-right: 0;
+    font-weight: bold;
 }
 
 #calonbar .linkbar {
@@ -40,6 +36,7 @@ root {
 	text-align: right;
     float: right;
 	margin-right: 2em;
+    color: #2D1155;
 }
 
 .calonbarlink {
@@ -47,11 +44,11 @@ root {
 }
 
 a.calonbarlink:link, a.calonbarlink:visited {
-    width:5em;
-    color:#800080;
-    text-align:center;
-    text-decoration:none;
-    font-weight:bold;
+    width: 5em;
+    color: #2D1155;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
     font-size: 100%;
 }
 

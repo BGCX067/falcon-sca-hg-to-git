@@ -73,13 +73,13 @@ public class CalonBar extends Composite {
 	public CalonBar() {
 
 		DOM.setElementAttribute(barPanel.getElement(), "id", CALONBAR);
-
-		Label titleLabel = new Label("Falcon");
-		titleLabel.setWordWrap(false);
-		titleLabel.setTitle("Fighter Authorization List Calontir Online (FALCON)");
-		titleLabel.setStyleName("title");
-
-		barPanel.add(titleLabel);
+//
+//		Label titleLabel = new Label("Falcon");
+//		titleLabel.setWordWrap(false);
+//		titleLabel.setTitle("Fighter Authorization List Calontir Online (FALCON)");
+//		titleLabel.setStyleName("title");
+//
+//		barPanel.add(titleLabel);
 
 		final FlowPanel linkbarPanel = new FlowPanel();
 		linkbarPanel.setStyleName("linkbar");
@@ -109,7 +109,7 @@ public class CalonBar extends Composite {
 			} else {
 				nameLabel.setText(loginInfo.getScaName());
 			}
-			nameLabel.getElement().getStyle().setColor("#800080");
+			nameLabel.setStyleName(CALONBARLINK);
 			nameLabel.getElement().getStyle().setDisplay(Style.Display.INLINE);
 			linkbarPanel.add(nameLabel);
 		} else {
