@@ -62,9 +62,7 @@ public class FighterCache implements LocalCache {
 
     public synchronized void putAll(Map<Long, FighterListItem> fighterMap) {
         _updated();
-	System.out.println("Cache size before " + _fighterListMap.size());
         _fighterListMap.putAll(fighterMap);
-	System.out.println("Cache size after " + _fighterListMap.size());
     }
 
     public synchronized void put(Fighter fighter) {

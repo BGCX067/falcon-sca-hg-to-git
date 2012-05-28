@@ -29,7 +29,6 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 			&& tu.getLastDeletion() != null
 			&& new DateTime(tu.getLastDeletion()).isAfter(new DateTime(targetDate)))) {
 
-			System.out.println("Getting List Items from DAO");
 			fighters = fighterDao.getFighterListItems();
 			retval.setUpdateInfo(false);
 		} else {

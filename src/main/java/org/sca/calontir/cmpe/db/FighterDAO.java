@@ -216,9 +216,7 @@ public class FighterDAO {
             }
             pm.makePersistent(tu);
             pm.flush();
-            if (f.getFighterId() == null) {
-                System.out.println("Key not updated.");
-            } else {
+            if (f.getFighterId() != null) {
                 keyValue = f.getFighterId().getId();
             }
 

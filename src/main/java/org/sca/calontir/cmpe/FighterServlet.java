@@ -48,10 +48,8 @@ public class FighterServlet extends HttpServlet {
         if (fighterId > 0) {
             String mode = request.getParameter("mode");
             fighter = dao.getFighter(fighterId);
-            System.out.println("Got fighter " + fighter.getFighterId() + ": " + fighter.getScaName());
             if (mode.startsWith("save")) {
                 if (mode.equals("saveAuthorizations")) {
-                    System.out.println("Saving auths");
                     fighter = FighterUpdater.authFromRequest(request, fighter);
                 } else {
                     fighter = FighterUpdater.infoFromRequest(request, fighter);
@@ -68,7 +66,6 @@ public class FighterServlet extends HttpServlet {
 //                this.getServletContext().getRequestDispatcher("/fighter.jsp").
 //                        include(request, response);
             } else if (mode.equals("deleteFighter")) {
-                System.out.println("Delete was called for " + fighter.getFighterId() + ": " + fighter.getScaName());
                 dao.deleteFighter(fighter.getFighterId());
                 request.setAttribute("uimessage", fighter.getScaName() + " deleted");
 //                this.getServletContext().getRequestDispatcher("/index.jsp").

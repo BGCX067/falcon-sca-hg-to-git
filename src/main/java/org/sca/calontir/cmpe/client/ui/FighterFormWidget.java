@@ -10,9 +10,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DateBox;
 import java.util.*;
 import org.sca.calontir.cmpe.client.FighterService;
@@ -107,7 +107,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		scaNameTextBox.setStyleName("scaName");
 		scaNameTextBox.setValue(fighter.getScaName());
 		scaNameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				//validate
@@ -160,7 +159,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				}
 			}
 			cb.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<Boolean> event) {
 					List<Authorization> auths = fighter.getAuthorization();
@@ -305,7 +303,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			modernName.setStyleName("modernName");
 			modernName.setValue(fighter.getModernName());
 			modernName.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					fighter.setModernName(modernName.getValue());
@@ -330,7 +327,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				}
 			}
 			status.addChangeHandler(new ChangeHandler() {
-
 				@Override
 				public void onChange(ChangeEvent event) {
 					fighter.setStatus(FighterStatus.valueOf(status.getValue(status.getSelectedIndex())));
@@ -362,7 +358,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			address1.setValue(address.getAddress1());
 			address1.setVisibleLength(60);
 			address1.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					address.setAddress1(address1.getValue());
@@ -376,7 +371,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			address2.setValue(address.getAddress2());
 			address2.setVisibleLength(60);
 			address2.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					address.setAddress2(address2.getValue());
@@ -390,7 +384,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			city.setValue(address.getCity());
 			city.setVisibleLength(30);
 			city.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					address.setCity(city.getValue());
@@ -404,7 +397,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			state.setValue(address.getState());
 			state.setVisibleLength(20);
 			state.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					address.setState(state.getValue());
@@ -418,7 +410,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			postalCode.setValue(address.getPostalCode());
 			postalCode.setVisibleLength(30);
 			postalCode.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					address.setPostalCode(postalCode.getValue());
@@ -452,7 +443,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				treaty.setValue(true);
 			}
 			treaty.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<Boolean> event) {
 					Treaty t = new Treaty();
@@ -476,7 +466,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			scaMemberNo.setStyleName("scaMemberNo");
 			scaMemberNo.setValue(fighter.getScaMemberNo());
 			scaMemberNo.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					fighter.setScaMemberNo(scaMemberNo.getValue());
@@ -509,7 +498,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				}
 			}
 			group.addChangeHandler(new ChangeHandler() {
-
 				@Override
 				public void onChange(ChangeEvent event) {
 					for (ScaGroup g : lookupController.getScaGroups()) {
@@ -553,7 +541,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				dateOfBirth.setValue(fighter.getDateOfBirth());
 			}
 			dateOfBirth.addValueChangeHandler(new ValueChangeHandler<Date>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<Date> event) {
 					ghost.value = false;
@@ -580,7 +567,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 //				}
 //			});
 			dateOfBirth.getTextBox().addBlurHandler(new BlurHandler() {
-
 				@Override
 				public void onBlur(BlurEvent event) {
 					if (dateOfBirth.getTextBox().getValue().isEmpty() && fighter.getDateOfBirth() != null) {
@@ -613,7 +599,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				phoneNumber.setValue(fighter.getPhone().get(0).getPhoneNumber());
 			}
 			phoneNumber.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
@@ -646,7 +631,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				email.setValue(fighter.getEmail().get(0).getEmailAddress());
 			}
 			email.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
@@ -688,7 +672,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				googleId.setStyleName("googleId");
 				googleId.setValue(fighter.getGoogleId());
 				googleId.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 					@Override
 					public void onValueChange(ValueChangeEvent<String> event) {
 						fighter.setGoogleId(googleId.getValue());
@@ -718,7 +701,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					}
 				}
 				userRole.addChangeHandler(new ChangeHandler() {
-
 					@Override
 					public void onChange(ChangeEvent event) {
 						fighter.setRole(UserRoles.valueOf(userRole.getValue(userRole.getSelectedIndex())));
@@ -766,7 +748,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				noteTa.setText(fighter.getNote().getBody());
 			}
 			noteTa.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
 					if (noteTa.getValue().isEmpty()) {
@@ -809,7 +790,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		scaNameTextBox.setStyleName("scaName");
 		scaNameTextBox.setValue(fighter.getScaName());
 		scaNameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				//validate
@@ -845,7 +825,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		bPrint.setStyleName("buttonLink");
 
 		bPrint.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				mode.setValue("printFighter");
@@ -861,7 +840,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		Anchor editButton = new Anchor("edit");
 		editButton.addStyleName("buttonLink");
 		editButton.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				switch (target) {
@@ -885,7 +863,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		Anchor cancelButton = new Anchor("cancel");
 		cancelButton.addStyleName("buttonLink");
 		cancelButton.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				switch (target) {
@@ -908,7 +885,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		saveButton.addStyleName("buttonLink");
 		saveButton.getElement().getStyle().setMarginRight(1.5, Style.Unit.EM);
 		saveButton.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				switch (target) {
@@ -959,7 +935,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		if (fighter != null && fighter.getFighterId() != null && fighter.getFighterId() > 0) {
 			FighterServiceAsync fighterService = GWT.create(FighterService.class);
 			fighterService.getFighter(fighter.getFighterId(), new AsyncCallback<Fighter>() {
-
 				@Override
 				public void onFailure(Throwable caught) {
 					throw new UnsupportedOperationException("Not supported yet.");
@@ -973,7 +948,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			});
 		} else {
 			final Timer t = new Timer() {
-
 				String scaName = null;
 
 				Timer setScaName(String scaName) {
@@ -985,7 +959,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 				public void run() {
 					FighterServiceAsync fighterService = GWT.create(FighterService.class);
 					fighterService.getFighterByScaName(scaName, new AsyncCallback<Fighter>() {
-
 						@Override
 						public void onFailure(Throwable caught) {
 							throw new UnsupportedOperationException("Not supported yet.");
@@ -1005,10 +978,18 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		}
 	}
 
-	private String getAuthsAsString(List<Authorization> authorizations) {
-		StringBuilder sb = new StringBuilder();
+	private String getAuthsAsString(final List<Authorization> authorizations) {
+		final StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		if (authorizations != null) {
+			Collections.sort(authorizations, new Comparator<Authorization>() {
+				@Override
+				public int compare(Authorization l, Authorization r) {
+					int left = l.getOrderValue() == null ? 99 : l.getOrderValue();
+					int right = r.getOrderValue() == null ? 99 : r.getOrderValue();
+					return (left < right ? -1 : (left == right ? 0 : 1));
+				}
+			});
 			for (Authorization a : authorizations) {
 				if (first) {
 					first = false;

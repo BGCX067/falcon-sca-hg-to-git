@@ -23,6 +23,9 @@ public class AuthType {
     @Persistent
     private String description;
 
+	@Persistent
+	private Integer orderValue;
+
     public Key getAuthTypeId() {
         return authTypeId;
     }
@@ -46,5 +49,13 @@ public class AuthType {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public Integer getOrderValue() {
+		return orderValue;
+	}
+
+	public void setOrderValue(Integer orderValue) {
+		this.orderValue = orderValue;
+	}
 
 }

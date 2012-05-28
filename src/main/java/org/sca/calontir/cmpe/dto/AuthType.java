@@ -10,6 +10,7 @@ public class AuthType implements Serializable {
     private Long authTypeId;
     private String code;
     private String description;
+	private Integer orderValue;
 
     public Long getAuthTypeId() {
         return authTypeId;
@@ -34,4 +35,13 @@ public class AuthType implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public Integer getOrderValue() {
+		return orderValue;
+	}
+
+	public void setOrderValue(Integer orderValue) {
+		this.orderValue = orderValue;
+	}
+	
 }
