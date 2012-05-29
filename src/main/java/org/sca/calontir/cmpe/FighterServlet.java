@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.db.PropertiesDao;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.print.CardMaker;
 import org.sca.calontir.cmpe.user.Security;
@@ -76,8 +78,13 @@ public class FighterServlet extends HttpServlet {
                 CardMaker cardMaker = new CardMaker();
                 List<Fighter> flist = new ArrayList<Fighter>();
                 flist.add(f);
+				PropertiesDao propDao = new PropertiesDao();
+				String start = propDao.getProperty("calontir.validStart");
+				String end = propDao.getProperty("calontir.validEnd");
+				DateTime startDt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(start);
+				DateTime endDt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(end);
                 try {
-                    cardMaker.build(baosPDF, flist, new DateTime(2012, 6, 1, 0, 0, 0, 0), new DateTime(2012, 8, 31, 0, 0, 0, 0));
+                    cardMaker.build(baosPDF, flist, startDt, endDt);
                 } catch (Exception ex) {
                     Logger.getLogger(FighterServlet.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException("Error building the cards", ex);
