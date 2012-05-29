@@ -7,7 +7,7 @@ defaultQueue << [
 	taskName: "storeDatabase" + String.format('%tY%<tm%<td%<tH%<tM%<tS', new Date()),
 	method: 'GET',
 	retryOptions: [
-		taskRetryLimit: 10,
+		taskRetryLimit: 1,
 		taskAgeLimitSeconds: 100,
 		minBackoffSeconds: 40,
 		maxBackoffSeconds: 50,
