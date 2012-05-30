@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,6 +94,8 @@ public class FighterServlet extends HttpServlet {
                 sb.append("attachment; filename=");
                 sb.append("FighterCard ");
                 sb.append(f.getScaName());
+				sb.append("-");
+				sb.append(String.format("%tF", new Date()));
                 sb.append(".pdf");
                 response.setHeader("Content-disposition", sb.toString());
                 response.setContentType("application/pdf");

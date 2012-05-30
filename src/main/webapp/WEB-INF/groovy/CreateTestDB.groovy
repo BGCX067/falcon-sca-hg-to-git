@@ -61,7 +61,7 @@ namespace.of("system") {
 
 	Entity sysTable = new Entity("properties")
 	sysTable.name = name
-	sysTable.property = "06/01/2012"
+	sysTable.property = "06/16/2012"
 
 	sysTable.save()
 

@@ -12,7 +12,32 @@ root {
 }
 
 .aboutbox {
-	padding: 1.5em;
+	background-color: #2D1155;
+}
+
+.aboutbox .base {
+	background-color: transparent;
+	border-left: 3px double #ffcc00;
+	border-right: 3px double #ffcc00;
+	border-bottom: 3px double #ffcc00;
+	border-top: 3px double #ffcc00;
+	margin-left: 22px;
+	margin-right: 22px;
+	margin-bottom: 1em;
+	margin-top: 1em;
+}
+
+.aboutbox .tile {
+	background-color: #F8F3E2;
+	border-left: ridge 2px #f8f3e2;
+	border-right: groove 2px #f8f3e2;
+	border-bottom: groove 2px #f8f3e2;
+	border-top: ridge 2px #f8f3e2;
+	margin-left: 1em;
+	margin-right: 1em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	padding: 0.5em;
 }
 
 #calonbar {

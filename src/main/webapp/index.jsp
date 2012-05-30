@@ -3,7 +3,6 @@
     <head>
         <title>Falcon - Calontir's Authorization List Online</title>
         <script language="javascript" src="fighter/fighter.nocache.js"></script>
-        <link type="text/css" href="css/calonbar_02.css" rel="stylesheet" />
         <link rel="SHORTCUT ICON" href="images/Marshal.ico"/>
     </head>
     <body>

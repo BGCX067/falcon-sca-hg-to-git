@@ -43,30 +43,36 @@ public class CalonBar extends Composite {
 		public AboutPanel() {
 			super(true);
 			FlowPanel fp = new FlowPanel();
-			fp.add(new HTML("The <strong>Fighter Authorization List Calontir Online (FALCON)</strong> system was designed to better manage Calontir’s fighter card information, issuance and tracking process."));
-			fp.add(new Label("The system allows the Calontir Marshallate to keep and update records in a centralized system as well as allowing Calontir’s fighters to maintain their own point-of-contact information, and print their own fighter cards at home."));
-			fp.add(new HTML("&nbsp;"));
-			fp.add(new Label("The system requires one of these preferred HTML5 capable browsers:"));
-			fp.add(new HTML("<a href=\"https://www.google.com/intl/en/chrome/\">Google Chrome</a> 18.x.xxx.xxx (or better)"));
-			fp.add(new HTML("<a href=\"http://www.mozilla.org/en-US/firefox/new/\">Firefox 12.0</a>  (or better)"));
-			fp.add(new HTML("<a href=\"http://windows.microsoft.com/en-US/internet-explorer/products/ie/home\">Windows Internet Explorer 8</a> (or better)"));
-			fp.add(new HTML("You also need <a href=\"http://get.adobe.com/reader/\">Adobe Reader</a>"));
-			fp.add(new HTML("&nbsp;"));
-			fp.add(new HTML("We'd love to hear your feedback on the system. Click the <a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dExnMU0tMDE2UWZyVDY3TE1Ic3lfRHc6MQ#gid=0\">Feedback</a> link on the page header."));
-			fp.add(new HTML("&nbsp;"));
-			fp.add(new Label("This system has been brought to you by:"));
-			fp.add(new HTML("<ol>"));
-			fp.add(new HTML("<li>His Grace Martino Michel Venneri, Earl Marshal of Calontir."));
-			fp.add(new HTML("<li>Sir Gustav Jameson, Project lead and Mastermind."));
-			fp.add(new HTML("<li>His Lordship Brendan Mac an tSaoir, Lead Programer."));
-			fp.add(new HTML("<li>Taiji Bataciqan-nu Ko'un Ashir, Current Card Marshal and Alpha Tester."));
-			fp.add(new HTML("<li>Sir Duncan Bruce of Logan, Programming Consultant."));
-			fp.add(new HTML("<li>Sir Hans Krieger, Programming Consultant."));
-			fp.add(new HTML("<li>Her Ladyship Kalisa Martel, Marshalatte Consultant."));
-			fp.add(new HTML("<li>His Lordship Aiden O'Seaghdma, Graphic Arts and Design of the fighter card imagery."));
-			fp.add(new HTML("<li>Mistress Olga Belobashnia Cherepanova, Contributing artist.  Provider of the Falcon logo."));
-			fp.add(new HTML("<li>The CSS Stylin for the page is based on the design create by Her Ladyship Sung Sai-êrh for the Calontir website."));
-			fp.add(new HTML("</ol>"));
+			FlowPanel base = new FlowPanel();
+			base.setStyleName("base");
+			fp.add(base);
+			FlowPanel tile = new FlowPanel();
+			tile.setStyleName("tile");
+			base.add(tile);
+			tile.add(new HTML("The <strong>Fighter Authorization List Calontir Online (FALCON)</strong> system was designed to better manage Calontir’s fighter card information, issuance and tracking process."));
+			tile.add(new Label("The system allows the Calontir Marshallate to keep and update records in a centralized system as well as allowing Calontir’s fighters to maintain their own point-of-contact information, and print their own fighter cards at home."));
+			tile.add(new HTML("&nbsp;"));
+			tile.add(new Label("The system requires one of these preferred HTML5 capable browsers:"));
+			tile.add(new HTML("<a href=\"https://www.google.com/intl/en/chrome/\">Google Chrome</a> 18.x.xxx.xxx (or better)"));
+			tile.add(new HTML("<a href=\"http://www.mozilla.org/en-US/firefox/new/\">Firefox 12.0</a>  (or better)"));
+			tile.add(new HTML("<a href=\"http://windows.microsoft.com/en-US/internet-explorer/products/ie/home\">Windows Internet Explorer 8</a> (or better)"));
+			tile.add(new HTML("You also need <a href=\"http://get.adobe.com/reader/\">Adobe Reader</a>"));
+			tile.add(new HTML("&nbsp;"));
+			tile.add(new HTML("We'd love to hear your feedback on the system. Click the <a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dExnMU0tMDE2UWZyVDY3TE1Ic3lfRHc6MQ#gid=0\">Feedback</a> link on the page header."));
+			tile.add(new HTML("&nbsp;"));
+			tile.add(new Label("This system has been brought to you by:"));
+			tile.add(new HTML("<ol>"));
+			tile.add(new HTML("<li>His Grace Martino Michel Venneri, Earl Marshal of Calontir."));
+			tile.add(new HTML("<li>Sir Gustav Jameson, Project lead."));
+			tile.add(new HTML("<li>His Lordship Brendan Mac an tSaoir, Lead Programer."));
+			tile.add(new HTML("<li>Taiji Bataciqan-nu Ko'un Ashir, Current Card Marshal and Alpha Tester."));
+			tile.add(new HTML("<li>Sir Duncan Bruce of Logan, Programming Consultant."));
+			tile.add(new HTML("<li>Sir Hans Krieger, Programming Consultant."));
+			tile.add(new HTML("<li>Her Ladyship Kalisa Martel, Marshalatte Consultant."));
+			tile.add(new HTML("<li>His Lordship Aiden O'Seaghdma, Graphic Arts and Design of the fighter card imagery."));
+			tile.add(new HTML("<li>Mistress Olga Belobashnia Cherepanova, Contributing artist.  Provider of the Falcon logo."));
+			tile.add(new HTML("<li>The CSS Styling for the page is based on the design created by Her Ladyship Sung Sai-êrh for the Calontir website."));
+			tile.add(new HTML("</ol>"));
 			setWidget(fp);
 		}
 	}
@@ -74,13 +80,6 @@ public class CalonBar extends Composite {
 	public CalonBar() {
 
 		DOM.setElementAttribute(barPanel.getElement(), "id", CALONBAR);
-//
-//		Label titleLabel = new Label("Falcon");
-//		titleLabel.setWordWrap(false);
-//		titleLabel.setTitle("Fighter Authorization List Calontir Online (FALCON)");
-//		titleLabel.setStyleName("title");
-//
-//		barPanel.add(titleLabel);
 
 		final FlowPanel linkbarPanel = new FlowPanel();
 		linkbarPanel.setStyleName("linkbar");
