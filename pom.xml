@@ -5,7 +5,7 @@
   <!-- The Basics -->
     <groupId>org.sca.calontir</groupId>
     <artifactId>cmpe</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5.15</version>
     <packaging>war</packaging>
 
     <name>cmpe</name>
