@@ -26,6 +26,7 @@ public class CalonBar extends Composite {
 	protected static final String ABOUT_PAGE = "/about.jsp";
 	protected static final String CALONBARLINK = "calonbarlink";
 	protected static final String FEEDBACKLINK = "https://docs.google.com/spreadsheet/viewform?formkey=dExnMU0tMDE2UWZyVDY3TE1Ic3lfRHc6MQ#gid=0";
+	protected static final String SUPPORTLINK = "https://sites.google.com/site/calontirmmproject/support";
 	protected static final String SIGN_IN_TEXT = "Please sign in to your Google Account.";
 	protected static final String SIGN_OUT_TEXT = "This will log you out of your Google Account.";
 	private Panel barPanel = new FlowPanel();
@@ -36,7 +37,8 @@ public class CalonBar extends Composite {
 	private Anchor signInLink = new Anchor("Sign In");
 	private Anchor signOutLink = new Anchor("Sign Out");
 	private Anchor feedBackLink = new Anchor("Feedback");
-	private Anchor syncLink = new Anchor("Sync");
+	private Anchor supportLink = new Anchor("Support");
+//	private Anchor syncLink = new Anchor("Sync");
 
 	private static class AboutPanel extends PopupPanel {
 
@@ -73,6 +75,11 @@ public class CalonBar extends Composite {
 			tile.add(new HTML("<li>Mistress Olga Belobashnia Cherepanova, Contributing artist.  Provider of the Falcon logo."));
 			tile.add(new HTML("<li>The CSS Styling for the page is based on the design created by Her Ladyship Sung Sai-êrh for the Calontir website."));
 			tile.add(new HTML("</ol>"));
+			Label versionLine = new Label("falcon version beta 0.9.0");
+			versionLine.getElement().getStyle().setFontStyle(Style.FontStyle.ITALIC);
+			versionLine.getElement().getStyle().setFontSize(85.0, Style.Unit.PCT);
+			versionLine.getElement().getStyle().setProperty("textAlign", "right");
+			tile.add(versionLine);
 			setWidget(fp);
 		}
 	}
@@ -124,6 +131,12 @@ public class CalonBar extends Composite {
 
 		linkbarPanel.add(getDivBar());
 
+		supportLink.setHref(SUPPORTLINK);
+		supportLink.setStyleName(CALONBARLINK);
+		linkbarPanel.add(supportLink);
+
+		linkbarPanel.add(getDivBar());
+
 		//aboutLink.setHref(ABOUT_PAGE);
 		aboutLink.setStyleName(CALONBARLINK);
 		aboutLink.addClickHandler(new ClickHandler() {
@@ -149,22 +162,22 @@ public class CalonBar extends Composite {
 
 		linkbarPanel.add(aboutLink);
 
-		linkbarPanel.add(getDivBar());
+//		linkbarPanel.add(getDivBar());
 
-		syncLink.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				Storage stockStore = Storage.getLocalStorageIfSupported();
-				if (stockStore != null) {
-					stockStore.removeItem("scaNameList");
-					stockStore.removeItem("scaNameUpdated");
-					Window.Location.assign("/");
-				}
-			}
-		});
-		syncLink.setStyleName(CALONBARLINK);
-		linkbarPanel.add(syncLink);
+//		syncLink.addClickHandler(new ClickHandler() {
+//
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				Storage stockStore = Storage.getLocalStorageIfSupported();
+//				if (stockStore != null) {
+//					stockStore.removeItem("scaNameList");
+//					stockStore.removeItem("scaNameUpdated");
+//					Window.Location.assign("/");
+//				}
+//			}
+//		});
+//		syncLink.setStyleName(CALONBARLINK);
+//		linkbarPanel.add(syncLink);
 
 		barPanel.add(linkbarPanel);
 

@@ -49,12 +49,22 @@ public class IndexPage implements EntryPoint {
 		titleImage.addStyleName("titleImage");
 		tilePanel.add(titleImage);
 		
-		Label titleLabel = new Label("Falcon");
+		Label titleLabel = new Label("FALCON");
 		titleLabel.setWordWrap(false);
-		titleLabel.setTitle("Fighter Authorization List Calontir Online (FALCON)");
+		titleLabel.setTitle("Fighter Authorization List Calontir ONline (FALCON)");
 		titleLabel.setStyleName("title");
 
+		Label betaLabel = new Label("beta");
+		betaLabel.setWordWrap(false);
+		betaLabel.getElement().getStyle().setColor("red");
+		betaLabel.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.TOP);
+		betaLabel.getElement().getStyle().setFontSize(50.0, Style.Unit.PCT);
+		betaLabel.getElement().getStyle().setDisplay(Style.Display.INLINE);
+
+
+
 		tilePanel.add(titleLabel);
+		tilePanel.add(betaLabel);
 
         LoginServiceAsync loginService = GWT.create(LoginService.class);
         loginService.login(GWT.getHostPageBaseURL() + "loggedin.jsp", new AsyncCallback<LoginInfo>() {
