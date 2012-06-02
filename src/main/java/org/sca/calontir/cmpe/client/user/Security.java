@@ -18,6 +18,12 @@ public class Security {
 	protected Security() {
 	}
 
+	public boolean isLoggedIn() {
+		if(loginInfo == null)
+			return false;
+		return loginInfo.isLoggedIn();
+	}
+
 	public LoginInfo getLoginInfo() {
 		return loginInfo;
 	}

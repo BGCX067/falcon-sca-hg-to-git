@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
@@ -16,6 +11,7 @@ import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 
 /**
+ * This widget places a navigation bar on the client.
  *
  * @author rikscarborough
  */
@@ -94,12 +90,6 @@ public class CalonBar extends Composite {
 		homeLink.setHref(INDEXHTML);
 		homeLink.setStyleName(CALONBARLINK);
 		homeLink.setTitle("Click here to return to the home page");
-//		homeLink.addClickHandler(new ClickHandler() {
-//
-//			@Override
-//			public void onClick(ClickEvent event) {
-//			}
-//		});
 		linkbarPanel.add(homeLink);
 
 		linkbarPanel.add(getDivBar());
@@ -137,7 +127,6 @@ public class CalonBar extends Composite {
 
 		linkbarPanel.add(getDivBar());
 
-		//aboutLink.setHref(ABOUT_PAGE);
 		aboutLink.setStyleName(CALONBARLINK);
 		aboutLink.addClickHandler(new ClickHandler() {
 
@@ -149,8 +138,8 @@ public class CalonBar extends Composite {
 
 					@Override
 					public void setPosition(int offsetWidth, int offsetHeight) {
-						int left = 50; //(Window.getClientWidth() - offsetWidth);
-						int top = 50; //(Window.getClientHeight() - offsetHeight) - 144;
+						int left = 50;
+						int top = 50;
 						ab.setPopupPosition(left, top);
 						ab.setWidth((offsetWidth - 100) + "px");
 						ab.addStyleName("aboutbox");
