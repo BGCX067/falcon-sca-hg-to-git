@@ -27,6 +27,7 @@ public class LookupController {
 	private List<AuthType> authTypes = null;
 	private List<ScaGroup> scaGroups = null;
 	private Map<Long, FighterInfo> fighterMap = null;
+	private Long dateSaved = null;
 	boolean dirty = false;
 
 	private LookupController() {
@@ -67,7 +68,14 @@ public class LookupController {
 				try {
 					JSONValue value = JSONParser.parseStrict(scaNameListStr);
 					JSONObject scaNameObjs = value.isObject();
+					JSONValue dateSavedVal = scaNameObjs.get("dateSaved");
+					JSONNumber dateSavedObj = null;
+					if(dateSavedVal != null)
+						dateSavedObj = dateSavedVal.isNumber();
 					JSONArray scaNameArray = scaNameObjs.get("scaNames").isArray();
+					if (dateSavedObj != null) {
+						dateSaved = new Double(dateSavedObj.doubleValue()).longValue();
+					}
 
 					for (int i = 0; i < scaNameArray.size(); ++i) {
 						JSONObject scaNameObj = scaNameArray.get(i).isObject();
@@ -134,6 +142,10 @@ public class LookupController {
 					scaNameObjs.set(i++, scaNameObj);
 				}
 
+				if (dateSaved != null) {
+					JSONNumber dateSavedObj = new JSONNumber(dateSaved);
+					scaNameList.put("dateSaved", dateSavedObj);
+				}
 				scaNameList.put("scaNames", scaNameObjs);
 				stockStore.removeItem("scaNameList");
 				stockStore.setItem("scaNameList", scaNameList.toString());
@@ -165,6 +177,7 @@ public class LookupController {
 						double d = saveDate.doubleValue();
 						long timeStamp = (new Double(d)).longValue();
 						stockStore.setItem("scaNameUpdated", Long.toString(timeStamp));
+						dateSaved = new Long(timeStamp);
 						Date saved = new Date(timeStamp);
 
 						getFighterList(null);
@@ -221,6 +234,7 @@ public class LookupController {
 			targetDate = null;
 		} else {
 			long timeStamp = Long.valueOf(timeStampStr);
+			//long threeDays = 86400000L * 3;
 			targetDate = new Date(timeStamp);
 		}
 

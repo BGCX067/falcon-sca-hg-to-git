@@ -4,9 +4,14 @@
  */
 package org.sca.calontir.cmpe.client.ui;
 
+import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
@@ -35,9 +40,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 	final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
 	final private Security security = SecurityFactory.getSecurity();
 
-	public FighterListBox(/*
-			 * CellTable<FighterInfo> table, ListDataProvider<FighterInfo> dataProvider
-			 */) {
+	public FighterListBox() {
 		Panel listBackground = new FlowPanel();
 		listBackground.getElement().setId("List-Box");
 		listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
@@ -51,6 +54,31 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(table);
 		table.addStyleName("header");
+
+		ButtonCell selectButton = new ButtonCell();
+		Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {
+
+			@Override
+			public void render(Context context, FighterInfo fighter, SafeHtmlBuilder sb) {
+				if (security.canView(fighter.getFighterId())) {
+					super.render(context, fighter, sb);
+				} else {
+					sb.append(new SafeHtml() {
+
+						@Override
+						public String asString() {
+							return "&nbsp;";
+						}
+					});
+				}
+			}
+
+			@Override
+			public String getValue(FighterInfo f) {
+				return "Select";
+			}
+		};
+		selectColumn.setSortable(false);
 
 		TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
 
@@ -80,6 +108,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		};
 		groupColumn.setSortable(false);
 
+		table.addColumn(selectColumn, "");
 		table.addColumn(scaNameColumn, "SCA Name");
 		table.addColumn(authorizationColumn, "Authorizations");
 		table.addColumn(groupColumn, "Group");
