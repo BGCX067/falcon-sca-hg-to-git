@@ -58,10 +58,26 @@ public class FighterDAO {
 
             if (fighters != null && fighters.size() > 0) {
                 retval = DataTransfer.convert(fighters.get(0));
-            }
+            } else {
+				retval = getByGoogleIdLowerCase(userId);
+			}
         }
         return retval;
     }
+
+	//TODO: if it returns a value, the record should be updated to reflect the correct address.
+    private org.sca.calontir.cmpe.dto.Fighter getByGoogleIdLowerCase(final String userId) {
+            final Query query = pm.newQuery(Fighter.class);
+            query.setFilter("googleId == googleIdParam");
+            query.declareParameters("String googleIdParam");
+            final List<Fighter> fighters = (List<Fighter>) query.execute(userId.toLowerCase());
+
+            if (fighters != null && fighters.size() > 0) {
+                return DataTransfer.convert(fighters.get(0));
+            }
+			return null;
+    }
+	
 
     public List<org.sca.calontir.cmpe.dto.Fighter> queryFightersByScaName(String scaName) {
         List<org.sca.calontir.cmpe.dto.Fighter> retArray = new ArrayList<org.sca.calontir.cmpe.dto.Fighter>();
