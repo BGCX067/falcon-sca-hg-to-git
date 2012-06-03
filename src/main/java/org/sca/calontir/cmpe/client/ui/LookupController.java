@@ -236,9 +236,15 @@ public class LookupController {
 		if (timeStampStr == null || timeStampStr.trim().isEmpty()) {
 			targetDate = null;
 		} else {
+			final long longDay = 86400000L;
 			long timeStamp = Long.valueOf(timeStampStr);
 			//long threeDays = 86400000L * 3;
-			targetDate = new Date(timeStamp);
+			long now = new Date().getTime();
+			if (now - longDay > timeStamp) {
+				targetDate = null;
+			} else {
+				targetDate = new Date(timeStamp);
+			}
 //			if (scaNameListStr != null) {
 //				JSONValue value = JSONParser.parseStrict(scaNameListStr);
 //				JSONObject scaNameObjs = value.isObject();
