@@ -70,8 +70,9 @@ public class LookupController {
 					JSONObject scaNameObjs = value.isObject();
 					JSONValue dateSavedVal = scaNameObjs.get("dateSaved");
 					JSONNumber dateSavedObj = null;
-					if(dateSavedVal != null)
+					if (dateSavedVal != null) {
 						dateSavedObj = dateSavedVal.isNumber();
+					}
 					JSONArray scaNameArray = scaNameObjs.get("scaNames").isArray();
 					if (dateSavedObj != null) {
 						dateSaved = new Double(dateSavedObj.doubleValue()).longValue();
