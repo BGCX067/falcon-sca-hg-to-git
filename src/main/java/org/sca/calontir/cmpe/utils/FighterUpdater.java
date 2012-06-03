@@ -102,7 +102,7 @@ public class FighterUpdater {
 
         String googleId = request.getParameter("googleId");
         if (StringUtils.isNotBlank(googleId)) {
-            fighter.setGoogleId(googleId);
+            fighter.setGoogleId(googleId.toLowerCase());
         }
 
         String userRole = request.getParameter("userRole");
