@@ -37,7 +37,7 @@ import org.sca.calontir.cmpe.dto.Fighter;
 public class FighterListBox extends Composite implements SearchEventHandler {
 
 	final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
-	final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
+	final private CellTable<FighterInfo> table = new CellTable<FighterInfo>(Integer.MAX_VALUE, CellTableResource.INSTANCE);
 	final private Security security = SecurityFactory.getSecurity();
 
 	public FighterListBox() {
@@ -53,7 +53,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(table);
-		table.addStyleName("header");
 
 		ButtonCell selectButton = new ButtonCell();
 		Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {

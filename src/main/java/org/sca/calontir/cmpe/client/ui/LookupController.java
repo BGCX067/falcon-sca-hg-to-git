@@ -70,8 +70,9 @@ public class LookupController {
 					JSONObject scaNameObjs = value.isObject();
 					JSONValue dateSavedVal = scaNameObjs.get("dateSaved");
 					JSONNumber dateSavedObj = null;
-					if(dateSavedVal != null)
+					if (dateSavedVal != null) {
 						dateSavedObj = dateSavedVal.isNumber();
+					}
 					JSONArray scaNameArray = scaNameObjs.get("scaNames").isArray();
 					if (dateSavedObj != null) {
 						dateSaved = new Double(dateSavedObj.doubleValue()).longValue();
@@ -226,8 +227,10 @@ public class LookupController {
 		Storage stockStore = Storage.getLocalStorageIfSupported();
 		int i = 0;
 		String timeStampStr = null;
+		String scaNameListStr = null;
 		if (stockStore != null) {
 			timeStampStr = stockStore.getItem("scaNameUpdated");
+			scaNameListStr = stockStore.getItem("scaNameList");
 		}
 		Date targetDate;
 		if (timeStampStr == null || timeStampStr.trim().isEmpty()) {
@@ -236,6 +239,20 @@ public class LookupController {
 			long timeStamp = Long.valueOf(timeStampStr);
 			//long threeDays = 86400000L * 3;
 			targetDate = new Date(timeStamp);
+//			if (scaNameListStr != null) {
+//				JSONValue value = JSONParser.parseStrict(scaNameListStr);
+//				JSONObject scaNameObjs = value.isObject();
+//				JSONValue dateSavedVal = scaNameObjs.get("dateSaved");
+//				JSONNumber dateSavedObj = null;
+//				if (dateSavedVal != null) {
+//					dateSavedObj = dateSavedVal.isNumber();
+//					dateSaved = new Double(dateSavedObj.doubleValue()).longValue();
+//					if (dateSaved > timeStamp) {
+//						Window.alert("timeStamp " + timeStamp + ": dateSaved " + dateSaved);
+//						targetDate = null;
+//					}
+//				}
+//			}
 		}
 
 		try {
