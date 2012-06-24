@@ -4,9 +4,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.sca.calontir.cmpe.dto.Authorization;
 import org.sca.calontir.cmpe.dto.Fighter;
 
@@ -23,13 +26,27 @@ public class MarshalUtils {
 		return isMinor(fighter.getDateOfBirth());
 	}
 
+	public static boolean isMinor(String fightersBirthDate) {
+		if (StringUtils.isBlank(fightersBirthDate)) {
+			return false;
+		}
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("MM/dd/yyyy");
+		DateTime dt = dtf.parseDateTime(fightersBirthDate);
+		DateMidnight birthday = new DateMidnight(dt);
+		return isMinor(birthday);
+	}
+
 	public static boolean isMinor(Date fightersBirthDate) {
+		DateMidnight birthday = new DateMidnight(fightersBirthDate);
+		return isMinor(birthday);
+	}
+
+	public static boolean isMinor(DateMidnight fightersBirthDate) {
 		if (fightersBirthDate == null) {
 			return false;
 		}
-		DateMidnight birthday = new DateMidnight(fightersBirthDate);
 		DateTime today = new DateTime();
-		Years age = Years.yearsBetween(birthday, today);
+		Years age = Years.yearsBetween(fightersBirthDate, today);
 		boolean retVal = false;
 		if (age.isLessThan(Years.years(18))) {
 			retVal = true;

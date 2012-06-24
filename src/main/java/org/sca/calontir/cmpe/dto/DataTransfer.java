@@ -5,6 +5,8 @@ import org.sca.calontir.cmpe.common.FighterStatus;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.db.TreatyDao;
@@ -24,7 +26,10 @@ public class DataTransfer {
 		fighter.setScaName(fighterDO.getScaName());
 		fighter.setScaMemberNo(fighterDO.getScaMemberNo());
 		fighter.setModernName(fighterDO.getModernName());
-		fighter.setDateOfBirth(fighterDO.getDateOfBirth());
+		if(fighterDO.getDateOfBirth() != null) {
+			String dt = new DateTime(fighterDO.getDateOfBirth().getTime()).toString("MM/dd/yyyy");
+			fighter.setDateOfBirth(dt);
+		} 
 		fighter.setGoogleId(fighterDO.getGoogleId());
 		if (fighterDO.getEmail() != null) {
 			List<Email> emails = new ArrayList<Email>();
@@ -157,7 +162,12 @@ public class DataTransfer {
 		fighterDO.setScaName(fighter.getScaName());
 		fighterDO.setScaMemberNo(fighter.getScaMemberNo());
 		fighterDO.setModernName(fighter.getModernName());
-		fighterDO.setDateOfBirth(fighter.getDateOfBirth());
+		if (StringUtils.isNotBlank(fighter.getDateOfBirth())) {
+			DateTime dt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(fighter.getDateOfBirth());
+			fighterDO.setDateOfBirth(dt.toDate());
+		} else {
+			fighterDO.setDateOfBirth(null);
+		}
 		fighterDO.setGoogleId(fighter.getGoogleId());
 		if (fighter.getEmail() != null) {
 			List<org.sca.calontir.cmpe.data.Email> emails = new ArrayList<org.sca.calontir.cmpe.data.Email>();

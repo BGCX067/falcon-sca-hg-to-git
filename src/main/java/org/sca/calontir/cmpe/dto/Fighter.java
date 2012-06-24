@@ -15,7 +15,7 @@ public class Fighter implements Serializable {
     private String scaName;
     private String scaMemberNo;
     private String modernName;
-    private Date dateOfBirth;
+    private String dateOfBirth;
     private String googleId;
     private List<Email> email;
     private List<Address> address;
@@ -43,11 +43,11 @@ public class Fighter implements Serializable {
         this.authorization = authorization;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

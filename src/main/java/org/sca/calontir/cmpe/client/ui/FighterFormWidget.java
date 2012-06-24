@@ -520,7 +520,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		formatter.setStyleName(4, 0, "label");
 		if (!edit) {
 			if (fighter.getDateOfBirth() != null) {
-				table.setText(4, 1, isMinor(fighter.getDateOfBirth()) ? "true" : "false");
+				Date d = DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getDateOfBirth());
+				table.setText(4, 1, isMinor(d) ? "true" : "false");
 			} else {
 				table.setText(4, 1, "false");
 			}
@@ -533,12 +534,10 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			final Flag ghost = new Flag();
 			dateOfBirth.getTextBox().getElement().setId("dateOfBirth");
 			dateOfBirth.getTextBox().setName("dateOfBirth");
-			dateOfBirth.setFormat(
-					new DateBox.DefaultFormat(
-					DateTimeFormat.getFormat("MM/dd/yyyy")));
+			dateOfBirth.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("MM/dd/yyyy")));
 			dateOfBirth.setStyleName("dateOfBirth");
 			if (fighter.getDateOfBirth() != null) {
-				dateOfBirth.setValue(fighter.getDateOfBirth());
+				dateOfBirth.setValue(DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getDateOfBirth()));
 			}
 			dateOfBirth.addValueChangeHandler(new ValueChangeHandler<Date>() {
 				@Override
@@ -547,7 +546,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					if (dateOfBirth.getTextBox().getValue().isEmpty()) {
 						fighter.setDateOfBirth(null);
 					} else {
-						fighter.setDateOfBirth(DateTimeFormat.getFormat("MM/dd/yyyy").parse(dateOfBirth.getTextBox().getValue()));
+						fighter.setDateOfBirth(dateOfBirth.getTextBox().getValue());
 					}
 //					dateOfBirth.getElement().getStyle().setColor("black");
 				}
@@ -583,8 +582,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			});
 			table.setWidget(5, 1, dateOfBirth);
 		} else if (fighter.getDateOfBirth() != null) {
-			table.setText(5, 1,
-					DateTimeFormat.getFormat("MM/dd/yyyy").format(fighter.getDateOfBirth()));
+			table.setText(5, 1, fighter.getDateOfBirth());
 		}
 		formatter.setStyleName(5, 0, "label");
 		formatter.setStyleName(5, 1, "data");
