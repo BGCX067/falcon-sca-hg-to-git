@@ -7,6 +7,6 @@ import java.io.Serializable;
  * @author rik
  */
 public enum FighterStatus  implements Serializable {
-    ACTIVE, SUSPENDED, INACTIVE
+    ACTIVE, SUSPENDED, INACTIVE, DELETED
     
 }
