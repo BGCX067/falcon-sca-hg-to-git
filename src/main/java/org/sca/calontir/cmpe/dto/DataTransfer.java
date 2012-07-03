@@ -393,6 +393,7 @@ public class DataTransfer {
 		}
 
 		fli.setMinor(MarshalUtils.isMinor(f.getDateOfBirth()));
+		fli.setStatus(FighterStatus.valueOf(f.getStatus()));
 		return fli;
 	}
 }

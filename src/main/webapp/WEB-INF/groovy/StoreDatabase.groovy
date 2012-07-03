@@ -31,6 +31,7 @@ fighters.each {
 		fmap.group = it.scaGroup.groupName
 	else
 		fmap.group = "Unknown or Out of Kingdom"
+	fmap.status = it.status
 	mapList << fmap
 }
 

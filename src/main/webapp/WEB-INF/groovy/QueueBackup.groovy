@@ -3,7 +3,7 @@
 //		method: 'GET', retryOptions: RetryOptions.Builder.withDefaults()
 
 defaultQueue << [
-	countdownMillis: 1000, url: "/BackupData.groovy",
+	countdownMillis: 1000, url: "http://adminb.calon-marshal-project-engine.appspot.com/BackupData.groovy",
 	taskName: "backup" + String.format('%tY%<tm%<td%<tH%<tM%<tS', new Date()),
 	method: 'GET',
 	retryOptions: [

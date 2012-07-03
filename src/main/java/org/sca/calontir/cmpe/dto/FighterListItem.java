@@ -1,6 +1,7 @@
 package org.sca.calontir.cmpe.dto;
 
 import java.io.Serializable;
+import org.sca.calontir.cmpe.common.FighterStatus;
 
 /**
  *
@@ -12,6 +13,7 @@ public class FighterListItem implements Serializable, Comparable<FighterListItem
     private String authorizations;
     private String group;
     private boolean minor;
+    private FighterStatus status = FighterStatus.ACTIVE;
 
     public String getAuthorizations() {
         return authorizations;
@@ -52,6 +54,14 @@ public class FighterListItem implements Serializable, Comparable<FighterListItem
     public void setScaName(String scaName) {
         this.scaName = scaName;
     }
+
+	public FighterStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(FighterStatus status) {
+		this.status = status;
+	}
 
     @Override
     public int compareTo(FighterListItem o) {
