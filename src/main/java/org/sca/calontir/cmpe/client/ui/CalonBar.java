@@ -19,7 +19,7 @@ public class CalonBar extends Composite {
 
 	protected static final String CALONBAR = "calonbar";
 	protected static final String INDEXHTML = "/";
-	protected static final String ABOUT_PAGE = "/about.jsp";
+	protected static final String LOGINLINK = "/login.jsp";
 	protected static final String CALONBARLINK = "calonbarlink";
 	protected static final String FEEDBACKLINK = "https://docs.google.com/spreadsheet/viewform?formkey=dExnMU0tMDE2UWZyVDY3TE1Ic3lfRHc6MQ#gid=0";
 	protected static final String SUPPORTLINK = "https://sites.google.com/site/calontirmmproject/support";
@@ -100,15 +100,7 @@ public class CalonBar extends Composite {
 		Security security = SecurityFactory.getSecurity();
 		loginInfo = security.getLoginInfo();
 		if (loginInfo.isLoggedIn()) {
-			Label nameLabel = new Label();
-			if (loginInfo.getScaName() == null) {
-				nameLabel.setText(loginInfo.getNickname());
-			} else {
-				nameLabel.setText(loginInfo.getScaName());
-			}
-			nameLabel.setStyleName(CALONBARLINK);
-			nameLabel.getElement().getStyle().setDisplay(Style.Display.INLINE);
-			linkbarPanel.add(nameLabel);
+			loadLogout();
 		} else {
 			loadLogin();
 		}
@@ -196,14 +188,17 @@ public class CalonBar extends Composite {
 	}
 
 	private void loadLogout() {
-		signOutLink.setHref(loginInfo.getLogoutUrl());
-		signOutLink.setStyleName(CALONBARLINK);
-		signOutLink.setTitle(SIGN_OUT_TEXT);
-		if (loginInfo.getScaName() == null) {
-			signOutLink.setText(loginInfo.getNickname());
-		} else {
-			signOutLink.setText(loginInfo.getScaName());
-		}
+		signInLink.setHref(LOGINLINK);
+		signOutLink.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Window.open("", "loginwindow", "width=940,height=400,status=1,resizeable=1,scrollbars=1");
+			}
+		});
+		signInLink.setTarget("loginwindow");
+		signInLink.setStyleName(CALONBARLINK);
+		signInLink.setTitle(SIGN_OUT_TEXT);
 		loginPanel.add(signOutLink);
 	}
 }
