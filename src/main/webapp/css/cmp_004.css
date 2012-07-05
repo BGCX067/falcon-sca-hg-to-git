@@ -334,3 +334,23 @@ table.wide-table {
     margin-left: 1.5em;
     margin-bottom: 1.5em;
 }
+
+.loplabel {
+   display: inline;
+}
+
+.loplink {
+}
+
+a.loplink:link, a.loplink:visited {
+    width: 5em;
+    color: #2D1155;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 100%;
+}
+
+a.loplink:hover, a.loplink:active {
+    text-decoration: underline;
+}

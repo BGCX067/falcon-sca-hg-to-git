@@ -194,7 +194,7 @@ public class CalonBar extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				String gLogoutUrl = loginInfo.getLogoutUrl();
-				Window.open(GWT.getHostPageBaseURL() + LOGOUTPAGE + "?logoutUrl=" + gLogoutUrl, "loginwindow", "width=940,height=400,status=1,resizeable=1,scrollbars=1");
+				Window.open(GWT.getHostPageBaseURL() + LOGOUTPAGE + "?logoutUrl=" + gLogoutUrl, "loginwindow", "width=940,height=400,location=no,status=1,resizeable=1,scrollbars=1");
 			}
 		});
 		signOutLink.setTarget("loginwindow");
