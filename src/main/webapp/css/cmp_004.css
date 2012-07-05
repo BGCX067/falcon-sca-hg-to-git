@@ -49,6 +49,12 @@ body {
 	padding: .25em;
 }
 
+.hello {
+	display: block;
+	text-align: left;
+    color:#2D1155;
+	margin: .25em;
+}
 
 .userbox {
     display: inline;
