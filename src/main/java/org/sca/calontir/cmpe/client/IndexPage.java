@@ -65,19 +65,29 @@ public class IndexPage implements EntryPoint {
 
 		tilePanel.add(titleLabel);
 		tilePanel.add(betaLabel);
-
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
-		loginService.login(GWT.getHostPageBaseURL() + "loggedin.jsp", new AsyncCallback<LoginInfo>() {
-
+		loginService.login(GWT.getHostPageBaseURL() + "loggedin.jsp", 
+				GWT.getHostPageBaseURL() + "loggedin.jsp?trgt=goodbye", 
+				new AsyncCallback<LoginInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
 				Window.alert("Error in contacting the server, try later");
 			}
 
 			@Override
-			public void onSuccess(LoginInfo result) {
-				LoginInfo loginInfo = result;
+			public void onSuccess(LoginInfo loginInfo) {
 				SecurityFactory.setLoginInfo(loginInfo);
+				if (security.isLoggedIn()) {
+					final Label hello;
+					if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
+						hello = new Label("Welcome " + loginInfo.getNickname());
+					} else {
+						hello = new Label("Welcome " + loginInfo.getScaName());
+					}
+					hello.setStyleName("hello", true);
+					tilePanel.add(hello);
+				}
+
 				buildIndexPage();
 			}
 		});

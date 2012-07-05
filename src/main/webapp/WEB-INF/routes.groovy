@@ -1,1 +1,2 @@
-post "/storeDatabase", forward: "/StoreDatabase.groovy"
+all "/storeDatabase", forward: "/StoreDatabase.groovy"
+all "/setupDev", forward: "/CreateTestDB.groovy"

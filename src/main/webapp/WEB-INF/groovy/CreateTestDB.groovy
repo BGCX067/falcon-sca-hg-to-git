@@ -90,8 +90,4 @@ fighter.lastUpdated = new Date();
 fighter.save()
 
 
-html.html {
-    body {
-        p "Done"
-    }
-}
+forward "/StoreDatabase.groovy"

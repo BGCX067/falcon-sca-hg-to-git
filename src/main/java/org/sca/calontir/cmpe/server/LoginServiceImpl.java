@@ -14,7 +14,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 	private static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
 	@Override
-    public LoginInfo login(String requestUri) {
+	public LoginInfo login(String loginTargetUri, String logoutTargetUri) {
         UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
         LoginInfo loginInfo = new LoginInfo();
@@ -23,7 +23,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
             loginInfo.setLoggedIn(true);
             loginInfo.setEmailAddress(user.getEmail());
             loginInfo.setNickname(user.getNickname());
-            loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
+            loginInfo.setLogoutUrl(userService.createLogoutURL(logoutTargetUri));
             FighterDAO fDao = new FighterDAO();
             Fighter f_ub = fDao.getFighterByGoogleId(user.getEmail()); // TODO: Change to only returning SCA Name, not entire object.
             if (f_ub != null) {
@@ -35,7 +35,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 			}
         } else {
             loginInfo.setLoggedIn(false);
-            loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
+            loginInfo.setLoginUrl(userService.createLoginURL(loginTargetUri));
         }
         return loginInfo;
     }

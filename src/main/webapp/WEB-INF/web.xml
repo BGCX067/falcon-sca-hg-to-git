@@ -83,9 +83,7 @@
     </filter>
     <filter-mapping>
         <filter-name>RoutesFilter</filter-name>
-        <url-pattern>/g/*</url-pattern>
-        <dispatcher>FORWARD</dispatcher>
-        <dispatcher>REQUEST</dispatcher>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
     
     <security-constraint>

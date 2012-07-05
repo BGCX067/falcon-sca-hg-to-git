@@ -1,5 +1,6 @@
 package org.sca.calontir.cmpe.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,7 +20,7 @@ public class CalonBar extends Composite {
 
 	protected static final String CALONBAR = "calonbar";
 	protected static final String INDEXHTML = "/";
-	protected static final String LOGINLINK = "/login.jsp";
+	protected static final String LOGOUTPAGE = "logout.jsp";
 	protected static final String CALONBARLINK = "calonbarlink";
 	protected static final String FEEDBACKLINK = "https://docs.google.com/spreadsheet/viewform?formkey=dExnMU0tMDE2UWZyVDY3TE1Ic3lfRHc6MQ#gid=0";
 	protected static final String SUPPORTLINK = "https://sites.google.com/site/calontirmmproject/support";
@@ -188,17 +189,17 @@ public class CalonBar extends Composite {
 	}
 
 	private void loadLogout() {
-		signInLink.setHref(LOGINLINK);
 		signOutLink.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.open("", "loginwindow", "width=940,height=400,status=1,resizeable=1,scrollbars=1");
+				String gLogoutUrl = loginInfo.getLogoutUrl();
+				Window.open(GWT.getHostPageBaseURL() + LOGOUTPAGE + "?logoutUrl=" + gLogoutUrl, "loginwindow", "width=940,height=400,status=1,resizeable=1,scrollbars=1");
 			}
 		});
-		signInLink.setTarget("loginwindow");
-		signInLink.setStyleName(CALONBARLINK);
-		signInLink.setTitle(SIGN_OUT_TEXT);
+		signOutLink.setTarget("loginwindow");
+		signOutLink.setStyleName(CALONBARLINK);
+		signOutLink.setTitle(SIGN_OUT_TEXT);
 		loginPanel.add(signOutLink);
 	}
 }

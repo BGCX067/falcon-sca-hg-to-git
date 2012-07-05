@@ -6,6 +6,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
  *
@@ -13,13 +14,19 @@ import com.google.gwt.user.client.Timer;
  */
 public class LoggedinPage implements EntryPoint {
 
-	public native void closeBrowser() /*-{ $wnd.close(); }-*/; 
+	public native void closeBrowser() /*-{ $wnd.close(); }-*/;
 	public native void reloadParent() /*-{ $wnd.opener.location.reload(); }-*/;
-
+	public native void parentToBye() /*-{ $wnd.opener.location = '/goodbye.jsp' }-*/;
 
 	@Override
 	public void onModuleLoad() {
-		reloadParent();
+		String target = Window.Location.getParameter("trgt");
+		if (target != null && target.equals("goodbye")) {
+			parentToBye();
+		} else {
+			reloadParent();
+		}
+
 		final Timer t = new Timer() {
 			@Override
 			public void run() {
@@ -28,6 +35,6 @@ public class LoggedinPage implements EntryPoint {
 		};
 
 		t.schedule(500);
-			
+
 	}
 }
