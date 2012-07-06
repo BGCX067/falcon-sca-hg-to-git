@@ -22,6 +22,7 @@ import org.sca.calontir.cmpe.dto.Fighter;
  * @author rikscarborough
  */
 public class SearchBar extends Composite implements DataUpdatedEventHandler {
+	private static final String SEARCH = "Search";
 
 	final private Security security = SecurityFactory.getSecurity();
 	private Button submit;
@@ -32,7 +33,7 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler {
 	public SearchBar() {
 		DOM.setElementAttribute(searchPanel.getElement(), "id", "searchBar");
 
-		submit = new Button("Lookup", new ClickHandler() {
+		submit = new Button(SEARCH, new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
