@@ -244,6 +244,15 @@ a.buttonLink:active, a.buttonLink:hover {
     vertical-align: top;
 }
 
+.signupPanel {
+	color: #2D1155;
+	font-family: Georgia, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", serif;
+}
+
+.gettingStarted {
+	text-align: right;
+}
+
 #fighterInfo {
     display: inline;
 }

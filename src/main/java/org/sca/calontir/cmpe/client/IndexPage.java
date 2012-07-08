@@ -23,7 +23,7 @@ import org.sca.calontir.cmpe.client.user.SecurityFactory;
  */
 public class IndexPage implements EntryPoint {
 
-	private Storage stockStore = null;
+	protected static final String GETTING_STARTED = "https://sites.google.com/site/calontirmmproject/support";
 	final private Security security = SecurityFactory.getSecurity();
 	private FighterFormWidget fighterFormWidget = new FighterFormWidget();
 	private FighterListBox flb = new FighterListBox();
@@ -124,12 +124,18 @@ public class IndexPage implements EntryPoint {
 
 		Panel innerSignupPanel = new FlowPanel();
 		innerSignupPanel.setStyleName("dataBody");
+		innerSignupPanel.setStyleName("signupPanel", true);
 
 		signupPanel.add(innerSignupPanel);
 
 		HTML p = new HTML();
 		p.setHTML("<a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ#gid=0\">Not registered? Sign up now!</a>");
 		innerSignupPanel.add(p);
+
+		Anchor gettingStarted = new Anchor("Getting Started>>");
+		gettingStarted.setHref(GETTING_STARTED);
+		gettingStarted.setStyleName("gettingStarted");
+		innerSignupPanel.add(gettingStarted);
 
 		if (!security.isLoggedIn()) {
 			HTML p2 = new HTML();

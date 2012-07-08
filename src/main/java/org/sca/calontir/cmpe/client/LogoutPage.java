@@ -26,17 +26,17 @@ public class LogoutPage implements EntryPoint {
 
 	protected static final String LOP_LINK = "loplink";
 	private static final String SIGN_OUT_OF__GOOGLE = "Sign out of Google";
-	private static final String SIGN_OUT_OF__FALCON = "Sign out of Falcon";
-	private static final String PRIVATE_COMPUTER_LABEL = " - Log out of the FALCON application (private computer)";
+	private static final String SIGN_OUT_OF__FALCON = "Clear local data";
+	private static final String PRIVATE_COMPUTER_LABEL = " - Remove the local data for the FALCON application (private computer)";
 	public static final String PUBLIC_COMPUTER_LABEL = " - Log out Google account (public or  shared computer)";
 	public static final String TITLE = "<h1>Click Log Out option below</h1>";
 	public static final String LOPLABEL = "loplabel";
 
 	public native void closeBrowser() /*-{ $wnd.close(); }-*/;
 
-	public native void reloadParent() /*-{ $wnd.opener.location.reload(); }-*/;
+	public native void reloadParent() /*-{ $wnd.opener.location.reload(true); }-*/;
 
-	public native void parentToBye() /*-{ $wnd.opener.location = '/goodbye.jsp' }-*/;
+	public native void parentToBye() /*-{ $wnd.opener.location.assign('/goodbye.jsp') }-*/;
 	protected static final String SIGN_OUT_TEXT = "This will log you out of your Google Account.";
 	private String logoutUrl;
 
