@@ -125,10 +125,9 @@ public class IndexPage implements EntryPoint {
 		innerSignupPanel.setStyleName("dataBody");
 		innerSignupPanel.setStyleName("signupPanel", true);
 
-		signupPanel.add(innerSignupPanel);
-
 		HTML p = new HTML();
 		p.setHTML("<a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ#gid=0\">Not registered? Sign up now!</a>");
+		p.getElement().getStyle().setDisplay(Style.Display.INLINE);
 		innerSignupPanel.add(p);
 
 		Anchor gettingStarted = new Anchor("Getting Started>>");
@@ -146,6 +145,8 @@ public class IndexPage implements EntryPoint {
 			innerSignupPanel.add(p2);
 			innerSignupPanel.add(form);
 		}
+
+		signupPanel.add(innerSignupPanel);
 
 		tilePanel.add(signupPanel);
 
