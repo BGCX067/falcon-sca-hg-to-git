@@ -11,3 +11,6 @@ After running the first time, or after a clean, access the pages (in order).
 http://localhost:8080/CreateTestDB.groovy
 http://localhost:8080/StoreDatabase.groovy
 http://localhost:8080/
+
+
+If you are having problems with the service freezing when loading the default page, load http://localhost:8080/RehydrateDatabase.groovy
