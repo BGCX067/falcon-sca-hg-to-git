@@ -195,7 +195,8 @@ public class CardMaker {
         PdfPCell cell;
 
         // Back of card
-        PdfPTable back = new PdfPTable(3);
+        PdfPTable back = new PdfPTable(3); 
+        back.setWidths(new float[]{1, 3, 1});  //the middle number controls the QR code size
         back.setTotalWidth(144);
         Paragraph p = new Paragraph();
         p.add(new Phrase("Kingdom Specific Authorizations\n", smallFont));
@@ -209,7 +210,7 @@ public class CardMaker {
         back.addCell(cell);
 
         PdfPTable middleTable = new PdfPTable(2);
-		middleTable.setWidths(new int[]{ 3, 2 });
+		middleTable.setWidths(new int[]{ 3, 2 }); 
 		
 		PdfPCell innerCell = new PdfPCell();
 		innerCell.setNoWrap(true);
@@ -241,7 +242,7 @@ public class CardMaker {
         }
 
 		innerCell = new PdfPCell();
-        BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 4, 4, null);
+        BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
         Image img = qrcode.getImage();
         img.setAlignment(Image.RIGHT);
 		innerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
@@ -254,7 +255,6 @@ public class CardMaker {
         cell = new PdfPCell(middleTable);
         cell.setBorder(Rectangle.TOP + Rectangle.BOTTOM);
         cell.setRotation(-90);
-        cell.setFixedHeight(250.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         back.addCell(cell);
@@ -263,7 +263,7 @@ public class CardMaker {
 		cell.setExtraParagraphSpace(1.5f);
         cell.setBorder(Rectangle.BOTTOM + Rectangle.TOP + Rectangle.RIGHT);
         cell.setRotation(-90);
-        cell.setFixedHeight(250.0f);
+        cell.setFixedHeight(50.0f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         back.addCell(cell);

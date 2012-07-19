@@ -433,16 +433,18 @@
 			version pointed to by ${gae.home} property (Typically, one used by
 			your Eclipse plug-in)
 		-->
+	
         <kindleit.version>1.5.5</kindleit.version>
         <gae.version>1.7.0</gae.version>
-
     <!-- GWT version -->
         <gwt.version>2.4.0</gwt.version>
         
         <gaelyk.version>1.2</gaelyk.version>
 		<!--
 			Upload to http://test.latest.<applicationName>.appspot.com by default
+            
 		-->
+
         <appengine.sdk.root>
             ${user.home}/.m2/repository/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}
         </appengine.sdk.root>
