@@ -21,6 +21,7 @@ public class CardMaker {
     private static Font largFont = new Font(Font.FontFamily.TIMES_ROMAN, 18f, Font.NORMAL);
     private static Font medFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.NORMAL);
     private static Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 12f, Font.NORMAL);
+    private static Font smallNormalFont = new Font(Font.FontFamily.TIMES_ROMAN, 10f, Font.NORMAL);
     private static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 8f, Font.NORMAL);
     private static Font smallerFont = new Font(Font.FontFamily.TIMES_ROMAN, 6f, Font.NORMAL);
 	private DateTime startDate;
@@ -213,20 +214,20 @@ public class CardMaker {
 		middleTable.setWidths(new int[]{ 3, 2 }); 
 		
 		PdfPCell innerCell = new PdfPCell();
-		innerCell.setNoWrap(true);
+		innerCell.setNoWrap(false);   //true
 		innerCell.setVerticalAlignment(Element.ALIGN_TOP);
 
         p = new Paragraph();
         if (StringUtils.isBlank(fighter.getScaName())) {
-            p.add(new Phrase("SCA Name: _________________________\n", smallFont));
+            p.add(new Phrase("\nSCA Name: _________________________\n", smallNormalFont));
         } else {
-            p.add(new Phrase(String.format("SCA Name: %s\n", fighter.getScaName()), smallFont));
+            p.add(new Phrase(String.format("\nSCA Name: %s\n", fighter.getScaName()), smallNormalFont));
         }
-        p.add(new Phrase(String.format("Modern Name: %s\n", fighter.getModernName()), smallFont));
+        p.add(new Phrase(String.format("Modern Name: %s\n", fighter.getModernName()), smallNormalFont));
         if(MarshalUtils.isMinor(fighter)) {
-            p.add(new Phrase(String.format("Group: %s  Minor X\n", fighter.getScaGroup().getGroupName()), smallFont));
+            p.add(new Phrase(String.format("Group: %s  Minor X\n", fighter.getScaGroup().getGroupName()), smallNormalFont));
         } else {
-            p.add(new Phrase(String.format("Group: %s\n", fighter.getScaGroup().getGroupName()), smallFont));
+            p.add(new Phrase(String.format("Group: %s\n", fighter.getScaGroup().getGroupName()), smallNormalFont));
         }
 		innerCell.setPhrase(p);
 		innerCell.setBorder(Rectangle.NO_BORDER);
