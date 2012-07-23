@@ -69,6 +69,7 @@ public class CalonBar extends Composite {
 			tile.add(new HTML("<li>Sir Hans Krieger, Programming Consultant."));
 			tile.add(new HTML("<li>Her Ladyship Kalisa Martel, Marshalatte Consultant."));
 			tile.add(new HTML("<li>His Lordship Aiden O'Seaghdma, Graphic Arts and Design of the fighter card imagery."));
+			tile.add(new HTML("<li>His Lordship Mathieu Chartrain, Programer"));
 			tile.add(new HTML("<li>Mistress Olga Belobashnia Cherepanova, Contributing artist.  Provider of the Falcon logo."));
 			tile.add(new HTML("<li>The CSS Styling for the page is based on the design created by Her Ladyship Sung Sai-êrh for the Calontir website."));
 			tile.add(new HTML("</ol>"));
