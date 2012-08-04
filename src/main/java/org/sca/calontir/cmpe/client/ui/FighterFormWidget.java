@@ -82,6 +82,51 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		initWidget(overallPanel);
 	}
 
+	@Override
+	public void buildView() {
+		buildInfoView();
+
+		buildAuthView();
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm);
+	}
+
+	@Override
+	public void buildAdd() {
+		fighterIdBoxPanel.clear();
+
+		final Hidden fighterId = new Hidden("fighterId");
+		fighterId.setValue("0");
+		fighterIdBoxPanel.add(fighterId);
+
+		mode.setValue("add");
+		fighterIdBoxPanel.add(mode);
+
+		fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
+
+		final TextBox scaNameTextBox = new TextBox();
+		scaNameTextBox.setName("scaName");
+		scaNameTextBox.setVisibleLength(25);
+		scaNameTextBox.setStyleName("scaName");
+		scaNameTextBox.setValue(fighter.getScaName());
+		scaNameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				//validate
+				fighter.setScaName(event.getValue());
+			}
+		});
+		fighterIdBoxPanel.add(scaNameTextBox);
+
+		buildInfoPanel(DisplayMode.add);
+		buildAuthEdit(false);
+
+		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+			buildNotePanel(true);
+		}
+
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm);
+	}
+
 	public void setForm(FormPanel form) {
 		this.form = form;
 	}
@@ -246,14 +291,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 	}
 
-	@Override
-	public void buildView() {
-		buildInfoView();
-
-		buildAuthView();
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm);
-	}
-
 	private void buildInfoPanel(DisplayMode dMode) {
 		infoPanel.clear();
 
@@ -297,9 +334,69 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 		FlexTable table = new FlexTable();
 		FlexTable.FlexCellFormatter formatter = table.getFlexCellFormatter();
+
 		table.setStyleName("wide-table");
 		table.setText(0, 0, "Modern Name:");
-		//if (dMode == DisplayMode.view) {
+		table.setWidget(0, 1, modernName(edit));
+		table.setWidget(0, 2, status(edit));
+		formatter.setStyleName(0, 0, "label");
+		formatter.setStyleName(0, 1, "data");
+		formatter.setStyleName(0, 2, "rightCol");
+
+		table.setText(1, 0, "Address:");
+		table.setWidget(1, 1, address(edit));
+		formatter.setStyleName(1, 0, "label");
+		formatter.setStyleName(1, 1, "data");
+
+		table.setWidget(1, 2, treaty(edit));
+		formatter.setStyleName(1, 2, "rightCol");
+		formatter.setVerticalAlignment(1, 2, HasVerticalAlignment.ALIGN_TOP);
+
+		table.setText(2, 0, "SCA Membership:");
+		table.setWidget(2, 1, scaMemberNo(edit));
+		formatter.setStyleName(2, 0, "label");
+		formatter.setStyleName(2, 1, "data");
+
+		table.setText(3, 0, "Group:");
+		table.setWidget(3, 1, group(edit, dMode));
+		formatter.setStyleName(3, 0, "label");
+		formatter.setStyleName(3, 1, "data");
+
+		table.setText(4, 0, "Minor:");
+		table.setWidget(4, 1, minor(edit));
+		formatter.setStyleName(4, 0, "label");
+		formatter.setStyleName(4, 1, "data");
+
+		table.setText(5, 0, "DOB:");
+		table.setWidget(5, 1, dateOfBirth(edit));
+		formatter.setStyleName(5, 0, "label");
+		formatter.setStyleName(5, 1, "data");
+
+		table.setWidget(6, 0, new Label("Phone Number:"));
+		table.setWidget(6, 1, phoneNumber(edit));
+		formatter.setStyleName(6, 0, "label");
+		formatter.setStyleName(6, 1, "data");
+
+		table.setText(7, 0, "Email Address:");
+		table.setWidget(7, 1, emailAddress(edit));
+		formatter.setStyleName(7, 0, "label");
+		formatter.setStyleName(7, 1, "data");
+
+		fighterInfo.add(table);
+
+		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) { // or user admin
+			fighterInfo.add(adminInfo(edit));
+		}
+
+		infoPanel.add(dataBody);
+
+		if (dMode == DisplayMode.add) {
+			SubmitButton addFighter = new SubmitButton("Add Fighter");
+			infoPanel.add(addFighter);
+		}
+	}
+
+	private Widget modernName(boolean edit) {
 		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
 			final TextBox modernName = new TextBox();
 			modernName.setName("modernName");
@@ -313,11 +410,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					fighter.setModernName(modernName.getValue());
 				}
 			});
-			table.setWidget(0, 1, modernName);
+			return modernName;
 		} else {
-			table.setText(0, 1, fighter.getModernName());
+			return new Label(fighter.getModernName());
 		}
+	}
 
+	private Widget status(boolean edit) {
 		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
 			final ListBox status = new ListBox();
 			status.setName("fighterStatus");
@@ -337,110 +436,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					fighter.setStatus(FighterStatus.valueOf(status.getValue(status.getSelectedIndex())));
 				}
 			});
-			table.setWidget(0, 2, status);
+			return status;
 		} else {
-			table.setText(0, 2, fighter.getStatus().toString());
+			return new Label(fighter.getStatus().toString());
 		}
-		formatter.setStyleName(0, 0, "label");
-		formatter.setStyleName(0, 1, "data");
-		formatter.setStyleName(0, 2, "rightCol");
+	}
 
-		table.setText(1, 0, "Address:");
-		final Address address;
-		if (fighter.getAddress() != null && !fighter.getAddress().isEmpty()) {
-			address = fighter.getAddress().get(0);
-		} else {
-			address = new Address();
-			List<Address> addresses = new ArrayList<Address>();
-			addresses.add(address);
-			fighter.setAddress(addresses);
-		}
-		if (edit) {
-			final FlexTable addressTable = new FlexTable();
-			addressTable.setText(0, 0, "Street:");
-			final TextBox address1 = new TextBox();
-			address1.setName("address1");
-			address1.setValue(address.getAddress1());
-			address1.setVisibleLength(60);
-			address1.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setAddress1(address1.getValue());
-				}
-			});
-			addressTable.setWidget(0, 1, address1);
-
-			addressTable.setText(1, 0, "Line 2:");
-			final TextBox address2 = new TextBox();
-			address2.setName("address2");
-			address2.setValue(address.getAddress2());
-			address2.setVisibleLength(60);
-			address2.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setAddress2(address2.getValue());
-				}
-			});
-			addressTable.setWidget(1, 1, address2);
-
-			addressTable.setText(2, 0, "City:");
-			final TextBox city = new TextBox();
-			city.setName("city");
-			city.setValue(address.getCity());
-			city.setVisibleLength(30);
-			city.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setCity(city.getValue());
-				}
-			});
-			addressTable.setWidget(2, 1, city);
-
-			addressTable.setText(3, 0, "State:");
-			final TextBox state = new TextBox();
-			state.setName("state");
-			state.setValue(address.getState());
-			state.setVisibleLength(20);
-			state.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setState(state.getValue());
-				}
-			});
-			addressTable.setWidget(3, 1, state);
-
-			addressTable.setText(4, 0, "Postal Code:");
-			final TextBox postalCode = new TextBox();
-			postalCode.setName("postalCode");
-			postalCode.setValue(address.getPostalCode());
-			postalCode.setVisibleLength(30);
-			postalCode.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setPostalCode(postalCode.getValue());
-				}
-			});
-			addressTable.setWidget(4, 1, postalCode);
-
-			table.setWidget(1, 1, addressTable);
-		} else {
-			StringBuilder sb = new StringBuilder();
-			sb.append(address.getAddress1());
-			if (address.getAddress2() != null && !address.getAddress2().isEmpty()) {
-				sb.append(", ");
-				sb.append(address.getAddress2());
-			}
-			sb.append(", ");
-			sb.append(address.getCity());
-			sb.append(", ");
-			sb.append(address.getState());
-			sb.append("&nbsp;&nbsp;");
-			sb.append(address.getPostalCode());
-			table.setHTML(1, 1, sb.toString());
-		}
-		formatter.setStyleName(1, 0, "label");
-		formatter.setStyleName(1, 1, "data");
-
+	private Widget treaty(boolean edit) {
 		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
 			final CheckBox treaty = new CheckBox("Treaty");
 			treaty.setName("treaty");
@@ -455,21 +457,16 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					fighter.setTreaty(t);
 				}
 			});
-			table.setWidget(1, 2, treaty);
+			return treaty;
 		} else {
 			if (fighter.getTreaty() != null) {
-				table.setWidget(1, 2, new Label("Treaty"));
+				return new Label("Treaty");
 			}
 		}
-		formatter.setStyleName(1, 2, "rightCol");
-		formatter.setVerticalAlignment(1, 2, HasVerticalAlignment.ALIGN_TOP);
+		return new Label("");
+	}
 
-		table.setText(2, 0, "SCA Membership:");
-		table.setWidget(2, 1, scaMemberNo(edit));
-		formatter.setStyleName(2, 0, "label");
-		formatter.setStyleName(2, 1, "data");
-
-		table.setText(3, 0, "Group:");
+	private Widget group(boolean edit, DisplayMode dMode) {
 		if (edit) {
 			final ListBox group = new ListBox();
 			group.setName("scaGroup");
@@ -499,27 +496,26 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					}
 				}
 			});
-			table.setWidget(3, 1, group);
+			return group;
 		} else {
-			table.setText(3, 1,
-					fighter.getScaGroup() == null ? "" : fighter.getScaGroup().getGroupName());
+			return new Label(fighter.getScaGroup() == null ? "" : fighter.getScaGroup().getGroupName());
 		}
-		formatter.setStyleName(3, 0, "label");
-		formatter.setStyleName(3, 1, "data");
+	}
 
-		table.setText(4, 0, "Minor:");
-		formatter.setStyleName(4, 0, "label");
+	private Widget minor(boolean edit) {
 		if (!edit) {
 			if (fighter.getDateOfBirth() != null) {
 				Date d = DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getDateOfBirth());
-				table.setText(4, 1, isMinor(d) ? "true" : "false");
+				return new Label(isMinor(d) ? "true" : "false");
 			} else {
-				table.setText(4, 1, "false");
+				return new Label("false");
 			}
-			formatter.setStyleName(4, 1, "data");
 		}
 
-		table.setText(5, 0, "DOB:");
+		return new Label("");
+	}
+
+	private Widget dateOfBirth(boolean edit) {
 		if (edit) {
 			final DateBox dateOfBirth = new DateBox();
 			final Flag ghost = new Flag();
@@ -571,14 +567,14 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					//dateOfBirth.setValue(fighter.getDateOfBirth());
 				}
 			});
-			table.setWidget(5, 1, dateOfBirth);
+			return dateOfBirth;
 		} else if (fighter.getDateOfBirth() != null) {
-			table.setWidget(5, 1, new Label(fighter.getDateOfBirth()));
+			return new Label(fighter.getDateOfBirth());
 		}
-		formatter.setStyleName(5, 0, "label");
-		formatter.setStyleName(5, 1, "data");
+		return new Label("");
+	}
 
-		table.setWidget(6, 0, new Label("Phone Number:"));
+	private Widget phoneNumber(boolean edit) {
 		if (edit) {
 			final TextBox phoneNumber = new TextBox();
 			phoneNumber.setName("phoneNumber");
@@ -601,16 +597,17 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					}
 				}
 			});
-			table.setWidget(6, 1, phoneNumber);
+			return phoneNumber;
 		} else {
 			if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
-				table.setText(6, 1, fighter.getPhone().get(0).getPhoneNumber());
+				return new Label(fighter.getPhone().get(0).getPhoneNumber());
 			}
+			return new Label("");
 		}
-		formatter.setStyleName(6, 0, "label");
-		formatter.setStyleName(6, 1, "data");
 
-		table.setText(7, 0, "Email Address:");
+	}
+
+	private Widget emailAddress(boolean edit) {
 		if (edit) {
 			final TextBox email = new TextBox();
 			email.setName("email");
@@ -633,86 +630,175 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					}
 				}
 			});
-			table.setWidget(7, 1, email);
+			return email;
 		} else {
 			if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
-				table.setWidget(7, 1, new Label(fighter.getEmail().get(0).getEmailAddress()));
+				return new Label(fighter.getEmail().get(0).getEmailAddress());
+			}
+			return new Label("");
+		}
+	}
+
+	private Panel adminInfo(boolean edit) {
+		Panel adminInfo = new FlowPanel();
+		DOM.setElementAttribute(adminInfo.getElement(), "id", "adminInfo");
+
+		FlexTable adminTable = new FlexTable();
+		FlexTable.FlexCellFormatter adminFormatter = adminTable.getFlexCellFormatter();
+
+		adminTable.setText(0, 0, "Google ID:");
+		if (edit) {
+			final TextBox googleId = new TextBox();
+			googleId.setName("googleId");
+			googleId.setVisibleLength(25);
+			googleId.setStyleName("googleId");
+			googleId.setValue(fighter.getGoogleId());
+			googleId.addValueChangeHandler(new ValueChangeHandler<String>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					fighter.setGoogleId(googleId.getValue());
+				}
+			});
+			adminTable.setWidget(0, 1, googleId);
+		} else {
+			adminTable.setText(0, 1, fighter.getGoogleId());
+		}
+		adminFormatter.setStyleName(0, 0, "label");
+		adminFormatter.setStyleName(0, 1, "data");
+
+		adminTable.setText(1, 0, "User Role:");
+		if (edit) {
+			final ListBox userRole = new ListBox();
+			userRole.setName("userRole");
+			for (UserRoles ur : UserRoles.values()) {
+				userRole.addItem(ur.toString(), ur.toString());
+			}
+
+			if (fighter.getRole() != null) {
+				for (int i = 0; i < userRole.getItemCount(); ++i) {
+					if (userRole.getValue(i).equals(fighter.getRole().toString())) {
+						userRole.setSelectedIndex(i);
+						break;
+					}
+				}
+			}
+			userRole.addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent event) {
+					fighter.setRole(UserRoles.valueOf(userRole.getValue(userRole.getSelectedIndex())));
+				}
+			});
+			adminTable.setWidget(1, 1, userRole);
+		} else {
+			if (fighter.getRole() != null) {
+				adminTable.setText(1, 1, fighter.getRole().toString());
 			}
 		}
-		formatter.setStyleName(7, 0, "label");
-		formatter.setStyleName(7, 1, "data");
+		adminFormatter.setStyleName(1, 0, "label");
+		adminFormatter.setStyleName(1, 1, "data");
 
-		fighterInfo.add(table);
+		adminInfo.add(adminTable);
 
-		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) { // or user admin
-			Panel adminInfo = new FlowPanel();
-			adminInfo.getElement().setId("fighterInfo");
-			DOM.setElementAttribute(adminInfo.getElement(), "id", "adminInfo");
-			fighterInfo.add(adminInfo);
+		return adminInfo;
+	}
 
-			FlexTable adminTable = new FlexTable();
-			FlexTable.FlexCellFormatter adminFormatter = adminTable.getFlexCellFormatter();
-
-			adminTable.setText(0, 0, "Google ID:");
-			if (edit) {
-				final TextBox googleId = new TextBox();
-				googleId.setName("googleId");
-				googleId.setVisibleLength(25);
-				googleId.setStyleName("googleId");
-				googleId.setValue(fighter.getGoogleId());
-				googleId.addValueChangeHandler(new ValueChangeHandler<String>() {
-					@Override
-					public void onValueChange(ValueChangeEvent<String> event) {
-						fighter.setGoogleId(googleId.getValue());
-					}
-				});
-				adminTable.setWidget(0, 1, googleId);
-			} else {
-				adminTable.setText(0, 1, fighter.getGoogleId());
-			}
-			adminFormatter.setStyleName(0, 0, "label");
-			adminFormatter.setStyleName(0, 1, "data");
-
-			adminTable.setText(1, 0, "User Role:");
-			if (edit) {
-				final ListBox userRole = new ListBox();
-				userRole.setName("userRole");
-				for (UserRoles ur : UserRoles.values()) {
-					userRole.addItem(ur.toString(), ur.toString());
-				}
-
-				if (fighter.getRole() != null) {
-					for (int i = 0; i < userRole.getItemCount(); ++i) {
-						if (userRole.getValue(i).equals(fighter.getRole().toString())) {
-							userRole.setSelectedIndex(i);
-							break;
-						}
-					}
-				}
-				userRole.addChangeHandler(new ChangeHandler() {
-					@Override
-					public void onChange(ChangeEvent event) {
-						fighter.setRole(UserRoles.valueOf(userRole.getValue(userRole.getSelectedIndex())));
-					}
-				});
-				adminTable.setWidget(1, 1, userRole);
-			} else {
-				if (fighter.getRole() != null) {
-					adminTable.setText(1, 1, fighter.getRole().toString());
-				}
-			}
-			adminFormatter.setStyleName(1, 0, "label");
-			adminFormatter.setStyleName(1, 1, "data");
-
-			adminInfo.add(adminTable);
-
+	private Widget address(boolean edit) {
+		final Address address;
+		if (fighter.getAddress() != null && !fighter.getAddress().isEmpty()) {
+			address = fighter.getAddress().get(0);
+		} else {
+			address = new Address();
+			List<Address> addresses = new ArrayList<Address>();
+			addresses.add(address);
+			fighter.setAddress(addresses);
 		}
+		if (edit) {
+			final FlexTable addressTable = new FlexTable();
+			addressTable.setText(0, 0, "Street:");
+			final TextBox address1 = new TextBox();
+			address1.setName("address1");
+			address1.setValue(address.getAddress1());
+			address1.setVisibleLength(60);
+			address1.addValueChangeHandler(new ValueChangeHandler<String>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setAddress1(address1.getValue());
+					fighter.getAddress().get(0).setAddress1(address1.getValue());
+				}
+			});
+			addressTable.setWidget(0, 1, address1);
 
-		infoPanel.add(dataBody);
+			addressTable.setText(1, 0, "Line 2:");
+			final TextBox address2 = new TextBox();
+			address2.setName("address2");
+			address2.setValue(address.getAddress2());
+			address2.setVisibleLength(60);
+			address2.addValueChangeHandler(new ValueChangeHandler<String>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setAddress2(address2.getValue());
+					fighter.getAddress().get(0).setAddress2(address2.getValue());
+				}
+			});
+			addressTable.setWidget(1, 1, address2);
 
-		if (dMode == DisplayMode.add) {
-			SubmitButton addFighter = new SubmitButton("Add Fighter");
-			infoPanel.add(addFighter);
+			addressTable.setText(2, 0, "City:");
+			final TextBox city = new TextBox();
+			city.setName("city");
+			city.setValue(address.getCity());
+			city.setVisibleLength(30);
+			city.addValueChangeHandler(new ValueChangeHandler<String>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setCity(city.getValue());
+					fighter.getAddress().get(0).setCity(city.getValue());
+				}
+			});
+			addressTable.setWidget(2, 1, city);
+
+			addressTable.setText(3, 0, "State:");
+			final TextBox state = new TextBox();
+			state.setName("state");
+			state.setValue(address.getState());
+			state.setVisibleLength(20);
+			state.addValueChangeHandler(new ValueChangeHandler<String>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setState(state.getValue());
+					fighter.getAddress().get(0).setState(state.getValue());
+				}
+			});
+			addressTable.setWidget(3, 1, state);
+
+			addressTable.setText(4, 0, "Postal Code:");
+			final TextBox postalCode = new TextBox();
+			postalCode.setName("postalCode");
+			postalCode.setValue(address.getPostalCode());
+			postalCode.setVisibleLength(30);
+			postalCode.addValueChangeHandler(new ValueChangeHandler<String>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					address.setPostalCode(postalCode.getValue());
+					fighter.getAddress().get(0).setPostalCode(postalCode.getValue());
+				}
+			});
+			addressTable.setWidget(4, 1, postalCode);
+
+			return addressTable;
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append(address.getAddress1());
+			if (address.getAddress2() != null && !address.getAddress2().isEmpty()) {
+				sb.append(", ");
+				sb.append(address.getAddress2());
+			}
+			sb.append(", ");
+			sb.append(address.getCity());
+			sb.append(", ");
+			sb.append(address.getState());
+			sb.append("  ");
+			sb.append(address.getPostalCode());
+			return new Label(sb.toString());
 		}
 	}
 
@@ -777,43 +863,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			dataBody.add(noteTa);
 			notePanel.add(dataBody);
 		}
-	}
-
-	@Override
-	public void buildAdd() {
-		fighterIdBoxPanel.clear();
-
-		final Hidden fighterId = new Hidden("fighterId");
-		fighterId.setValue("0");
-		fighterIdBoxPanel.add(fighterId);
-
-		mode.setValue("add");
-		fighterIdBoxPanel.add(mode);
-
-		fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
-
-		final TextBox scaNameTextBox = new TextBox();
-		scaNameTextBox.setName("scaName");
-		scaNameTextBox.setVisibleLength(25);
-		scaNameTextBox.setStyleName("scaName");
-		scaNameTextBox.setValue(fighter.getScaName());
-		scaNameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				//validate
-				fighter.setScaName(event.getValue());
-			}
-		});
-		fighterIdBoxPanel.add(scaNameTextBox);
-
-		buildInfoPanel(DisplayMode.add);
-		buildAuthEdit(false);
-
-		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			buildNotePanel(true);
-		}
-
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm);
 	}
 
 	@Override

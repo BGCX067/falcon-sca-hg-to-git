@@ -1,5 +1,6 @@
 package org.sca.calontir.cmpe.client.ui;
 
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -33,6 +34,12 @@ public class Shout extends PopupPanel {
 				setWidth((offsetWidth - 100) + "px");
 			}
 		});
+		final Timer t = new Timer() {
+			@Override
+			public void run() {
+				hide();
+			}
+		};
+		t.schedule(5000);
 	}
-
 }
