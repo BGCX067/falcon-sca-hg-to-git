@@ -15,6 +15,8 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.datepicker.client.DateBox;
 import java.util.*;
+import java.util.logging.Logger;
+import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.user.Security;
@@ -31,6 +33,7 @@ import org.sca.calontir.cmpe.dto.*;
  */
 public class FighterFormWidget extends Composite implements EditViewHandler, FormPanel.SubmitHandler, FormPanel.SubmitCompleteHandler {
 
+	private static final Logger log = Logger.getLogger(FighterFormWidget.class.getName());
 	final private Security security = SecurityFactory.getSecurity();
 	private Panel overallPanel = new FlowPanel();
 	private Panel fighterIdBoxPanel = new FlowPanel();
@@ -240,6 +243,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
 			buildNotePanel(false);
 		}
+
 	}
 
 	@Override
@@ -247,6 +251,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		buildInfoView();
 
 		buildAuthView();
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm);
 	}
 
 	private void buildInfoPanel(DisplayMode dMode) {
@@ -453,28 +458,14 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			table.setWidget(1, 2, treaty);
 		} else {
 			if (fighter.getTreaty() != null) {
-				table.setText(1, 2, "Treaty");
+				table.setWidget(1, 2, new Label("Treaty"));
 			}
 		}
 		formatter.setStyleName(1, 2, "rightCol");
 		formatter.setVerticalAlignment(1, 2, HasVerticalAlignment.ALIGN_TOP);
+
 		table.setText(2, 0, "SCA Membership:");
-		if (edit) {
-			final TextBox scaMemberNo = new TextBox();
-			scaMemberNo.setName("scaMemberNo");
-			scaMemberNo.setVisibleLength(20);
-			scaMemberNo.setStyleName("scaMemberNo");
-			scaMemberNo.setValue(fighter.getScaMemberNo());
-			scaMemberNo.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					fighter.setScaMemberNo(scaMemberNo.getValue());
-				}
-			});
-			table.setWidget(2, 1, scaMemberNo);
-		} else {
-			table.setText(2, 1, fighter.getScaMemberNo());
-		}
+		table.setWidget(2, 1, scaMemberNo(edit));
 		formatter.setStyleName(2, 0, "label");
 		formatter.setStyleName(2, 1, "data");
 
@@ -582,12 +573,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			});
 			table.setWidget(5, 1, dateOfBirth);
 		} else if (fighter.getDateOfBirth() != null) {
-			table.setText(5, 1, fighter.getDateOfBirth());
+			table.setWidget(5, 1, new Label(fighter.getDateOfBirth()));
 		}
 		formatter.setStyleName(5, 0, "label");
 		formatter.setStyleName(5, 1, "data");
 
-		table.setText(6, 0, "Phone Number:");
+		table.setWidget(6, 0, new Label("Phone Number:"));
 		if (edit) {
 			final TextBox phoneNumber = new TextBox();
 			phoneNumber.setName("phoneNumber");
@@ -645,7 +636,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			table.setWidget(7, 1, email);
 		} else {
 			if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
-				table.setText(7, 1, fighter.getEmail().get(0).getEmailAddress());
+				table.setWidget(7, 1, new Label(fighter.getEmail().get(0).getEmailAddress()));
 			}
 		}
 		formatter.setStyleName(7, 0, "label");
@@ -722,6 +713,25 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		if (dMode == DisplayMode.add) {
 			SubmitButton addFighter = new SubmitButton("Add Fighter");
 			infoPanel.add(addFighter);
+		}
+	}
+
+	private Widget scaMemberNo(boolean edit) {
+		if (edit) {
+			final TextBox scaMemberNo = new TextBox();
+			scaMemberNo.setName("scaMemberNo");
+			scaMemberNo.setVisibleLength(20);
+			scaMemberNo.setStyleName("scaMemberNo");
+			scaMemberNo.setValue(fighter.getScaMemberNo());
+			scaMemberNo.addValueChangeHandler(new ValueChangeHandler<String>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					fighter.setScaMemberNo(scaMemberNo.getValue());
+				}
+			});
+			return scaMemberNo;
+		} else {
+			return new Label(fighter.getScaMemberNo());
 		}
 	}
 
@@ -802,6 +812,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
 			buildNotePanel(true);
 		}
+
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm);
 	}
 
 	@Override

@@ -69,9 +69,6 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
-					DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.NONE);
-					DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.BLOCK);
 					fireEvent(new EditViewEvent(Mode.ADD));
 				}
 			});

@@ -23,6 +23,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.List;
+import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
@@ -42,13 +43,11 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
 	public FighterListBox() {
 		Panel listBackground = new FlowPanel();
-		listBackground.getElement().setId("List-Box");
+		listBackground.getElement().setId(DisplayUtils.Displays.ListBox.toString());
 		listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
 
 		Panel listPanel = new FlowPanel();
 		listPanel.setStyleName("list");
-//        listPanel.getElement().setId("List-Box");
-//        listPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
 
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
@@ -123,9 +122,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 				if (selected != null) {
 					if (security.canView(selected.getFighterId())) {
 //                        Window.open("/FighterSearchServlet?mode=lookup&fid=" + selected.getFighterId(), "_self", "");
-						DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
-						DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.NONE);
-						DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.BLOCK);
 						FighterServiceAsync fighterService = GWT.create(FighterService.class);
 
 						fighterService.getFighter(selected.getFighterId(), new AsyncCallback<Fighter>() {
@@ -173,10 +169,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 			data.add(fli);
 		}
 
-		DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
-		DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.NONE);
-
-		DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox);
 	}
 
 	@Override
@@ -189,9 +182,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 			data.add(fli);
 		}
 
-		DOM.getElementById("Signup-Form").getStyle().setDisplay(Style.Display.NONE);
-		DOM.getElementById("FighterForm").getStyle().setDisplay(Style.Display.NONE);
-
-		DOM.getElementById("List-Box").getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox);
 	}
 }

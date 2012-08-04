@@ -92,11 +92,13 @@ public class FighterServlet extends HttpServlet {
                 }
                 StringBuilder sb = new StringBuilder();
                 sb.append("attachment; filename=");
-                sb.append("FighterCard ");
+                sb.append("FighterCard_");
                 sb.append(f.getScaName());
-				sb.append("-");
+				sb.append("_");
 				sb.append(String.format("%tF", new Date()));
                 sb.append(".pdf");
+				String fn = sb.toString().replaceAll(" ", "_");
+				fn = fn.replaceAll("-", "_");
                 response.setHeader("Content-disposition", sb.toString());
                 response.setContentType("application/pdf");
                 response.setContentLength(baosPDF.size());

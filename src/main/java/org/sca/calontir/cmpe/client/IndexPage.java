@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
@@ -10,6 +11,8 @@ import com.google.gwt.user.client.ui.*;
 import org.sca.calontir.cmpe.client.ui.*;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Entry Point.
@@ -22,6 +25,7 @@ import org.sca.calontir.cmpe.client.user.SecurityFactory;
  */
 public class IndexPage implements EntryPoint {
 
+	private static final Logger log = Logger.getLogger(IndexPage.class.getName());
 	protected static final String GETTING_STARTED = "https://sites.google.com/site/calontirmmproject/support";
 	final private Security security = SecurityFactory.getSecurity();
 	private FighterFormWidget fighterFormWidget = new FighterFormWidget();
@@ -33,6 +37,22 @@ public class IndexPage implements EntryPoint {
 	 */
 	@Override
 	public void onModuleLoad() {
+		GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
+			@Override
+			public void onUncaughtException(Throwable e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+		});
+		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				onModuleLoad2();
+			}
+		});
+
+	}
+
+	public void onModuleLoad2() {
 		String userAgent = Window.Navigator.getUserAgent();
 		if (userAgent.contains("MSIE 7.") || userAgent.contains("MSIE 6.")) {
 			Window.alert("This application will not work with any verison of IE below 8.\n"
@@ -41,7 +61,7 @@ public class IndexPage implements EntryPoint {
 			return;
 		}
 		tilePanel = RootPanel.get("tile");
-		LookupController.getInstance();
+		//LookupController.getInstance();
 
 		Image titleImage = new Image();
 		titleImage.setUrl("images/title_image.gif");
@@ -65,31 +85,35 @@ public class IndexPage implements EntryPoint {
 		tilePanel.add(titleLabel);
 		tilePanel.add(betaLabel);
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
-		loginService.login(GWT.getHostPageBaseURL() + "loggedin.jsp", 
-				GWT.getHostPageBaseURL() + "loggedin.jsp?trgt=goodbye", 
+		loginService.login(GWT.getHostPageBaseURL() + "loggedin.jsp",
+				GWT.getHostPageBaseURL() + "loggedin.jsp?trgt=goodbye",
 				new AsyncCallback<LoginInfo>() {
-			@Override
-			public void onFailure(Throwable error) {
-				Window.alert("Error in contacting the server, try later");
-			}
-
-			@Override
-			public void onSuccess(LoginInfo loginInfo) {
-				SecurityFactory.setLoginInfo(loginInfo);
-				if (security.isLoggedIn()) {
-					final Label hello;
-					if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
-						hello = new Label("Welcome " + loginInfo.getNickname());
-					} else {
-						hello = new Label("Welcome " + loginInfo.getScaName());
+					@Override
+					public void onFailure(Throwable error) {
+						Window.alert("Error in contacting the server, try later");
 					}
-					hello.setStyleName("hello", true);
-					tilePanel.add(hello);
-				}
 
-				buildIndexPage();
-			}
-		});
+					@Override
+					public void onSuccess(LoginInfo loginInfo) {
+						SecurityFactory.setLoginInfo(loginInfo);
+						if (security.isLoggedIn()) {
+							final Label hello;
+							if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
+								hello = new Label("Welcome " + loginInfo.getNickname());
+							} else {
+								hello = new Label("Welcome " + loginInfo.getScaName());
+							}
+							hello.setStyleName("hello", true);
+							tilePanel.add(hello);
+						}
+
+						Shout shout = new Shout();
+						shout.tell("loading");
+						LookupController.getInstance();
+						buildIndexPage();
+						shout.hide();
+					}
+				});
 
 		//Must turn off search button and have the load data started above to turn it back on.
 	}
@@ -119,7 +143,7 @@ public class IndexPage implements EntryPoint {
 	private void onIndexPage() {
 		Panel signupPanel = new FlowPanel();
 		signupPanel.setStyleName("dataBox");
-		signupPanel.getElement().setId("Signup-Form");
+		signupPanel.getElement().setId(DisplayUtils.Displays.SignupForm.toString());
 
 		Panel innerSignupPanel = new FlowPanel();
 		innerSignupPanel.setStyleName("dataBody");
@@ -160,7 +184,7 @@ public class IndexPage implements EntryPoint {
 	private void buildFighterForm() {
 		final FormPanel fighterForm = new FormPanel();
 		fighterForm.setAction("/FighterServlet");
-		fighterForm.getElement().setId("FighterForm");
+		fighterForm.getElement().setId(DisplayUtils.Displays.FighterForm.toString());
 		fighterForm.getElement().getStyle().setDisplay(Style.Display.NONE);
 		fighterForm.setMethod(FormPanel.METHOD_POST);
 
