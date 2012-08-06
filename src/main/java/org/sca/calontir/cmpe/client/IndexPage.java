@@ -8,11 +8,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.ui.*;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Entry Point.
@@ -107,7 +107,7 @@ public class IndexPage implements EntryPoint {
 							tilePanel.add(hello);
 						}
 
-						Shout shout = new Shout();
+						Shout shout = Shout.getInstance();
 						shout.tell("loading");
 						LookupController.getInstance();
 						buildIndexPage();

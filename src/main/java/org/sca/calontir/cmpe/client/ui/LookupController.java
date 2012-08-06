@@ -23,6 +23,7 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  */
 public class LookupController {
 
+	private final static long DAY = 86400000L;
 	private static LookupController _instance = new LookupController();
 	private List<AuthType> authTypes = null;
 	private List<ScaGroup> scaGroups = null;
@@ -103,7 +104,6 @@ public class LookupController {
 		List<FighterInfo> fighterList = new ArrayList<FighterInfo>(fighterMap.values());
 
 		Collections.sort(fighterList, new Comparator<FighterInfo>() {
-
 			@Override
 			public int compare(FighterInfo l, FighterInfo r) {
 				return l.getScaName().compareToIgnoreCase(r.getScaName());
@@ -124,7 +124,6 @@ public class LookupController {
 				List<FighterInfo> fighterList = new ArrayList<FighterInfo>(fighterMap.values());
 
 				Collections.sort(fighterList, new Comparator<FighterInfo>() {
-
 					@Override
 					public int compare(FighterInfo l, FighterInfo r) {
 						return l.getScaName().compareToIgnoreCase(r.getScaName());
@@ -151,7 +150,7 @@ public class LookupController {
 				stockStore.removeItem("scaNameList");
 				stockStore.setItem("scaNameList", scaNameList.toString());
 				Date now = new Date();
-				stockStore.setItem("scaNameUpdated", Long.toString(now.getTime()));
+				stockStore.setItem("scaNameUpdated", Long.toString(now.getTime() - DAY));
 			}
 			dirty = false;
 		}
@@ -161,7 +160,6 @@ public class LookupController {
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "/RehydrateDatabase.groovy");
 		try {
 			requestBuilder.sendRequest("request", new RequestCallback() {
-
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					String text = response.getText();
@@ -177,7 +175,6 @@ public class LookupController {
 						JSONNumber saveDate = valueObj.get("dateSaved").isNumber();
 						double d = saveDate.doubleValue();
 						long timeStamp = (new Double(d)).longValue();
-						stockStore.setItem("scaNameUpdated", Long.toString(timeStamp));
 						dateSaved = new Long(timeStamp);
 						Date saved = new Date(timeStamp);
 
@@ -198,7 +195,6 @@ public class LookupController {
 
 	private void getListItems(final FighterServiceAsync fighterService, final Date targetDate) {
 		fighterService.getListItems(targetDate, new AsyncCallback<FighterListInfo>() {
-
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed lookup " + caught.getMessage());
@@ -235,8 +231,15 @@ public class LookupController {
 			targetDate = null;
 		} else {
 			long timeStamp = Long.valueOf(timeStampStr);
-			//long threeDays = 86400000L * 3;
-			targetDate = new Date(timeStamp);
+			Date now = new Date();
+			Shout shout = Shout.getInstance();
+			if (now.getTime() - DAY < timeStamp) {
+				targetDate = null;
+				shout.tell("Updating from server");
+			} else {
+				targetDate = new Date(timeStamp);
+				shout.tell("Using local data");
+			}
 		}
 
 		try {
@@ -253,7 +256,6 @@ public class LookupController {
 
 
 		fighterService.getAuthTypes(new AsyncCallback<List<AuthType>>() {
-
 			@Override
 			public void onFailure(Throwable caught) {
 				throw new UnsupportedOperationException("Not supported yet.");
@@ -266,7 +268,6 @@ public class LookupController {
 		});
 
 		fighterService.getGroups(new AsyncCallback<List<ScaGroup>>() {
-
 			@Override
 			public void onFailure(Throwable caught) {
 				throw new UnsupportedOperationException("Not supported yet.");

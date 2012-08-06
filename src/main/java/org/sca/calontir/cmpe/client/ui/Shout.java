@@ -13,16 +13,42 @@ import com.google.gwt.user.client.ui.PopupPanel;
 public class Shout extends PopupPanel {
 
 	private Label comm = new Label();
+	private final static Shout _instance = new Shout();
+	private boolean showing = false;
+	private Timer t = null;
 
-	public Shout() {
+	private Shout() {
 		super(true);
 		FlowPanel fp = new FlowPanel();
+		comm.setWordWrap(true);
 		fp.add(comm);
 		setWidget(fp);
 	}
 
+	public static Shout getInstance() {
+		return _instance;
+	}
+
+	@Override
+	public void hide() {
+		super.hide();
+		showing = false;
+		if(t != null) {
+			t.cancel();
+			t = null;
+		}
+	}
+	
+
 	public void tell(String status) {
+		if(showing) {
+			status = comm.getText() + "\n" + status;
+		}
+		if(t != null) {
+			t.cancel();
+		}
 		comm.setText(status);
+		showing = true;
 		setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 			@Override
 			public void setPosition(int offsetWidth, int offsetHeight) {
@@ -31,10 +57,10 @@ public class Shout extends PopupPanel {
 				int left = (width - offsetWidth) / 2;
 				int top = 50;
 				setPopupPosition(left, top);
-				setWidth((offsetWidth - 100) + "px");
+				//setWidth((offsetWidth - 100) + "px");
 			}
 		});
-		final Timer t = new Timer() {
+		t = new Timer() {
 			@Override
 			public void run() {
 				hide();
