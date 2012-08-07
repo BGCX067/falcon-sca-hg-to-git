@@ -5,6 +5,7 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.event.shared.GwtEvent;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
  *
@@ -14,6 +15,7 @@ public class SearchEvent extends GwtEvent<SearchEventHandler>{
 
 	public static Type<SearchEventHandler> TYPE = new GwtEvent.Type<SearchEventHandler>();
 	private String searchName = null;
+	private ScaGroup group = null;
 
 	public SearchEvent() {
 		
@@ -23,6 +25,10 @@ public class SearchEvent extends GwtEvent<SearchEventHandler>{
 		this.searchName = searchName;
 	}
 
+	public SearchEvent(ScaGroup group) {
+		this.group = group;
+	}
+
 	@Override
 	public Type<SearchEventHandler> getAssociatedType() {
 		return TYPE;
@@ -30,10 +36,12 @@ public class SearchEvent extends GwtEvent<SearchEventHandler>{
 
 	@Override
 	protected void dispatch(SearchEventHandler handler) {
-		if(searchName == null) {
+		if(searchName == null && group == null) {
 			handler.loadAll();
-		} else {
+		} else if (group == null) {
 			handler.find(searchName);
+		} else {
+
 		}
 
 	}

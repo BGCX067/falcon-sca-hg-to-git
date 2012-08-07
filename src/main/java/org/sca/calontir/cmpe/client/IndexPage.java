@@ -73,17 +73,7 @@ public class IndexPage implements EntryPoint {
 		titleLabel.setTitle("Fighter Authorization List Calontir ONline (FALCON)");
 		titleLabel.setStyleName("title");
 
-		Label betaLabel = new Label("beta");
-		betaLabel.setWordWrap(false);
-		betaLabel.getElement().getStyle().setColor("red");
-		betaLabel.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.TOP);
-		betaLabel.getElement().getStyle().setFontSize(50.0, Style.Unit.PCT);
-		betaLabel.getElement().getStyle().setDisplay(Style.Display.INLINE);
-
-
-
 		tilePanel.add(titleLabel);
-		tilePanel.add(betaLabel);
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL() + "loggedin.jsp",
 				GWT.getHostPageBaseURL() + "loggedin.jsp?trgt=goodbye",

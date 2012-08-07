@@ -28,19 +28,11 @@ public class GoodbyePage implements EntryPoint {
 			titleLabel.setTitle("Fighter Authorization List Calontir ONline (FALCON)");
 			titleLabel.setStyleName("title");
 
-			Label betaLabel = new Label("beta");
-			betaLabel.setWordWrap(false);
-			betaLabel.getElement().getStyle().setColor("red");
-			betaLabel.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.TOP);
-			betaLabel.getElement().getStyle().setFontSize(50.0, Style.Unit.PCT);
-			betaLabel.getElement().getStyle().setDisplay(Style.Display.INLINE);
-
 			HTML p = new HTML();
 			p.setText("Thank you for using the FALCON Card Marshal application.");
 
 
 			tilePanel.add(titleLabel);
-			tilePanel.add(betaLabel);
 			tilePanel.add(p);
 		} catch (Exception e) {
 		}

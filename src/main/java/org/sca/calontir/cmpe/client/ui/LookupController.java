@@ -235,10 +235,10 @@ public class LookupController {
 			Shout shout = Shout.getInstance();
 			if (now.getTime() - DAY < timeStamp) {
 				targetDate = null;
-				shout.tell("Updating from server");
+				shout.tell("Loading remote data");
 			} else {
 				targetDate = new Date(timeStamp);
-				shout.tell("Using local data");
+				shout.tell("Loading local data");
 			}
 		}
 
