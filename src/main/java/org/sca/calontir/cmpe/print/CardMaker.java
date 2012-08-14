@@ -164,11 +164,16 @@ public class CardMaker {
 
         try {
             Image sig = loadSignature();
+			float orgHeight = sig.getHeight();
+			float percent = (33/orgHeight)*100;
+			sig.scalePercent(percent);
             cell = new PdfPCell(sig);
             cell.setBorder(Rectangle.NO_BORDER);
             cell.setPaddingLeft(padding);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+			cell.setPaddingBottom(0);
+			cell.setBorderWidthBottom(0);
+			cell.setFixedHeight(33);
             table.addCell(cell);
         } catch (BadElementException ex) {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
