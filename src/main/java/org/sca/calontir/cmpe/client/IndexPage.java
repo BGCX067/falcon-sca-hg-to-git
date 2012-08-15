@@ -41,6 +41,7 @@ public class IndexPage implements EntryPoint {
 			@Override
 			public void onUncaughtException(Throwable e) {
 				log.log(Level.SEVERE, e.getMessage(), e);
+				Window.Location.replace("/over_quota.html");
 			}
 		});
 		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
