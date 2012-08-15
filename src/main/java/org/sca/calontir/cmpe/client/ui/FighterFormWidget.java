@@ -619,7 +619,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			email.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
+					if (fighter.getEmail() == null || fighter.getEmail().isEmpty()) {
 						Email e = new Email();
 						e.setEmailAddress(email.getValue());
 						List<Email> emails = new ArrayList<Email>();
