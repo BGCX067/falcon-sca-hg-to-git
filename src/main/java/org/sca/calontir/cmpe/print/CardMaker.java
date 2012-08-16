@@ -299,7 +299,7 @@ public class CardMaker {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-		innerCell = new PdfPCell(new Phrase("Kingdom of Calontir\nFighter Authorizatin Card\n\n", smallFont));
+		innerCell = new PdfPCell(new Phrase("Kingdom of Calontir\nFighter Authorization Card\n\n", smallFont));
 		innerCell.setExtraParagraphSpace(1.5f);
         innerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         innerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
