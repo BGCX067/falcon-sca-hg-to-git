@@ -71,9 +71,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		infoPanel.setStyleName("dataBox");
 		overallPanel.add(infoPanel);
 
-		// Todo: move the login from calonbar to indexpage and do
-		// before loading data. This will insure that security will
-		// be correct before building the pages.
 		notePanel.setStyleName("dataBoxShort");
 		notePanel.getElement().getStyle().setDisplay(Style.Display.NONE);
 		overallPanel.add(notePanel);
@@ -112,7 +109,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				//validate
-				fighter.setScaName(event.getValue());
+				String change = cleanString(event.getValue());
+				fighter.setScaName(change);
 			}
 		});
 		fighterIdBoxPanel.add(scaNameTextBox);
@@ -158,7 +156,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				//validate
-				fighter.setScaName(event.getValue());
+				String change = cleanString(event.getValue());
+				fighter.setScaName(change);
 			}
 		});
 
@@ -407,7 +406,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			modernName.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					fighter.setModernName(modernName.getValue());
+					String change = cleanString(event.getValue());
+					fighter.setModernName(modernName.getValue().trim());
+					//TODO: error, this cannot be blank
 				}
 			});
 			return modernName;
@@ -452,9 +453,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			treaty.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					Treaty t = new Treaty();
-					t.setName("Treaty");
-					fighter.setTreaty(t);
+					if (event.getValue()) {
+						Treaty t = new Treaty();
+						t.setName("Treaty");
+						fighter.setTreaty(t);
+					} else {
+						fighter.setTreaty(null);
+					}
 				}
 			});
 			return treaty;
@@ -586,9 +591,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			phoneNumber.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
+					if (fighter.getPhone() == null || fighter.getPhone().isEmpty()) {
 						Phone phone = new Phone();
-						phone.setPhoneNumber(phoneNumber.getValue());
+						if (phoneNumber.getValue() == null) {
+							phone.setPhoneNumber("");
+						} else {
+							phone.setPhoneNumber(phoneNumber.getValue().trim());
+						}
 						List<Phone> phones = new ArrayList<Phone>();
 						phones.add(phone);
 						fighter.setPhone(phones);
@@ -619,14 +628,15 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			email.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
+					String changed = cleanString(event.getValue());
 					if (fighter.getEmail() == null || fighter.getEmail().isEmpty()) {
 						Email e = new Email();
-						e.setEmailAddress(email.getValue());
+						e.setEmailAddress(changed);
 						List<Email> emails = new ArrayList<Email>();
 						emails.add(e);
 						fighter.setEmail(emails);
 					} else {
-						fighter.getEmail().get(0).setEmailAddress(email.getValue());
+						fighter.getEmail().get(0).setEmailAddress(changed);
 					}
 				}
 			});
@@ -722,8 +732,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			address1.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setAddress1(address1.getValue());
-					fighter.getAddress().get(0).setAddress1(address1.getValue());
+					String changed = cleanString(event.getValue());
+					address.setAddress1(changed);
+					fighter.getAddress().get(0).setAddress1(changed);
 				}
 			});
 			addressTable.setWidget(0, 1, address1);
@@ -736,8 +747,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			address2.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setAddress2(address2.getValue());
-					fighter.getAddress().get(0).setAddress2(address2.getValue());
+					String changed = cleanString(event.getValue());
+					address.setAddress2(changed);
+					fighter.getAddress().get(0).setAddress2(changed);
 				}
 			});
 			addressTable.setWidget(1, 1, address2);
@@ -750,8 +762,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			city.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setCity(city.getValue());
-					fighter.getAddress().get(0).setCity(city.getValue());
+					String changed = cleanString(event.getValue());
+					address.setCity(changed);
+					fighter.getAddress().get(0).setCity(changed);
 				}
 			});
 			addressTable.setWidget(2, 1, city);
@@ -764,8 +777,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			state.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setState(state.getValue());
-					fighter.getAddress().get(0).setState(state.getValue());
+					String changed = cleanString(event.getValue());
+					address.setState(changed);
+					fighter.getAddress().get(0).setState(changed);
 				}
 			});
 			addressTable.setWidget(3, 1, state);
@@ -778,8 +792,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			postalCode.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					address.setPostalCode(postalCode.getValue());
-					fighter.getAddress().get(0).setPostalCode(postalCode.getValue());
+					String changed = cleanString(event.getValue());
+					address.setPostalCode(changed);
+					fighter.getAddress().get(0).setPostalCode(changed);
 				}
 			});
 			addressTable.setWidget(4, 1, postalCode);
@@ -802,6 +817,17 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		}
 	}
 
+	private String cleanString(String target) {
+		if (target == null) {
+			return "";
+		}
+		String changed = target.trim();
+		changed = changed.replaceAll(",$", "");
+		changed = target.trim();
+
+		return changed;
+	}
+
 	private Widget scaMemberNo(boolean edit) {
 		if (edit) {
 			final TextBox scaMemberNo = new TextBox();
@@ -812,7 +838,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			scaMemberNo.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					fighter.setScaMemberNo(scaMemberNo.getValue());
+					String changed = cleanString(event.getValue());
+					fighter.setScaMemberNo(changed);
 				}
 			});
 			return scaMemberNo;
@@ -844,7 +871,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			noteTa.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
-					if (noteTa.getValue().isEmpty()) {
+					String changed = cleanString(event.getValue());
+					if (changed.isEmpty()) {
 						fighter.setNote(null);
 					} else {
 						Note note;
@@ -853,7 +881,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 						} else {
 							note = new Note();
 						}
-						note.setBody(noteTa.getValue());
+						note.setBody(changed);
 						note.setUpdated(new Date());
 
 						fighter.setNote(note);
@@ -871,8 +899,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	}
 
 	private boolean isMinor(Date dob) {
-		Date now = new Date();
-		Date targetDate = new Date(dob.getYear() + 18, dob.getMonth(), dob.getDate());
+		final Date now = new Date();
+		final Date targetDate = new Date(dob.getYear() + 18, dob.getMonth(), dob.getDate());
 		if (targetDate.after(now)) {
 			return true;
 		}
@@ -880,12 +908,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	}
 
 	private Widget printButton() {
-		Anchor bPrint = new Anchor("Download Fighter Card");
+		final Anchor bPrint = new Anchor("Download Fighter Card");
 		bPrint.setStyleName("buttonLink");
 
 		bPrint.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				bPrint.setEnabled(false);
 				mode.setValue("printFighter");
 				//form.setAction("/ServePDF.groovy");
 				form.submit();
@@ -896,11 +925,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	}
 
 	private Widget editButton(final Target target) {
-		Anchor editButton = new Anchor("edit");
+		final Anchor editButton = new Anchor("edit");
 		editButton.addStyleName("buttonLink");
 		editButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				editButton.setEnabled(false);
 				switch (target) {
 					case Auths:
 						buildInfoView();
@@ -919,11 +949,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	}
 
 	private Widget cancelButton(final Target target) {
-		Anchor cancelButton = new Anchor("cancel");
+		final Anchor cancelButton = new Anchor("cancel");
 		cancelButton.addStyleName("buttonLink");
 		cancelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				cancelButton.setEnabled(false);
 				switch (target) {
 					case Auths:
 						buildAuthView();
@@ -940,12 +971,13 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	}
 
 	private Widget saveButton(final Target target) {
-		Anchor saveButton = new Anchor("save");
+		final Anchor saveButton = new Anchor("save");
 		saveButton.addStyleName("buttonLink");
 		saveButton.getElement().getStyle().setMarginRight(1.5, Style.Unit.EM);
 		saveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				saveButton.setEnabled(false);
 				switch (target) {
 					case Auths:
 						mode.setValue("saveAuthorizations");

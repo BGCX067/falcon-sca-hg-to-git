@@ -33,7 +33,7 @@ public class FighterDAO {
     public org.sca.calontir.cmpe.dto.Fighter getFighter(long fighterId) {
         org.sca.calontir.cmpe.dto.Fighter retVal = fCache.getFighter(fighterId);
         if (retVal == null) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, String.format("Getting %d from datastore", fighterId));
+            Logger.getLogger(getClass().getName()).log(Level.INFO, String.format("Getting %d from datastore", fighterId));
             Fighter fighter = getFighterDO(fighterId);
             retVal = DataTransfer.convert(fighter);
             fCache.put(retVal);
@@ -130,7 +130,7 @@ public class FighterDAO {
     }
 
     public List<FighterListItem> getFighterListItems(DateTime dt) {
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Getting fighter list from datastore as of {0}", dt);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Getting fighter list from datastore as of {0}", dt);
         if (dt == null || dt.getYear() == 1966) {
             return getFighterListItems();
         }
@@ -147,7 +147,7 @@ public class FighterDAO {
     }
 
     public List<FighterListItem> getFighterListItems() {
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Getting fighter list from datastore as of {0}", fCache.getLastUpdate());
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Getting fighter list from datastore as of {0}", fCache.getLastUpdate());
         List<Fighter> fighters = getAllFightersAsOf(fCache.getLastUpdate());
         Map<Long, FighterListItem> fighterListMap = new HashMap<Long, FighterListItem>();
         for (Fighter f : fighters) {
@@ -168,7 +168,7 @@ public class FighterDAO {
         query.declareParameters("Date lastUpdateParam");
         List<Fighter> fighters = (List<Fighter>) query.execute(dt.toDate());
 
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+        Logger.getLogger(getClass().getName()).log(Level.INFO,
                 "Getting updated fighters: {0} as of {1}", new Object[]{fighters.size(), dt.toString()});
         return fighters;
     }
@@ -177,7 +177,7 @@ public class FighterDAO {
         Query query = pm.newQuery(Fighter.class);
         query.setOrdering("scaName");
         List<Fighter> fighters = (List<Fighter>) query.execute();
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Getting all fighters: {0}", fighters.size());
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Getting all fighters: {0}", fighters.size());
         return fighters;
     }
 
@@ -216,7 +216,7 @@ public class FighterDAO {
 			}
             f.setLastUpdated(new Date());
             f.setUserUpdated(userId);
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Saving {0}", f.getScaName());
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Saving {0}", f.getScaName());
             f = pm.makePersistent(f);
 
             Query query = pm.newQuery(TableUpdates.class);
