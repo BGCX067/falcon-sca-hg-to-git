@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+	<cron>
+		<url>/BackupData.groovy</url>
+		<target>adminb</target>
+		<description>Backup data once a week</description>
+		<schedule>every monday 21:00</schedule>
+		<timezone>America/Chicago</timezone>
+	</cron>
+</cronentries>

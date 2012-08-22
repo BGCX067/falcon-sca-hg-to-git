@@ -643,7 +643,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			return email;
 		} else {
 			if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
-				return new Label(fighter.getEmail().get(0).getEmailAddress());
+				String emailAddress = fighter.getEmail().get(0).getEmailAddress();
+				return new Anchor(emailAddress, "mailto:" + emailAddress, "_blank");
 			}
 			return new Label("");
 		}
@@ -735,6 +736,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					String changed = cleanString(event.getValue());
 					address.setAddress1(changed);
 					fighter.getAddress().get(0).setAddress1(changed);
+					address1.setValue(changed);
 				}
 			});
 			addressTable.setWidget(0, 1, address1);
@@ -750,6 +752,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					String changed = cleanString(event.getValue());
 					address.setAddress2(changed);
 					fighter.getAddress().get(0).setAddress2(changed);
+					address2.setValue(changed);
 				}
 			});
 			addressTable.setWidget(1, 1, address2);
@@ -765,6 +768,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					String changed = cleanString(event.getValue());
 					address.setCity(changed);
 					fighter.getAddress().get(0).setCity(changed);
+					city.setValue(changed);
 				}
 			});
 			addressTable.setWidget(2, 1, city);
@@ -780,6 +784,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					String changed = cleanString(event.getValue());
 					address.setState(changed);
 					fighter.getAddress().get(0).setState(changed);
+					state.setValue(changed);
 				}
 			});
 			addressTable.setWidget(3, 1, state);
@@ -795,6 +800,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					String changed = cleanString(event.getValue());
 					address.setPostalCode(changed);
 					fighter.getAddress().get(0).setPostalCode(changed);
+					postalCode.setValue(changed);
 				}
 			});
 			addressTable.setWidget(4, 1, postalCode);
@@ -823,7 +829,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		}
 		String changed = target.trim();
 		changed = changed.replaceAll(",$", "");
-		changed = target.trim();
+		changed = changed.trim();
 
 		return changed;
 	}
@@ -975,20 +981,25 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		saveButton.addStyleName("buttonLink");
 		saveButton.getElement().getStyle().setMarginRight(1.5, Style.Unit.EM);
 		saveButton.addClickHandler(new ClickHandler() {
+			private boolean unclicked = true;
+
 			@Override
 			public void onClick(ClickEvent event) {
-				saveButton.setEnabled(false);
-				switch (target) {
-					case Auths:
-						mode.setValue("saveAuthorizations");
-						////form.setAction("/FighterServlet");
-						form.submit();
-						break;
-					case Info:
-						mode.setValue("saveFighter");
-						//form.setAction("/FighterServlet");
-						form.submit();
-						break;
+				if (unclicked) {
+					unclicked = false;
+					saveButton.setEnabled(false);
+					switch (target) {
+						case Auths:
+							mode.setValue("saveAuthorizations");
+							////form.setAction("/FighterServlet");
+							form.submit();
+							break;
+						case Info:
+							mode.setValue("saveFighter");
+							//form.setAction("/FighterServlet");
+							form.submit();
+							break;
+					}
 				}
 			}
 		});

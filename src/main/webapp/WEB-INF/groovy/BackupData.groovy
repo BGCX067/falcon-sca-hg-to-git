@@ -44,62 +44,64 @@ fighters = dao.getFighters()
 
 def json = new groovy.json.JsonBuilder()
 def root = json {
-	fighters.each { f ->
-		fighter {
-			fighterId f.fighterId
-			scaName f.scaName
-			scaMemberNo f.scaMemberNo
-			modernName f.modernName
-			dateOfBirth f.dateOfBirth
-			googleId f.googleId
-			emails {
-				f.email.each {e ->
-					email {
-						emailAddress e.emailAddress
-						type e.type
+	fighters {
+		fighters.each { f ->
+			fighter {
+				fighterId f.fighterId
+				scaName f.scaName
+				scaMemberNo f.scaMemberNo
+				modernName f.modernName
+				dateOfBirth f.dateOfBirth
+				googleId f.googleId
+				emails {
+					f.email.each {e ->
+						email {
+							emailAddress e.emailAddress
+							type e.type
+						}
 					}
 				}
-			}
-			addresses {
-				f.address.each {add ->
-					address {
-						address1 add.address1
-						address2 add.address2
-						city add.city
-						district add.district
-						postalCode add.postalCode
-						state add.state
-						type add.type
+				addresses {
+					f.address.each {add ->
+						address {
+							address1 add.address1
+							address2 add.address2
+							city add.city
+							district add.district
+							postalCode add.postalCode
+							state add.state
+							type add.type
+						}
 					}
 				}
-			}
-			phones {
-				f.phone.each { p ->
-					phone {
-						phoneNumber p.phoneNumber
-						type p.type
+				phones {
+					f.phone.each { p ->
+						phone {
+							phoneNumber p.phoneNumber
+							type p.type
+						}
 					}
 				}
-			}
-			Authorizations {
-				f.authorization.each { auth ->
+				Authorizations {
 					authorization { 
-						code auth.code
-						description auth.description
-						date auth.date
+						f.authorization.each { auth ->
+							code auth.code
+							description auth.description
+							date auth.date
+						}
 					}
 				}
-			}
-			scaGroup {
-				groupName f.scaGroup?.groupName
-				groupLocation f.scaGroup?.groupLocation
-			}
-			role f.role
-			status f.status
-			treaty {
-				if(f.treaty != null) {
-					treatyId f.treaty.treatyId.id
-					name f.treaty.name
+				scaGroup {
+					groupName f.scaGroup?.groupName
+					groupLocation f.scaGroup?.groupLocation
+				}
+				role f.role
+				status f.status
+				treaty {
+					if(f.treaty != null) {
+						treatyId f.treaty.treatyId.id
+						name f.treaty.name
+					}
 				}
 			}
 		}
