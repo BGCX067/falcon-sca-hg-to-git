@@ -4,7 +4,7 @@
 		<url>/BackupData.groovy</url>
 		<target>adminb</target>
 		<description>Backup data once a week</description>
-		<schedule>every saturday 10:35</schedule>
+		<schedule>every saturday 11:00</schedule>
 		<timezone>America/Chicago</timezone>
 	</cron>
 </cronentries>
