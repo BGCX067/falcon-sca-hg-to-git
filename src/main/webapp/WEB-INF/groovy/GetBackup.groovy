@@ -9,6 +9,7 @@ import com.google.appengine.api.blobstore.BlobKey
 import org.sca.calontir.cmpe.dto.FighterListItem
 import org.sca.calontir.cmpe.dto.Authorization
 import org.sca.calontir.cmpe.utils.MarshalUtils
+import org.sca.calontir.cmpe.common.UserRoles
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 

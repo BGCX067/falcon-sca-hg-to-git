@@ -42,70 +42,68 @@ dao = new FighterDAO()
 
 fighters = dao.getFighters()
 
-def json = new groovy.json.JsonBuilder()
-def root = json {
-	fighters {
-		fighters.each { f ->
-			fighter {
-				fighterId f.fighterId
-				scaName f.scaName
-				scaMemberNo f.scaMemberNo
-				modernName f.modernName
-				dateOfBirth f.dateOfBirth
-				googleId f.googleId
-				emails {
-					f.email.each {e ->
-						email {
-							emailAddress e.emailAddress
-							type e.type
-						}
-					}
-				}
-				addresses {
-					f.address.each {add ->
-						address {
-							address1 add.address1
-							address2 add.address2
-							city add.city
-							district add.district
-							postalCode add.postalCode
-							state add.state
-							type add.type
-						}
-					}
-				}
-				phones {
-					f.phone.each { p ->
-						phone {
-							phoneNumber p.phoneNumber
-							type p.type
-						}
-					}
-				}
-				Authorizations {
-					authorization { 
-						f.authorization.each { auth ->
-							code auth.code
-							description auth.description
-							date auth.date
-						}
-					}
-				}
-				scaGroup {
-					groupName f.scaGroup?.groupName
-					groupLocation f.scaGroup?.groupLocation
-				}
-				role f.role
-				status f.status
-				treaty {
-					if(f.treaty != null) {
-						treatyId f.treaty.treatyId.id
-						name f.treaty.name
-					}
-				}
-			}
-		}
+def mapList = []
+fighters.each { f ->
+	def fmap = [:]
+	fmap.fighterId = f.fighterId
+	fmap.scaName = f.scaName
+	fmap.scaMemberNo = f.scaMemberNo
+	fmap.modernName = f.modernName
+	fmap.dateOfBirth = f.dateOfBirth
+	fmap.googleId = f.googleId
+	def emailList = []
+	f.email.each {email ->
+		def emailMap = [:]
+		emailMap.emailAddress = email.emailAddress
+		emailMap.type = email.type
+		emailList << emailMap
 	}
+	fmap.email = emailList
+	def addressList = []
+	f.address.each { address->
+		def addressMap = [:]
+		addressMap.address1 = address.address1
+		addressMap.address2 = address.address2
+		addressMap.city = address.city
+		addressMap.district = address.district
+		addressMap.postalCode = address.postalCode
+		addressMap.state = address.state
+		addressMap.type = address.type
+		addressList << addressMap
+	}
+	fmap.address = addressList
+	def phoneList = []
+	f.phone.each {phone ->
+		def phoneMap = [:]
+		phoneMap.phoneNumber = phone.phoneNumber
+		phoneMap.type = phone.type
+		phoneList << phoneMap
+	}
+	fmap.phone = phoneList
+	def authList = []
+	f.authorization.each { auth ->
+		def authMap = [:]
+		authMap.code = auth.code
+		authMap.description = auth.description
+		authMap.date = auth.date
+		authList << authMap
+	}
+	fmap.authorization = authList
+	if(f.scaGroup)
+		fmap.group = f.scaGroup.groupName
+	else
+		fmap.group = "Unknown or Out of Kingdom"
+	fmap.role = f.role
+	fmap.status = f.status
+	fmap.treaty = f.treaty?.name
+	mapList << fmap
+}
+
+def json = new groovy.json.JsonBuilder()
+def now = new Date()
+def root = json {
+	dateBackedUp String.format('%tF %<tT', now.time)
+	fighters mapList
 }
 
 def file = files.createNewBlobFile("text/json", "backup.json")
