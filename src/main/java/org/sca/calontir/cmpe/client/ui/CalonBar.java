@@ -73,7 +73,7 @@ public class CalonBar extends Composite {
 			tile.add(new HTML("<li>Mistress Olga Belobashnia Cherepanova, Contributing artist.  Provider of the Falcon logo."));
 			tile.add(new HTML("<li>The CSS Styling for the page is based on the design created by Her Ladyship Sung Sai-êrh for the Calontir website."));
 			tile.add(new HTML("</ol>"));
-			Label versionLine = new Label("falcon version 1.0.6");
+			Label versionLine = new Label("falcon version (DEV 1.1)");
 			versionLine.getElement().getStyle().setFontStyle(Style.FontStyle.ITALIC);
 			versionLine.getElement().getStyle().setFontSize(85.0, Style.Unit.PCT);
 			versionLine.getElement().getStyle().setProperty("textAlign", "right");
