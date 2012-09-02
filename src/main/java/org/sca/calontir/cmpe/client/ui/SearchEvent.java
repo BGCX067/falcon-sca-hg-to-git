@@ -11,22 +11,35 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  *
  * @author rikscarborough
  */
-public class SearchEvent extends GwtEvent<SearchEventHandler>{
+public class SearchEvent extends GwtEvent<SearchEventHandler> {
 
 	public static Type<SearchEventHandler> TYPE = new GwtEvent.Type<SearchEventHandler>();
+
+	public enum SearchType {
+
+		FIGHTER, GROUP;
+	}
 	private String searchName = null;
 	private ScaGroup group = null;
+	private SearchType searchType = SearchType.FIGHTER;
+    private boolean searchTypeChange = false;
 
 	public SearchEvent() {
-		
 	}
 
 	public SearchEvent(String searchName) {
 		this.searchName = searchName;
+        searchType = SearchType.FIGHTER;
 	}
 
 	public SearchEvent(ScaGroup group) {
 		this.group = group;
+        searchType = SearchType.GROUP;
+	}
+
+	public SearchEvent(SearchType searchType) {
+		this.searchType = searchType;
+        searchTypeChange = true;
 	}
 
 	@Override
@@ -36,14 +49,17 @@ public class SearchEvent extends GwtEvent<SearchEventHandler>{
 
 	@Override
 	protected void dispatch(SearchEventHandler handler) {
-		if(searchName == null && group == null) {
-			handler.loadAll();
-		} else if (group == null) {
-			handler.find(searchName);
-		} else {
-
-		}
-
+        if(searchTypeChange) {
+        } else {
+            if (searchType == SearchType.FIGHTER) {
+                if (searchName == null && group == null) {
+                    handler.loadAll();
+                } else if (group == null) {
+                    handler.find(searchName);
+                }
+            } else {
+                handler.loadGroup(group);
+            }
+        }
 	}
-	
 }

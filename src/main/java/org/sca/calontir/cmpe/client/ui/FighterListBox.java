@@ -30,6 +30,7 @@ import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
  *
@@ -56,14 +57,12 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
 		ButtonCell selectButton = new ButtonCell();
 		Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {
-
 			@Override
 			public void render(Context context, FighterInfo fighter, SafeHtmlBuilder sb) {
 				if (security.canView(fighter.getFighterId())) {
 					super.render(context, fighter, sb);
 				} else {
 					sb.append(new SafeHtml() {
-
 						@Override
 						public String asString() {
 							return "&nbsp;";
@@ -80,7 +79,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		selectColumn.setSortable(false);
 
 		TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
-
 			@Override
 			public String getValue(FighterInfo fli) {
 				return fli.getScaName();
@@ -91,7 +89,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		scaNameColumn.setSortable(false);
 
 		TextColumn<FighterInfo> authorizationColumn = new TextColumn<FighterInfo>() {
-
 			@Override
 			public String getValue(FighterInfo fli) {
 				return fli.getAuthorizations();
@@ -99,7 +96,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		};
 
 		TextColumn<FighterInfo> groupColumn = new TextColumn<FighterInfo>() {
-
 			@Override
 			public String getValue(FighterInfo fli) {
 				return fli.getGroup();
@@ -115,7 +111,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<FighterInfo>();
 		table.setSelectionModel(selectionModel);
 		selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-
 			@Override
 			public void onSelectionChange(SelectionChangeEvent event) {
 				FighterInfo selected = selectionModel.getSelectedObject();
@@ -125,7 +120,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 						FighterServiceAsync fighterService = GWT.create(FighterService.class);
 
 						fighterService.getFighter(selected.getFighterId(), new AsyncCallback<Fighter>() {
-
 							@Override
 							public void onFailure(Throwable caught) {
 								throw new UnsupportedOperationException("Not supported yet.");
@@ -180,6 +174,21 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		data.clear();
 		for (FighterInfo fli : fighterList) {
 			data.add(fli);
+		}
+
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox);
+	}
+
+	@Override
+	public void loadGroup(ScaGroup group) {
+		List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
+		table.setRowCount(fighterList.size());
+		List data = dataProvider.getList();
+		data.clear();
+		for (FighterInfo fli : fighterList) {
+			if (fli.getGroup().equals(group.getGroupName())) {
+				data.add(fli);
+			}
 		}
 
 		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox);

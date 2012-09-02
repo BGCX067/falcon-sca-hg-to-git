@@ -99,6 +99,7 @@ a.buttonLink:active, a.buttonLink:hover {
 }
 
 #searchBar {
+	color: #F8F3E2;
     background-color: #2D1155;
     display: block;
     border: 1px solid #2D1155;

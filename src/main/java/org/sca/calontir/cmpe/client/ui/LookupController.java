@@ -51,6 +51,15 @@ public class LookupController {
 		return scaGroups;
 	}
 
+	public ScaGroup getScaGroup(String name) {
+		for(ScaGroup group : scaGroups) {
+			if(name.equals(group.getGroupName())) {
+				return group;
+			}
+		}
+		return null;
+	}
+
 	public void replaceFighter(FighterInfo replacement) {
 		buildTables();
 		//fighterMap.put(replacement.getScaName(), replacement);
