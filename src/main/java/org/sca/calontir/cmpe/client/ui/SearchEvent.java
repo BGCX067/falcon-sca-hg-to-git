@@ -50,6 +50,7 @@ public class SearchEvent extends GwtEvent<SearchEventHandler> {
 	@Override
 	protected void dispatch(SearchEventHandler handler) {
         if(searchTypeChange) {
+			handler.switchSearchType(searchType);
         } else {
             if (searchType == SearchType.FIGHTER) {
                 if (searchName == null && group == null) {

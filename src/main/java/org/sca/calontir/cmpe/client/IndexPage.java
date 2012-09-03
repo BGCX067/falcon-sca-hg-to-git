@@ -2,9 +2,11 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -44,12 +46,26 @@ public class IndexPage implements EntryPoint {
 				Window.Location.replace("/over_quota.html");
 			}
 		});
-		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+		LookupController.getInstance();
+		final Timer t = new Timer() {
+
 			@Override
-			public void execute() {
-				onModuleLoad2();
+			public void run() {
+				if(LookupController.getInstance().isDLComplete()) {
+					Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+						@Override
+						public void execute() {
+							onModuleLoad2();
+						}
+					});
+				} else {
+					this.schedule(500);
+				}
 			}
-		});
+		};
+			
+		t.schedule(500);
+
 
 	}
 
@@ -100,7 +116,6 @@ public class IndexPage implements EntryPoint {
 
 						Shout shout = Shout.getInstance();
 						shout.tell("loading");
-						LookupController.getInstance();
 						buildIndexPage();
 						shout.hide();
 					}
@@ -120,15 +135,24 @@ public class IndexPage implements EntryPoint {
 		SearchBar searchBar = new SearchBar();
 		searchBar.addHandler(fighterFormWidget, EditViewEvent.TYPE);
 		searchBar.addHandler(flb, SearchEvent.TYPE);
+		searchBar.addHandler(searchBar, SearchEvent.TYPE);
 		fighterFormWidget.addHandler(searchBar, DataUpdatedEvent.TYPE);
-		fighterFormWidget.addHandler(flb, SearchEvent.TYPE);
 		tilePanel.add(searchBar);
 
 
 		onIndexPage();
-		foundMultibleResults();
-		buildFighterForm();
+		GWT.runAsync(new RunAsyncCallback() {
+			@Override
+			public void onFailure(Throwable reason) {
+				log.log(Level.SEVERE, reason.getMessage(), reason);
+			}
 
+			@Override
+			public void onSuccess() {
+				foundMultibleResults();
+				buildFighterForm();
+			}
+		});
 	}
 
 	private void onIndexPage() {

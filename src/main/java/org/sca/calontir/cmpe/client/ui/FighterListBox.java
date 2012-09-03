@@ -27,6 +27,7 @@ import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
+import org.sca.calontir.cmpe.client.ui.SearchEvent.SearchType;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.dto.Fighter;
@@ -192,5 +193,9 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		}
 
 		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox);
+	}
+
+	@Override
+	public void switchSearchType(SearchType searchType) {
 	}
 }

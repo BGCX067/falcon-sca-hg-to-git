@@ -30,6 +30,7 @@ public class LookupController {
 	private Map<Long, FighterInfo> fighterMap = null;
 	private Long dateSaved = null;
 	boolean dirty = false;
+	private boolean fighterDLComplete = false;
 
 	private LookupController() {
 		try {
@@ -41,6 +42,10 @@ public class LookupController {
 
 	public static LookupController getInstance() {
 		return _instance;
+	}
+
+	public boolean isDLComplete() {
+		return authTypes != null && scaGroups != null && fighterDLComplete;
 	}
 
 	public List<AuthType> getAuthType() {
@@ -223,6 +228,7 @@ public class LookupController {
 				}
 
 				writeDataToLocal();
+				fighterDLComplete = true;
 				//signal we have the data;
 			}
 		});

@@ -19,4 +19,6 @@ public interface SearchEventHandler extends EventHandler {
 
 	public void loadGroup(ScaGroup group);
 
+	public void switchSearchType(SearchEvent.SearchType searchType);
+
 }

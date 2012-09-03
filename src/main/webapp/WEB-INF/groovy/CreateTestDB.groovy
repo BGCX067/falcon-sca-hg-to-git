@@ -16,13 +16,13 @@ import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
 
 def scaGroup = new Entity ("ScaGroup")
-scaGroup.groupName = "Forgotten Sea"
-scaGroup.groupLocation = "Central"
+scaGroup.groupName = "Lonely Tower"
+scaGroup.groupLocation = "North"
 scaGroup.save()
 
 scaGroup = new Entity ("ScaGroup")
-scaGroup.groupName = "Lonely Tower"
-scaGroup.groupLocation = "North"
+scaGroup.groupName = "Forgotten Sea"
+scaGroup.groupLocation = "Central"
 scaGroup.save()
 
 def wsh = new Entity("AuthType")
