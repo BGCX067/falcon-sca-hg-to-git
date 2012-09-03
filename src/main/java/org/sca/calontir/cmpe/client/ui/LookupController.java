@@ -263,11 +263,7 @@ public class LookupController {
 		}
 
 		FighterServiceAsync fighterService = GWT.create(FighterService.class);
-		if (targetDate == null) {
-			getStoredList(fighterService);
-		} else {
-			getListItems(fighterService, targetDate);
-		}
+		getStoredList(fighterService);
 
 
 		fighterService.getAuthTypes(new AsyncCallback<List<AuthType>>() {

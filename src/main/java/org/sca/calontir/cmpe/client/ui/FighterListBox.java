@@ -164,7 +164,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 			data.add(fli);
 		}
 
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox);
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 			data.add(fli);
 		}
 
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox);
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
 	}
 
 	@Override
@@ -192,7 +192,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 			}
 		}
 
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox);
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
 	}
 
 	@Override

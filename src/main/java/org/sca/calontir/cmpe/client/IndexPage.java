@@ -5,7 +5,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -48,10 +51,9 @@ public class IndexPage implements EntryPoint {
 		});
 		LookupController.getInstance();
 		final Timer t = new Timer() {
-
 			@Override
 			public void run() {
-				if(LookupController.getInstance().isDLComplete()) {
+				if (LookupController.getInstance().isDLComplete()) {
 					Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
 						@Override
 						public void execute() {
@@ -63,7 +65,7 @@ public class IndexPage implements EntryPoint {
 				}
 			}
 		};
-			
+
 		t.schedule(500);
 
 
@@ -121,8 +123,26 @@ public class IndexPage implements EntryPoint {
 					}
 				});
 
-		//Must turn off search button and have the load data started above to turn it back on.
+		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+			public void onValueChange(ValueChangeEvent<String> event) {
+				String historyToken = event.getValue();
+				try {
+					if (historyToken.substring(0, 8).equals("display:")) {
+						String display = historyToken.substring(8);
+						// Select the specified tab panel
+						DisplayUtils.changeDisplay(DisplayUtils.Displays.valueOf(display));
+					} else {
+						DisplayUtils.changeDisplay(DisplayUtils.Displays.SignupForm);
+					}
+
+				} catch (IndexOutOfBoundsException e) {
+					DisplayUtils.changeDisplay(DisplayUtils.Displays.SignupForm);
+				}
+			}
+		});
+
 	}
+	
 
 	private void buildIndexPage() {
 		// remove Loading-Message from page

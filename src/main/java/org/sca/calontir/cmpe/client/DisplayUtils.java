@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.History;
 
 /**
  *
@@ -10,9 +11,17 @@ import com.google.gwt.user.client.DOM;
 public class DisplayUtils {
 
 	public static enum Displays {
+
 		SignupForm,
 		ListBox,
 		FighterForm
+	}
+
+	public static void changeDisplay(Displays display, boolean history) {
+		if (history) {
+			History.newItem("display:" + display.toString());
+		}
+		changeDisplay(display);
 	}
 
 	public static void changeDisplay(Displays display) {

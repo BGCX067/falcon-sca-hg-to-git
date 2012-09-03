@@ -84,7 +84,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		buildInfoView();
 
 		buildAuthView();
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm);
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm, true);
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			buildNotePanel(true);
 		}
 
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm);
+		DisplayUtils.changeDisplay(DisplayUtils.Displays.FighterForm, true);
 	}
 
 	public void setForm(FormPanel form) {
