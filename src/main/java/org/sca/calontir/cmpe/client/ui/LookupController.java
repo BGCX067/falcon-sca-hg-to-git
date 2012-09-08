@@ -23,20 +23,22 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  */
 public class LookupController {
 
+	private static final Logger log = Logger.getLogger(LookupController.class.getName());
 	private final static long DAY = 86400000L;
 	private static LookupController _instance = new LookupController();
 	private List<AuthType> authTypes = null;
 	private List<ScaGroup> scaGroups = null;
-	private Map<Long, FighterInfo> fighterMap = null;
+	private Map<Long, FighterInfo> fighterMap = new HashMap<Long, FighterInfo>();
 	private Long dateSaved = null;
 	boolean dirty = false;
 	private boolean fighterDLComplete = false;
+	private FighterServiceAsync fighterService = GWT.create(FighterService.class);
 
 	private LookupController() {
 		try {
 			buildTables();
 		} catch (Exception e) {
-			Window.alert(e.toString());
+			log.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
@@ -57,8 +59,8 @@ public class LookupController {
 	}
 
 	public ScaGroup getScaGroup(String name) {
-		for(ScaGroup group : scaGroups) {
-			if(name.equals(group.getGroupName())) {
+		for (ScaGroup group : scaGroups) {
+			if (name.equals(group.getGroupName())) {
 				return group;
 			}
 		}
@@ -66,10 +68,7 @@ public class LookupController {
 	}
 
 	public void replaceFighter(FighterInfo replacement) {
-		buildTables();
-		//fighterMap.put(replacement.getScaName(), replacement);
-		//dirty = true;
-		//writeDataToLocal();
+		updateLocalData();
 	}
 
 	public List<FighterInfo> getFighterList(String searchName) {
@@ -99,6 +98,7 @@ public class LookupController {
 						JSONNumber id = scaNameObj.get("id").isNumber();
 						JSONString auths = scaNameObj.get("authorizations").isString();
 						JSONString group = scaNameObj.get("group").isString();
+						JSONString status = scaNameObj.get("status").isString();
 						if (searchName == null || searchName.isEmpty()
 								|| scaName.stringValue().toUpperCase().contains(searchName.toUpperCase())) {
 							FighterInfo fli = new FighterInfo();
@@ -106,11 +106,12 @@ public class LookupController {
 							fli.setScaName(scaName.stringValue());
 							fli.setAuthorizations(auths.stringValue());
 							fli.setGroup(group.stringValue());
+							fli.setStatus(status.stringValue());
 							fighterMap.put(fli.getFighterId(), fli);
 						}
 					}
 				} catch (Exception e) {
-					Window.alert(e.getMessage());
+					log.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
 		}
@@ -148,11 +149,13 @@ public class LookupController {
 					JSONNumber id = new JSONNumber(fli.getFighterId());
 					JSONString auths = new JSONString(fli.getAuthorizations());
 					JSONString group = new JSONString(fli.getGroup());
+					JSONString status = new JSONString(fli.getStatus());
 					JSONObject scaNameObj = new JSONObject();
 					scaNameObj.put("scaName", scaName);
 					scaNameObj.put("id", id);
 					scaNameObj.put("authorizations", auths);
 					scaNameObj.put("group", group);
+					scaNameObj.put("status", status);
 					scaNameObjs.set(i++, scaNameObj);
 				}
 
@@ -170,44 +173,10 @@ public class LookupController {
 		}
 	}
 
-	private void getStoredList(final FighterServiceAsync fighterService) {
-		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "/RehydrateDatabase.groovy");
-		try {
-			requestBuilder.sendRequest("request", new RequestCallback() {
-				@Override
-				public void onResponseReceived(Request request, Response response) {
-					String text = response.getText();
-					Storage stockStore = Storage.getLocalStorageIfSupported();
-					if (stockStore != null) {
-						stockStore.removeItem("scaNameList");
-						stockStore.setItem("scaNameList", text);
-
-						JSONValue value = JSONParser.parseStrict(text);
-						JSONObject valueObj = value.isObject();
-						//vv
-						//JSONString saveDate = valueObj.get("dateSaved").isString();
-						JSONNumber saveDate = valueObj.get("dateSaved").isNumber();
-						double d = saveDate.doubleValue();
-						long timeStamp = (new Double(d)).longValue();
-						dateSaved = new Long(timeStamp);
-						Date saved = new Date(timeStamp);
-
-						getFighterList(null);
-						getListItems(fighterService, saved);
-					}
-				}
-
-				@Override
-				public void onError(Request request, Throwable exception) {
-					Window.alert("Failed lookup " + exception.getMessage());
-				}
-			});
-		} catch (RequestException ex) {
-			Logger.getLogger(LookupController.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	private void getListItems(final FighterServiceAsync fighterService, final Date targetDate) {
+	public void updateLocalData() {
+		final Date targetDate = new Date(dateSaved);
+		dateSaved = new Date().getTime();
+		getFighterList(null);
 		fighterService.getListItems(targetDate, new AsyncCallback<FighterListInfo>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -228,65 +197,36 @@ public class LookupController {
 				}
 
 				writeDataToLocal();
-				fighterDLComplete = true;
 				//signal we have the data;
 			}
 		});
 	}
 
 	private void buildTables() {
-		Storage stockStore = Storage.getLocalStorageIfSupported();
-		int i = 0;
-		String timeStampStr = null;
-		if (stockStore != null) {
-			timeStampStr = stockStore.getItem("scaNameUpdated");
-		}
-		Date targetDate;
-		if (timeStampStr == null || timeStampStr.trim().isEmpty()) {
-			targetDate = null;
-		} else {
-			long timeStamp = Long.valueOf(timeStampStr);
-			Date now = new Date();
-			Shout shout = Shout.getInstance();
-			if (now.getTime() - DAY < timeStamp) {
-				targetDate = null;
-				shout.tell("Loading remote data");
-			} else {
-				targetDate = new Date(timeStamp);
-				shout.tell("Loading local data");
-			}
-		}
-
-		try {
-			getFighterList("");
-		} catch (Exception e) {
-		}
-
-		FighterServiceAsync fighterService = GWT.create(FighterService.class);
-		getStoredList(fighterService);
-
-
-		fighterService.getAuthTypes(new AsyncCallback<List<AuthType>>() {
+		final Storage stockStore = Storage.getLocalStorageIfSupported();
+		fighterService.initialLookup(new AsyncCallback<Map<String, Object>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				throw new UnsupportedOperationException("Not supported yet.");
 			}
 
 			@Override
-			public void onSuccess(List<AuthType> result) {
-				authTypes = result;
-			}
-		});
+			public void onSuccess(Map<String, Object> result) {
+				String text = (String) result.get("stored");
+				if (stockStore != null) {
+					stockStore.removeItem("scaNameList");
+					stockStore.setItem("scaNameList", text);
+					JSONValue value = JSONParser.parseStrict(text);
+					JSONObject valueObj = value.isObject();
+					JSONNumber saveDate = valueObj.get("dateSaved").isNumber();
+					double d = saveDate.doubleValue();
+					long timeStamp = (new Double(d)).longValue();
+					dateSaved = new Long(timeStamp);
+					stockStore.setItem("scaNameUpdated", saveDate.toString());
+					fighterDLComplete = true;
+				}
 
-		fighterService.getGroups(new AsyncCallback<List<ScaGroup>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				throw new UnsupportedOperationException("Not supported yet.");
-			}
-
-			@Override
-			public void onSuccess(List<ScaGroup> result) {
-				scaGroups = result;
+				authTypes = (List<AuthType>) result.get("authTypes");
+				scaGroups = (List<ScaGroup>) result.get("groups");
 			}
 		});
 	}

@@ -3,6 +3,7 @@ import org.sca.calontir.cmpe.user.SecurityFactory
 import org.sca.calontir.cmpe.dto.Fighter
 import org.sca.calontir.cmpe.db.FighterDAO
 import org.sca.calontir.cmpe.utils.MarshalUtils
+import org.sca.calontir.cmpe.common.*
 import com.google.appengine.api.blobstore.BlobKey
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
@@ -23,16 +24,18 @@ def json = new groovy.json.JsonBuilder()
 
 def mapList = []
 fighters.each {
-	def fmap = [:]
-	fmap.scaName = it.scaName
-	fmap.id = it.fighterId
-	fmap.authorizations = MarshalUtils.getAuthsAsString(it.authorization)
-	if(it.scaGroup)
-		fmap.group = it.scaGroup.groupName
-	else
-		fmap.group = "Unknown or Out of Kingdom"
-	fmap.status = it.status
-	mapList << fmap
+	if(it.status != FighterStatus.DELETED) {
+		def fmap = [:]
+		fmap.scaName = it.scaName
+		fmap.id = it.fighterId
+		fmap.authorizations = MarshalUtils.getAuthsAsString(it.authorization)
+		if(it.scaGroup)
+			fmap.group = it.scaGroup.groupName
+		else
+			fmap.group = "Unknown or Out of Kingdom"
+		fmap.status = it.status
+		mapList << fmap
+	}
 }
 
 def now = new Date()

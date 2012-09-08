@@ -115,15 +115,17 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler, Sea
 			}
 
 			List<FighterInfo> fList = LookupController.getInstance().getFighterList(security.getLoginInfo().getScaName());
-			FighterInfo user = fList.get(0);
-			if (user.getGroup() != null) {
-				for (int i = 0; i < group.getItemCount(); ++i) {
-					if (group.getValue(i).equals(user.getGroup())) {
-						group.setSelectedIndex(i);
-						break;
-					}
-				}
-			}
+			if(fList != null && fList.size() > 0) {
+                FighterInfo user = fList.get(0);
+                if (user.getGroup() != null) {
+                    for (int i = 0; i < group.getItemCount(); ++i) {
+                        if (group.getValue(i).equals(user.getGroup())) {
+                            group.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                }
+            }
 			group.addChangeHandler(new ChangeHandler() {
 				@Override
 				public void onChange(ChangeEvent event) {
@@ -208,17 +210,19 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler, Sea
 			box.getElement().getStyle().setDisplay(Style.Display.NONE);
 			submit.getElement().getStyle().setDisplay(Style.Display.NONE);
 			List<FighterInfo> fList = LookupController.getInstance().getFighterList(security.getLoginInfo().getScaName());
-			FighterInfo user = fList.get(0);
-			if (user.getGroup() != null) {
-				for (int i = 0; i < groupBox.getItemCount(); ++i) {
-					if (groupBox.getValue(i).equals(user.getGroup())) {
-						groupBox.setSelectedIndex(i);
-						break;
-					}
-				}
-			}
-			ScaGroup scaGroup = LookupController.getInstance().getScaGroup(user.getGroup());
-			fireEvent(new SearchEvent(scaGroup));
+            if(fList != null && fList.size() > 0) {
+                FighterInfo user = fList.get(0);
+                if (user.getGroup() != null) {
+                    for (int i = 0; i < groupBox.getItemCount(); ++i) {
+                        if (groupBox.getValue(i).equals(user.getGroup())) {
+                            groupBox.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                }
+                ScaGroup scaGroup = LookupController.getInstance().getScaGroup(user.getGroup());
+                fireEvent(new SearchEvent(scaGroup));
+            }
 		}
 	}
 }

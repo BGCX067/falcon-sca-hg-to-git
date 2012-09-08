@@ -1,14 +1,32 @@
 package org.sca.calontir.cmpe.server;
 
+import com.google.appengine.api.NamespaceManager;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreInputStream;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
-import org.sca.calontir.cmpe.client.StoredFighterList;
+import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
@@ -25,9 +43,9 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		TableUpdates tu = tuDao.getTableUpdates("Fighter");
 		List<FighterListItem> fighters;
 		if (targetDate == null
-			|| (tu != null
-			&& tu.getLastDeletion() != null
-			&& new DateTime(tu.getLastDeletion()).isAfter(new DateTime(targetDate)))) {
+				|| (tu != null
+				&& tu.getLastDeletion() != null
+				&& new DateTime(tu.getLastDeletion()).isAfter(new DateTime(targetDate)))) {
 
 			fighters = fighterDao.getFighterListItems();
 			retval.setUpdateInfo(false);
@@ -38,53 +56,19 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
 		List<FighterInfo> retValList = new ArrayList<FighterInfo>();
 		for (FighterListItem fli : fighters) {
-			if (fli != null) {
+			if (fli != null && fli.getStatus() != FighterStatus.DELETED) {
 				FighterInfo info = new FighterInfo();
 				info.setFighterId(fli.getFighterId() == null ? 0 : fli.getFighterId());
 				info.setScaName(fli.getScaName() == null ? "" : fli.getScaName());
 				info.setAuthorizations(fli.getAuthorizations() == null ? "" : fli.getAuthorizations());
 				info.setGroup(fli.getGroup() == null ? "" : fli.getGroup());
+				info.setStatus(fli.getStatus() == null ? "" : fli.getStatus().toString());
 				retValList.add(info);
 			}
 		}
 		retval.setFighterInfo(retValList);
 
 		return retval;
-	}
-
-	@Override
-	public StoredFighterList getStoredList() {
-//		System.out.println("in getStoredList");
-//		CompilerConfiguration compiler =new CompilerConfiguration();
-//		compiler.setScriptBaseClass("Storage");
-//		GroovyShell shell = new GroovyShell(compiler);
-//		Map retMap = (Map) shell.evaluate("getFighterList()");
-//		System.out.println("Got map, size: " + retMap.size());
-//		//Storage storage = new Storage();
-//		//Map retMap = storage.getFighterList();
-//		StoredFighterList sfl = new StoredFighterList();
-//
-//		List<FighterListItem> fighters = (List<FighterListItem>) retMap.get("fighterList");
-//		Date saved = (Date) retMap.get("saveDate");
-//
-//		sfl.setDateSaved(saved);
-//
-//		List<FighterInfo> retValList = new ArrayList<FighterInfo>();
-//		for (FighterListItem fli : fighters) {
-//			if (fli != null) {
-//				FighterInfo info = new FighterInfo();
-//				info.setFighterId(fli.getFighterId() == null ? 0 : fli.getFighterId());
-//				info.setScaName(fli.getScaName() == null ? "" : fli.getScaName());
-//				info.setAuthorizations(fli.getAuthorizations() == null ? "" : fli.getAuthorizations());
-//				info.setGroup(fli.getGroup() == null ? "" : fli.getGroup());
-//				retValList.add(info);
-//			}
-//		}
-//		sfl.setFighterInfo(retValList);
-//
-//
-//		return sfl;
-		return null;
 	}
 
 	@Override
@@ -110,8 +94,60 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 	public Fighter getFighterByScaName(String scaName) {
 		FighterDAO fighterDao = new FighterDAO();
 		List<Fighter> fList = fighterDao.queryFightersByScaName(scaName);
-		if(fList != null && !fList.isEmpty())
+		if (fList != null && !fList.isEmpty()) {
 			return fList.get(0);
+		}
 		return null;
+	}
+
+	@Override
+	public Map<String, Object> initialLookup() {
+		Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
+		Map<String, Object> iMap = new HashMap<String, Object>();
+		// get from blob
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		String namespace = NamespaceManager.get();
+		String blobKeyStr;
+		try {
+			NamespaceManager.set("system");
+
+			String name = "calontir.snapshotkey";
+			Query query = new Query("properties");
+			query.setFilter(new Query.FilterPredicate("name", Query.FilterOperator.EQUAL, name));
+			PreparedQuery preparedQuery = datastore.prepare(query);
+			Entity entity = preparedQuery.asSingleEntity();
+			blobKeyStr = (String) entity.getProperty("property");
+		} finally {
+			NamespaceManager.set(namespace);
+		}
+		BlobKey blobKey = new BlobKey(blobKeyStr);
+		BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
+		try {
+			BlobstoreInputStream bis = new BlobstoreInputStream(blobKey);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(bis));
+			StringWriter sw = new StringWriter();
+			char[] buffer = new char[1024 * 4];
+			int n = 0;
+			while (-1 != (n = reader.read(buffer))) {
+				sw.write(buffer, 0, n);
+			}
+			String text = sw.toString();
+
+			iMap.put("stored", text);
+		} catch (IOException ex) {
+			Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		// get groups
+		ScaGroupDAO groupDao = new ScaGroupDAO();
+		List<ScaGroup> groups = groupDao.getScaGroup();
+		iMap.put("groups", groups);
+
+		// get authtypes
+		AuthTypeDAO authTypeDao = new AuthTypeDAO();
+		List<AuthType> authTypes = authTypeDao.getAuthType();
+		iMap.put("authTypes", authTypes);
+
+		return iMap;
 	}
 }

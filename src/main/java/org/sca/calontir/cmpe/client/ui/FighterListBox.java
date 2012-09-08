@@ -30,6 +30,7 @@ import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.SearchEvent.SearchType;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
@@ -108,6 +109,18 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		table.addColumn(scaNameColumn, "SCA Name");
 		table.addColumn(authorizationColumn, "Authorizations");
 		table.addColumn(groupColumn, "Group");
+
+		if(security.isRoleOrGreater(UserRoles.KNIGHTS_MARSHAL)) {
+			TextColumn<FighterInfo> statusColumn = new TextColumn<FighterInfo>() {
+				@Override
+				public String getValue(FighterInfo fli) {
+					return fli.getStatus();
+				}
+			};
+			statusColumn.setSortable(false);
+
+			table.addColumn(statusColumn, "Status");
+		}
 
 		final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<FighterInfo>();
 		table.setSelectionModel(selectionModel);

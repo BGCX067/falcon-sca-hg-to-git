@@ -35,7 +35,7 @@ public class CalonBar extends Composite {
 	private Anchor signOutLink = new Anchor("Sign Out");
 	private Anchor feedBackLink = new Anchor("Feedback");
 	private Anchor supportLink = new Anchor("Support");
-//	private Anchor syncLink = new Anchor("Sync");
+	private Anchor reportLink = new Anchor("Report");
 
 	private static class AboutPanel extends PopupPanel {
 
@@ -108,6 +108,11 @@ public class CalonBar extends Composite {
 		}
 
 		linkbarPanel.add(getDivBar());
+		
+		reportLink.setStyleName(CALONBARLINK);
+		linkbarPanel.add(reportLink);
+
+		linkbarPanel.add(getDivBar());
 
 		feedBackLink.setHref(FEEDBACKLINK);
 		feedBackLink.setStyleName(CALONBARLINK);
@@ -144,23 +149,6 @@ public class CalonBar extends Composite {
 		});
 
 		linkbarPanel.add(aboutLink);
-
-//		linkbarPanel.add(getDivBar());
-
-//		syncLink.addClickHandler(new ClickHandler() {
-//
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				Storage stockStore = Storage.getLocalStorageIfSupported();
-//				if (stockStore != null) {
-//					stockStore.removeItem("scaNameList");
-//					stockStore.removeItem("scaNameUpdated");
-//					Window.Location.assign("/");
-//				}
-//			}
-//		});
-//		syncLink.setStyleName(CALONBARLINK);
-//		linkbarPanel.add(syncLink);
 
 		barPanel.add(linkbarPanel);
 

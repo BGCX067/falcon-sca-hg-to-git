@@ -36,6 +36,7 @@ public class IndexPage implements EntryPoint {
 	private FighterFormWidget fighterFormWidget = new FighterFormWidget();
 	private FighterListBox flb = new FighterListBox();
 	private Panel tilePanel;
+	private Shout shout = Shout.getInstance();
 
 	/**
 	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
@@ -49,6 +50,7 @@ public class IndexPage implements EntryPoint {
 				Window.Location.replace("/over_quota.html");
 			}
 		});
+		shout.tell("Please wait, retrieving data");
 		LookupController.getInstance();
 		final Timer t = new Timer() {
 			@Override
@@ -57,6 +59,8 @@ public class IndexPage implements EntryPoint {
 					Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
 						@Override
 						public void execute() {
+							shout.tell("Updating Initial data");
+							LookupController.getInstance().updateLocalData();
 							onModuleLoad2();
 						}
 					});
@@ -116,8 +120,7 @@ public class IndexPage implements EntryPoint {
 							tilePanel.add(hello);
 						}
 
-						Shout shout = Shout.getInstance();
-						shout.tell("loading");
+						shout.tell("Building pages.");
 						buildIndexPage();
 						shout.hide();
 					}
@@ -142,7 +145,6 @@ public class IndexPage implements EntryPoint {
 		});
 
 	}
-	
 
 	private void buildIndexPage() {
 		// remove Loading-Message from page

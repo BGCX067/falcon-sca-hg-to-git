@@ -290,7 +290,7 @@
 					<!-- This is for generating Asynch interfaces -->
 					<!-- <servicePattern>**/client/*Service.java</servicePattern> -->
 
-					<extraJvmArgs>-Xmx512m</extraJvmArgs>
+					<extraJvmArgs>-Xss1M -Xmx512m</extraJvmArgs>
 					<!--<jvm>${JAVA_HOME}/bin/java</jvm> -->
 					<!--<noServer>false</noServer> -->
 

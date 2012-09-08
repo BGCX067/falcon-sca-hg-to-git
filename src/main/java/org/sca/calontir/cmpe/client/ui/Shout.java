@@ -3,6 +3,7 @@ package org.sca.calontir.cmpe.client.ui;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 
@@ -12,7 +13,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
  */
 public class Shout extends PopupPanel {
 
-	private Label comm = new Label();
+	private HTML comm = new HTML();
 	private final static Shout _instance = new Shout();
 	private boolean showing = false;
 	private Timer t = null;
@@ -31,8 +32,9 @@ public class Shout extends PopupPanel {
 
 	@Override
 	public void hide() {
-		super.hide();
 		showing = false;
+		super.hide();
+		comm.setText("");
 		if(t != null) {
 			t.cancel();
 			t = null;
@@ -42,12 +44,12 @@ public class Shout extends PopupPanel {
 
 	public void tell(String status) {
 		if(showing) {
-			status = comm.getText() + "\n" + status;
+			status = comm.getText() + "<br>" + status;
 		}
 		if(t != null) {
 			t.cancel();
 		}
-		comm.setText(status);
+		comm.setHTML(status);
 		showing = true;
 		setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 			@Override
