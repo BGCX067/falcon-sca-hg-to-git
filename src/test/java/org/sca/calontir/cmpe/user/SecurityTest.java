@@ -65,14 +65,13 @@ public class SecurityTest {
         Security instance = new Security();
         User user = new User("riksca@gmail.com", "", "riksca@gmail.com");
         Fighter fighter = new Fighter();
-        fighter.setRole(UserRoles.DEPUTY_EARL_MARSHAL);
+        fighter.setRole(UserRoles.CARD_MARSHAL);
         instance.setAeUser(user);
         instance.setUser(fighter);
-        boolean expResult = false;
-        boolean result = instance.isRoleOrGreater(UserRoles.CARD_MARSHAL);
-        assertEquals(expResult, result);
+        boolean result = instance.isRoleOrGreater(UserRoles.KNIGHTS_MARSHAL);
+        assertTrue(result);
         
-        result = instance.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL);
+        result = instance.isRoleOrGreater(UserRoles.CARD_MARSHAL);
         assertTrue(result);
     }
 

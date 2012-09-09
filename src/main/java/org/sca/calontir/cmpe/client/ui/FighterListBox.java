@@ -14,7 +14,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -110,7 +109,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		table.addColumn(authorizationColumn, "Authorizations");
 		table.addColumn(groupColumn, "Group");
 
-		if(security.isRoleOrGreater(UserRoles.KNIGHTS_MARSHAL)) {
+		if(security.isRoleOrGreater(UserRoles.GROUP_MARSHAL)) {
 			TextColumn<FighterInfo> statusColumn = new TextColumn<FighterInfo>() {
 				@Override
 				public String getValue(FighterInfo fli) {

@@ -34,7 +34,7 @@ public class IndexPage implements EntryPoint {
 	protected static final String GETTING_STARTED = "https://sites.google.com/site/calontirmmproject/support";
 	final private Security security = SecurityFactory.getSecurity();
 	private FighterFormWidget fighterFormWidget = new FighterFormWidget();
-	private FighterListBox flb = new FighterListBox();
+	private FighterListBox flb;
 	private Panel tilePanel;
 	private Shout shout = Shout.getInstance();
 
@@ -154,6 +154,7 @@ public class IndexPage implements EntryPoint {
 		CalonBar calonBar = new CalonBar();
 		tilePanel.add(calonBar);
 
+		flb = new FighterListBox();
 		SearchBar searchBar = new SearchBar();
 		searchBar.addHandler(fighterFormWidget, EditViewEvent.TYPE);
 		searchBar.addHandler(flb, SearchEvent.TYPE);

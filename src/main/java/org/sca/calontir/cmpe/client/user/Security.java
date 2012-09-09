@@ -4,6 +4,7 @@
  */
 package org.sca.calontir.cmpe.client.user;
 
+import com.google.gwt.user.client.Window;
 import org.sca.calontir.cmpe.client.LoginInfo;
 import org.sca.calontir.cmpe.common.UserRoles;
 
@@ -43,7 +44,7 @@ public class Security {
 		if (loginInfo == null || loginInfo.getUserRole() == null) {
 			return false;
 		}
-		return loginInfo.getUserRole().compareTo(userRole) >= 0;
+		return loginInfo.getUserRole().ordinal() >= userRole.ordinal();
 	}
 
 	public boolean canEditAuthorizations(Long fighterId) {

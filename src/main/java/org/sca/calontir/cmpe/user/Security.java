@@ -22,7 +22,7 @@ public class Security {
     }
 
     public boolean isRoleOrGreater(UserRoles userRole) {
-        return user == null ? false : user.getRole().compareTo(userRole) >= 0;
+        return user == null ? false : user.getRole().ordinal() >= userRole.ordinal();
     }
 
     public User getAeUser() {
