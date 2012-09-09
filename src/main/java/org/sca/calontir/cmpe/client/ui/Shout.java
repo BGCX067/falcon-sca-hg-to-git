@@ -44,7 +44,7 @@ public class Shout extends PopupPanel {
 
 	public void tell(String status) {
 		if(showing) {
-			status = comm.getText() + "<br>" + status;
+			status = comm.getHTML() + "<br>" + status;
 		}
 		if(t != null) {
 			t.cancel();

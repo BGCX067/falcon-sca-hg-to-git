@@ -33,6 +33,8 @@ public class LookupController {
 	boolean dirty = false;
 	private boolean fighterDLComplete = false;
 	private FighterServiceAsync fighterService = GWT.create(FighterService.class);
+	private Storage stockStore = Storage.getLocalStorageIfSupported();
+	private Shout shout = Shout.getInstance();
 
 	private LookupController() {
 		try {
@@ -72,10 +74,8 @@ public class LookupController {
 	}
 
 	public List<FighterInfo> getFighterList(String searchName) {
-		Storage stockStore;
-		stockStore = Storage.getLocalStorageIfSupported();
-		//if (!dirty) {
 		fighterMap = new HashMap<Long, FighterInfo>();
+		shout.tell("getFighterList: map size " + fighterMap.size());
 		if (stockStore != null) {
 			String scaNameListStr = stockStore.getItem("scaNameList");
 			if (scaNameListStr != null && !scaNameListStr.trim().isEmpty()) {
@@ -115,6 +115,7 @@ public class LookupController {
 				}
 			}
 		}
+		shout.tell("after getFighterList: map size " + fighterMap.size());
 		//}
 		List<FighterInfo> fighterList = new ArrayList<FighterInfo>(fighterMap.values());
 
@@ -128,7 +129,7 @@ public class LookupController {
 	}
 
 	private void writeDataToLocal() {
-		Storage stockStore = Storage.getLocalStorageIfSupported();
+		shout.tell("writeDataToLocal: map size " + fighterMap.size());
 		if (stockStore != null) {
 			JSONArray scaNameObjs;
 			scaNameObjs = new JSONArray();
@@ -176,7 +177,9 @@ public class LookupController {
 	public void updateLocalData() {
 		final Date targetDate = new Date(dateSaved);
 		dateSaved = new Date().getTime();
+		shout.tell("updateLocalData1: map size " + fighterMap.size());
 		getFighterList(null);
+		shout.tell("updateLocalData2: map size " + fighterMap.size());
 		fighterService.getListItems(targetDate, new AsyncCallback<FighterListInfo>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -186,24 +189,18 @@ public class LookupController {
 
 			@Override
 			public void onSuccess(FighterListInfo result) {
-				if (result.isUpdateInfo()) {
-					for (FighterInfo fi : result.getFighterInfo()) {
-						fighterMap.put(fi.getFighterId(), fi);
-					}
-				} else {
-					for (FighterInfo fi : result.getFighterInfo()) {
-						fighterMap.put(fi.getFighterId(), fi);
-					}
+				getFighterList(null);
+				for (FighterInfo fi : result.getFighterInfo()) {
+					fighterMap.put(fi.getFighterId(), fi);
 				}
+				shout.tell("updateLocalData3: map size " + fighterMap.size());
 
 				writeDataToLocal();
-				//signal we have the data;
 			}
 		});
 	}
 
 	private void buildTables() {
-		final Storage stockStore = Storage.getLocalStorageIfSupported();
 		fighterService.initialLookup(new AsyncCallback<Map<String, Object>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -222,11 +219,13 @@ public class LookupController {
 					long timeStamp = (new Double(d)).longValue();
 					dateSaved = new Long(timeStamp);
 					stockStore.setItem("scaNameUpdated", saveDate.toString());
-					fighterDLComplete = true;
+					getFighterList(null);
+					shout.tell("init: map size " + fighterMap.size());
 				}
 
 				authTypes = (List<AuthType>) result.get("authTypes");
 				scaGroups = (List<ScaGroup>) result.get("groups");
+				fighterDLComplete = true;
 			}
 		});
 	}

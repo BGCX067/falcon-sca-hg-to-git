@@ -33,7 +33,7 @@ public class IndexPage implements EntryPoint {
 	private static final Logger log = Logger.getLogger(IndexPage.class.getName());
 	protected static final String GETTING_STARTED = "https://sites.google.com/site/calontirmmproject/support";
 	final private Security security = SecurityFactory.getSecurity();
-	private FighterFormWidget fighterFormWidget = new FighterFormWidget();
+	private FighterFormWidget fighterFormWidget;
 	private FighterListBox flb;
 	private Panel tilePanel;
 	private Shout shout = Shout.getInstance();
@@ -155,6 +155,7 @@ public class IndexPage implements EntryPoint {
 		tilePanel.add(calonBar);
 
 		flb = new FighterListBox();
+		fighterFormWidget  = new FighterFormWidget();
 		SearchBar searchBar = new SearchBar();
 		searchBar.addHandler(fighterFormWidget, EditViewEvent.TYPE);
 		searchBar.addHandler(flb, SearchEvent.TYPE);
