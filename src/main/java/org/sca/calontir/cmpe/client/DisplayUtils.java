@@ -33,4 +33,11 @@ public class DisplayUtils {
 			}
 		}
 	}
+
+	public static void clearDisplay() {
+		for (Displays d : Displays.values()) {
+			DOM.getElementById(d.toString()).getStyle().setDisplay(Style.Display.NONE);
+		}
+
+	}
 }

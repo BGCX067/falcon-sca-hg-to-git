@@ -157,6 +157,7 @@ public class IndexPage implements EntryPoint {
 		flb = new FighterListBox();
 		fighterFormWidget  = new FighterFormWidget();
 		SearchBar searchBar = new SearchBar();
+		searchBar.getElement().setId("SearchBar");
 		searchBar.addHandler(fighterFormWidget, EditViewEvent.TYPE);
 		searchBar.addHandler(flb, SearchEvent.TYPE);
 		searchBar.addHandler(searchBar, SearchEvent.TYPE);

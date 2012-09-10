@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.LoginInfo;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
@@ -108,8 +109,15 @@ public class CalonBar extends Composite {
 		}
 
 		linkbarPanel.add(getDivBar());
-		
+
 		reportLink.setStyleName(CALONBARLINK);
+		reportLink.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
+				DisplayUtils.clearDisplay();
+			}
+		});
 		linkbarPanel.add(reportLink);
 
 		linkbarPanel.add(getDivBar());
@@ -128,13 +136,11 @@ public class CalonBar extends Composite {
 
 		aboutLink.setStyleName(CALONBARLINK);
 		aboutLink.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				final AboutPanel ab = new AboutPanel();
 				ab.setTitle("Click outside the About box to close.");
 				ab.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-
 					@Override
 					public void setPosition(int offsetWidth, int offsetHeight) {
 						int left = 50;
@@ -165,7 +171,6 @@ public class CalonBar extends Composite {
 	private void loadLogin() {
 		signInLink.setHref(loginInfo.getLoginUrl());
 		signInLink.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				Window.open("", "loginwindow", "width=940,height=400,status=1,resizeable=1,scrollbars=1");
@@ -179,7 +184,6 @@ public class CalonBar extends Composite {
 
 	private void loadLogout() {
 		signOutLink.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				String gLogoutUrl = loginInfo.getLogoutUrl();
