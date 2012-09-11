@@ -69,13 +69,16 @@ public class LookupController {
 		return null;
 	}
 
+	public FighterInfo getFighter(Long id) {
+		return fighterMap.get(id);
+	}
+
 	public void replaceFighter(FighterInfo replacement) {
 		updateLocalData();
 	}
 
 	public List<FighterInfo> getFighterList(String searchName) {
 		fighterMap = new HashMap<Long, FighterInfo>();
-		shout.tell("getFighterList: map size " + fighterMap.size());
 		if (stockStore != null) {
 			String scaNameListStr = stockStore.getItem("scaNameList");
 			if (scaNameListStr != null && !scaNameListStr.trim().isEmpty()) {
@@ -115,8 +118,6 @@ public class LookupController {
 				}
 			}
 		}
-		shout.tell("after getFighterList: map size " + fighterMap.size());
-		//}
 		List<FighterInfo> fighterList = new ArrayList<FighterInfo>(fighterMap.values());
 
 		Collections.sort(fighterList, new Comparator<FighterInfo>() {
@@ -129,7 +130,6 @@ public class LookupController {
 	}
 
 	private void writeDataToLocal() {
-		shout.tell("writeDataToLocal: map size " + fighterMap.size());
 		if (stockStore != null) {
 			JSONArray scaNameObjs;
 			scaNameObjs = new JSONArray();
@@ -177,9 +177,7 @@ public class LookupController {
 	public void updateLocalData() {
 		final Date targetDate = new Date(dateSaved);
 		dateSaved = new Date().getTime();
-		shout.tell("updateLocalData1: map size " + fighterMap.size());
 		getFighterList(null);
-		shout.tell("updateLocalData2: map size " + fighterMap.size());
 		fighterService.getListItems(targetDate, new AsyncCallback<FighterListInfo>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -193,7 +191,6 @@ public class LookupController {
 				for (FighterInfo fi : result.getFighterInfo()) {
 					fighterMap.put(fi.getFighterId(), fi);
 				}
-				shout.tell("updateLocalData3: map size " + fighterMap.size());
 
 				writeDataToLocal();
 			}
@@ -220,7 +217,6 @@ public class LookupController {
 					dateSaved = new Long(timeStamp);
 					stockStore.setItem("scaNameUpdated", saveDate.toString());
 					getFighterList(null);
-					shout.tell("init: map size " + fighterMap.size());
 				}
 
 				authTypes = (List<AuthType>) result.get("authTypes");

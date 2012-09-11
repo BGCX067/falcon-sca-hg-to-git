@@ -38,13 +38,6 @@ def getFighterList() {
 	return jsonStr
 }
 
-groupsDao = new ScaGroupDAO()
-def scaGroups = [:]
-def groups = groupsDao.getScaGroup()
-groups.each {group ->
-	scaGroups[group.groupName] = []
-}
-
 Security security = SecurityFactory.getSecurity()
 def jsonStr = getFighterList()
 
@@ -55,10 +48,9 @@ dao = new FighterDAO()
 dt = new DateTime(jsonObj.dateSaved)
 def fighters = dao.getFighterListItems(dt)
 mapList = jsonObj.scaNames
-//Create map of names
-scaNameMap = [:]
+keyMap = [:]
 mapList.each {
-	scaNameMap[it.scaName] = it
+	keyMap[it.fighterId] = it
 	it.status = FighterStatus.valueOf(it.status)
 }
 
@@ -74,19 +66,28 @@ fighters.each {
 	}
 	fmap.status = it.status
 
-	if(scaNameMap.containsKey(it.scaName)) {
-		tempF = scaNameMap[it.scaName]
+	if(keyMap.containsKey(it.fighterId)) {
+		tempF = keyMap[it.fighterId]
 		mapList.remove(tempF)
-		scaNameMap.remove(it.scaName)
+		keyMap.remove(it.fighterId)
 	}
 	
 	mapList << fmap
 }
 
+int count = 0
+int active = 0
+int marshal = 0
+
 mapList.each { f ->
-	scaGroups[f.group]?.add(f)
+	count++
+	if(f.status.equals(FighterStatus.ACTIVE)) {
+		active++
+	}
+	if(f.authorizations.contains('Marshal')) {
+		marshal++
+	}
 }
-scaGroups.sort()
 
 StringWriter writer = new StringWriter()  
 def build = new MarkupBuilder(writer)  
@@ -95,28 +96,9 @@ build.html{
 		title('Report')
 	}  
 	body{  
-		scaGroups.keySet().each { key -> 
-			p() {
-				h2(key)
-				fList = scaGroups[key]
-				if(!fList.isEmpty()) {
-					fList.sort{it.scaName}
-					ol() {
-						fList.each { f ->
-							if(f.status.equals(FighterStatus.ACTIVE)) {
-								li(f.scaName)
-							}
-						}
-					}
-				}
-			}
-		}  
+		p"Number of fighters ${count}"
+		p"Number of active fighters ${active}"
+		p"Number of marshals ${marshal}"
 	}  
 }  
 println writer.toString()
-
-def email = security.user.email[0]?.emailAddress
-
-if(email != null) {
-	mail.send from: email, to: email, subject: "report", htmlBody: writer.toString()
-}
