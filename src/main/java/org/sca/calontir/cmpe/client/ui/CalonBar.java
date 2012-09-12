@@ -7,7 +7,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.LoginInfo;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
@@ -36,7 +35,6 @@ public class CalonBar extends Composite {
 	private Anchor signOutLink = new Anchor("Sign Out");
 	private Anchor feedBackLink = new Anchor("Feedback");
 	private Anchor supportLink = new Anchor("Support");
-	private Anchor reportLink = new Anchor("Report");
 
 	private static class AboutPanel extends PopupPanel {
 
@@ -74,7 +72,7 @@ public class CalonBar extends Composite {
 			tile.add(new HTML("<li>Mistress Olga Belobashnia Cherepanova, Contributing artist.  Provider of the Falcon logo."));
 			tile.add(new HTML("<li>The CSS Styling for the page is based on the design created by Her Ladyship Sung Sai-êrh for the Calontir website."));
 			tile.add(new HTML("</ol>"));
-			Label versionLine = new Label("falcon version (DEV 1.1)");
+			Label versionLine = new Label("falcon version (1.0.7)");
 			versionLine.getElement().getStyle().setFontStyle(Style.FontStyle.ITALIC);
 			versionLine.getElement().getStyle().setFontSize(85.0, Style.Unit.PCT);
 			versionLine.getElement().getStyle().setProperty("textAlign", "right");
@@ -107,18 +105,6 @@ public class CalonBar extends Composite {
 		} else {
 			loadLogin();
 		}
-
-		linkbarPanel.add(getDivBar());
-
-		reportLink.setStyleName(CALONBARLINK);
-		reportLink.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
-				DisplayUtils.clearDisplay();
-			}
-		});
-		linkbarPanel.add(reportLink);
 
 		linkbarPanel.add(getDivBar());
 
