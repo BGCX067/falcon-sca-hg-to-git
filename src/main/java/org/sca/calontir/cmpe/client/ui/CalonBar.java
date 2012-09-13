@@ -108,17 +108,19 @@ public class CalonBar extends Composite {
 			loadLogin();
 		}
 
-		linkbarPanel.add(getDivBar());
+		if (security.isLoggedIn()) {
+			linkbarPanel.add(getDivBar());
 
-		reportLink.setStyleName(CALONBARLINK);
-		reportLink.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
-				DisplayUtils.clearDisplay();
-			}
-		});
-		linkbarPanel.add(reportLink);
+			reportLink.setStyleName(CALONBARLINK);
+			reportLink.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
+					DisplayUtils.clearDisplay();
+				}
+			});
+			linkbarPanel.add(reportLink);
+		}
 
 		linkbarPanel.add(getDivBar());
 
