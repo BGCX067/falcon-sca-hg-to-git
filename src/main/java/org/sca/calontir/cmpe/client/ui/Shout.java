@@ -35,18 +35,29 @@ public class Shout extends PopupPanel {
 		showing = false;
 		super.hide();
 		comm.setText("");
-		if(t != null) {
+		if (t != null) {
 			t.cancel();
 			t = null;
 		}
 	}
-	
 
 	public void tell(String status) {
-		if(showing) {
+		tell(status, true);
+	}
+
+	@Override
+	public void hide(boolean autoClosed) {
+		super.hide(autoClosed);
+		comm.setText("");
+	}
+
+	
+
+	public void tell(String status, boolean hide) {
+		if (showing) {
 			status = comm.getHTML() + "<br>" + status;
 		}
-		if(t != null) {
+		if (t != null) {
 			t.cancel();
 		}
 		comm.setHTML(status);
@@ -58,16 +69,18 @@ public class Shout extends PopupPanel {
 				int height = Window.getClientHeight();
 				int left = (width - offsetWidth) / 2;
 				int top = 50;
+				setWidth(width - offsetWidth + "px");
 				setPopupPosition(left, top);
-				//setWidth((offsetWidth - 100) + "px");
 			}
 		});
-		t = new Timer() {
-			@Override
-			public void run() {
-				hide();
-			}
-		};
-		t.schedule(5000);
+		if (hide) {
+			t = new Timer() {
+				@Override
+				public void run() {
+					hide();
+				}
+			};
+			t.schedule(5000);
+		}
 	}
 }
