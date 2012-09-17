@@ -35,7 +35,7 @@ public class DisplayUtils {
 	}
 
 	public static void clearDisplay() {
-		DOM.getElementById("searchBar").getStyle().setDisplay(Style.Display.NONE);
+		//DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
 		for (Displays d : Displays.values()) {
 			DOM.getElementById(d.toString()).getStyle().setDisplay(Style.Display.NONE);
 		}

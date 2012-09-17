@@ -1,12 +1,15 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.LoginInfo;
 import org.sca.calontir.cmpe.client.user.Security;
@@ -19,6 +22,7 @@ import org.sca.calontir.cmpe.client.user.SecurityFactory;
  */
 public class CalonBar extends Composite {
 
+	private static final Logger log = Logger.getLogger(CalonBar.class.getName());
 	protected static final String CALONBAR = "calonbar";
 	protected static final String INDEXHTML = "/";
 	protected static final String LOGOUTPAGE = "logout.jsp";
@@ -115,8 +119,22 @@ public class CalonBar extends Composite {
 			reportLink.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
-					DisplayUtils.clearDisplay();
+					GWT.runAsync(new RunAsyncCallback() {
+						@Override
+						public void onFailure(Throwable reason) {
+							log.log(Level.SEVERE, reason.getMessage(), reason);
+						}
+
+						@Override
+						public void onSuccess() {
+							DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
+							DisplayUtils.clearDisplay();
+							Panel tilePanel = RootPanel.get("tile");
+							ReportGen reportGen = new ReportGen();
+							reportGen.init();
+							tilePanel.add(reportGen);
+						}
+					});
 				}
 			});
 			linkbarPanel.add(reportLink);

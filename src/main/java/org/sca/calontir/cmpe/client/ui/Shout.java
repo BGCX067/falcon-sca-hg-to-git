@@ -67,7 +67,7 @@ public class Shout extends PopupPanel {
 			public void setPosition(int offsetWidth, int offsetHeight) {
 				int width = Window.getClientWidth();
 				int height = Window.getClientHeight();
-				int left = (width - offsetWidth) / 2;
+				int left = (width - offsetWidth) / 3;
 				int top = 50;
 				setWidth(width - offsetWidth + "px");
 				setPopupPosition(left, top);
