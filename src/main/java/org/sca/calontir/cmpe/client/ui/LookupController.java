@@ -13,6 +13,7 @@ import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
+import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
@@ -110,7 +111,9 @@ public class LookupController {
 							fli.setAuthorizations(auths.stringValue());
 							fli.setGroup(group.stringValue());
 							fli.setStatus(status.stringValue());
-							fighterMap.put(fli.getFighterId(), fli);
+							if (!fli.getStatus().equals(FighterStatus.DELETED.toString())) {
+								fighterMap.put(fli.getFighterId(), fli);
+							}
 						}
 					}
 				} catch (Exception e) {
