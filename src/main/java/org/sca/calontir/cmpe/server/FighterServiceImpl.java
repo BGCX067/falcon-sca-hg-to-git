@@ -56,7 +56,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
 		List<FighterInfo> retValList = new ArrayList<FighterInfo>();
 		for (FighterListItem fli : fighters) {
-			if (fli != null && fli.getStatus() != FighterStatus.DELETED) {
+			if (fli != null) {
 				FighterInfo info = new FighterInfo();
 				info.setFighterId(fli.getFighterId() == null ? 0 : fli.getFighterId());
 				info.setScaName(fli.getScaName() == null ? "" : fli.getScaName());
