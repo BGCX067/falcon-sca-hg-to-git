@@ -5,7 +5,6 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -21,7 +20,7 @@ public class ReportGen extends Composite {
 
 	public void init() {
 		Panel background = new FlowPanel();
-		History.newItem("qrtlyreport:Welcom");
+		History.newItem("qrtlyreport:Welcome");
 
 
 		Welcome welcome = new Welcome();

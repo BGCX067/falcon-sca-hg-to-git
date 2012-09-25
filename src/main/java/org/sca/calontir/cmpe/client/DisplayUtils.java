@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 
 /**
@@ -14,7 +15,8 @@ public class DisplayUtils {
 
 		SignupForm,
 		ListBox,
-		FighterForm
+		FighterForm,
+		ReportGen
 	}
 
 	public static void changeDisplay(Displays display, boolean history) {
@@ -27,17 +29,29 @@ public class DisplayUtils {
 	public static void changeDisplay(Displays display) {
 		for (Displays d : Displays.values()) {
 			if (!d.equals(display)) {
-				DOM.getElementById(d.toString()).getStyle().setDisplay(Style.Display.NONE);
+				Element element = DOM.getElementById(d.toString());
+				if (element != null) {
+					element.getStyle().setDisplay(Style.Display.NONE);
+				}
 			} else {
-				DOM.getElementById(display.toString()).getStyle().setDisplay(Style.Display.BLOCK);
+				Element element = DOM.getElementById(display.toString());
+				if (element != null) {
+					element.getStyle().setDisplay(Style.Display.BLOCK);
+				}
 			}
 		}
 	}
 
 	public static void clearDisplay() {
-		DOM.getElementById("searchBar").getStyle().setDisplay(Style.Display.NONE);
+		DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
 		for (Displays d : Displays.values()) {
-			DOM.getElementById(d.toString()).getStyle().setDisplay(Style.Display.NONE);
+			Element element = DOM.getElementById(d.toString());
+			if (element != null) {
+				element.getStyle().setDisplay(Style.Display.NONE);
+			}
+		}
+		if(DOM.getElementById(Displays.ReportGen.toString()) != null) {
+			DOM.getElementById(Displays.ReportGen.toString()).removeFromParent();
 		}
 
 	}

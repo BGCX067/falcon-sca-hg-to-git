@@ -14,6 +14,7 @@ import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.LoginInfo;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
  * This widget places a navigation bar on the client.
@@ -112,7 +113,7 @@ public class CalonBar extends Composite {
 			loadLogin();
 		}
 
-		if (security.isLoggedIn()) {
+		if (security.isRoleOrGreater(UserRoles.USER)) {
 			linkbarPanel.add(getDivBar());
 
 			reportLink.setStyleName(CALONBARLINK);
@@ -127,11 +128,12 @@ public class CalonBar extends Composite {
 
 						@Override
 						public void onSuccess() {
-							DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
 							DisplayUtils.clearDisplay();
-							Panel tilePanel = RootPanel.get("tile");
 							ReportGen reportGen = new ReportGen();
 							reportGen.init();
+							reportGen.getElement().setId(DisplayUtils.Displays.ReportGen.toString());
+
+							Panel tilePanel = RootPanel.get("tile");
 							tilePanel.add(reportGen);
 						}
 					});

@@ -136,6 +136,7 @@ public class IndexPage implements EntryPoint {
 						String display = historyToken.substring(8);
 						// Select the specified tab panel
 						DisplayUtils.changeDisplay(DisplayUtils.Displays.valueOf(display));
+					} else if (historyToken.substring(0, 12).equals("qrtlyreport:")) {
 					} else {
 						DisplayUtils.changeDisplay(DisplayUtils.Displays.SignupForm);
 					}
@@ -190,6 +191,7 @@ public class IndexPage implements EntryPoint {
 		Panel innerSignupPanel = new FlowPanel();
 		innerSignupPanel.setStyleName("dataBody");
 		innerSignupPanel.setStyleName("signupPanel", true);
+		innerSignupPanel.getElement().setId("innerSignupPanel");
 
 		HTML p = new HTML();
 		p.setHTML("<a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ#gid=0\">Not registered? Sign up now!</a>");
