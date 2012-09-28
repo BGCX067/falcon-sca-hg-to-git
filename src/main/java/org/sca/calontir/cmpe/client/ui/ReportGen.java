@@ -36,8 +36,11 @@ public class ReportGen extends Composite {
 		pi.init();
 		pi.getElement().setId("personalinfo");
 		pi.getElement().getStyle().setDisplay(Style.Display.NONE);
-
 		deck.add(pi);
+
+		Activities activities = new Activities();
+		activities.init();
+		deck.add(activities);
 
 
 		Panel background = new FlowPanel();
@@ -51,7 +54,7 @@ public class ReportGen extends Composite {
 	}
 
 	private Anchor buildNextLink(final DeckPanel deck) {
-		Anchor nextLink = new Anchor("Next >>");
+		final Anchor nextLink = new Anchor("Next >>");
 		nextLink.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -59,6 +62,7 @@ public class ReportGen extends Composite {
 				int index = deck.getVisibleWidget();
 				index++;
 				if(index == deck.getWidgetCount()) {
+					nextLink.setEnabled(false);
 					index = 0;
 				}
 				deck.showWidget(index);
