@@ -26,6 +26,7 @@ public class PersonalInfo extends BaseReportPage {
 
 	final private Security security = SecurityFactory.getSecurity();
 
+	@Override
 	public void init() {
 		clear();
 

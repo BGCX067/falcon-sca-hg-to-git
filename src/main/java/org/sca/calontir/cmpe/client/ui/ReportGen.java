@@ -13,14 +13,22 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
+import org.sca.calontir.cmpe.client.ui.qtrlyreport.Activities;
+import org.sca.calontir.cmpe.client.ui.qtrlyreport.InjuryReport;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.PersonalInfo;
+import org.sca.calontir.cmpe.client.ui.qtrlyreport.Summary;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Welcome;
+import org.sca.calontir.cmpe.client.user.Security;
+import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
  *
  * @author rikscarborough
  */
 public class ReportGen extends Composite {
+
+	final private Security security = SecurityFactory.getSecurity();
 
 	public void init() {
 		final DeckPanel deck = new DeckPanel();
@@ -42,6 +50,16 @@ public class ReportGen extends Composite {
 		activities.init();
 		deck.add(activities);
 
+		if (security.isRoleOrGreater(UserRoles.GROUP_MARSHAL)) {
+			InjuryReport injuryReport = new InjuryReport();
+			injuryReport.init();
+			deck.add(injuryReport);
+		}
+
+		Summary summary = new Summary();
+		summary.init();
+		deck.add(summary);
+
 
 		Panel background = new FlowPanel();
 		background.add(deck);
@@ -49,27 +67,25 @@ public class ReportGen extends Composite {
 
 		background.add(buildNextLink(deck));
 
-		
+
 		initWidget(background);
 	}
 
 	private Anchor buildNextLink(final DeckPanel deck) {
 		final Anchor nextLink = new Anchor("Next >>");
 		nextLink.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				int index = deck.getVisibleWidget();
-				index++;
-				if(index == deck.getWidgetCount()) {
+				if (index < deck.getWidgetCount() - 1) {
+					index++;
+					deck.showWidget(index);
+				} else {
 					nextLink.setEnabled(false);
-					index = 0;
 				}
-				deck.showWidget(index);
 			}
 		});
 
 		return nextLink;
 	}
-	
 }
