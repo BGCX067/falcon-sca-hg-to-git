@@ -150,4 +150,19 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
 		return iMap;
 	}
+
+	@Override
+	public Integer getMinorTotal(String group) {
+		int ret = 0;
+		FighterDAO fighterDao = new FighterDAO();
+		ScaGroupDAO groupDao = new ScaGroupDAO();
+		ScaGroup scaGroup = groupDao.getScaGroupByName(group);
+		List<Fighter> fList = fighterDao.getMinorCount();
+		for(Fighter f : fList) {
+			if(f.getScaGroup().equals(scaGroup)) {
+				++ret;
+			}
+		}
+		return ret;
+	}
 }

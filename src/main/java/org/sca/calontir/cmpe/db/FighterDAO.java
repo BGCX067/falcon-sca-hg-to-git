@@ -129,6 +129,20 @@ public class FighterDAO {
         return retList;
     }
 
+	public List<org.sca.calontir.cmpe.dto.Fighter> getMinorCount() {
+        List<org.sca.calontir.cmpe.dto.Fighter> retArray = new ArrayList<org.sca.calontir.cmpe.dto.Fighter>();
+        Query query = pm.newQuery(Fighter.class);
+        query.setFilter("dateOfBirth > dateOfBirthParam");
+        query.declareImports("import java.util.Date");
+        query.declareParameters("Date dateOfBirthParam");
+		DateMidnight now = new DateMidnight();
+        List<Fighter> fighters = (List<Fighter>) query.execute(now.toDate());
+        for (Fighter f : fighters) {
+            retArray.add(DataTransfer.convert(f));
+        }
+        return retArray;
+	}
+
     public List<FighterListItem> getFighterListItems(DateTime dt) {
         Logger.getLogger(getClass().getName()).log(Level.INFO, "Getting fighter list from datastore as of {0}", dt);
         if (dt == null || dt.getYear() == 1966) {

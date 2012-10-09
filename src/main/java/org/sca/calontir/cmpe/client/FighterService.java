@@ -22,4 +22,6 @@ public interface FighterService  extends RemoteService {
     public List<ScaGroup> getGroups();
 
 	public Map<String, Object> initialLookup();
+
+	public Integer getMinorTotal(String group);
 }

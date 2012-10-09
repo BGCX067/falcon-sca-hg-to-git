@@ -28,4 +28,6 @@ public interface FighterServiceAsync {
     public void getGroups(AsyncCallback<List<ScaGroup>> async);
 
 	public void initialLookup(AsyncCallback<Map<String, Object>> async);
+
+	public void getMinorTotal(String group, AsyncCallback<Integer> async);
 }
