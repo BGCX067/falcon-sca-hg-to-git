@@ -24,4 +24,6 @@ public interface FighterService  extends RemoteService {
 	public Map<String, Object> initialLookup();
 
 	public Integer getMinorTotal(String group);
+
+	public void sendReportInfo(Map<String, Object> reportInfo);
 }

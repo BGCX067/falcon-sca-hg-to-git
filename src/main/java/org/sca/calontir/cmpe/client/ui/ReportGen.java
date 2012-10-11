@@ -4,11 +4,13 @@
  */
 package org.sca.calontir.cmpe.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Activities;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.InjuryReport;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.PersonalInfo;
@@ -47,11 +51,17 @@ public class ReportGen extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (submit.isEnabled()) {
-					String out = "";
-					for (String key : reportInfo.keySet()) {
-						out += key + ":" + reportInfo.get(key);
-					}
-					Window.alert(out);
+					FighterServiceAsync fighterService = GWT.create(FighterService.class);
+					fighterService.sendReportInfo(reportInfo, new AsyncCallback<Void>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+						}
+					});
 				}
 			}
 		});

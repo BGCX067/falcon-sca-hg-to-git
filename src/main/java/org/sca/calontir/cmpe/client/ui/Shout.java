@@ -4,7 +4,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 
 /**
@@ -69,7 +68,6 @@ public class Shout extends PopupPanel {
 				int height = Window.getClientHeight();
 				int left = (width - offsetWidth) / 3;
 				int top = 50;
-				setWidth(width - offsetWidth + "px");
 				setPopupPosition(left, top);
 			}
 		});

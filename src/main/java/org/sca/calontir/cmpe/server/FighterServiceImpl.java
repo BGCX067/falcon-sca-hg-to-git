@@ -165,4 +165,9 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		}
 		return ret;
 	}
+
+	@Override
+	public void sendReportInfo(Map<String, Object> reportInfo) {
+		Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Here");
+	}
 }

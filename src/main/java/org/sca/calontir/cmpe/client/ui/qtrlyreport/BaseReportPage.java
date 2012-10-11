@@ -28,27 +28,23 @@ public abstract class BaseReportPage extends SimplePanel {
 	public void addReportInfo(String key, Object value) {
 		reportInfo.put(key, value);
 		if(allRequired()) {
-			log.info("Enabled");
 			submitButton.setEnabled(true);
 		}
 	}
 
 	private boolean allRequired() {
 		int count = required.size();
-		log.info("Count is " + count);
 		for(String test : required) {
 			if(reportInfo.containsKey(test)) {
 				--count;
 			}
 		}
-		log.info("Count is " + count);
 		return count == 0;
 	}
 
 	public void addRequired(String newRequired) {
 		required.add(newRequired);
 		if(!allRequired()) {
-			log.info("Disabled");
 			submitButton.setEnabled(false);
 		}
 	}
