@@ -1,6 +1,8 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -26,7 +28,7 @@ public class Activities extends BaseReportPage {
 	final private Security security = SecurityFactory.getSecurity();
 
 	@Override
-	public void init() {
+	public void buildPage() {
 		final Panel bk = new FlowPanel();
 
 		if (security.isRole(UserRoles.GROUP_MARSHAL) || security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
@@ -55,6 +57,14 @@ public class Activities extends BaseReportPage {
 
 		final TextArea activities = new TextArea();
 		bk.add(activities);
+		addRequired("Activities");
+		activities.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				addReportInfo("Activities", event.getValue());
+			}
+		});
 
 
 		add(bk);
@@ -70,6 +80,7 @@ public class Activities extends BaseReportPage {
 			}
 		}
 		target.setText(retVal.toString());
+		addReportInfo("Active Fighters", retVal);
 	}
 
 	private void updateMinorFighters(final TextBox target) {
@@ -86,6 +97,7 @@ public class Activities extends BaseReportPage {
 			@Override
 			public void onSuccess(Integer result) {
 				target.setText(result.toString());
+				addReportInfo("Minor Fighters", result);
 			}
 		});
 	}

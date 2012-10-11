@@ -27,7 +27,7 @@ public class PersonalInfo extends BaseReportPage {
 	final private Security security = SecurityFactory.getSecurity();
 
 	@Override
-	public void init() {
+	public void buildPage() {
 		clear();
 
 		final Panel bk = new FlowPanel();
@@ -62,6 +62,7 @@ public class PersonalInfo extends BaseReportPage {
 		table.setStyleName("wide-table");
 		table.setText(0, 0, "Modern Name:");
 		table.setWidget(0, 1, new Label(user.getModernName()));
+		addReportInfo("Modern Name", user.getModernName());
 		formatter.setStyleName(0, 0, "label");
 		formatter.setStyleName(0, 1, "data");
 
@@ -83,24 +84,29 @@ public class PersonalInfo extends BaseReportPage {
 		}
 		table.setText(1, 0, "Address:");
 		table.setWidget(1, 1, new Label(sb.toString()));
+		addReportInfo("Address", sb.toString());
 		formatter.setStyleName(1, 0, "label");
 		formatter.setStyleName(1, 1, "data");
 
 		table.setText(2, 0, "SCA Membership:");
 		table.setWidget(2, 1, new Label(user.getScaMemberNo()));
+		addReportInfo("SCA Membership No", user.getScaMemberNo());
 		formatter.setStyleName(2, 0, "label");
 		formatter.setStyleName(2, 1, "data");
 
 		table.setText(3, 0, "Group:");
 		table.setWidget(3, 1, new Label(user.getScaGroup().getGroupName()));
+		addReportInfo("SCA Group", user.getScaGroup().getGroupName());
 		formatter.setStyleName(3, 0, "label");
 		formatter.setStyleName(3, 1, "data");
 
 		table.setWidget(4, 0, new Label("Phone Number:"));
 		if (user.getPhone() != null && !user.getPhone().isEmpty()) {
 			table.setWidget(4, 1, new Label(user.getPhone().get(0).getPhoneNumber()));
+			addReportInfo("Phone Number", user.getPhone().get(0).getPhoneNumber());
 		} else {
 			table.setWidget(4, 1, new Label(""));
+			addReportInfo("Phone Number", "");
 		}
 		formatter.setStyleName(4, 0, "label");
 		formatter.setStyleName(4, 1, "data");
@@ -109,8 +115,10 @@ public class PersonalInfo extends BaseReportPage {
 		if (user.getEmail() != null && !user.getEmail().isEmpty()) {
 			String emailAddress = user.getEmail().get(0).getEmailAddress();
 			table.setWidget(5, 1, new Label(emailAddress));
+			addReportInfo("Email Address", emailAddress);
 		} else {
 			table.setWidget(5, 1, new Label(""));
+			addReportInfo("Email Address", "");
 		}
 		formatter.setStyleName(5, 0, "label");
 		formatter.setStyleName(5, 1, "data");

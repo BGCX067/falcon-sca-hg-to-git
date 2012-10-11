@@ -1,5 +1,7 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
@@ -12,7 +14,7 @@ import com.google.gwt.user.client.ui.TextArea;
 public class InjuryReport extends BaseReportPage {
 
 	@Override
-	public void init() {
+	public void buildPage() {
 		final Panel bk = new FlowPanel();
 		String p1 = "Enter the problems or injuries that have happened during this quarter.";
 		HTML para1 = new HTML(p1);
@@ -20,6 +22,13 @@ public class InjuryReport extends BaseReportPage {
 
 		final TextArea injuries = new TextArea();
 		bk.add(injuries);
+		injuries.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				addReportInfo("Injury", event.getValue());
+			}
+		});
 
 
 		add(bk);
