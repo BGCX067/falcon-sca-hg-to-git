@@ -156,10 +156,10 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		int ret = 0;
 		FighterDAO fighterDao = new FighterDAO();
 		ScaGroupDAO groupDao = new ScaGroupDAO();
-		ScaGroup scaGroup = groupDao.getScaGroupByName(group);
+		//ScaGroup scaGroup = groupDao.getScaGroupByName(group);
 		List<Fighter> fList = fighterDao.getMinorCount();
 		for(Fighter f : fList) {
-			if(f.getScaGroup().equals(scaGroup)) {
+			if(f.getScaGroup().getGroupName().equals(group)) {
 				++ret;
 			}
 		}

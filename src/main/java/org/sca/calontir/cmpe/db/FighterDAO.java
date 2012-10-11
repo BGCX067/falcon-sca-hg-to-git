@@ -136,8 +136,10 @@ public class FighterDAO {
         query.declareImports("import java.util.Date");
         query.declareParameters("Date dateOfBirthParam");
 		DateMidnight now = new DateMidnight();
-        List<Fighter> fighters = (List<Fighter>) query.execute(now.toDate());
+		DateMidnight minorDate = now.minusYears(18);
+        List<Fighter> fighters = (List<Fighter>) query.execute(minorDate.toDate());
         for (Fighter f : fighters) {
+			Logger.getLogger(getClass().getName()).log(Level.INFO, "Found minor named {0}", f.getScaName());
             retArray.add(DataTransfer.convert(f));
         }
         return retArray;

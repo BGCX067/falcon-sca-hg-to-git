@@ -80,7 +80,7 @@ public class Activities extends BaseReportPage {
 			}
 		}
 		target.setText(retVal.toString());
-		addReportInfo("Active Fighters", retVal);
+		addReportInfo("Active Fighters", retVal.toString());
 	}
 
 	private void updateMinorFighters(final TextBox target) {
@@ -97,7 +97,7 @@ public class Activities extends BaseReportPage {
 			@Override
 			public void onSuccess(Integer result) {
 				target.setText(result.toString());
-				addReportInfo("Minor Fighters", result);
+				addReportInfo("Minor Fighters", result.toString());
 			}
 		});
 	}
