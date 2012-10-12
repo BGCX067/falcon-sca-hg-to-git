@@ -1,6 +1,7 @@
 package org.sca.calontir.cmpe.server;
 
 import com.google.appengine.api.NamespaceManager;
+import com.google.appengine.api.backends.BackendServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -10,6 +11,10 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +31,6 @@ import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
-import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
@@ -158,8 +162,8 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		ScaGroupDAO groupDao = new ScaGroupDAO();
 		//ScaGroup scaGroup = groupDao.getScaGroupByName(group);
 		List<Fighter> fList = fighterDao.getMinorCount();
-		for(Fighter f : fList) {
-			if(f.getScaGroup().getGroupName().equals(group)) {
+		for (Fighter f : fList) {
+			if (f.getScaGroup().getGroupName().equals(group)) {
 				++ret;
 			}
 		}
@@ -168,6 +172,13 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
 	@Override
 	public void sendReportInfo(Map<String, Object> reportInfo) {
-		Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Here");
+		Queue queue = QueueFactory.getDefaultQueue();
+		TaskOptions to = withUrl("/BuildReport.groovy");
+		to.method(TaskOptions.Method.POST);
+		for(String key : reportInfo.keySet()) {
+			to.param(key, reportInfo.get(key).toString());
+		}
+		to.header("Host", BackendServiceFactory.getBackendService().getBackendAddress("adminb"));
+		queue.add(to);
 	}
 }
