@@ -56,6 +56,7 @@ public class Activities extends BaseReportPage {
 		bk.add(para1);
 
 		final TextArea activities = new TextArea();
+		activities.setStylePrimaryName("reportTextBox");
 		bk.add(activities);
 		addRequired("Activities");
 		activities.addValueChangeHandler(new ValueChangeHandler<String>() {

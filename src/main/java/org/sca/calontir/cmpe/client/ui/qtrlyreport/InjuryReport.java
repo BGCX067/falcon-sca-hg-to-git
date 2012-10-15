@@ -21,6 +21,7 @@ public class InjuryReport extends BaseReportPage {
 		bk.add(para1);
 
 		final TextArea injuries = new TextArea();
+		injuries.setStylePrimaryName("reportTextBox");
 		bk.add(injuries);
 		injuries.addValueChangeHandler(new ValueChangeHandler<String>() {
 

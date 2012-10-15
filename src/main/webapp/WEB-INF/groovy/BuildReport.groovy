@@ -1,18 +1,41 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+import org.joda.time.DateTime
+import groovy.xml.MarkupBuilder
 
 
-logger.BuildReport.info "logging an info message"
-def text = ""
-params.keySet().each {
-	logger.BuildReport.info it + ":" + params[it]
-	text += it + ":" + params[it]
-}
+//backends.run { 
+	logger.BuildReport.info "logging an info message"
 
+	StringWriter writer = new StringWriter()  
+	def build = new MarkupBuilder(writer)  
+	build.html{  
+		head{  
+			title('Marshal Report')
+		}  
+		body {
+			h1 "Marshal Report"
 
-mail.send from: "riksca@gmail.com",
-	to: "riksca@gmail.com",
-	subject: "Hello",
-	textBody: text
+			p "Reporting Period: " + params["Report Type"]
+			p "Marshal Type: " + params["Marshal Type"]
+			p "SCA Name: " + params["SCA Name"]
+			p "Modern First & Last Name: " + params["Modern Name"]
+			p "Address: " + params["Address"]
+			p "Phone Number: " + params["Phone Number"]
+			p "Membership Number: " + params["SCA Membership No"]
+			p "Membership Expires: " + params["Membership Expires"]
+			p "Home Group: " + params["Group"]
+			p "Number of Authorized Fighters: " + params["Active Fighters"]
+			p "Number of Minors: " + params["Minor Fighters"]
+			p "Activities: " + params["Activities"]
+			p "Problems or Injuries: " + params["Injury"]
+			p "Summary: " + params["Summary"]
+
+		}
+	}
+	
+
+	mail.send from: params["Email From"],
+		to: params["Email To"],
+		subject: "Marshal report for " + params["Report Type"],
+		textBody: writer.toString()
+
+//}

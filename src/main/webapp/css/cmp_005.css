@@ -379,3 +379,8 @@ a.loplink:hover, a.loplink:active {
     border-color: #000000 #898989 #898989 #000000 ;
     background-color: whitesmoke;
 }
+
+reportTextBox {
+    width: 100%;
+	height: 100%;
+}

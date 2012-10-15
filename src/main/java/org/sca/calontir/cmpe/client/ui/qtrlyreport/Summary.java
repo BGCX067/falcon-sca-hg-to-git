@@ -22,6 +22,7 @@ public class Summary extends BaseReportPage {
 		bk.add(para1);
 
 		final TextArea summary = new TextArea();
+		summary.setStylePrimaryName("reportTextBox");
 		bk.add(summary);
 		addRequired("Summary");
 		summary.addValueChangeHandler(new ValueChangeHandler<String>() {

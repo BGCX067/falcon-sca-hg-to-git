@@ -60,11 +60,20 @@ public class PersonalInfo extends BaseReportPage {
 		FlexTable.FlexCellFormatter formatter = table.getFlexCellFormatter();
 
 		table.setStyleName("wide-table");
-		table.setText(0, 0, "Modern Name:");
-		table.setWidget(0, 1, new Label(user.getModernName()));
-		addReportInfo("Modern Name", user.getModernName());
+
+		addReportInfo("SCA Name", user.getScaName());
+
+		table.setText(0, 0, "Group:");
+		table.setWidget(0, 1, new Label(user.getScaGroup().getGroupName()));
+		addReportInfo("Group", user.getScaGroup().getGroupName());
 		formatter.setStyleName(0, 0, "label");
 		formatter.setStyleName(0, 1, "data");
+
+		table.setText(1, 0, "Modern Name:");
+		table.setWidget(1, 1, new Label(user.getModernName()));
+		addReportInfo("Modern Name", user.getModernName());
+		formatter.setStyleName(1, 0, "label");
+		formatter.setStyleName(1, 1, "data");
 
 		final Address address;
 		final StringBuilder sb = new StringBuilder();
@@ -82,46 +91,46 @@ public class PersonalInfo extends BaseReportPage {
 			sb.append("  ");
 			sb.append(address.getPostalCode());
 		}
-		table.setText(1, 0, "Address:");
-		table.setWidget(1, 1, new Label(sb.toString()));
+		table.setText(2, 0, "Address:");
+		table.setWidget(2, 1, new Label(sb.toString()));
 		addReportInfo("Address", sb.toString());
-		formatter.setStyleName(1, 0, "label");
-		formatter.setStyleName(1, 1, "data");
-
-		table.setText(2, 0, "SCA Membership:");
-		table.setWidget(2, 1, new Label(user.getScaMemberNo()));
-		addReportInfo("SCA Membership No", user.getScaMemberNo());
 		formatter.setStyleName(2, 0, "label");
 		formatter.setStyleName(2, 1, "data");
 
-		table.setText(3, 0, "Group:");
-		table.setWidget(3, 1, new Label(user.getScaGroup().getGroupName()));
-		addReportInfo("SCA Group", user.getScaGroup().getGroupName());
+		table.setText(3, 0, "SCA Membership:");
+		table.setWidget(3, 1, new Label(user.getScaMemberNo()));
+		addReportInfo("SCA Membership No", user.getScaMemberNo());
 		formatter.setStyleName(3, 0, "label");
 		formatter.setStyleName(3, 1, "data");
 
-		table.setWidget(4, 0, new Label("Phone Number:"));
-		if (user.getPhone() != null && !user.getPhone().isEmpty()) {
-			table.setWidget(4, 1, new Label(user.getPhone().get(0).getPhoneNumber()));
-			addReportInfo("Phone Number", user.getPhone().get(0).getPhoneNumber());
-		} else {
-			table.setWidget(4, 1, new Label(""));
-			addReportInfo("Phone Number", "");
-		}
+		table.setText(4, 0, "Group:");
+		table.setWidget(4, 1, new Label(user.getScaGroup().getGroupName()));
+		addReportInfo("SCA Group", user.getScaGroup().getGroupName());
 		formatter.setStyleName(4, 0, "label");
 		formatter.setStyleName(4, 1, "data");
 
-		table.setText(5, 0, "Email Address:");
-		if (user.getEmail() != null && !user.getEmail().isEmpty()) {
-			String emailAddress = user.getEmail().get(0).getEmailAddress();
-			table.setWidget(5, 1, new Label(emailAddress));
-			addReportInfo("Email Address", emailAddress);
+		table.setWidget(5, 0, new Label("Phone Number:"));
+		if (user.getPhone() != null && !user.getPhone().isEmpty()) {
+			table.setWidget(5, 1, new Label(user.getPhone().get(0).getPhoneNumber()));
+			addReportInfo("Phone Number", user.getPhone().get(0).getPhoneNumber());
 		} else {
 			table.setWidget(5, 1, new Label(""));
-			addReportInfo("Email Address", "");
+			addReportInfo("Phone Number", "");
 		}
 		formatter.setStyleName(5, 0, "label");
 		formatter.setStyleName(5, 1, "data");
+
+		table.setText(6, 0, "Email Address:");
+		if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+			String emailAddress = user.getEmail().get(0).getEmailAddress();
+			table.setWidget(6, 1, new Label(emailAddress));
+			addReportInfo("Email Address", emailAddress);
+		} else {
+			table.setWidget(6, 1, new Label(""));
+			addReportInfo("Email Address", "");
+		}
+		formatter.setStyleName(6, 0, "label");
+		formatter.setStyleName(6, 1, "data");
 		
 		return table;
 	}

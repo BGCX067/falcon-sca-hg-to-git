@@ -24,6 +24,7 @@ import java.util.Map;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Activities;
+import org.sca.calontir.cmpe.client.ui.qtrlyreport.Final;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.InjuryReport;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.PersonalInfo;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Summary;
@@ -47,6 +48,7 @@ public class ReportGen extends Composite {
 
 		final Button submit = new Button("Submit Report");
 		submit.setEnabled(false);
+		submit.getElement().getStyle().setTextAlign(Style.TextAlign.RIGHT);
 		submit.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -66,6 +68,8 @@ public class ReportGen extends Composite {
 			}
 		});
 
+		reportInfo.put("Email From", security.getLoginInfo().getEmailAddress());
+		reportInfo.put("Email To", "BrendanMacantSaoir@gmail.com");
 		List<String> required = new ArrayList<String>();
 
 		Welcome welcome = new Welcome();
@@ -93,9 +97,11 @@ public class ReportGen extends Composite {
 		summary.init(reportInfo, required, submit);
 		deck.add(summary);
 
+		Final finalPage = new Final();
+		finalPage.init(reportInfo, required, submit);
+		deck.add(finalPage);
 
 		Panel background = new FlowPanel();
-
 
 		background.add(deck);
 		deck.showWidget(0);
@@ -122,6 +128,7 @@ public class ReportGen extends Composite {
 				}
 			}
 		});
+		nextLink.setStylePrimaryName("buttonLink");
 
 		return nextLink;
 	}
