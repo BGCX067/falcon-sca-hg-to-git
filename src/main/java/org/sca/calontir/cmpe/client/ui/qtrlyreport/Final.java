@@ -13,9 +13,11 @@ public class Final extends BaseReportPage {
 	@Override
 	public void buildPage() {
 		final Panel bk = new FlowPanel();
-		String p1 = "Thank you for your report.  You should recieve a copy in your email shortly.  Press Home to get back to the falcon application";
+		String p1 = "Press submit to send your report.  When you submit your report, you should recieve a copy of your report by email.";
 		HTML para1 = new HTML(p1);
 		bk.add(para1);
+		
+		add(bk);
 	}
 	
 }

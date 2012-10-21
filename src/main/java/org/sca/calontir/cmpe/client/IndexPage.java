@@ -137,6 +137,8 @@ public class IndexPage implements EntryPoint {
 						// Select the specified tab panel
 						DisplayUtils.changeDisplay(DisplayUtils.Displays.valueOf(display));
 					} else if (historyToken.substring(0, 12).equals("qrtlyreport:")) {
+						DisplayUtils.clearDisplay();
+						DisplayUtils.changeDisplay(DisplayUtils.Displays.ReportGen);
 					} else {
 						DisplayUtils.changeDisplay(DisplayUtils.Displays.SignupForm);
 					}

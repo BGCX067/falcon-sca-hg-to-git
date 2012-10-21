@@ -42,6 +42,11 @@ public class DisplayUtils {
 		}
 	}
 
+	public static void resetDisplay() {
+		DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.BLOCK);
+		changeDisplay(Displays.SignupForm);
+	}
+
 	public static void clearDisplay() {
 		DOM.getElementById("SearchBar").getStyle().setDisplay(Style.Display.NONE);
 		for (Displays d : Displays.values()) {
