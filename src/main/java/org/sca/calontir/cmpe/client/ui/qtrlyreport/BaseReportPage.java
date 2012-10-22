@@ -16,6 +16,13 @@ public abstract class BaseReportPage extends SimplePanel {
 	private List<String> required;
 	private FocusWidget submitButton;
 
+	public static final String REPORT_BUTTON_PANEL = "reportButtonPanel";
+	public static final String REPORTBG = "reportbg";
+	public static final String REPORT_TITLE = "reportTitle";
+	public static final String REPORT_INSTRUCTIONS = "reportInstructions";
+	public static final String REPORT_TEXT_BOX = "reportTextBox";
+	public static final String PERSONAL_INFO = "personalInfo";
+
 	public void init(Map<String, Object> reportInfo, List<String> required, FocusWidget submitButton) {
 		this.reportInfo = reportInfo;
 		this.required = required;

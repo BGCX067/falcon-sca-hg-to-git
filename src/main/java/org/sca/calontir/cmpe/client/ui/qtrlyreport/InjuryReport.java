@@ -16,12 +16,15 @@ public class InjuryReport extends BaseReportPage {
 	@Override
 	public void buildPage() {
 		final Panel bk = new FlowPanel();
+		bk.setStylePrimaryName(REPORTBG);
+
 		String p1 = "Enter the problems or injuries that have happened during this quarter.";
 		HTML para1 = new HTML(p1);
+		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
 		final TextArea injuries = new TextArea();
-		injuries.setStylePrimaryName("reportTextBox");
+		injuries.setStylePrimaryName(REPORT_TEXT_BOX);
 		bk.add(injuries);
 		injuries.addValueChangeHandler(new ValueChangeHandler<String>() {
 

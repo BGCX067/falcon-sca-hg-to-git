@@ -13,23 +13,27 @@ import com.google.gwt.user.client.ui.TextArea;
  * @author rikscarborough
  */
 public class Summary extends BaseReportPage {
+	public static final String SUMMARY = "Summary";
 
 	@Override
 	public void buildPage() {
 		final Panel bk = new FlowPanel();
+		bk.setStylePrimaryName(REPORTBG);
+
 		String p1 = "Enter a summary of your report for this quarter.";
 		HTML para1 = new HTML(p1);
+		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
 		final TextArea summary = new TextArea();
-		summary.setStylePrimaryName("reportTextBox");
+		summary.setStylePrimaryName(REPORT_TEXT_BOX);
 		bk.add(summary);
-		addRequired("Summary");
+		addRequired(SUMMARY);
 		summary.addValueChangeHandler(new ValueChangeHandler<String>() {
 
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
-				addReportInfo("Summary", event.getValue());
+				addReportInfo(SUMMARY, event.getValue());
 			}
 		});
 

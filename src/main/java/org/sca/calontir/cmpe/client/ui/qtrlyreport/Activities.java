@@ -30,33 +30,39 @@ public class Activities extends BaseReportPage {
 	@Override
 	public void buildPage() {
 		final Panel bk = new FlowPanel();
+		bk.setStylePrimaryName(REPORTBG);
 
 		if (security.isRole(UserRoles.GROUP_MARSHAL) || security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
+			final Panel persInfo = new FlowPanel();
+			persInfo.setStylePrimaryName(PERSONAL_INFO);
 			Label authFightersLabel = new Label();
 			authFightersLabel.setText("Number of Authorized Fighters: ");
-			bk.add(authFightersLabel);
+			persInfo.add(authFightersLabel);
 
 			TextBox authFighters = new TextBox();
 			authFighters.setReadOnly(true);
-			bk.add(authFighters);
+			persInfo.add(authFighters);
 			updateActiveFighters(authFighters);
 
 			Label minorFightersLabel = new Label();
 			minorFightersLabel.setText("Number of Minor Fighters: ");
-			bk.add(minorFightersLabel);
+			persInfo.add(minorFightersLabel);
 
 			TextBox minorFighters = new TextBox();
 			minorFighters.setReadOnly(true);
-			bk.add(minorFighters);
+			persInfo.add(minorFighters);
 			updateMinorFighters(minorFighters);
+
+			bk.add(persInfo);
 		}
 
 		String p1 = "Enter the activities you have done for this quarter.  Include events you have attended, fighter practices you have been active in, and events you have helped at.";
 		HTML para1 = new HTML(p1);
+		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
 		final TextArea activities = new TextArea();
-		activities.setStylePrimaryName("reportTextBox");
+		activities.setStylePrimaryName(REPORT_TEXT_BOX);
 		bk.add(activities);
 		addRequired("Activities");
 		activities.addValueChangeHandler(new ValueChangeHandler<String>() {

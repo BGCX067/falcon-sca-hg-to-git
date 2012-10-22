@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
-import java.util.Map;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.common.UserRoles;
@@ -25,9 +24,10 @@ public class Welcome extends BaseReportPage {
 		clear();
 
 		Panel bk = new FlowPanel();
+		bk.setStylePrimaryName(REPORTBG);
 		String p1 = "<h1>Marshal Report Form</h1>";
 		HTML para1 = new HTML(p1);
-		para1.setStyleName("reportTitle");
+		para1.setStylePrimaryName(REPORT_TITLE);
 		bk.add(para1);
 
 		String p2;
@@ -42,12 +42,11 @@ public class Welcome extends BaseReportPage {
 			addReportInfo("Marshal Type", "Marshal of the Field");
 		}
 		HTML para2 = new HTML(p2);
-		para2.setStyleName("reportBody");
+		para2.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para2);
 
-		final Map<String, Object> reportInfo = getReportInfo();
-
 		Panel qtrButtonPanel = new HorizontalPanel();
+		qtrButtonPanel.setStylePrimaryName(REPORT_BUTTON_PANEL);
 		RadioButton qtr1Button = new RadioButton("reportType", "1st Quarter");
 		qtr1Button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
@@ -96,6 +95,7 @@ public class Welcome extends BaseReportPage {
 		bk.add(qtrButtonPanel);
 
 		Panel eventButtonPanel = new HorizontalPanel();
+		eventButtonPanel.setStylePrimaryName(REPORT_BUTTON_PANEL);
 		RadioButton eventButton = new RadioButton("reportType", "Event Report");
 		eventButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override

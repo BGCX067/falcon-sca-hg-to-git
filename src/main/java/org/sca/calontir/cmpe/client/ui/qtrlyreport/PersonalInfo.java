@@ -31,9 +31,11 @@ public class PersonalInfo extends BaseReportPage {
 		clear();
 
 		final Panel bk = new FlowPanel();
+		bk.setStylePrimaryName(REPORTBG);
 
 		String p1 = "Please review this information. If it is not correct, go back to the main page and update your personal information";
 		HTML para1 = new HTML(p1);
+		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
 		FighterServiceAsync fighterService = GWT.create(FighterService.class);
