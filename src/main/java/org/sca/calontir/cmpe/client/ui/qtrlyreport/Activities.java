@@ -34,7 +34,7 @@ public class Activities extends BaseReportPage {
 
 		if (security.isRole(UserRoles.GROUP_MARSHAL) || security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
 			final Panel persInfo = new FlowPanel();
-			persInfo.setStylePrimaryName(PERSONAL_INFO);
+			persInfo.setStylePrimaryName("activitiesInfo");
 			Label authFightersLabel = new Label();
 			authFightersLabel.setText("Number of Authorized Fighters: ");
 			persInfo.add(authFightersLabel);

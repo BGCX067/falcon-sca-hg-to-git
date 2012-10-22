@@ -11,11 +11,11 @@ import java.util.logging.Logger;
  * @author rikscarborough
  */
 public abstract class BaseReportPage extends SimplePanel {
+
 	private static final Logger log = Logger.getLogger(BaseReportPage.class.getName());
 	private Map<String, Object> reportInfo;
 	private List<String> required;
 	private FocusWidget submitButton;
-
 	public static final String REPORT_BUTTON_PANEL = "reportButtonPanel";
 	public static final String REPORTBG = "reportbg";
 	public static final String REPORT_TITLE = "reportTitle";
@@ -33,16 +33,35 @@ public abstract class BaseReportPage extends SimplePanel {
 	public abstract void buildPage();
 
 	public void addReportInfo(String key, Object value) {
-		reportInfo.put(key, value);
-		if(allRequired()) {
+		boolean removeValue = false;
+		if (value == null) {
+			removeValue = true;
+		} else if (value instanceof String) {
+			String strValue = (String) value;
+			if (strValue.trim().isEmpty()) {
+				removeValue = true;
+			}
+		}
+
+		if (removeValue) {
+			if (reportInfo.containsKey(key)) {
+				reportInfo.remove(key);
+			}
+		} else {
+			reportInfo.put(key, value);
+		}
+
+		if (allRequired()) {
 			submitButton.setEnabled(true);
+		} else {
+			submitButton.setEnabled(false);
 		}
 	}
 
-	private boolean allRequired() {
+	protected boolean allRequired() {
 		int count = required.size();
-		for(String test : required) {
-			if(reportInfo.containsKey(test)) {
+		for (String test : required) {
+			if (reportInfo.containsKey(test)) {
 				--count;
 			}
 		}
@@ -51,7 +70,7 @@ public abstract class BaseReportPage extends SimplePanel {
 
 	public void addRequired(String newRequired) {
 		required.add(newRequired);
-		if(!allRequired()) {
+		if (!allRequired()) {
 			submitButton.setEnabled(false);
 		}
 	}
