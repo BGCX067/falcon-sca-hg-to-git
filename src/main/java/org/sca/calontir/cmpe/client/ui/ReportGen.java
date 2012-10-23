@@ -9,7 +9,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -57,6 +56,7 @@ public class ReportGen extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (submit.isEnabled()) {
+					submit.setEnabled(false);
 					FighterServiceAsync fighterService = GWT.create(FighterService.class);
 					fighterService.sendReportInfo(reportInfo, new AsyncCallback<Void>() {
 						@Override
