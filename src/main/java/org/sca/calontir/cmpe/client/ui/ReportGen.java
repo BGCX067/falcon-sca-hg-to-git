@@ -26,6 +26,7 @@ import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Activities;
+import org.sca.calontir.cmpe.client.ui.qtrlyreport.FighterComment;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Final;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.InjuryReport;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.PersonalInfo;
@@ -96,6 +97,10 @@ public class ReportGen extends Composite {
 			InjuryReport injuryReport = new InjuryReport();
 			injuryReport.init(reportInfo, required, submit);
 			deck.add(injuryReport, "Injury Report");
+
+			FighterComment fc = new FighterComment();
+			fc.init(reportInfo, required, submit);
+			deck.add(fc, "Fighter Comment");
 		}
 
 		Summary summary = new Summary();

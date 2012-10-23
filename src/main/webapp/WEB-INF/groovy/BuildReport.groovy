@@ -27,6 +27,7 @@ import groovy.xml.MarkupBuilder
 			p "Number of Minors: " + params["Minor Fighters"]
 			p "Activities: " + params["Activities"]
 			p "Problems or Injuries: " + params["Injury"]
+			p "Fighter Comments " + params["Fighter Comments"]
 			p "Summary: " + params["Summary"]
 
 		}
@@ -35,7 +36,8 @@ import groovy.xml.MarkupBuilder
 
 	mail.send from: params["Email From"],
 		to: params["Email To"],
+		cc: ["riksca@gmail.com"],
 		subject: "Marshal report for " + params["Report Type"],
-		textBody: writer.toString()
+		htmlBody: writer.toString()
 
 //}

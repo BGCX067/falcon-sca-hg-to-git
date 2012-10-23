@@ -30,6 +30,8 @@ public interface FighterServiceAsync {
 	public void initialLookup(AsyncCallback<Map<String, Object>> async);
 
 	public void getMinorTotal(String group, AsyncCallback<Integer> async);
+	
+	public void getMinorFighters(String group, AsyncCallback<Fighter> async);
 
 	public void sendReportInfo(Map<String, Object> reportInfo, AsyncCallback<Void> async);
 }

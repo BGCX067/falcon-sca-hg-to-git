@@ -12,6 +12,7 @@ public class FighterInfo  implements Serializable {
     private String authorizations;
     private String group;
 	private String status;
+	private Boolean minor;
 
     public String getScaName() {
         return scaName;
@@ -51,5 +52,17 @@ public class FighterInfo  implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public boolean isMinor() {
+		return minor.booleanValue();
+	}
+
+	public Boolean getMinor() {
+		return minor;
+	}
+
+	public void setMinor(Boolean minor) {
+		this.minor = minor;
 	}
 }

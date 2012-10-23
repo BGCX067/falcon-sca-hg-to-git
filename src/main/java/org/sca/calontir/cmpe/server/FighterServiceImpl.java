@@ -67,6 +67,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 				info.setAuthorizations(fli.getAuthorizations() == null ? "" : fli.getAuthorizations());
 				info.setGroup(fli.getGroup() == null ? "" : fli.getGroup());
 				info.setStatus(fli.getStatus() == null ? "" : fli.getStatus().toString());
+				info.setMinor(new Boolean(fli.isMinor()));
 				retValList.add(info);
 			}
 		}
@@ -168,6 +169,19 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public List<Fighter> getMinorFighters(String group) {
+		FighterDAO fighterDao = new FighterDAO();
+		List<Fighter> fList = fighterDao.getMinorCount();
+		List<Fighter> retList = new ArrayList<Fighter>();
+		for (Fighter f : fList) {
+			if (f.getScaGroup().getGroupName().equals(group)) {
+				retList.add(f);
+			}
+		}
+		return retList;
 	}
 
 	@Override
