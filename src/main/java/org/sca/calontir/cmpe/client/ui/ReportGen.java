@@ -76,6 +76,7 @@ public class ReportGen extends Composite {
 
 		reportInfo.put("Email From", security.getLoginInfo().getEmailAddress());
 		reportInfo.put("Email To", "BrendanMacantSaoir@gmail.com");
+		reportInfo.put("Email Cc", security.getLoginInfo().getEmailAddress());
 		List<String> required = new ArrayList<String>();
 
 		Welcome welcome = new Welcome();

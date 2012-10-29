@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -190,7 +191,11 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		TaskOptions to = withUrl("/BuildReport.groovy");
 		to.method(TaskOptions.Method.POST);
 		for(String key : reportInfo.keySet()) {
-			to.param(key, reportInfo.get(key).toString());
+			if(reportInfo.get(key) instanceof Collection) {
+
+			} else {
+				to.param(key, reportInfo.get(key).toString());
+			}
 		}
 		to.header("Host", BackendServiceFactory.getBackendService().getBackendAddress("adminb"));
 		queue.add(to);

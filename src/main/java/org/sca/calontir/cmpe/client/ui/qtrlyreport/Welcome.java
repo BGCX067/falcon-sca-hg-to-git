@@ -7,6 +7,9 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
+import java.util.Calendar;
+import java.util.Date;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.common.UserRoles;
@@ -45,6 +48,8 @@ public class Welcome extends BaseReportPage {
 		para2.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para2);
 
+		int quarter = getQuarter();
+
 		Panel qtrButtonPanel = new HorizontalPanel();
 		qtrButtonPanel.setStylePrimaryName(REPORT_BUTTON_PANEL);
 		RadioButton qtr1Button = new RadioButton("reportType", "1st Quarter");
@@ -74,7 +79,7 @@ public class Welcome extends BaseReportPage {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				if (event.getValue()) {
-					addReportInfo("Report Type", "2rd Quarter");
+					addReportInfo("Report Type", "3rd Quarter");
 				}
 			}
 		});
@@ -91,6 +96,22 @@ public class Welcome extends BaseReportPage {
 		});
 		qtrButtonPanel.add(qtr4Button);
 
+		switch (quarter) {
+			case 0:
+				qtr1Button.setValue(Boolean.TRUE, true);
+				break;
+			case 1:
+				qtr2Button.setValue(Boolean.TRUE, true);
+				break;
+			case 2:
+				qtr3Button.setValue(Boolean.TRUE, true);
+				break;
+			case 3:
+				qtr4Button.setValue(Boolean.TRUE, true);
+				break;
+			default:
+				qtr4Button.setValue(Boolean.TRUE, true);
+		}
 
 		bk.add(qtrButtonPanel);
 
@@ -109,5 +130,26 @@ public class Welcome extends BaseReportPage {
 		bk.add(eventButtonPanel);
 
 		add(bk);
+	}
+
+	@SuppressWarnings("deprecation")
+	private int getQuarter() {
+		Date now = new Date();
+		if (now.getMonth() < 2 || now.getMonth() == 11) {
+			return 3;
+		}
+
+		if (now.getMonth() < 5) {
+			return 0;
+		}
+
+		if (now.getMonth() < 7) {
+			return 1;
+		}
+
+		if (now.getMonth() < 11) {
+			return 2;
+		}
+		return 0;
 	}
 }

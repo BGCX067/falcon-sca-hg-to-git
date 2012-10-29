@@ -93,7 +93,7 @@ import groovy.xml.MarkupBuilder
 
 	mail.send from: params["Email From"],
 		to: params["Email To"],
-		cc: ["riksca@gmail.com"],
+		cc: params["Email Cc"].split(","),
 		subject: "Marshal report for " + params["Report Type"],
 		htmlBody: writer.toString()
 

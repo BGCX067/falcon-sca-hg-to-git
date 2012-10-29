@@ -432,7 +432,7 @@
 		<gae.version>1.7.2</gae.version>
 
 		<!-- GWT version -->
-		<gwt.version>2.5.0-rc1</gwt.version>
+		<gwt.version>2.5.0</gwt.version>
         
 		<gaelyk.version>1.2</gaelyk.version>
 		<!--
