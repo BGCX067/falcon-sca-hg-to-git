@@ -37,5 +37,10 @@ public class InjuryReport extends BaseReportPage {
 
 		add(bk);
 	}
+
+	@Override
+	public void onDisplay() {
+		nextButton.setEnabled(false);
+	}
 	
 }

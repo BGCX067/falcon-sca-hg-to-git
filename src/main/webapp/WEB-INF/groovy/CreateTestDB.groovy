@@ -75,6 +75,18 @@ namespace.of("system") {
 	sysTable.property = "08/31/2012"
 
 	sysTable.save()
+
+	sysTable = new Entity("properties")
+	sysTable.name = "calontir.earlmarshal.email"
+	sysTable.property = "riksca@gmail.com"
+
+	sysTable.save()
+
+	sysTable = new Entity("properties")
+	sysTable.name = "calontir.North.email"
+	sysTable.property = "brendanmacantsaoir@gmail.com"
+
+	sysTable.save()
 }
 
 // add myself so I can use the system

@@ -136,4 +136,9 @@ public class PersonalInfo extends BaseReportPage {
 		
 		return table;
 	}
+
+	@Override
+	public void onDisplay() {
+		nextButton.setEnabled(true);
+	}
 }

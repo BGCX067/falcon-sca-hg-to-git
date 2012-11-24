@@ -15,16 +15,18 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.TabPanel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.sca.calontir.cmpe.client.DisplayUtils;
+import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Activities;
+import org.sca.calontir.cmpe.client.ui.qtrlyreport.BaseReportPage;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.FighterComment;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Final;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.InjuryReport;
@@ -45,13 +47,17 @@ public class ReportGen extends Composite {
 	Map<String, Object> reportInfo = new HashMap<String, Object>();
 
 	public void init() {
-		//final DeckPanel deck = new DeckPanel();
-		final TabPanel deck = new TabPanel();
+		final DeckPanel deck = new DeckPanel();
+		deck.setAnimationEnabled(true);
 		History.newItem("qrtlyreport:Welcome");
+
+		final FocusWidget next = buildNextLink(deck);
+		next.setEnabled(true);
 
 		final Button submit = new Button("Submit Report");
 		submit.setEnabled(false);
 		submit.getElement().getStyle().setTextAlign(Style.TextAlign.RIGHT);
+		submit.getElement().getStyle().setDisplay(Style.Display.NONE);
 		submit.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -74,76 +80,76 @@ public class ReportGen extends Composite {
 			}
 		});
 
-		reportInfo.put("Email From", security.getLoginInfo().getEmailAddress());
-		reportInfo.put("Email To", "BrendanMacantSaoir@gmail.com");
-		reportInfo.put("Email Cc", security.getLoginInfo().getEmailAddress());
+		//reportInfo.put("Email Cc", user.);
+		reportInfo.put("user.googleid", security.getLoginInfo().getEmailAddress());
 		List<String> required = new ArrayList<String>();
 
 		Welcome welcome = new Welcome();
-		welcome.init(reportInfo, required, submit);
-		deck.add(welcome, "Welcome");
+		welcome.init(reportInfo, required, submit, next);
+		deck.add(welcome);
 
 
 		PersonalInfo pi = new PersonalInfo();
-		pi.init(reportInfo, required, submit);
+		pi.init(reportInfo, required, submit, next);
 		pi.getElement().setId("personalinfo");
 		pi.getElement().getStyle().setDisplay(Style.Display.NONE);
-		deck.add(pi, "Personal Info");
+		deck.add(pi);
 
 		Activities activities = new Activities();
-		activities.init(reportInfo, required, submit);
-		deck.add(activities, "Activities");
+		activities.init(reportInfo, required, submit, next);
+		deck.add(activities);
 
-		if (security.isRoleOrGreater(UserRoles.GROUP_MARSHAL)) {
+		if (security.isRole(UserRoles.GROUP_MARSHAL)
+				|| security.isRole(UserRoles.KNIGHTS_MARSHAL)
+				|| security.isRole(UserRoles.MARSHAL_OF_THE_FIELD)) {
 			InjuryReport injuryReport = new InjuryReport();
-			injuryReport.init(reportInfo, required, submit);
-			deck.add(injuryReport, "Injury Report");
+			injuryReport.init(reportInfo, required, submit, next);
+			deck.add(injuryReport);
 
 			FighterComment fc = new FighterComment();
-			fc.init(reportInfo, required, submit);
-			deck.add(fc, "Fighter Comment");
+			fc.init(reportInfo, required, submit, next);
+			deck.add(fc);
 		}
 
 		Summary summary = new Summary();
-		summary.init(reportInfo, required, submit);
-		deck.add(summary, "Summary");
+		summary.init(reportInfo, required, submit, next);
+		deck.add(summary);
 
 		Final finalPage = new Final();
-		finalPage.init(reportInfo, required, submit);
-		deck.add(finalPage, "Final Page");
+		finalPage.init(reportInfo, required, submit, next);
+		deck.add(finalPage);
 
 		Panel background = new FlowPanel();
 
 		background.add(deck);
-		deck.selectTab(0);
+		deck.showWidget(0);
 
-		background.add(buildNextLink(deck.getDeckPanel()));
+		background.add(next);
 		background.add(submit);
 
 
 		initWidget(background);
 	}
 
-	private Anchor buildNextLink(final DeckPanel deck) {
-		final Anchor nextLink = new Anchor("Next >>");
+	private FocusWidget buildNextLink(final DeckPanel deck) {
+		final Button nextLink = new Button("Next >>");
 		nextLink.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				int index = deck.getVisibleWidget();
-				if (index < deck.getWidgetCount() - 1) {
-					index++;
-					if (index >= deck.getWidgetCount() - 1) {
-						nextLink.setEnabled(false);
-						nextLink.getElement().getStyle().setDisplay(Style.Display.NONE);
+				if (nextLink.isEnabled()) {
+					int index = deck.getVisibleWidget();
+					if (index < deck.getWidgetCount() - 1) {
+						index++;
+						BaseReportPage page = (BaseReportPage) deck.getWidget(index);
+						page.onDisplay();
+						deck.showWidget(index);
 					}
-					deck.showWidget(index);
-				} else {
-					nextLink.setEnabled(false);
-					nextLink.getElement().getStyle().setDisplay(Style.Display.NONE);
 				}
 			}
 		});
 		nextLink.setStylePrimaryName("buttonLink");
+		nextLink.setWidth("90px");
+		nextLink.setHeight(".90em");
 
 		return nextLink;
 	}

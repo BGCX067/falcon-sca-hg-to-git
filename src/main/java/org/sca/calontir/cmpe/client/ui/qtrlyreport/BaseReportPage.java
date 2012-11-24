@@ -15,7 +15,8 @@ public abstract class BaseReportPage extends SimplePanel {
 	private static final Logger log = Logger.getLogger(BaseReportPage.class.getName());
 	private Map<String, Object> reportInfo;
 	private List<String> required;
-	private FocusWidget submitButton;
+	protected FocusWidget submitButton;
+	protected FocusWidget nextButton;
 	public static final String REPORT_BUTTON_PANEL = "reportButtonPanel";
 	public static final String REPORTBG = "reportbg";
 	public static final String REPORT_TITLE = "reportTitle";
@@ -23,14 +24,17 @@ public abstract class BaseReportPage extends SimplePanel {
 	public static final String REPORT_TEXT_BOX = "reportTextBox";
 	public static final String PERSONAL_INFO = "personalInfo";
 
-	public void init(Map<String, Object> reportInfo, List<String> required, FocusWidget submitButton) {
+	public void init(Map<String, Object> reportInfo, List<String> required, FocusWidget submitButton, FocusWidget nextButton) {
 		this.reportInfo = reportInfo;
 		this.required = required;
 		this.submitButton = submitButton;
+		this.nextButton = nextButton;
 		buildPage();
 	}
 
 	public abstract void buildPage();
+
+	public abstract void onDisplay();
 
 	public void addReportInfo(String key, Object value) {
 		boolean removeValue = false;
@@ -49,6 +53,7 @@ public abstract class BaseReportPage extends SimplePanel {
 			}
 		} else {
 			reportInfo.put(key, value);
+			nextButton.setEnabled(true);
 		}
 
 		if (allRequired()) {

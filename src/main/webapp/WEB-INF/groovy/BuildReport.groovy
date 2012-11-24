@@ -1,6 +1,43 @@
+import org.sca.calontir.cmpe.user.Security
+import org.sca.calontir.cmpe.user.SecurityFactory
 import org.joda.time.DateTime
 import groovy.xml.MarkupBuilder
+import com.google.appengine.api.datastore.*
+import static com.google.appengine.api.datastore.FetchOptions.Builder.*
+import org.sca.calontir.cmpe.db.FighterDAO
 
+def dao = new FighterDAO()
+def kingdom = "Calontir" 
+def user = dao.getFighterByGoogleId(params["user.googleid"])
+log.info("Generating report for ${user.scaName}")
+def from = user?.email[0].emailAddress
+def ccs = params["Email Cc"]?.split(",")
+if(!ccs) {
+	ccs = []
+}
+ccs += user?.email[0].emailAddress
+def to
+def group = user?.scaGroup?.groupName
+
+namespace.of("system") {
+	def query = new Query("properties")
+	query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + ".earlmarshal.email")
+	PreparedQuery preparedQuery = datastore.prepare(query)
+	def entities = preparedQuery.asList( withLimit(10) )
+	if(entities != null && entities.size() > 0) {
+		def entity = entities[0]
+		ccs += entity.property
+	}
+
+	query = new Query("properties")
+	query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + "." + group + ".email")
+	preparedQuery = datastore.prepare(query)
+	entities = preparedQuery.asList( withLimit(10) )
+	if(entities != null && entities.size() > 0) {
+		def entity = entities[0]
+		to = entity.property
+	}
+}
 
 //backends.run { 
 	logger.BuildReport.info "logging an info message"
@@ -90,10 +127,9 @@ import groovy.xml.MarkupBuilder
 		}
 	}
 	
-
-	mail.send from: params["Email From"],
-		to: params["Email To"],
-		cc: params["Email Cc"].split(","),
+	mail.send from: from,
+		to: to,
+		cc: ccs,
 		subject: "Marshal report for " + params["Report Type"],
 		htmlBody: writer.toString()
 

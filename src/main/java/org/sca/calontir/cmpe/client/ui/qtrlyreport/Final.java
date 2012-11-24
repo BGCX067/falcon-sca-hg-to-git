@@ -1,5 +1,6 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
@@ -26,5 +27,11 @@ public class Final extends BaseReportPage {
 		bk.add(para1);
 
 		add(bk);
+	}
+
+	@Override
+	public void onDisplay() {
+		nextButton.getElement().getStyle().setDisplay(Style.Display.NONE);
+		submitButton.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
 	}
 }

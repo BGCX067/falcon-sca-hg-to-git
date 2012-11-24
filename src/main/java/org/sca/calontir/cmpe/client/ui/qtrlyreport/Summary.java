@@ -2,7 +2,6 @@ package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
@@ -39,6 +38,11 @@ public class Summary extends BaseReportPage {
 
 
 		add(bk);
+	}
+
+	@Override
+	public void onDisplay() {
+		nextButton.setEnabled(false);
 	}
 	
 }

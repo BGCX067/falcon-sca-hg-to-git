@@ -1,12 +1,12 @@
 package org.sca.calontir.cmpe.dto;
 
 import com.google.appengine.api.datastore.Key;
-import org.sca.calontir.cmpe.common.FighterStatus;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.db.TreatyDao;

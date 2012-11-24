@@ -7,8 +7,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
-import java.util.Calendar;
 import java.util.Date;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
@@ -151,5 +149,10 @@ public class Welcome extends BaseReportPage {
 			return 2;
 		}
 		return 0;
+	}
+
+	@Override
+	public void onDisplay() {
+		nextButton.setEnabled(true);
 	}
 }

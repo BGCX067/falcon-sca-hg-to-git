@@ -111,4 +111,9 @@ public class FighterComment extends BaseReportPage {
 		target.add(listPanel);
 
 	}
+
+	@Override
+	public void onDisplay() {
+		nextButton.setEnabled(true);
+	}
 }

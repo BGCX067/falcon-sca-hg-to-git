@@ -108,4 +108,9 @@ public class Activities extends BaseReportPage {
 			}
 		});
 	}
+
+	@Override
+	public void onDisplay() {
+		nextButton.setEnabled(false);
+	}
 }
