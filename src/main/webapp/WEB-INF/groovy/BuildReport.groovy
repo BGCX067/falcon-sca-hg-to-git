@@ -6,10 +6,11 @@ import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 import org.sca.calontir.cmpe.db.FighterDAO
 
+def now = new DateTime()
 def dao = new FighterDAO()
 def kingdom = "Calontir" 
 def user = dao.getFighterByGoogleId(params["user.googleid"])
-log.info("Generating report for ${user.scaName}")
+logger.BuildReport.info "Generating report for ${user.scaName}"
 def from = user?.email[0].emailAddress
 def ccs = params["Email Cc"]?.split(",")
 if(!ccs) {
@@ -30,7 +31,7 @@ namespace.of("system") {
 	}
 
 	query = new Query("properties")
-	query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + "." + group + ".email")
+	query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + "." + group?.toLowerCase() + ".email")
 	preparedQuery = datastore.prepare(query)
 	entities = preparedQuery.asList( withLimit(10) )
 	if(entities != null && entities.size() > 0) {
@@ -39,8 +40,27 @@ namespace.of("system") {
 	}
 }
 
+namespace.of(kingdom.toLowerCase()) {
+	def reportInfo = new Entity ("Report")
+	reportInfo.dateEntered = now.toString()
+	reportInfo.reportType = params["Report Type"]
+	reportInfo.marshalName = user?.scaName
+	reportInfo.marshalId = user?.fighterId
+	reportInfo.googleId = user?.googleId
+	
+	def reportInfoId = reportInfo.save()
+	
+	params.keySet().each {
+		def reportParams = new Entity("ReportParams")
+		reportParams.reportKey = reportInfoId
+		reportParams.name = it
+		reportParams.value = params[it]
+
+		reportParams.save()
+	}
+}
+
 //backends.run { 
-	logger.BuildReport.info "logging an info message"
 
 	StringWriter writer = new StringWriter()  
 	def build = new MarkupBuilder(writer)  
@@ -126,6 +146,8 @@ namespace.of("system") {
 			p ('class':'sect_body', params["Summary"])
 		}
 	}
+
+logger.BuildReport.info "Sending report for ${params["Report Type"]}: to ${to}, from ${from}, cc ${ccs}"
 	
 	mail.send from: from,
 		to: to,

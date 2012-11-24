@@ -83,7 +83,7 @@ namespace.of("system") {
 	sysTable.save()
 
 	sysTable = new Entity("properties")
-	sysTable.name = "calontir.North.email"
+	sysTable.name = "calontir.central.email"
 	sysTable.property = "brendanmacantsaoir@gmail.com"
 
 	sysTable.save()
