@@ -18,7 +18,7 @@ if(!ccs) {
 }
 ccs += user?.email[0].emailAddress
 def to
-def group = user?.scaGroup?.groupName
+def location = user?.scaGroup?.groupLocation
 
 namespace.of("system") {
 	def query = new Query("properties")
@@ -31,7 +31,7 @@ namespace.of("system") {
 	}
 
 	query = new Query("properties")
-	query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + "." + group?.toLowerCase() + ".email")
+	query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + "." + location?.toLowerCase() + ".email")
 	preparedQuery = datastore.prepare(query)
 	entities = preparedQuery.asList( withLimit(10) )
 	if(entities != null && entities.size() > 0) {
