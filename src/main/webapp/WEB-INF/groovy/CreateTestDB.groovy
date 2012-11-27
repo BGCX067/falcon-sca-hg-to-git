@@ -1,4 +1,3 @@
-import org.sca.calontir.cmpe.common.UserRoles
 import org.sca.calontir.cmpe.user.Security
 import org.sca.calontir.cmpe.user.SecurityFactory
 import org.sca.calontir.cmpe.dto.Fighter
@@ -10,6 +9,7 @@ import com.google.appengine.api.blobstore.BlobKey
 import org.sca.calontir.cmpe.dto.FighterListItem
 import org.sca.calontir.cmpe.dto.Authorization
 import org.sca.calontir.cmpe.utils.MarshalUtils
+import org.sca.calontir.cmpe.common.*
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
@@ -84,6 +84,12 @@ namespace.of("system") {
 
 	sysTable = new Entity("properties")
 	sysTable.name = "calontir.central.email"
+	sysTable.property = "brendanmacantsaoir@gmail.com"
+
+	sysTable.save()
+
+	sysTable = new Entity("properties")
+	sysTable.name = "calontir.from.email"
 	sysTable.property = "brendanmacantsaoir@gmail.com"
 
 	sysTable.save()

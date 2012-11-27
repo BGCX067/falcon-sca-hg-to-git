@@ -1,6 +1,8 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -44,6 +46,16 @@ public class FighterComment extends BaseReportPage {
 				addReportInfo("Fighter Comments", event.getValue());
 			}
 		});
+
+		fighterComments.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if(!fighterComments.getValue().isEmpty()) {
+					nextButton.setEnabled(true);
+				}
+			}
+		});
+
 
 		List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
 		addListPanel(fighterList, bk);

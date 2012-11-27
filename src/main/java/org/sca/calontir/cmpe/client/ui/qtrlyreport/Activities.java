@@ -66,13 +66,12 @@ public class Activities extends BaseReportPage {
 		bk.add(activities);
 		addRequired("Activities");
 		activities.addValueChangeHandler(new ValueChangeHandler<String>() {
-
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				addReportInfo("Activities", event.getValue());
 			}
 		});
-
+		activities.addKeyPressHandler(new RequiredFieldKeyPressHander());
 
 		add(bk);
 	}
@@ -95,7 +94,6 @@ public class Activities extends BaseReportPage {
 
 		FighterServiceAsync fighterService = GWT.create(FighterService.class);
 		fighterService.getMinorTotal(userInfo.getGroup(), new AsyncCallback<Integer>() {
-
 			@Override
 			public void onFailure(Throwable caught) {
 				throw new UnsupportedOperationException("Not supported yet.");

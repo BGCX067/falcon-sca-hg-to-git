@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.sca.calontir.cmpe.client.DisplayUtils;
-import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Activities;
@@ -150,6 +148,7 @@ public class ReportGen extends Composite {
 		nextLink.setStylePrimaryName("buttonLink");
 		nextLink.setWidth("90px");
 		nextLink.setHeight(".90em");
+		nextLink.getElement().getStyle().setFontSize(0.90, Style.Unit.EM);
 
 		return nextLink;
 	}

@@ -1,7 +1,10 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextBoxBase;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -86,5 +89,17 @@ public abstract class BaseReportPage extends SimplePanel {
 
 	public List<String> getRequired() {
 		return required;
+	}
+
+	public class RequiredFieldKeyPressHander implements KeyPressHandler {
+		@Override
+		public void onKeyPress(KeyPressEvent event) {
+			TextBoxBase textBox = (TextBoxBase) event.getSource();
+			if (textBox.getValue().isEmpty()) {
+				nextButton.setEnabled(false);
+			} else {
+				nextButton.setEnabled(true);
+			}
+		}
 	}
 }

@@ -11,12 +11,12 @@ def dao = new FighterDAO()
 def kingdom = "Calontir" 
 def user = dao.getFighterByGoogleId(params["user.googleid"])
 logger.BuildReport.info "Generating report for ${user.scaName}"
-def from = user?.email[0].emailAddress
 def ccs = params["Email Cc"]?.split(",")
 if(!ccs) {
 	ccs = []
 }
 ccs += user?.email[0].emailAddress
+def from
 def to
 def location = user?.scaGroup?.groupLocation
 
@@ -28,6 +28,15 @@ namespace.of("system") {
 	if(entities != null && entities.size() > 0) {
 		def entity = entities[0]
 		ccs += entity.property
+	}
+
+	query = new Query("properties")
+	query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + ".from.email")
+	preparedQuery = datastore.prepare(query)
+	entities = preparedQuery.asList( withLimit(10) )
+	if(entities != null && entities.size() > 0) {
+		def entity = entities[0]
+		from = entity.property
 	}
 
 	query = new Query("properties")
