@@ -32,35 +32,35 @@ public class Activities extends BaseReportPage {
 		final Panel bk = new FlowPanel();
 		bk.setStylePrimaryName(REPORTBG);
 
-		if (security.isRole(UserRoles.GROUP_MARSHAL) || security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
-			final Panel persInfo = new FlowPanel();
-			persInfo.setStylePrimaryName("activitiesInfo");
-			Label authFightersLabel = new Label();
-			authFightersLabel.setText("Number of Authorized Fighters: ");
-			persInfo.add(authFightersLabel);
-
-			TextBox authFighters = new TextBox();
-			authFighters.setReadOnly(true);
-			persInfo.add(authFighters);
-			updateActiveFighters(authFighters);
-
-			Label minorFightersLabel = new Label();
-			minorFightersLabel.setText("Number of Minor Fighters: ");
-			persInfo.add(minorFightersLabel);
-
-			TextBox minorFighters = new TextBox();
-			minorFighters.setReadOnly(true);
-			persInfo.add(minorFighters);
-			updateMinorFighters(minorFighters);
-
-			bk.add(persInfo);
-		}
-
 		final String p1;
 		String reportType = (String) getReportInfo().get("Report Type");
-		if(reportType.equals("Event")) {
+		if (reportType.equals("Event")) {
 			p1 = "Please describe the activities that took place at this event. Tournaments, pickup fights, melees, and what generally occured.";
 		} else {
+			if (security.isRole(UserRoles.GROUP_MARSHAL) || security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
+				final Panel persInfo = new FlowPanel();
+				persInfo.setStylePrimaryName("activitiesInfo");
+				Label authFightersLabel = new Label();
+				authFightersLabel.setText("Number of Authorized Fighters: ");
+				persInfo.add(authFightersLabel);
+
+				TextBox authFighters = new TextBox();
+				authFighters.setReadOnly(true);
+				persInfo.add(authFighters);
+				updateActiveFighters(authFighters);
+
+				Label minorFightersLabel = new Label();
+				minorFightersLabel.setText("Number of Minor Fighters: ");
+				persInfo.add(minorFightersLabel);
+
+				TextBox minorFighters = new TextBox();
+				minorFighters.setReadOnly(true);
+				persInfo.add(minorFighters);
+				updateMinorFighters(minorFighters);
+
+				bk.add(persInfo);
+			}
+
 			p1 = "Please describe your  activities for this quarter. Include events you have attended in general, fighter practices in which you are active, and events where you may have assisted in Marshalatte activities.";
 		}
 		HTML para1 = new HTML(p1);
