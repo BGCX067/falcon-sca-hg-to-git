@@ -37,7 +37,7 @@ public class Summary extends BaseReportPage {
 				addReportInfo(SUMMARY, event.getValue());
 			}
 		});
-		summary.addKeyPressHandler(new RequiredFieldKeyPressHander());
+		summary.addKeyPressHandler(requiredFieldKeyPressHandler);
 
 		add(bk);
 	}
@@ -45,6 +45,10 @@ public class Summary extends BaseReportPage {
 	@Override
 	public void onDisplay() {
 		nextButton.setEnabled(false);
+	}
+
+	@Override
+	public void onLeavePage() {
 	}
 	
 }

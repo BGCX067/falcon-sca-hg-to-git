@@ -56,7 +56,13 @@ public class Activities extends BaseReportPage {
 			bk.add(persInfo);
 		}
 
-		String p1 = "Enter the activities you have done for this quarter.  Include events you have attended, fighter practices you have been active in, and events you have helped at.";
+		final String p1;
+		String reportType = (String) getReportInfo().get("Report Type");
+		if(reportType.equals("Event")) {
+			p1 = "Please describe the activities that took place at this event. Tournaments, pickup fights, melees, and what generally occured.";
+		} else {
+			p1 = "Please describe your  activities for this quarter. Include events you have attended in general, fighter practices in which you are active, and events where you may have assisted in Marshalatte activities.";
+		}
 		HTML para1 = new HTML(p1);
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
@@ -71,7 +77,7 @@ public class Activities extends BaseReportPage {
 				addReportInfo("Activities", event.getValue());
 			}
 		});
-		activities.addKeyPressHandler(new RequiredFieldKeyPressHander());
+		activities.addKeyPressHandler(requiredFieldKeyPressHandler);
 
 		add(bk);
 	}
@@ -110,5 +116,9 @@ public class Activities extends BaseReportPage {
 	@Override
 	public void onDisplay() {
 		nextButton.setEnabled(false);
+	}
+
+	@Override
+	public void onLeavePage() {
 	}
 }

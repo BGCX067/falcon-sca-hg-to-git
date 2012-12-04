@@ -34,4 +34,8 @@ public class Final extends BaseReportPage {
 		nextButton.getElement().getStyle().setDisplay(Style.Display.NONE);
 		submitButton.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
 	}
+
+	@Override
+	public void onLeavePage() {
+	}
 }

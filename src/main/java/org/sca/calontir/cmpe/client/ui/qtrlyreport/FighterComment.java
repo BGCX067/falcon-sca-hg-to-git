@@ -128,4 +128,8 @@ public class FighterComment extends BaseReportPage {
 	public void onDisplay() {
 		nextButton.setEnabled(true);
 	}
+
+	@Override
+	public void onLeavePage() {
+	}
 }

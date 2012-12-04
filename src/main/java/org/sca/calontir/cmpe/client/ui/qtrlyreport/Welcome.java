@@ -155,4 +155,18 @@ public class Welcome extends BaseReportPage {
 	public void onDisplay() {
 		nextButton.setEnabled(true);
 	}
+
+	@Override
+	public void onLeavePage() {
+		String reportType = (String) getReportInfo().get("Report Type");
+		if(reportType.equals("Event")) {
+			if (!(security.isRole(UserRoles.GROUP_MARSHAL)
+					|| security.isRole(UserRoles.KNIGHTS_MARSHAL)
+					|| security.isRole(UserRoles.DEPUTY_EARL_MARSHAL))) {
+				InjuryReport injuryReport = new InjuryReport();
+				injuryReport.init(reportInfo, required, submitButton, nextButton);
+				getDeck().insert(injuryReport, getDeck().getWidgetCount()-2);
+			}
+		}
+	}
 }

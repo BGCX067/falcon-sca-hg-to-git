@@ -84,6 +84,7 @@ public class ReportGen extends Composite {
 
 		Welcome welcome = new Welcome();
 		welcome.init(reportInfo, required, submit, next);
+		welcome.setDeck(deck);
 		deck.add(welcome);
 
 
@@ -99,7 +100,7 @@ public class ReportGen extends Composite {
 
 		if (security.isRole(UserRoles.GROUP_MARSHAL)
 				|| security.isRole(UserRoles.KNIGHTS_MARSHAL)
-				|| security.isRole(UserRoles.MARSHAL_OF_THE_FIELD)) {
+				|| security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
 			InjuryReport injuryReport = new InjuryReport();
 			injuryReport.init(reportInfo, required, submit, next);
 			deck.add(injuryReport);
@@ -137,18 +138,21 @@ public class ReportGen extends Composite {
 				if (nextLink.isEnabled()) {
 					int index = deck.getVisibleWidget();
 					if (index < deck.getWidgetCount() - 1) {
+						if(index >= 0) {
+							BaseReportPage prevPage = (BaseReportPage) deck.getWidget(index);
+							prevPage.onLeavePage();
+						}
 						index++;
-						BaseReportPage page = (BaseReportPage) deck.getWidget(index);
-						page.onDisplay();
+						BaseReportPage nextPage = (BaseReportPage) deck.getWidget(index);
+						nextPage.onDisplay();
 						deck.showWidget(index);
 					}
 				}
 			}
 		});
-		nextLink.setStylePrimaryName("buttonLink");
 		nextLink.setWidth("90px");
-		nextLink.setHeight(".90em");
-		nextLink.getElement().getStyle().setFontSize(0.90, Style.Unit.EM);
+//		nextLink.setHeight(".90em");
+//		nextLink.getElement().getStyle().setFontSize(0.75, Style.Unit.EM);
 
 		return nextLink;
 	}

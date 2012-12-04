@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBoxBase;
@@ -16,16 +17,19 @@ import java.util.logging.Logger;
 public abstract class BaseReportPage extends SimplePanel {
 
 	private static final Logger log = Logger.getLogger(BaseReportPage.class.getName());
-	private Map<String, Object> reportInfo;
-	private List<String> required;
+	protected Map<String, Object> reportInfo;
+	protected List<String> required;
 	protected FocusWidget submitButton;
 	protected FocusWidget nextButton;
+	protected DeckPanel deck;
 	public static final String REPORT_BUTTON_PANEL = "reportButtonPanel";
 	public static final String REPORTBG = "reportbg";
 	public static final String REPORT_TITLE = "reportTitle";
 	public static final String REPORT_INSTRUCTIONS = "reportInstructions";
 	public static final String REPORT_TEXT_BOX = "reportTextBox";
 	public static final String PERSONAL_INFO = "personalInfo";
+
+	public RequiredFieldKeyPressHandler requiredFieldKeyPressHandler = new RequiredFieldKeyPressHandler();
 
 	public void init(Map<String, Object> reportInfo, List<String> required, FocusWidget submitButton, FocusWidget nextButton) {
 		this.reportInfo = reportInfo;
@@ -38,6 +42,8 @@ public abstract class BaseReportPage extends SimplePanel {
 	public abstract void buildPage();
 
 	public abstract void onDisplay();
+
+	public abstract void onLeavePage();
 
 	public void addReportInfo(String key, Object value) {
 		boolean removeValue = false;
@@ -91,7 +97,7 @@ public abstract class BaseReportPage extends SimplePanel {
 		return required;
 	}
 
-	public class RequiredFieldKeyPressHander implements KeyPressHandler {
+	public class RequiredFieldKeyPressHandler implements KeyPressHandler {
 		@Override
 		public void onKeyPress(KeyPressEvent event) {
 			TextBoxBase textBox = (TextBoxBase) event.getSource();
@@ -101,5 +107,13 @@ public abstract class BaseReportPage extends SimplePanel {
 				nextButton.setEnabled(true);
 			}
 		}
+	}
+
+	public DeckPanel getDeck() {
+		return deck;
+	}
+
+	public void setDeck(DeckPanel deck) {
+		this.deck = deck;
 	}
 }

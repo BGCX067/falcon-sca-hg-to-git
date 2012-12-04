@@ -18,7 +18,13 @@ public class InjuryReport extends BaseReportPage {
 		final Panel bk = new FlowPanel();
 		bk.setStylePrimaryName(REPORTBG);
 
-		String p1 = "Enter the problems or injuries that have happened during this quarter.";
+		final String p1;
+		String reportType = (String) getReportInfo().get("Report Type");
+		if(reportType.equals("Event")) {
+			p1 = "Please include detailed information on any injuries, fighter disciplinary issues, Marshal Courts, or any other issues for this event.  Please include specifics such as individuals involved, etc.";
+		} else {
+			p1 = "Please include detailed information on any injuries, fighter disciplinary issues, Marshal Courts, or any other issues during this reporting period.  Please include specifics such as individuals involved, event where the incident occurred, etc.";
+		}
 		HTML para1 = new HTML(p1);
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
@@ -40,7 +46,11 @@ public class InjuryReport extends BaseReportPage {
 
 	@Override
 	public void onDisplay() {
-		nextButton.setEnabled(false);
+		nextButton.setEnabled(true);
+	}
+
+	@Override
+	public void onLeavePage() {
 	}
 	
 }
