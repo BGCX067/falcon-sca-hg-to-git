@@ -1,6 +1,7 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -11,6 +12,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
@@ -25,45 +28,39 @@ import org.sca.calontir.cmpe.common.UserRoles;
  */
 public class Activities extends BaseReportPage {
 
+	private static final Logger log = Logger.getLogger(Activities.class.getName());
 	final private Security security = SecurityFactory.getSecurity();
+	final private HTML para1 = new HTML();
+	final Panel bk = new FlowPanel();
+	final Panel persInfo = new FlowPanel();
 
 	@Override
 	public void buildPage() {
-		final Panel bk = new FlowPanel();
 		bk.setStylePrimaryName(REPORTBG);
 
-		final String p1;
-		String reportType = (String) getReportInfo().get("Report Type");
-		if (reportType.equals("Event")) {
-			p1 = "Please describe the activities that took place at this event. Tournaments, pickup fights, melees, and what generally occured.";
-		} else {
-			if (security.isRole(UserRoles.GROUP_MARSHAL) || security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
-				final Panel persInfo = new FlowPanel();
-				persInfo.setStylePrimaryName("activitiesInfo");
-				Label authFightersLabel = new Label();
-				authFightersLabel.setText("Number of Authorized Fighters: ");
-				persInfo.add(authFightersLabel);
+		if (security.isRole(UserRoles.GROUP_MARSHAL) || security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
+			persInfo.setStylePrimaryName("activitiesInfo");
+			Label authFightersLabel = new Label();
+			authFightersLabel.setText("Number of Authorized Fighters: ");
+			persInfo.add(authFightersLabel);
 
-				TextBox authFighters = new TextBox();
-				authFighters.setReadOnly(true);
-				persInfo.add(authFighters);
-				updateActiveFighters(authFighters);
+			TextBox authFighters = new TextBox();
+			authFighters.setReadOnly(true);
+			persInfo.add(authFighters);
+			updateActiveFighters(authFighters);
 
-				Label minorFightersLabel = new Label();
-				minorFightersLabel.setText("Number of Minor Fighters: ");
-				persInfo.add(minorFightersLabel);
+			Label minorFightersLabel = new Label();
+			minorFightersLabel.setText("Number of Minor Fighters: ");
+			persInfo.add(minorFightersLabel);
 
-				TextBox minorFighters = new TextBox();
-				minorFighters.setReadOnly(true);
-				persInfo.add(minorFighters);
-				updateMinorFighters(minorFighters);
+			TextBox minorFighters = new TextBox();
+			minorFighters.setReadOnly(true);
+			persInfo.add(minorFighters);
+			updateMinorFighters(minorFighters);
 
-				bk.add(persInfo);
-			}
+			bk.add(persInfo);
 
-			p1 = "Please describe your  activities for this quarter. Include events you have attended in general, fighter practices in which you are active, and events where you may have assisted in Marshalatte activities.";
 		}
-		HTML para1 = new HTML(p1);
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
@@ -116,6 +113,16 @@ public class Activities extends BaseReportPage {
 	@Override
 	public void onDisplay() {
 		nextButton.setEnabled(false);
+		final String p1;
+		String reportType = (String) getReportInfo().get("Report Type");
+		log.info("Report type = " + reportType);
+		if (reportType.equals("Event")) {
+			p1 = "Please describe the activities that took place at this event. Tournaments, pickup fights, melees, and what generally occured.";
+			persInfo.getElement().getStyle().setDisplay(Style.Display.NONE);
+		} else {
+			p1 = "Please describe your  activities for this quarter. Include events you have attended in general, fighter practices in which you are active, and events where you may have assisted in Marshalatte activities.";
+		}
+		para1.setHTML(p1);
 	}
 
 	@Override

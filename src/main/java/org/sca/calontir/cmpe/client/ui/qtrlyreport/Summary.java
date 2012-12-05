@@ -15,14 +15,13 @@ import com.google.gwt.user.client.ui.TextArea;
  */
 public class Summary extends BaseReportPage {
 	public static final String SUMMARY = "Summary";
+	private HTML para1 = new HTML();
 
 	@Override
 	public void buildPage() {
 		final Panel bk = new FlowPanel();
 		bk.setStylePrimaryName(REPORTBG);
 
-		String p1 = "Enter a summary of your report for this quarter.";
-		HTML para1 = new HTML(p1);
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
@@ -45,6 +44,14 @@ public class Summary extends BaseReportPage {
 	@Override
 	public void onDisplay() {
 		nextButton.setEnabled(false);
+		String p1;
+		String reportType = (String) getReportInfo().get("Report Type");
+		if (reportType.equals("Event")) {
+			p1 = "Enter a summary of your report for this event.";
+		} else {
+			p1 = "Enter a summary of your report for this quarter.";
+		}
+		para1.setHTML(p1);
 	}
 
 	@Override
