@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import java.util.List;
@@ -28,7 +29,6 @@ public abstract class BaseReportPage extends SimplePanel {
 	public static final String REPORT_INSTRUCTIONS = "reportInstructions";
 	public static final String REPORT_TEXT_BOX = "reportTextBox";
 	public static final String PERSONAL_INFO = "personalInfo";
-
 	public RequiredFieldKeyPressHandler requiredFieldKeyPressHandler = new RequiredFieldKeyPressHandler();
 
 	public void init(Map<String, Object> reportInfo, List<String> required, FocusWidget submitButton, FocusWidget nextButton) {
@@ -98,13 +98,23 @@ public abstract class BaseReportPage extends SimplePanel {
 	}
 
 	public class RequiredFieldKeyPressHandler implements KeyPressHandler {
+
 		@Override
 		public void onKeyPress(KeyPressEvent event) {
-			TextBoxBase textBox = (TextBoxBase) event.getSource();
-			if (textBox.getValue().isEmpty()) {
-				nextButton.setEnabled(false);
+			if (event.getSource() instanceof RichTextArea) {
+				RichTextArea textBox = (RichTextArea) event.getSource();
+				if (textBox.getText().isEmpty()) {
+					nextButton.setEnabled(false);
+				} else {
+					nextButton.setEnabled(true);
+				}
 			} else {
-				nextButton.setEnabled(true);
+				TextBoxBase textBox = (TextBoxBase) event.getSource();
+				if (textBox.getValue().isEmpty()) {
+					nextButton.setEnabled(false);
+				} else {
+					nextButton.setEnabled(true);
+				}
 			}
 		}
 	}

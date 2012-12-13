@@ -197,7 +197,7 @@ public class IndexPage implements EntryPoint {
 		innerSignupPanel.getElement().setId("innerSignupPanel");
 
 		HTML p = new HTML();
-		p.setHTML("<a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ#gid=0\">Not registered? Sign up now!</a>");
+		p.setHTML("<a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dEhpX0tCWmhGRU9tNjF4OVdtTjZpcHc6MQ\">Not registered? Sign up now!</a>");
 		p.getElement().getStyle().setDisplay(Style.Display.INLINE);
 		innerSignupPanel.add(p);
 
@@ -211,8 +211,7 @@ public class IndexPage implements EntryPoint {
 			p2.setText("Registering with Falcon allows you review your own authorizations, "
 					+ "update your contact information, and print your own fighter card at home.");
 
-			HTML form = new HTML("<iframe src=\"https://docs.google.com/spreadsheet/embeddedform?formkey=dGNDV2NYdGUtZk1aZXN6MURkaWlFNlE6MQ\" "
-					+ "width=\"620\" height=\"820\" frameborder=\"0\" marginheight=\"0\" marginwidth=\0\">Loading Signup Form...</iframe>");
+			HTML form = new HTML("<iframe src=\"https://docs.google.com/spreadsheet/embeddedform?formkey=dEhpX0tCWmhGRU9tNjF4OVdtTjZpcHc6MQ\" width=\"760\" height=\"705\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\">Loading...</iframe>");
 			innerSignupPanel.add(p2);
 			innerSignupPanel.add(form);
 		}

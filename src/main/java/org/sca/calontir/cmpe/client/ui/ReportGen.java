@@ -123,6 +123,7 @@ public class ReportGen extends Composite {
 		background.add(deck);
 		deck.showWidget(0);
 
+		background.add(buildPrevLink(deck));
 		background.add(next);
 		background.add(submit);
 
@@ -156,4 +157,28 @@ public class ReportGen extends Composite {
 
 		return nextLink;
 	}
+
+	private FocusWidget buildPrevLink(final DeckPanel deck) {
+		final Button prevLink = new Button("<< Prev");
+		prevLink.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (prevLink.isEnabled()) {
+					int index = deck.getVisibleWidget();
+					if (index > 0) {
+						--index;
+						BaseReportPage nextPage = (BaseReportPage) deck.getWidget(index);
+						nextPage.onDisplay();
+						deck.showWidget(index);
+					}
+				}
+			}
+		});
+		prevLink.setWidth("90px");
+//		nextLink.setHeight(".90em");
+//		nextLink.getElement().getStyle().setFontSize(0.75, Style.Unit.EM);
+
+		return prevLink;
+	}
+
 }

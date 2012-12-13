@@ -49,12 +49,11 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
 
 		Panel listPanel = new FlowPanel();
-		listPanel.setStyleName("list");
+		//listPanel.setStylePrimaryName("list");
 
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(table);
-		table.addStyleName("header");
 
 		ButtonCell selectButton = new ButtonCell();
 		Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {

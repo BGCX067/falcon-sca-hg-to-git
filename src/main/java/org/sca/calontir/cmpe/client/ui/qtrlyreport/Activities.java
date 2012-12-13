@@ -2,17 +2,16 @@ package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterService;
@@ -64,14 +63,16 @@ public class Activities extends BaseReportPage {
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
-		final TextArea activities = new TextArea();
+		final RichTextArea activities = new RichTextArea();
 		activities.setStylePrimaryName(REPORT_TEXT_BOX);
+		activities.setHeight("10em");
 		bk.add(activities);
 		addRequired("Activities");
-		activities.addValueChangeHandler(new ValueChangeHandler<String>() {
+		activities.addBlurHandler(new BlurHandler() {
+
 			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				addReportInfo("Activities", event.getValue());
+			public void onBlur(BlurEvent event) {
+				addReportInfo("Activities", activities.getHTML());
 			}
 		});
 		activities.addKeyPressHandler(requiredFieldKeyPressHandler);
@@ -120,7 +121,7 @@ public class Activities extends BaseReportPage {
 			p1 = "Please describe the activities that took place at this event. Tournaments, pickup fights, melees, and what generally occured.";
 			persInfo.getElement().getStyle().setDisplay(Style.Display.NONE);
 		} else {
-			p1 = "Please describe your  activities for this quarter. Include events you have attended in general, fighter practices in which you are active, and events where you may have assisted in Marshalatte activities.";
+			p1 = "Please describe your activities as a Marshal for this quarter. Include events you have attended in general, fighter practices in which you are active, and events where you may have assisted in Marshalatte activities.";
 		}
 		para1.setHTML(p1);
 	}

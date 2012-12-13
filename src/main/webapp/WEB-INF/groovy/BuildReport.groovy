@@ -5,6 +5,7 @@ import groovy.xml.MarkupBuilder
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 import org.sca.calontir.cmpe.db.FighterDAO
+import org.apache.commons.lang.StringEscapeUtils
 
 def now = new DateTime()
 def dao = new FighterDAO()
@@ -19,6 +20,7 @@ ccs += user?.email[0].emailAddress
 def from
 def to
 def location = user?.scaGroup?.groupLocation
+def activities = StringEscapeUtils.unescapeHtml(params["Activities"])
 
 namespace.of("system") {
 	def query = new Query("properties")
@@ -143,7 +145,7 @@ namespace.of(kingdom.toLowerCase()) {
 			}
 
 			h3 ('class':'sect_title',  "Activities: "  )
-			p ('class':'sect_body', params["Activities"])
+			p { mkp.yieldUnescaped activities }
 
 			h3 ('class':'sect_title',  "Problems or Injuries: "  )
 			p ('class':'sect_body', params["Injury"])

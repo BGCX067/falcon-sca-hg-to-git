@@ -65,14 +65,12 @@ public class FighterComment extends BaseReportPage {
 
 	private void addListPanel(List<FighterInfo> fighterList, Panel target) {
 		Panel listPanel = new FlowPanel();
-		listPanel.setStyleName("list");
 		FighterInfo userInfo = LookupController.getInstance().getFighter(security.getLoginInfo().getFighterId());
 
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
 		CellTable<FighterInfo> table = new CellTable<FighterInfo>();
 		pager.setDisplay(table);
-		table.addStyleName("header");
 
 		TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
 			@Override
