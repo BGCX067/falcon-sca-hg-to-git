@@ -121,6 +121,7 @@ public class PersonalInfo extends BaseReportPage {
 			membershipExpires.setValue(DateTimeFormat.getFormat("MM/dd/yyyy").parse(user.getMembershipExpires()));
 		}
 		addRequired("Membership Expires");
+		addReportInfo("Membership Expires", user.getMembershipExpires());
 		membershipExpires.getTextBox().addKeyPressHandler(requiredFieldKeyPressHandler);
 		membershipExpires.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
@@ -168,7 +169,11 @@ public class PersonalInfo extends BaseReportPage {
 
 	@Override
 	public void onDisplay() {
-		nextButton.setEnabled(false);
+		if(getRequired().contains("Membership Expires")) {
+			nextButton.setEnabled(true);
+		} else {
+			nextButton.setEnabled(false);
+		}
 	}
 
 	@Override
