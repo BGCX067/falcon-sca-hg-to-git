@@ -14,6 +14,7 @@ public class Fighter implements Serializable {
     private Long fighterId;
     private String scaName;
     private String scaMemberNo;
+	private String membershipExpires;
     private String modernName;
     private String dateOfBirth;
     private String googleId;
@@ -106,6 +107,14 @@ public class Fighter implements Serializable {
     public void setScaMemberNo(String scaMemberNo) {
         this.scaMemberNo = scaMemberNo;
     }
+
+	public String getMembershipExpires() {
+		return membershipExpires;
+	}
+
+	public void setMembershipExpires(String membershipExpires) {
+		this.membershipExpires = membershipExpires;
+	}
 
     public String getScaName() {
         return scaName;

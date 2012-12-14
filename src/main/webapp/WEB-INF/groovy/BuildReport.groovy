@@ -5,12 +5,16 @@ import groovy.xml.MarkupBuilder
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 import org.sca.calontir.cmpe.db.FighterDAO
+import org.sca.calontir.cmpe.dto.Fighter
 import org.apache.commons.lang.StringEscapeUtils
 
 def now = new DateTime()
-def dao = new FighterDAO()
+FighterDAO dao = new FighterDAO()
 def kingdom = "Calontir" 
-def user = dao.getFighterByGoogleId(params["user.googleid"])
+Fighter user = dao.getFighterByGoogleId(params["user.googleid"])
+def membershipExpires = params["Membership Expires"]
+user.setMembershipExpires(membershipExpires)
+dao.saveFighter(user, user.getFighterId(), false)
 logger.BuildReport.info "Generating report for ${user.scaName}"
 def ccs = params["Email Cc"]?.split(",")
 if(!ccs) {
@@ -73,97 +77,110 @@ namespace.of(kingdom.toLowerCase()) {
 
 //backends.run { 
 
-	StringWriter writer = new StringWriter()  
-	def build = new MarkupBuilder(writer)  
-	build.html{  
-		head{  
-			title('Marshal Report')
-			style(type:"text/css", '''  
+StringWriter writer = new StringWriter()  
+def build = new MarkupBuilder(writer)  
+build.html{  
+	head{  
+		title('Marshal Report')
+		style(type:"text/css", '''  
 			.sect_title {
 				text-decoration:underline;
 			}
 			.sect_body {
 			}
 			''')
-		}  
-		body {
-			h1 "Marshal Report"
+	}  
+	body {
+		h1 "Marshal Report"
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;', "Reporting Period: " )
-				span ('class':'sect_body', params["Report Type"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;', "Reporting Period: " )
+			span ('class':'sect_body', params["Report Type"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Marshal Type: "  )
-				span ('class':'sect_body', params["Marshal Type"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Marshal Type: "  )
+			span ('class':'sect_body', params["Marshal Type"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "SCA Name: "  )
-				span ('class':'sect_body', params["SCA Name"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "SCA Name: "  )
+			span ('class':'sect_body', params["SCA Name"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Modern First & Last Name: "  )
-				span ('class':'sect_body', 'style':'display: inline;', params["Modern Name"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Modern First & Last Name: "  )
+			span ('class':'sect_body', 'style':'display: inline;', params["Modern Name"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Address: "  )
-				span ('class':'sect_body', params["Address"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Address: "  )
+			span ('class':'sect_body', params["Address"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Phone Number: "  )
-				span ('class':'sect_body', params["Phone Number"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Phone Number: "  )
+			span ('class':'sect_body', params["Phone Number"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Membership Number: "  )
-				span ('class':'sect_body', params["SCA Membership No"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Membership Number: "  )
+			span ('class':'sect_body', params["SCA Membership No"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Membership Expires: "  )
-				span ('class':'sect_body', params["Membership Expires"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Membership Expires: "  )
+			span ('class':'sect_body', params["Membership Expires"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Home Group: "  )
-				span ('class':'sect_body', params["Group"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Membership Expires: "  )
+			span ('class':'sect_body', params["Membership Expires"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Number of Authorized Fighters: "  )
-				span ('class':'sect_body', params["Active Fighters"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Home Group: "  )
+			span ('class':'sect_body', params["Group"])
+		}
 
-			p {
-				h3 ('class':'sect_title', 'style':'display: inline;',  "Number of Minors: "  )
-				span ('class':'sect_body', params["Minor Fighters"])
-			}
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Number of Authorized Fighters: "  )
+			span ('class':'sect_body', params["Active Fighters"])
+		}
 
+		p {
+			h3 ('class':'sect_title', 'style':'display: inline;',  "Number of Minors: "  )
+			span ('class':'sect_body', params["Minor Fighters"])
+		}
+
+		if(params["Activities"]) {
 			h3 ('class':'sect_title',  "Activities: "  )
-			p { mkp.yieldUnescaped activities }
+			p { mkp.yieldUnescaped params["Activities"] }
+		}
 
+		if(params["Injuries"]) {
 			h3 ('class':'sect_title',  "Problems or Injuries: "  )
-			p ('class':'sect_body', params["Injury"])
+			p { mkp.yieldUnescaped params["Injury"]}
+		}
 
+		if(params["Fighter Comments"]) {
 			h3 ('class':'sect_title',  "Fighter Comments "  )
-			p ('class':'sect_body', params["Fighter Comments"])
+			p {mkp.yieldUnescaped params["Fighter Comments"]}
+		}
 
+		if(params["Summary"]) {
 			h3 ('class':'sect_title',  "Summary: "  )
-			p ('class':'sect_body', params["Summary"])
+			p {mkp.yieldUnescaped params["Summary"]}
 		}
 	}
+}
 
 logger.BuildReport.info "Sending report for ${params["Report Type"]}: to ${to}, from ${from}, cc ${ccs}"
 	
-	mail.send from: from,
-		to: to,
-		cc: ccs,
-		subject: "Marshal report for " + params["Report Type"],
-		htmlBody: writer.toString()
+mail.send from: from,
+to: to,
+cc: ccs,
+subject: "Marshal report for " + params["Report Type"],
+htmlBody: writer.toString()
 
 //}

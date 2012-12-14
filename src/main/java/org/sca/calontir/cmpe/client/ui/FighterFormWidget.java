@@ -356,6 +356,11 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		formatter.setStyleName(2, 0, "label");
 		formatter.setStyleName(2, 1, "data");
 
+		table.setText(2, 0, "Membership Expiration Date:");
+		table.setWidget(2, 1, membershipExpires(edit));
+		formatter.setStyleName(2, 0, "label");
+		formatter.setStyleName(2, 1, "data");
+
 		table.setText(3, 0, "Group:");
 		table.setWidget(3, 1, group(edit, dMode));
 		formatter.setStyleName(3, 0, "label");
@@ -517,6 +522,44 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			}
 		}
 
+		return new Label("");
+	}
+
+	private Widget membershipExpires(boolean edit) {
+		if (edit) {
+			final DateBox membershipExpires = new DateBox();
+			final Flag ghost = new Flag();
+			membershipExpires.getTextBox().getElement().setId("membershipExpires");
+			membershipExpires.getTextBox().setName("membershipExpires");
+			membershipExpires.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("MM/dd/yyyy")));
+			membershipExpires.setStyleName("membershipExpires");
+			if (fighter.getMembershipExpires() != null) {
+				membershipExpires.setValue(DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getMembershipExpires()));
+			}
+			membershipExpires.addValueChangeHandler(new ValueChangeHandler<Date>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<Date> event) {
+					ghost.value = false;
+					if (membershipExpires.getTextBox().getValue().isEmpty()) {
+						fighter.setMembershipExpires(null);
+					} else {
+						fighter.setMembershipExpires(membershipExpires.getTextBox().getValue());
+					}
+				}
+			});
+			membershipExpires.getTextBox().addBlurHandler(new BlurHandler() {
+				@Override
+				public void onBlur(BlurEvent event) {
+					if (membershipExpires.getTextBox().getValue().isEmpty() && fighter.getMembershipExpires() != null) {
+						fighter.setMembershipExpires(null);
+						membershipExpires.setValue(null, false);
+					}
+				}
+			});
+			return membershipExpires;
+		} else if (fighter.getMembershipExpires() != null) {
+			return new Label(fighter.getMembershipExpires());
+		}
 		return new Label("");
 	}
 

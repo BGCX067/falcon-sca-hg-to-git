@@ -5,12 +5,19 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.datepicker.client.DateBox;
+import java.util.Date;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.user.Security;
@@ -55,7 +62,7 @@ public class PersonalInfo extends BaseReportPage {
 		add(bk);
 	}
 
-	private FlexTable buildTable(Fighter user) {
+	private FlexTable buildTable(final Fighter user) {
 
 
 		FlexTable table = new FlexTable();
@@ -105,6 +112,28 @@ public class PersonalInfo extends BaseReportPage {
 		formatter.setStyleName(3, 0, "label");
 		formatter.setStyleName(3, 1, "data");
 
+		final DateBox membershipExpires = new DateBox();
+		membershipExpires.getTextBox().getElement().setId("membershipExpires");
+		membershipExpires.getTextBox().setName("membershipExpires");
+		membershipExpires.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("MM/dd/yyyy")));
+		membershipExpires.setStyleName("membershipExpires");
+		if (user.getMembershipExpires() != null) {
+			membershipExpires.setValue(DateTimeFormat.getFormat("MM/dd/yyyy").parse(user.getMembershipExpires()));
+		}
+		addRequired("Membership Expires");
+		membershipExpires.getTextBox().addKeyPressHandler(requiredFieldKeyPressHandler);
+		membershipExpires.addValueChangeHandler(new ValueChangeHandler<Date>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Date> event) {
+				addReportInfo("Membership Expires", membershipExpires.getTextBox().getValue());
+			}
+		});
+
+		table.setText(2, 0, "Membership Expiration Date:");
+		table.setWidget(2, 1, membershipExpires);
+		formatter.setStyleName(2, 0, "label");
+		formatter.setStyleName(2, 1, "data");
+
 		table.setText(4, 0, "Group:");
 		table.setWidget(4, 1, new Label(user.getScaGroup().getGroupName()));
 		addReportInfo("SCA Group", user.getScaGroup().getGroupName());
@@ -133,13 +162,13 @@ public class PersonalInfo extends BaseReportPage {
 		}
 		formatter.setStyleName(6, 0, "label");
 		formatter.setStyleName(6, 1, "data");
-		
+
 		return table;
 	}
 
 	@Override
 	public void onDisplay() {
-		nextButton.setEnabled(true);
+		nextButton.setEnabled(false);
 	}
 
 	@Override

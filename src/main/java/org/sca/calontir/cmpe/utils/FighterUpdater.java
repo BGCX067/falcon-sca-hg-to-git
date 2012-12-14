@@ -5,9 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
@@ -45,6 +42,13 @@ public class FighterUpdater {
             group.setGroupName(groupStr);
             fighter.setScaGroup(group);
         }
+
+        String membershipExpires = request.getParameter("membershipExpires");
+        if (StringUtils.isNotBlank(membershipExpires)) {
+            fighter.setMembershipExpires(membershipExpires);
+        } else {
+			fighter.setMembershipExpires(null);
+		}
 
         String dob = request.getParameter("dateOfBirth");
         if (StringUtils.isNotBlank(dob)) {

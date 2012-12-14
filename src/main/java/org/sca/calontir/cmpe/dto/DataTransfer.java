@@ -26,6 +26,10 @@ public class DataTransfer {
 		fighter.setScaName(fighterDO.getScaName());
 		fighter.setScaMemberNo(fighterDO.getScaMemberNo());
 		fighter.setModernName(fighterDO.getModernName());
+		if(fighterDO.getMembershipExpires() != null) {
+			String dt = new DateTime(fighterDO.getMembershipExpires().getTime()).toString("MM/dd/yyyy");
+			fighter.setMembershipExpires(dt);
+		}
 		if(fighterDO.getDateOfBirth() != null) {
 			String dt = new DateTime(fighterDO.getDateOfBirth().getTime()).toString("MM/dd/yyyy");
 			fighter.setDateOfBirth(dt);
@@ -162,6 +166,12 @@ public class DataTransfer {
 		fighterDO.setScaName(fighter.getScaName());
 		fighterDO.setScaMemberNo(fighter.getScaMemberNo());
 		fighterDO.setModernName(fighter.getModernName());
+		if (StringUtils.isNotBlank(fighter.getMembershipExpires())) {
+			DateTime dt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(fighter.getMembershipExpires());
+			fighterDO.setMembershipExpires(dt.toDate());
+		} else {
+			fighterDO.setMembershipExpires(null);
+		}
 		if (StringUtils.isNotBlank(fighter.getDateOfBirth())) {
 			DateTime dt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(fighter.getDateOfBirth());
 			fighterDO.setDateOfBirth(dt.toDate());

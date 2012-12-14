@@ -24,6 +24,8 @@ public class Fighter {
     @Persistent
     private String scaMemberNo;
     @Persistent
+    private Date membershipExpires;
+    @Persistent
     private String modernName;
     @Persistent
     private Date dateOfBirth;
@@ -91,6 +93,14 @@ public class Fighter {
     public void setScaMemberNo(String scaMemberNo) {
         this.scaMemberNo = scaMemberNo;
     }
+
+	public Date getMembershipExpires() {
+		return membershipExpires;
+	}
+
+	public void setMembershipExpires(Date membershipExpires) {
+		this.membershipExpires = membershipExpires;
+	}
 
     public List<Address> getAddress() {
         return address;
