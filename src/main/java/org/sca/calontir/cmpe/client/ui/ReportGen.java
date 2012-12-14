@@ -69,6 +69,7 @@ public class ReportGen extends Composite {
 
 						@Override
 						public void onSuccess(Void result) {
+							LookupController.getInstance().updateLocalData();
 							Shout shout = Shout.getInstance();
 							shout.tell("Thank you for submitting your report");
 							DisplayUtils.resetDisplay();

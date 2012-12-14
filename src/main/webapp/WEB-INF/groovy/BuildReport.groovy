@@ -134,11 +134,6 @@ build.html{
 		}
 
 		p {
-			h3 ('class':'sect_title', 'style':'display: inline;',  "Membership Expires: "  )
-			span ('class':'sect_body', params["Membership Expires"])
-		}
-
-		p {
 			h3 ('class':'sect_title', 'style':'display: inline;',  "Home Group: "  )
 			span ('class':'sect_body', params["Group"])
 		}
