@@ -1,10 +1,13 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextArea;
 
 /**
@@ -23,15 +26,15 @@ public class Summary extends BaseReportPage {
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
-		final TextArea summary = new TextArea();
-		summary.setStylePrimaryName(REPORT_TEXT_BOX);
+		final RichTextArea summary = new RichTextArea();
+		summary.addStyleName(REPORT_TEXT_BOX);
 		bk.add(summary);
 		addRequired(SUMMARY);
-		summary.addValueChangeHandler(new ValueChangeHandler<String>() {
+		summary.addBlurHandler(new BlurHandler() {
 
 			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				addReportInfo(SUMMARY, event.getValue());
+			public void onBlur(BlurEvent event) {
+				addReportInfo(SUMMARY, summary.getHTML());
 			}
 		});
 		summary.addKeyPressHandler(requiredFieldKeyPressHandler);

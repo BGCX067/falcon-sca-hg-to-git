@@ -1,10 +1,13 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextArea;
 
 /**
@@ -29,14 +32,14 @@ public class InjuryReport extends BaseReportPage {
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
-		final TextArea injuries = new TextArea();
-		injuries.setStylePrimaryName(REPORT_TEXT_BOX);
+		final RichTextArea injuries = new RichTextArea();
+		injuries.addStyleName(REPORT_TEXT_BOX);
 		bk.add(injuries);
-		injuries.addValueChangeHandler(new ValueChangeHandler<String>() {
+		injuries.addBlurHandler(new BlurHandler() {
 
 			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				addReportInfo("Injury", event.getValue());
+			public void onBlur(BlurEvent event) {
+				addReportInfo("Injury", injuries.getHTML());
 			}
 		});
 

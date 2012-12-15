@@ -129,6 +129,7 @@ public class IndexPage implements EntryPoint {
 				});
 
 		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				String historyToken = event.getValue();
 				try {

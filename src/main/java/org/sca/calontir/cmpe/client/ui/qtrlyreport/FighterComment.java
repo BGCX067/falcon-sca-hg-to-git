@@ -1,6 +1,8 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -11,6 +13,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.List;
@@ -37,24 +40,18 @@ public class FighterComment extends BaseReportPage {
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
-		final TextArea fighterComments = new TextArea();
-		fighterComments.setStylePrimaryName(REPORT_TEXT_BOX);
+		final RichTextArea fighterComments = new RichTextArea();
+		fighterComments.addStyleName(REPORT_TEXT_BOX);
 		bk.add(fighterComments);
-		fighterComments.addValueChangeHandler(new ValueChangeHandler<String>() {
+		fighterComments.addBlurHandler(new BlurHandler() {
+
 			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				addReportInfo("Fighter Comments", event.getValue());
+			public void onBlur(BlurEvent event) {
+				addReportInfo("Fighter Comments", fighterComments.getHTML());
 			}
 		});
 
-		fighterComments.addKeyPressHandler(new KeyPressHandler() {
-			@Override
-			public void onKeyPress(KeyPressEvent event) {
-				if(!fighterComments.getValue().isEmpty()) {
-					nextButton.setEnabled(true);
-				}
-			}
-		});
+		fighterComments.addKeyPressHandler(requiredFieldKeyPressHandler);
 
 
 		List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);

@@ -64,8 +64,7 @@ public class Activities extends BaseReportPage {
 		bk.add(para1);
 
 		final RichTextArea activities = new RichTextArea();
-		activities.setStylePrimaryName(REPORT_TEXT_BOX);
-		activities.setHeight("10em");
+		activities.addStyleName(REPORT_TEXT_BOX);
 		bk.add(activities);
 		addRequired("Activities");
 		activities.addBlurHandler(new BlurHandler() {

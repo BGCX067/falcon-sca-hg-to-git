@@ -36,6 +36,7 @@ public class LookupController {
 	private FighterServiceAsync fighterService = GWT.create(FighterService.class);
 	private Storage stockStore = Storage.getLocalStorageIfSupported();
 	private Shout shout = Shout.getInstance();
+	public String versionId;
 
 	private LookupController() {
 		try {
@@ -208,6 +209,7 @@ public class LookupController {
 
 			@Override
 			public void onSuccess(Map<String, Object> result) {
+				versionId = (String) result.get("appversion");
 				String text = (String) result.get("stored");
 				if (stockStore != null) {
 					stockStore.removeItem("scaNameList");

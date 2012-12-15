@@ -8,7 +8,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -41,7 +40,7 @@ public class PersonalInfo extends BaseReportPage {
 
 		String p1 = "Please review this information. If it is not correct, go back to the main page and update your personal information";
 		HTML para1 = new HTML(p1);
-		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
+		para1.addStyleName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
 		FighterServiceAsync fighterService = GWT.create(FighterService.class);

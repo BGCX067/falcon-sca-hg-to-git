@@ -920,18 +920,28 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 			final Panel dataBody = new FlowPanel();
 			dataBody.setStyleName("dataBody");
-			final TextArea noteTa = new TextArea();
-			noteTa.setName("notes");
-			noteTa.setReadOnly(!edit);
+			final Hidden noteField = new Hidden();
+			noteField.setID("notes");
+			noteField.setName("notes");
 			if (fighter.getNote() != null) {
-				noteTa.setText(fighter.getNote().getBody());
+				noteField.setValue(fighter.getNote().getBody());
 			}
-			noteTa.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String changed = cleanString(event.getValue());
+			notePanel.add(noteField);
+
+			final RichTextArea noteTa = new RichTextArea();
+			//noteTa.setName("notes");
+			noteTa.setEnabled(edit);
+			if (fighter.getNote() != null) {
+				noteTa.setHTML(fighter.getNote().getBody());
+			}
+			noteTa.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent event) {
+					RichTextArea source = (RichTextArea) event.getSource();
+					String changed = source.getHTML();
 					if (changed.isEmpty()) {
 						fighter.setNote(null);
+						noteField.setValue("");
 					} else {
 						Note note;
 						if (fighter.getNote() != null) {
@@ -943,6 +953,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 						note.setUpdated(new Date());
 
 						fighter.setNote(note);
+						noteField.setValue(changed);
 					}
 				}
 			});

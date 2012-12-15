@@ -13,8 +13,10 @@ FighterDAO dao = new FighterDAO()
 def kingdom = "Calontir" 
 Fighter user = dao.getFighterByGoogleId(params["user.googleid"])
 def membershipExpires = params["Membership Expires"]
-user.setMembershipExpires(membershipExpires)
-dao.saveFighter(user, user.getFighterId(), false)
+if(!membershipExpires == user.membershipExpires) {
+	user.setMembershipExpires(membershipExpires)
+	dao.saveFighter(user, user.getFighterId(), false)
+}
 logger.BuildReport.info "Generating report for ${user.scaName}"
 def ccs = params["Email Cc"]?.split(",")
 if(!ccs) {
