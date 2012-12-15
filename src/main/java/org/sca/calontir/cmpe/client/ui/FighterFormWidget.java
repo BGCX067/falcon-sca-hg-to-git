@@ -334,57 +334,66 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		FlexTable table = new FlexTable();
 		FlexTable.FlexCellFormatter formatter = table.getFlexCellFormatter();
 
+		int row = 0;
 		table.setStyleName("wide-table");
-		table.setText(0, 0, "Modern Name:");
-		table.setWidget(0, 1, modernName(edit));
-		table.setWidget(0, 2, status(edit));
-		formatter.setStyleName(0, 0, "label");
-		formatter.setStyleName(0, 1, "data");
-		formatter.setStyleName(0, 2, "rightCol");
+		table.setText(row, 0, "Modern Name:");
+		table.setWidget(row, 1, modernName(edit));
+		table.setWidget(row, 2, status(edit));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
+		formatter.setStyleName(row, 2, "rightCol");
 
-		table.setText(1, 0, "Address:");
-		table.setWidget(1, 1, address(edit));
-		formatter.setStyleName(1, 0, "label");
-		formatter.setStyleName(1, 1, "data");
+		++row;
+		table.setText(row, 0, "Address:");
+		table.setWidget(row, 1, address(edit));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
 
-		table.setWidget(1, 2, treaty(edit));
-		formatter.setStyleName(1, 2, "rightCol");
-		formatter.setVerticalAlignment(1, 2, HasVerticalAlignment.ALIGN_TOP);
+		table.setWidget(row, 2, treaty(edit));
+		formatter.setStyleName(row, 2, "rightCol");
+		formatter.setVerticalAlignment(row, 2, HasVerticalAlignment.ALIGN_TOP);
 
-		table.setText(2, 0, "SCA Membership:");
-		table.setWidget(2, 1, scaMemberNo(edit));
-		formatter.setStyleName(2, 0, "label");
-		formatter.setStyleName(2, 1, "data");
+		++row;
+		table.setText(row, 0, "SCA Membership:");
+		table.setWidget(row, 1, scaMemberNo(edit));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
 
-		table.setText(2, 0, "Membership Expiration Date:");
-		table.setWidget(2, 1, membershipExpires(edit));
-		formatter.setStyleName(2, 0, "label");
-		formatter.setStyleName(2, 1, "data");
+		++row;
+		table.setText(row, 0, "Membership Expiration Date:");
+		table.setWidget(row, 1, membershipExpires(edit));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
 
-		table.setText(3, 0, "Group:");
-		table.setWidget(3, 1, group(edit, dMode));
-		formatter.setStyleName(3, 0, "label");
-		formatter.setStyleName(3, 1, "data");
+		++row;
+		table.setText(row, 0, "Group:");
+		table.setWidget(row, 1, group(edit, dMode));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
 
-		table.setText(4, 0, "Minor:");
-		table.setWidget(4, 1, minor(edit));
-		formatter.setStyleName(4, 0, "label");
-		formatter.setStyleName(4, 1, "data");
+		++row;
+		table.setText(row, 0, "Minor:");
+		table.setWidget(row, 1, minor(edit));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
 
-		table.setText(5, 0, "DOB:");
-		table.setWidget(5, 1, dateOfBirth(edit));
-		formatter.setStyleName(5, 0, "label");
-		formatter.setStyleName(5, 1, "data");
+		++row;
+		table.setText(row, 0, "DOB:");
+		table.setWidget(row, 1, dateOfBirth(edit));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
 
-		table.setWidget(6, 0, new Label("Phone Number:"));
-		table.setWidget(6, 1, phoneNumber(edit));
-		formatter.setStyleName(6, 0, "label");
-		formatter.setStyleName(6, 1, "data");
+		++row;
+		table.setWidget(row, 0, new Label("Phone Number:"));
+		table.setWidget(row, 1, phoneNumber(edit));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
 
-		table.setText(7, 0, "Email Address:");
-		table.setWidget(7, 1, emailAddress(edit));
-		formatter.setStyleName(7, 0, "label");
-		formatter.setStyleName(7, 1, "data");
+		++row;
+		table.setText(row, 0, "Email Address:");
+		table.setWidget(row, 1, emailAddress(edit));
+		formatter.setStyleName(row, 0, "label");
+		formatter.setStyleName(row, 1, "data");
 
 		fighterInfo.add(table);
 

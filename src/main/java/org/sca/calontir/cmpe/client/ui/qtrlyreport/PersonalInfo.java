@@ -8,6 +8,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -115,7 +116,7 @@ public class PersonalInfo extends BaseReportPage {
 		membershipExpires.getTextBox().setName("membershipExpires");
 		membershipExpires.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("MM/dd/yyyy")));
 		membershipExpires.setStyleName("membershipExpires");
-		if (user.getMembershipExpires() != null) {
+		if (user.getMembershipExpires() != null && !user.getMembershipExpires().isEmpty()) {
 			membershipExpires.setValue(DateTimeFormat.getFormat("MM/dd/yyyy").parse(user.getMembershipExpires()));
 		}
 		addRequired("Membership Expires");
@@ -128,46 +129,46 @@ public class PersonalInfo extends BaseReportPage {
 			}
 		});
 
-		table.setText(2, 0, "Membership Expiration Date:");
-		table.setWidget(2, 1, membershipExpires);
-		formatter.setStyleName(2, 0, "label");
-		formatter.setStyleName(2, 1, "data");
-
-		table.setText(4, 0, "Group:");
-		table.setWidget(4, 1, new Label(user.getScaGroup().getGroupName()));
-		addReportInfo("SCA Group", user.getScaGroup().getGroupName());
+		table.setText(4, 0, "Membership Expiration Date:");
+		table.setWidget(4, 1, membershipExpires);
 		formatter.setStyleName(4, 0, "label");
 		formatter.setStyleName(4, 1, "data");
 
-		table.setWidget(5, 0, new Label("Phone Number:"));
-		if (user.getPhone() != null && !user.getPhone().isEmpty()) {
-			table.setWidget(5, 1, new Label(user.getPhone().get(0).getPhoneNumber()));
-			addReportInfo("Phone Number", user.getPhone().get(0).getPhoneNumber());
-		} else {
-			table.setWidget(5, 1, new Label(""));
-			addReportInfo("Phone Number", "");
-		}
+		table.setText(5, 0, "Group:");
+		table.setWidget(5, 1, new Label(user.getScaGroup().getGroupName()));
+		addReportInfo("SCA Group", user.getScaGroup().getGroupName());
 		formatter.setStyleName(5, 0, "label");
 		formatter.setStyleName(5, 1, "data");
 
-		table.setText(6, 0, "Email Address:");
-		if (user.getEmail() != null && !user.getEmail().isEmpty()) {
-			String emailAddress = user.getEmail().get(0).getEmailAddress();
-			table.setWidget(6, 1, new Label(emailAddress));
-			addReportInfo("Email Address", emailAddress);
+		table.setWidget(6, 0, new Label("Phone Number:"));
+		if (user.getPhone() != null && !user.getPhone().isEmpty()) {
+			table.setWidget(6, 1, new Label(user.getPhone().get(0).getPhoneNumber()));
+			addReportInfo("Phone Number", user.getPhone().get(0).getPhoneNumber());
 		} else {
 			table.setWidget(6, 1, new Label(""));
-			addReportInfo("Email Address", "");
+			addReportInfo("Phone Number", "");
 		}
 		formatter.setStyleName(6, 0, "label");
 		formatter.setStyleName(6, 1, "data");
+
+		table.setText(7, 0, "Email Address:");
+		if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+			String emailAddress = user.getEmail().get(0).getEmailAddress();
+			table.setWidget(7, 1, new Label(emailAddress));
+			addReportInfo("Email Address", emailAddress);
+		} else {
+			table.setWidget(7, 1, new Label(""));
+			addReportInfo("Email Address", "");
+		}
+		formatter.setStyleName(7, 0, "label");
+		formatter.setStyleName(7, 1, "data");
 
 		return table;
 	}
 
 	@Override
 	public void onDisplay() {
-		if(getRequired().contains("Membership Expires")) {
+		if(getReportInfo().keySet().contains("Membership Expires")) {
 			nextButton.setEnabled(true);
 		} else {
 			nextButton.setEnabled(false);
