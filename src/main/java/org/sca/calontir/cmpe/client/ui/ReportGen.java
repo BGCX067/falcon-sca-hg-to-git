@@ -166,7 +166,13 @@ public class ReportGen extends Composite {
 			public void onClick(ClickEvent event) {
 				if (prevLink.isEnabled()) {
 					int index = deck.getVisibleWidget();
-					if (index > 0) {
+					if (index == 1) {
+						Shout.getInstance().tell("To reselect the report type, select the Report link from the menu and start again.");
+					} else if (index > 1) {
+						if(index < deck.getWidgetCount()) {
+							BaseReportPage prevPage = (BaseReportPage) deck.getWidget(index);
+							prevPage.onLeavePage();
+						}
 						--index;
 						BaseReportPage nextPage = (BaseReportPage) deck.getWidget(index);
 						nextPage.onDisplay();

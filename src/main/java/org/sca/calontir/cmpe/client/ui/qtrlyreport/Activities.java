@@ -37,6 +37,7 @@ public class Activities extends BaseReportPage {
 	final private HTML para1 = new HTML();
 	final Panel bk = new FlowPanel();
 	final Panel persInfo = new FlowPanel();
+	RichTextArea activities;
 
 	@Override
 	public void buildPage() {
@@ -48,7 +49,7 @@ public class Activities extends BaseReportPage {
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
 
-		final RichTextArea activities = new RichTextArea();
+		activities = new RichTextArea();
 		activities.addStyleName(REPORT_TEXT_BOX);
 		bk.add(activities);
 		addRequired("Activities");
@@ -96,16 +97,27 @@ public class Activities extends BaseReportPage {
 
 	@Override
 	public void onDisplay() {
-		nextButton.setEnabled(false);
 		final String p1;
 		String reportType = (String) getReportInfo().get("Report Type");
 		log.info("Report type = " + reportType);
 		if (reportType.equals("Event")) {
 			p1 = "Please describe the activities that took place at this event. Tournaments, pickup fights, melees, and what generally occured.";
 			buildEventInfo();
+			if(getReportInfo().containsKey("Event Name")
+				&& getReportInfo().containsKey("Event Date")	
+				&& getReportInfo().containsKey("Activities")) {
+				nextButton.setEnabled(true);
+			} else {
+				nextButton.setEnabled(false);
+			}
 		} else {
 			p1 = "Please describe your activities as a Marshal for this quarter. Include events you have attended in general, fighter practices in which you are active, and events where you may have assisted in Marshalatte activities.";
 			buildQuarterlyInfo();
+			if(!activities.getHTML().isEmpty()) {
+				nextButton.setEnabled(true);
+			} else {
+				nextButton.setEnabled(false);
+			}
 		}
 		para1.setHTML(p1);
 	}

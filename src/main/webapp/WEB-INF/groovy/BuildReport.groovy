@@ -140,14 +140,18 @@ build.html{
 			span ('class':'sect_body', params["Group"])
 		}
 
-		p {
-			h3 ('class':'sect_title', 'style':'display: inline;',  "Number of Authorized Fighters: "  )
-			span ('class':'sect_body', params["Active Fighters"])
+		if(params["Active Fighters"]) {
+			p {
+				h3 ('class':'sect_title', 'style':'display: inline;',  "Number of Authorized Fighters: "  )
+				span ('class':'sect_body', params["Active Fighters"])
+			}
 		}
 
-		p {
-			h3 ('class':'sect_title', 'style':'display: inline;',  "Number of Minors: "  )
-			span ('class':'sect_body', params["Minor Fighters"])
+		if(params["Minor Fighters"]) {
+			p {
+				h3 ('class':'sect_title', 'style':'display: inline;',  "Number of Minors: "  )
+				span ('class':'sect_body', params["Minor Fighters"])
+			}
 		}
 
 		if(params["Activities"]) {
