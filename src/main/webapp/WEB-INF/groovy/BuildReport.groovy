@@ -159,7 +159,7 @@ build.html{
 			p { mkp.yieldUnescaped params["Activities"] }
 		}
 
-		if(params["Injuries"]) {
+		if(params["Injury"]) {
 			h3 ('class':'sect_title',  "Problems or Injuries: "  )
 			p { mkp.yieldUnescaped params["Injury"]}
 		}

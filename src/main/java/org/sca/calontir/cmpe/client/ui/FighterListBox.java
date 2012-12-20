@@ -142,10 +142,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 								fireEvent(new EditViewEvent(Mode.VIEW, result));
 							}
 						});
-
-
-					} else {
-						table.redraw();
 					}
 				}
 			}

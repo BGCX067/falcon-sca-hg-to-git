@@ -78,7 +78,7 @@ public class Security {
 		FighterInfo fi = LookupController.getInstance().getFighter(fighterId);
 		FighterInfo user = LookupController.getInstance().getFighter(loginInfo.getFighterId());
 
-        if (isRole(UserRoles.KNIGHTS_MARSHAL)) {
+        if (isRole(UserRoles.KNIGHTS_MARSHAL) || isRole(UserRoles.GROUP_MARSHAL)) {
 			ScaGroup userGroup = LookupController.getInstance().getScaGroup(user.getGroup());
 			ScaGroup fightersGroup =LookupController.getInstance().getScaGroup(fi.getGroup());
             if (userGroup != null && fightersGroup != null) {
