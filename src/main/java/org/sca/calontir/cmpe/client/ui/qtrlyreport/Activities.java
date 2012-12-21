@@ -1,7 +1,6 @@
 package org.sca.calontir.cmpe.client.ui.qtrlyreport;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -122,13 +121,15 @@ public class Activities extends BaseReportPage {
 		para1.setHTML(p1);
 	}
 
+	TextBox eventName = null;
+	DateBox eventDate = null;
 	private void buildEventInfo() {
 		persInfo.clear();
 		Label eventNameLabel = new Label();
 		eventNameLabel.setText("Name of the event");
 		persInfo.add(eventNameLabel);
 
-		TextBox eventName = new TextBox();
+		eventName = new TextBox();
 		eventName.setName("eventName");
 		eventName.getElement().setId("eventName");
 		eventName.setValue((String) getReportInfo().get("Event Name"), false);
@@ -142,7 +143,7 @@ public class Activities extends BaseReportPage {
 		persInfo.add(eventName);
 
 		persInfo.add(new Label("Date of Event"));
-		final DateBox eventDate = new DateBox();
+		eventDate = new DateBox();
 		eventDate.getTextBox().getElement().setId("eventDate");
 		eventDate.getTextBox().setName("eventDate");
 		if (getReportInfo().containsKey("Event Date")) {
@@ -160,6 +161,20 @@ public class Activities extends BaseReportPage {
 		persInfo.add(eventDate);
 
 	}
+
+	@Override
+	public boolean enableNext() {
+		if(eventName != null && eventDate != null) {
+			if(eventName.getText().isEmpty() || eventDate.getTextBox().getText().isEmpty() || activities.getHTML().isEmpty()) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+	
 
 	private void buildQuarterlyInfo() {
 		persInfo.clear();

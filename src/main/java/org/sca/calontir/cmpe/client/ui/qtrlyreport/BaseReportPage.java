@@ -45,6 +45,10 @@ public abstract class BaseReportPage extends SimplePanel {
 
 	public abstract void onLeavePage();
 
+	public boolean enableNext() {
+		return true;
+	}
+
 	public void addReportInfo(String key, Object value) {
 		boolean removeValue = false;
 		if (value == null) {
@@ -62,7 +66,9 @@ public abstract class BaseReportPage extends SimplePanel {
 			}
 		} else {
 			reportInfo.put(key, value);
-			nextButton.setEnabled(true);
+			if(enableNext()) {
+				nextButton.setEnabled(true);
+			}
 		}
 
 		if (allRequired()) {
@@ -106,14 +112,18 @@ public abstract class BaseReportPage extends SimplePanel {
 				if (textBox.getText().isEmpty()) {
 					nextButton.setEnabled(false);
 				} else {
-					nextButton.setEnabled(true);
+					if(enableNext()) {
+						nextButton.setEnabled(true);
+					}
 				}
 			} else {
 				TextBoxBase textBox = (TextBoxBase) event.getSource();
 				if (textBox.getValue().isEmpty()) {
 					nextButton.setEnabled(false);
 				} else {
-					nextButton.setEnabled(true);
+					if(enableNext()) {
+						nextButton.setEnabled(true);
+					}
 				}
 			}
 		}
