@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.joda.time.DateTime;
+import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
@@ -190,6 +191,22 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
 	@Override
 	public void sendReportInfo(Map<String, Object> reportInfo) {
+		FighterDAO fighterDao = new FighterDAO();
+		Fighter user = fighterDao.getFighterByGoogleId((String) reportInfo.get("user.googleid"));
+
+		if (user != null) {
+			String membershipExpires = (String) reportInfo.get("Membership Expires");
+			if (!membershipExpires.equals(user.getMembershipExpires())) {
+				user.setMembershipExpires(membershipExpires);
+				try {
+					fighterDao.saveFighter(user, user.getFighterId(), false);
+				} catch (ValidationException ex) {
+					Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		}
+
+
 		Queue queue = QueueFactory.getDefaultQueue();
 		TaskOptions to = withUrl("/BuildReport.groovy");
 		to.method(TaskOptions.Method.POST);
