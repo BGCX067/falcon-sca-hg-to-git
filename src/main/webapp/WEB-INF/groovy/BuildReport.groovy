@@ -176,7 +176,7 @@ logger.BuildReport.info "Sending report for ${params["Report Type"]}: to ${to}, 
 mail.send from: from,
 to: to,
 cc: ccs,
-subject: "Marshal report for " + params["Report Type"],
+subject: "Marshal report - ${user.scaName} - ${params["Report Type"]}",
 htmlBody: writer.toString()
 
 //}
