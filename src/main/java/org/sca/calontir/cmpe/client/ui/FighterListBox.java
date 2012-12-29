@@ -12,6 +12,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -21,6 +22,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import java.util.Comparator;
 import java.util.List;
 import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterInfo;
@@ -49,7 +51,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
 
 		Panel listPanel = new FlowPanel();
-		//listPanel.setStylePrimaryName("list");
 
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
@@ -58,22 +59,12 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		ButtonCell selectButton = new ButtonCell();
 		Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {
 			@Override
-			public void render(Context context, FighterInfo fighter, SafeHtmlBuilder sb) {
+			public String getValue(FighterInfo fighter) {
 				if (security.canView(fighter.getFighterId())) {
-					super.render(context, fighter, sb);
+					return "Select";
 				} else {
-					sb.append(new SafeHtml() {
-						@Override
-						public String asString() {
-							return "&nbsp;";
-						}
-					});
+					return "     ";
 				}
-			}
-
-			@Override
-			public String getValue(FighterInfo f) {
-				return "Select";
 			}
 		};
 		selectColumn.setSortable(false);
@@ -86,7 +77,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		};
 		//TODO: Turning off sorting for now. Once everything else is settled,
 		//      revisit this.
-		scaNameColumn.setSortable(false);
+		scaNameColumn.setSortable(true);
 
 		TextColumn<FighterInfo> authorizationColumn = new TextColumn<FighterInfo>() {
 			@Override
@@ -101,12 +92,28 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 				return fli.getGroup();
 			}
 		};
-		groupColumn.setSortable(false);
+		groupColumn.setSortable(true);
 
 		table.addColumn(selectColumn, "");
 		table.addColumn(scaNameColumn, "SCA Name");
+		ColumnSortEvent.ListHandler<FighterInfo> columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
+		columnSortHandler.setComparator(scaNameColumn, new Comparator<FighterInfo>() {
+			@Override
+			public int compare(FighterInfo left, FighterInfo right) {
+				return left.getScaName().compareTo(right.getScaName());
+			}
+		});
+		table.addColumnSortHandler(columnSortHandler);
 		table.addColumn(authorizationColumn, "Authorizations");
 		table.addColumn(groupColumn, "Group");
+		columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
+		columnSortHandler.setComparator(groupColumn, new Comparator<FighterInfo>() {
+			@Override
+			public int compare(FighterInfo left, FighterInfo right) {
+				return left.getGroup().compareTo(right.getGroup());
+			}
+		});
+		table.addColumnSortHandler(columnSortHandler);
 
 		if(security.isRoleOrGreater(UserRoles.GROUP_MARSHAL)) {
 			TextColumn<FighterInfo> statusColumn = new TextColumn<FighterInfo>() {
@@ -128,7 +135,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 				FighterInfo selected = selectionModel.getSelectedObject();
 				if (selected != null) {
 					if (security.canView(selected.getFighterId())) {
-//                        Window.open("/FighterSearchServlet?mode=lookup&fid=" + selected.getFighterId(), "_self", "");
 						FighterServiceAsync fighterService = GWT.create(FighterService.class);
 
 						fighterService.getFighter(selected.getFighterId(), new AsyncCallback<Fighter>() {
@@ -154,7 +160,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
 		listPanel.add(table);
 		listPanel.add(pager);
-//        listPanel.add(new HTML("&nbsp;"));
 
 		listBackground.add(listPanel);
 		initWidget(listBackground);
