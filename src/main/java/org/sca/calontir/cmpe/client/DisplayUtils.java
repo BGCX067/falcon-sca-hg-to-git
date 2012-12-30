@@ -16,7 +16,8 @@ public class DisplayUtils {
 		SignupForm,
 		ListBox,
 		FighterForm,
-		ReportGen
+		ReportGen,
+		ReportView
 	}
 
 	public static void changeDisplay(Displays display, boolean history) {
@@ -57,6 +58,9 @@ public class DisplayUtils {
 		}
 		if(DOM.getElementById(Displays.ReportGen.toString()) != null) {
 			DOM.getElementById(Displays.ReportGen.toString()).removeFromParent();
+		}
+		if(DOM.getElementById(Displays.ReportView.toString()) != null) {
+			DOM.getElementById(Displays.ReportView.toString()).removeFromParent();
 		}
 
 	}

@@ -2,6 +2,7 @@ import org.sca.calontir.cmpe.user.Security
 import org.sca.calontir.cmpe.user.SecurityFactory
 import org.sca.calontir.cmpe.dto.Fighter
 import org.sca.calontir.cmpe.db.FighterDAO
+import org.sca.calontir.cmpe.db.ReportDAO
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.blobstore.BlobKey
 import com.google.appengine.api.datastore.*
@@ -98,12 +99,29 @@ fighters.each { f ->
 	fmap.treaty = f.treaty?.name
 	mapList << fmap
 }
+def reportList = []
+namespace.of("calontir") {
+	dao = new ReportDAO();
+	reports = dao.select()
+	reports.each { r ->
+		def rmap = [:]
+		rmap.id = r.id
+		rmap.dateEntered = r.dateEntered
+		rmap.reportType = r.reportType
+		rmap.marshalName = r.marshalName
+		rmap.marshalId = r.marshalId
+		rmap.googleId = r.googleId
+		rmap.reportParams = r.reportParams
+		reportList << rmap
+	}
+}
 
 def json = new groovy.json.JsonBuilder()
 def now = new Date()
 def root = json {
 	dateBackedUp String.format('%tF %<tT', now.time)
 	fighters mapList
+	reports reportList
 }
 
 def file = files.createNewBlobFile("text/json", "backup.json")

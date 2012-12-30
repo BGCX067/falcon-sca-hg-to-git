@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.dto.Report;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
@@ -34,4 +35,8 @@ public interface FighterServiceAsync {
 	public void getMinorFighters(String group, AsyncCallback<Fighter> async);
 
 	public void sendReportInfo(Map<String, Object> reportInfo, AsyncCallback<Void> async);
+
+	public void getAllReports(AsyncCallback<List<Report>> async);
+
+	public void deleteReport(Report report, AsyncCallback<Void> async);
 }

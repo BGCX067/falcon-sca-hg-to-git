@@ -15,6 +15,7 @@ import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.dto.AuthType;
+import org.sca.calontir.cmpe.dto.Report;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
@@ -227,6 +228,28 @@ public class LookupController {
 				authTypes = (List<AuthType>) result.get("authTypes");
 				scaGroups = (List<ScaGroup>) result.get("groups");
 				fighterDLComplete = true;
+			}
+		});
+	}
+
+	public void retrieveReports() {
+		fighterService.getAllReports(new AsyncCallback<List<Report>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				throw new UnsupportedOperationException("Not supported yet.");
+			}
+
+			@Override
+			public void onSuccess(List<Report> result) {
+				String s = "";
+				for(Report r : result) {
+					s += r.getMarshalName() + "<br";
+					for(String k : r.getReportParams().keySet()) {
+						s += k + ":" + r.getReportParams().get(k) + "<br>";
+					}
+				}
+				Window.alert(s);
 			}
 		});
 	}

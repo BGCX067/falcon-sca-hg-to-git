@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.dto.Report;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
 @RemoteServiceRelativePath("fighter")
@@ -28,4 +29,8 @@ public interface FighterService  extends RemoteService {
 	public List<Fighter> getMinorFighters(String group);
 
 	public void sendReportInfo(Map<String, Object> reportInfo);
+
+	public List<Report> getAllReports();
+
+	public void deleteReport(Report report);
 }

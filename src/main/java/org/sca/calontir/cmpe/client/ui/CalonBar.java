@@ -42,6 +42,7 @@ public class CalonBar extends Composite {
 	private Anchor feedBackLink = new Anchor("Feedback");
 	private Anchor supportLink = new Anchor("Support");
 	private Anchor reportLink = new Anchor("Report");
+	private Anchor reportViewLink = new Anchor("Report View");
 
 	private static class AboutPanel extends PopupPanel {
 
@@ -140,6 +141,35 @@ public class CalonBar extends Composite {
 				}
 			});
 			linkbarPanel.add(reportLink);
+		}
+
+		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+			linkbarPanel.add(getDivBar());
+			reportViewLink.setStyleName(CALONBARLINK);
+			reportViewLink.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					GWT.runAsync(new RunAsyncCallback() {
+						@Override
+						public void onFailure(Throwable reason) {
+							log.log(Level.SEVERE, reason.getMessage(), reason);
+						}
+
+						@Override
+						public void onSuccess() {
+							DisplayUtils.clearDisplay();
+							ReportView reportView = new ReportView();
+							reportView.init();
+							reportView.getElement().setId(DisplayUtils.Displays.ReportView.toString());
+
+							Panel tilePanel = RootPanel.get("tile");
+							tilePanel.add(reportView);
+						}
+					});
+				}
+			});
+			linkbarPanel.add(reportViewLink);
 		}
 
 		linkbarPanel.add(getDivBar());

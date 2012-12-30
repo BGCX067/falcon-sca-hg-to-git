@@ -35,6 +35,7 @@ import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
+import org.sca.calontir.cmpe.db.ReportDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.db.TableUpdatesDao;
 import org.sca.calontir.cmpe.dto.*;
@@ -112,7 +113,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
 		Map<String, Object> iMap = new HashMap<String, Object>();
 		// get application version
-		iMap.put("appversion", "1.1.0");
+		iMap.put("appversion", "1.1.1");
 
 		// get from blob
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -218,5 +219,29 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		}
 		to.header("Host", BackendServiceFactory.getBackendService().getBackendAddress("adminb"));
 		queue.add(to);
+	}
+
+	@Override
+	public List<Report> getAllReports() {
+		String namespace = NamespaceManager.get();
+		try {
+			NamespaceManager.set("calontir");
+			ReportDAO dao = new ReportDAO();
+			return dao.select();
+		} finally {
+			NamespaceManager.set(namespace);
+		}
+	}
+
+	@Override
+	public void deleteReport(Report report) {
+		String namespace = NamespaceManager.get();
+		try {
+			NamespaceManager.set("calontir");
+			ReportDAO dao = new ReportDAO();
+			dao.delete(report);
+		} finally {
+			NamespaceManager.set(namespace);
+		}
 	}
 }
