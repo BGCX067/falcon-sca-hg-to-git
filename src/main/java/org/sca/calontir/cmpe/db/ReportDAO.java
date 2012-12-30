@@ -43,7 +43,7 @@ public class ReportDAO {
 			PreparedQuery iPq = datastore.prepare(iQ);
 			Map<String, String> reportParams = new HashMap<String, String>();
 			for(Entity e : iPq.asQueryResultIterable()) {
-				reportParams.put((String)e.getProperty("name"), (String)e.getProperty("value"));
+				reportParams.put(e.getProperty("name").toString(), e.getProperty("value").toString());
 			}
 			report.setReportParams(reportParams);
 			retList.add(report);
