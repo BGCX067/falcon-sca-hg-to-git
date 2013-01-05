@@ -5,7 +5,7 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.Cell.Context;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -59,6 +59,13 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		ButtonCell selectButton = new ButtonCell();
 		Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {
 			@Override
+			public void render(Cell.Context context, FighterInfo fighter, SafeHtmlBuilder sb) {
+				if (security.canView(fighter.getFighterId())) {
+				} else {
+				}
+				super.render(context, fighter, sb);
+			}
+			@Override
 			public String getValue(FighterInfo fighter) {
 				if (security.canView(fighter.getFighterId())) {
 					return "Select";
@@ -75,8 +82,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 				return fli.getScaName();
 			}
 		};
-		//TODO: Turning off sorting for now. Once everything else is settled,
-		//      revisit this.
 		scaNameColumn.setSortable(true);
 
 		TextColumn<FighterInfo> authorizationColumn = new TextColumn<FighterInfo>() {

@@ -5,52 +5,43 @@
 	<!-- The Basics -->
 	<groupId>org.sca.calontir</groupId>
 	<artifactId>cmpe</artifactId>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.1.2</version>
 	<packaging>war</packaging>
 
 	<name>cmpe</name>
-	<repositories>
-		<repository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven</name>
-			<url>http://download.java.net/maven/2/</url>
-			<layout>default</layout>
-		</repository>
-	</repositories> 
+
+	<properties>
+		<appengine.app.version>1.1.1</appengine.app.version>
+		<appengine.target.version>1.7.4</appengine.target.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<downloadSources>true</downloadSources>
+		<gwt.version>2.5.0</gwt.version>
+		<gaelyk.version>1.2</gaelyk.version>
+		<gwt.style>DETAILED</gwt.style>
+		<datanucleus.version>3.2.0-m2</datanucleus.version>
+	</properties>
+
 	<dependencies>
-
-		<!-- Google App Engine meta-package -->
-		<dependency>
-			<groupId>net.kindleit</groupId>
-			<artifactId>gae-runtime</artifactId>
-			<version>${kindleit.version}</version>
-			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<groupId>com.google.appengine</groupId>
-					<artifactId>appengine-tools-sdk</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- <dependency>
-    <groupId>com.google.appengine.orm</groupId>
-    <artifactId>datanucleus-appengine</artifactId>
-    <version>1.0.9</version>
-    <scope>runtime</scope>
-  </dependency>  -->
-
-
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<version>${gae.version}</version>
+			<version>${appengine.target.version}</version>
 		</dependency>
-        
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
-			<version>5.2.0</version>
+			<version>5.3.4</version>
 			<type>jar</type>
 		</dependency>
 
@@ -58,7 +49,21 @@
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
 			<version>${datanucleus.version}</version>
-			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-api-jdo</artifactId>
+			<version>${datanucleus.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine.orm</groupId>
+			<artifactId>datanucleus-appengine</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-api-jpa</artifactId>
+			<version>${datanucleus.version}</version>
 		</dependency>
         
 		<dependency>
@@ -87,21 +92,12 @@
 			<artifactId>jta</artifactId>
 			<version>1.1</version>
 		</dependency>
-        
-		<!--
-			J2EE Servlet API. We need it to compile IndexServlet class. You can
-			probably remove it, if you don't explicitly use Servlets
-		-->
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-servlet_2.5_spec</artifactId>
 			<version>1.2</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!--
-			Make use of JSP tags. Remove, if you don't use JSPs
-		-->
 		<dependency>
 			<artifactId>standard</artifactId>
 			<groupId>taglibs</groupId>
@@ -109,65 +105,21 @@
 			<type>jar</type>
 			<scope>runtime</scope>
 		</dependency>
-
-		<!-- These dependencies are here just for enabling logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
+			<version>1.7.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>0.9.24</version>
+			<version>1.0.9</version>
 		</dependency>
-
-		<!-- Test scope -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.5</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!--
-			GAE libraries for local testing as described here:
-			http://code.google.com/appengine/docs/java/howto/unittesting.html
-		-->
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-labs</artifactId>
-			<version>${gae.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-stubs</artifactId>
-			<version>${gae.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-testing</artifactId>
-			<version>${gae.version}</version>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>javax.jdo</groupId>
-			<artifactId>jdo2-api</artifactId>
-			<version>2.3-eb</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.transaction</groupId>
-					<artifactId>transaction-api</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>jdo-api</artifactId>
+			<version>3.0.1</version>
 		</dependency>
-
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -176,35 +128,56 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>1.6.2</version>
+			<version>2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.3</version>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
-			<version>2.0</version>
+			<version>2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.8</version>
+			<version>3.9</version>
+		</dependency>
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-testing</artifactId>
+			<version>${appengine.target.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-stubs</artifactId>
+			<version>${appengine.target.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<!--
-				This plug-in "enhances" your domain model objects (i.e. makes them
-				persistent for datanucleus)
-			-->
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>maven-datanucleus-plugin</artifactId>
-				<version>1.1.4</version>
+				<version>3.1.0-release</version>
 				<configuration>
 					<!--
 						Make sure this path contains your persistent classes!
@@ -227,76 +200,82 @@
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-core</artifactId>
 						<version>${datanucleus.version}</version>
-						<exclusions>
-							<exclusion>
-								<groupId>javax.transaction</groupId>
-								<artifactId>transaction-api</artifactId>
-							</exclusion>
-						</exclusions>
 					</dependency>
 					<dependency>
 						<groupId>org.datanucleus</groupId>
-						<artifactId>datanucleus-rdbms</artifactId>
+						<artifactId>datanucleus-api-jdo</artifactId>
 						<version>${datanucleus.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.datanucleus</groupId>
-						<artifactId>datanucleus-enhancer</artifactId>
-						<version>1.1.4</version>
+						<artifactId>datanucleus-api-jpa</artifactId>
+						<version>${datanucleus.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>javax.jdo</groupId>
-						<artifactId>jdo2-api</artifactId>
-						<version>2.3-ec</version>
-						<scope>runtime</scope>
+						<artifactId>jdo-api</artifactId>
+						<version>3.0.1</version>
+					</dependency>
+					<dependency>
+						<groupId>com.google.appengine.orm</groupId>
+						<artifactId>datanucleus-appengine</artifactId>
+						<version>2.1.1</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<!-- Java compiler version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>${appengine.target.version}</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1.1</version>
+				<version>2.3</version>
 				<configuration>
+					<archiveClasses>true</archiveClasses>
 					<webResources>
+						<!-- in order to interpolate version from pom into appengine-web.xml -->
 						<resource>
-							<directory>src/main/webapp</directory>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
 							<filtering>true</filtering>
-							<includes>
-								<include>**/appengine-web.xml</include>
-							</includes>
+							<targetPath>WEB-INF</targetPath>
 						</resource>
 					</webResources>
 				</configuration>
 			</plugin>
-
-			<!-- Maven GWT plugin (ex. http://gwt-maven.googlecode.com/svn/docs/maven-googlewebtoolkit2-plugin/index.html)
-   http://mojo.codehaus.org/gwt-maven-plugin -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
 				<version>2.5.0-rc2</version>
 				<configuration>
 					<logLevel>INFO</logLevel>
-
-					<!-- match -Dgae.port -->
 					<port>${gae.port}</port>
 
 					<!-- This must point to your GWT modules! -->
 					<compileTargets>
-						<value>net.kindleit.gae.example.Messages</value>
+						<value>org.sca.calontir.cmpe.Fighter</value>
+						<value>org.sca.calontir.cmpe.Goodbye</value>
+						<value>org.sca.calontir.cmpe.Loggedin</value>
 					</compileTargets>
-
 					<!-- This is for generating Asynch interfaces -->
 					<!-- <servicePattern>**/client/*Service.java</servicePattern> -->
-
 					<extraJvmArgs>-Xss1M -Xmx512m</extraJvmArgs>
 					<!--<jvm>${JAVA_HOME}/bin/java</jvm> -->
 					<!--<noServer>false</noServer> -->
-
 					<!-- TODO This should help running GAE stuff in hosted mode (when gwt-maven-plugin-1.2 is released, see http://jira.codehaus.org/browse/MGWT-112) -->
 					<server>com.google.appengine.tools.development.gwt.AppEngineLauncher </server>
-
 					<runTarget>/index.jsp</runTarget>
 					<style>DETAILED</style>
 					<webXml>war/WEB-INF/web.xml</webXml>
@@ -315,51 +294,6 @@
 				</executions>
 			</plugin>
 
-			<!--
-				The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn
-				gae:deploy" to upload to GAE.
-			-->
-			<plugin>
-				<groupId>net.kindleit</groupId>
-				<artifactId>maven-gae-plugin</artifactId>
-				<version>0.9.5</version>
-				<configuration>
-					<serverId>appengine.google.com</serverId>
-					<sdkDir>${appengine.sdk.root}</sdkDir>
-					<appDir>${basedir}/target/cmpe-${project.version}</appDir>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>net.kindleit</groupId>
-						<artifactId>gae-runtime</artifactId>
-						<version>${gae.version}</version>
-						<type>pom</type>
-					</dependency>
-
-				</dependencies>
-			</plugin>
-
-			<!--
-				Upload application to the appspot automatically, during
-				release:perform
-			-->
-			<plugin>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<goals>gae:deploy</goals>
-				</configuration>
-			</plugin>
-
-			<!-- Java compiler version -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
@@ -409,90 +343,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<!-- Specify hard-coded project properties here -->
-	<properties>
-
-		<!-- Sets the project's default encoding.
-  http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<!--
-			This is just for "eclipse:eclipse" goal to always attempt downloading
-			sources
-		-->
-		<downloadSources>true</downloadSources>
-
-		<!--
-			Specify AppEngine version for your project. It should match SDK
-			version pointed to by ${gae.home} property (Typically, one used by
-			your Eclipse plug-in)
-		-->
-		<kindleit.version>1.5.5</kindleit.version>
-		<gae.version>1.7.3</gae.version>
-
-		<!-- GWT version -->
-		<gwt.version>2.5.0</gwt.version>
-        
-		<gaelyk.version>1.2</gaelyk.version>
-		<!--
-			Upload to http://test.latest.<applicationName>.appspot.com by default
-		-->
-		<appengine.sdk.root>
-			${user.home}/.m2/repository/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}
-		</appengine.sdk.root>
-    
-		<gae.application.version>test</gae.application.version>
-    
-		<!-- port defaults to 8080 -->
-		<gae.port>8080</gae.port>
-
-		<!-- Produce detailed JS during GWT compilation for development environment -->
-		<gwt.style>DETAILED</gwt.style>
-		<datanucleus.version>1.1.5</datanucleus.version>
-	</properties>
-
-	<profiles>
-		<!--
-			We can configure our integration server to activate this profile and
-			perform gae:deploy, thus uploading latest snapshot to the
-			http://1.latest.<applicationName>.appspot.com automatically
-		-->
-		<profile>
-			<id>integration-build</id>
-			<properties>
-				<gae.application.version>stage</gae.application.version>
-            
-				<!-- Produce pretty JS during GWT compilation for test environment -->
-				<gwt.style>PRETTY</gwt.style>
-			</properties>
-		</profile>
-
-		<!--
-			This profile will activate automatically during release and upload
-			application to the http://2.latest.<applicationName>.appspot.com (We
-			might want to set the 2nd version as our applications Default version
-			to be accessible at http://<applicationName>.appspot.com)
-		-->
-		<profile>
-			<id>release-build</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-
-			<properties>
-				<!--
-					During release, set application version in appengine-web.xml to 2
-				-->
-				<gae.application.version>release</gae.application.version>
-            
-				<!-- Produce compressed JS during GWT compilation for production environment -->
-				<gwt.style>OBFUSCATED</gwt.style>
-			</properties>
-		</profile>
-	</profiles>
 
 </project>
