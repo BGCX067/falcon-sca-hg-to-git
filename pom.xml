@@ -18,7 +18,7 @@
 		<gwt.version>2.5.0</gwt.version>
 		<gaelyk.version>1.2</gaelyk.version>
 		<gwt.style>DETAILED</gwt.style>
-		<datanucleus.version>3.2.0-m2</datanucleus.version>
+		<datanucleus.version>3.1.1</datanucleus.version>
 	</properties>
 
 	<dependencies>
@@ -63,6 +63,11 @@
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-api-jpa</artifactId>
+			<version>${datanucleus.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-rdbms</artifactId>
 			<version>${datanucleus.version}</version>
 		</dependency>
         
@@ -216,6 +221,11 @@
 						<artifactId>jdo-api</artifactId>
 						<version>3.0.1</version>
 					</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-rdbms</artifactId>
+			<version>${datanucleus.version}</version>
+		</dependency>
 					<dependency>
 						<groupId>com.google.appengine.orm</groupId>
 						<artifactId>datanucleus-appengine</artifactId>
