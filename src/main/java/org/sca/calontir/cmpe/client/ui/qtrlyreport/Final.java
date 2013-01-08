@@ -40,32 +40,32 @@ public class Final extends BaseReportPage {
 		header.setInnerText("Marshal Report");
 		bk.getElement().insertAfter(header, null);
 
-		buildOne("Reporting Period: ", (String)getReportInfo().get("Report Type"), bk);
-		buildOne("Marshal Type: ", (String)getReportInfo().get("Marshal Type"), bk);
-		buildOne("SCA Name: ", (String)getReportInfo().get("SCA Name"), bk);
-		buildOne("Modern First & Last Name: ", (String)getReportInfo().get("Modern Name"), bk);
-		buildOne("Address: ", (String)getReportInfo().get("Address"), bk);
-		buildOne("Phone Number: ", (String)getReportInfo().get("Phone Number"), bk);
-		buildOne("Membership Number: ", (String)getReportInfo().get("SCA Membership No"), bk);
-		buildOne("Membership Expires: ", (String)getReportInfo().get("Membership Expires"), bk);
-		buildOne("Home Group: ", (String)getReportInfo().get("Group"), bk);
+		buildOne("Reporting Period: ", getReportInfo().get("Report Type").toString(), bk);
+		buildOne("Marshal Type: ", getReportInfo().get("Marshal Type").toString(), bk);
+		buildOne("SCA Name: ", getReportInfo().get("SCA Name").toString(), bk);
+		buildOne("Modern First & Last Name: ", getReportInfo().get("Modern Name").toString(), bk);
+		buildOne("Address: ", getReportInfo().get("Address").toString(), bk);
+		buildOne("Phone Number: ", getReportInfo().get("Phone Number").toString(), bk);
+		buildOne("Membership Number: ", getReportInfo().get("SCA Membership No").toString(), bk);
+		buildOne("Membership Expires: ", getReportInfo().get("Membership Expires").toString(), bk);
+		buildOne("Home Group: ", getReportInfo().get("Group").toString(), bk);
 		if (getReportInfo().containsKey("Active Fighters")) {
-			buildOne("Number of Authorized Fighters: ", (String)getReportInfo().get("Active Fighters"), bk);
+			buildOne("Number of Authorized Fighters: ", getReportInfo().get("Active Fighters").toString(), bk);
 		}
 		if (getReportInfo().containsKey("Minor Fighters")) {
-			buildOne("Number of Minors: ", (String)getReportInfo().get("Minor Fighters"), bk);
+			buildOne("Number of Minors: ", getReportInfo().get("Minor Fighters").toString(), bk);
 		}
 		if (getReportInfo().containsKey("Activities")) {
-			buildTwo("Activities: ", (String)getReportInfo().get("Activities"), bk);
+			buildTwo("Activities: ", getReportInfo().get("Activities").toString(), bk);
 		}
 		if (getReportInfo().containsKey("Injury")) {
-			buildTwo("Problems or Injuries: ", (String)getReportInfo().get("Injury"), bk);
+			buildTwo("Problems or Injuries: ", getReportInfo().get("Injury").toString(), bk);
 		}
 		if (getReportInfo().containsKey("Fighter Comments")) {
-			buildTwo("Fighter Comments: ", (String)getReportInfo().get("Fighter Comments"), bk);
+			buildTwo("Fighter Comments: ", getReportInfo().get("Fighter Comments").toString(), bk);
 		}
 		if (getReportInfo().containsKey("Summary")) {
-			buildTwo("Summary: ", (String)getReportInfo().get("Summary"), bk);
+			buildTwo("Summary: ", getReportInfo().get("Summary").toString(), bk);
 		}
 	}
 

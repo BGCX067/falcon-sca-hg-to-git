@@ -115,8 +115,10 @@ public class IndexPage implements EntryPoint {
 							final Label hello;
 							if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
 								hello = new Label("Welcome " + loginInfo.getNickname());
+								log.info("Logged with " + loginInfo.getNickname());
 							} else {
 								hello = new Label("Welcome " + loginInfo.getScaName());
+								log.info("Logged in as " + loginInfo.getScaName() + ":" + loginInfo.getNickname());
 							}
 							hello.setStyleName("hello", true);
 							tilePanel.add(hello);
@@ -206,16 +208,6 @@ public class IndexPage implements EntryPoint {
 		gettingStarted.setHref(GETTING_STARTED);
 		gettingStarted.setStyleName("gettingStarted");
 		innerSignupPanel.add(gettingStarted);
-
-		if (!security.isLoggedIn()) {
-			HTML p2 = new HTML();
-			p2.setText("Registering with Falcon allows you review your own authorizations, "
-					+ "update your contact information, and print your own fighter card at home.");
-
-			HTML form = new HTML("<iframe src=\"https://docs.google.com/spreadsheet/embeddedform?formkey=dEhpX0tCWmhGRU9tNjF4OVdtTjZpcHc6MQ\" width=\"760\" height=\"705\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\">Loading...</iframe>");
-			innerSignupPanel.add(p2);
-			innerSignupPanel.add(form);
-		}
 
 		signupPanel.add(innerSignupPanel);
 

@@ -6,6 +6,7 @@ package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -70,11 +71,20 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 				if (security.canView(fighter.getFighterId())) {
 					return "Select";
 				} else {
-					return "     ";
+					return "...";
 				}
 			}
 		};
 		selectColumn.setSortable(false);
+		selectColumn.setFieldUpdater(new FieldUpdater<FighterInfo, String>() {
+
+			@Override
+			public void update(int index, FighterInfo fighter, String value) {
+				if (!security.canView(fighter.getFighterId())) {
+					Shout.getInstance().tell("You do not have rights to update this record");
+				}
+			}
+		});
 
 		TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
 			@Override
