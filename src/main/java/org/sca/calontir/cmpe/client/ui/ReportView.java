@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import java.util.List;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.dto.Report;
@@ -24,6 +25,7 @@ import org.sca.calontir.cmpe.dto.Report;
  * @author rikscarborough
  */
 public class ReportView extends Composite {
+	private static final Logger log = Logger.getLogger(ReportView.class.getName());
 
 	private FighterServiceAsync fighterService = GWT.create(FighterService.class);
 
@@ -34,7 +36,7 @@ public class ReportView extends Composite {
 		fighterService.getAllReports(new AsyncCallback<List<Report>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				throw new UnsupportedOperationException("Not supported yet.");
+				log.severe("getAllReports" + caught);
 			}
 
 			@Override
@@ -52,7 +54,7 @@ public class ReportView extends Composite {
 							fighterService.deleteReport(r, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
-									throw new UnsupportedOperationException("Not supported yet.");
+									log.severe("deleteReport " + caught.getMessage());
 								}
 
 								@Override

@@ -9,7 +9,6 @@ import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
@@ -25,6 +24,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterService;
@@ -41,6 +41,7 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  * @author rikscarborough
  */
 public class FighterListBox extends Composite implements SearchEventHandler {
+	private static final Logger log = Logger.getLogger(FighterListBox.class.getName());
 
 	final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
 	final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
@@ -155,7 +156,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 						fighterService.getFighter(selected.getFighterId(), new AsyncCallback<Fighter>() {
 							@Override
 							public void onFailure(Throwable caught) {
-								throw new UnsupportedOperationException("Not supported yet.");
+								log.severe("getFighter " + caught.getMessage());
 							}
 
 							@Override

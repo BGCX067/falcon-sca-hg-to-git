@@ -92,11 +92,11 @@ public class FighterCache implements LocalCache {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Clear Not supported yet.");
     }
 
     @Override
     public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("getCount Not supported yet.");
     }
 }

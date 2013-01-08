@@ -237,7 +237,7 @@ public class LookupController {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				throw new UnsupportedOperationException("Not supported yet.");
+				log.severe("getAllReports " + caught.getMessage());
 			}
 
 			@Override

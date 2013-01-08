@@ -46,7 +46,7 @@ public class EditViewEvent extends GwtEvent<EditViewHandler> {
                 
 
             default:
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new UnsupportedOperationException("Only Add and View supported.");
         }
 
 

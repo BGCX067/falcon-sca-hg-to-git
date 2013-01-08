@@ -115,7 +115,7 @@ public class IndexPage implements EntryPoint {
 							final Label hello;
 							if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
 								hello = new Label("Welcome " + loginInfo.getNickname());
-								log.info("Logged with " + loginInfo.getNickname());
+								log.info("Logged in with " + loginInfo.getNickname());
 							} else {
 								hello = new Label("Welcome " + loginInfo.getScaName());
 								log.info("Logged in as " + loginInfo.getScaName() + ":" + loginInfo.getNickname());

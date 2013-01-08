@@ -1102,7 +1102,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			fighterService.getFighter(fighter.getFighterId(), new AsyncCallback<Fighter>() {
 				@Override
 				public void onFailure(Throwable caught) {
-					throw new UnsupportedOperationException("Not supported yet.");
+					log.severe("Submit fighter form: " + caught.getMessage());
 				}
 
 				@Override
@@ -1126,7 +1126,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 					fighterService.getFighterByScaName(scaName, new AsyncCallback<Fighter>() {
 						@Override
 						public void onFailure(Throwable caught) {
-							throw new UnsupportedOperationException("Not supported yet.");
+							log.severe("getFighterByScaName " + caught.getMessage());
 						}
 
 						@Override

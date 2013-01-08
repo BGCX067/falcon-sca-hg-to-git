@@ -16,8 +16,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.datepicker.client.DateBox;
 import java.util.Date;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
+import org.sca.calontir.cmpe.client.IndexPage;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.dto.Address;
@@ -28,7 +30,7 @@ import org.sca.calontir.cmpe.dto.Fighter;
  * @author rikscarborough
  */
 public class PersonalInfo extends BaseReportPage {
-
+	private static final Logger log = Logger.getLogger(IndexPage.class.getName());
 	final private Security security = SecurityFactory.getSecurity();
 
 	@Override
@@ -48,7 +50,7 @@ public class PersonalInfo extends BaseReportPage {
 		fighterService.getFighter(security.getLoginInfo().getFighterId(), new AsyncCallback<Fighter>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				throw new UnsupportedOperationException("Not supported yet.");
+				log.severe("getFighter: " + caught.getMessage());
 			}
 
 			@Override

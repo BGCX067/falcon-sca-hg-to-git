@@ -83,7 +83,7 @@ public class Activities extends BaseReportPage {
 		fighterService.getMinorTotal(userInfo.getGroup(), new AsyncCallback<Integer>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				throw new UnsupportedOperationException("Not supported yet.");
+				log.severe("getMinorTotal: " + caught.getMessage());
 			}
 
 			@Override
