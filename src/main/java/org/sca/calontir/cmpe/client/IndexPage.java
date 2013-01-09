@@ -46,10 +46,9 @@ public class IndexPage implements EntryPoint {
 		GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
 			@Override
 			public void onUncaughtException(Throwable e) {
-                log.log(Level.SEVERE, e.getMessage(), e);
 				DisplayUtils.clearDisplay();
 				Shout.getInstance().tell("Ehue -- We've encountered an error. The error has been logged,  and we will take a look. In the meantime please refresh by clicking on \"Home\" or hit F5 on your keyboard.", false);
-				log.log(Level.SEVERE, e.getMessage(), e);
+				log.log(Level.SEVERE, "Uncaught Exception", e);
 			}
 		});
 		shout.tell("Please wait, retrieving data");

@@ -40,15 +40,33 @@ public class Final extends BaseReportPage {
 		header.setInnerText("Marshal Report");
 		bk.getElement().insertAfter(header, null);
 
-		buildOne("Reporting Period: ", getReportInfo().get("Report Type").toString(), bk);
-		buildOne("Marshal Type: ", getReportInfo().get("Marshal Type").toString(), bk);
-		buildOne("SCA Name: ", getReportInfo().get("SCA Name").toString(), bk);
-		buildOne("Modern First & Last Name: ", getReportInfo().get("Modern Name").toString(), bk);
-		buildOne("Address: ", getReportInfo().get("Address").toString(), bk);
-		buildOne("Phone Number: ", getReportInfo().get("Phone Number").toString(), bk);
-		buildOne("Membership Number: ", getReportInfo().get("SCA Membership No").toString(), bk);
-		buildOne("Membership Expires: ", getReportInfo().get("Membership Expires").toString(), bk);
-		buildOne("Home Group: ", getReportInfo().get("Group").toString(), bk);
+		if (getReportInfo().containsKey("Report Type")) {
+			buildOne("Reporting Period: ", getReportInfo().get("Report Type").toString(), bk);
+		}
+		if (getReportInfo().containsKey("Marshal Type")) {
+			buildOne("Marshal Type: ", getReportInfo().get("Marshal Type").toString(), bk);
+		}
+		if (getReportInfo().containsKey("SCA Name")) {
+			buildOne("SCA Name: ", getReportInfo().get("SCA Name").toString(), bk);
+		}
+		if (getReportInfo().containsKey("Modern Name")) {
+			buildOne("Modern First & Last Name: ", getReportInfo().get("Modern Name").toString(), bk);
+		}
+		if (getReportInfo().containsKey("Address")) {
+			buildOne("Address: ", getReportInfo().get("Address").toString(), bk);
+		}
+		if (getReportInfo().containsKey("Phone Number")) {
+			buildOne("Phone Number: ", getReportInfo().get("Phone Number").toString(), bk);
+		}
+		if (getReportInfo().containsKey("SCA Membership No")) {
+			buildOne("Membership Number: ", getReportInfo().get("SCA Membership No").toString(), bk);
+		}
+		if (getReportInfo().containsKey("Membership Expires")) {
+			buildOne("Membership Expires: ", getReportInfo().get("Membership Expires").toString(), bk);
+		}
+		if (getReportInfo().containsKey("Group")) {
+			buildOne("Home Group: ", getReportInfo().get("Group").toString(), bk);
+		}
 		if (getReportInfo().containsKey("Active Fighters")) {
 			buildOne("Number of Authorized Fighters: ", getReportInfo().get("Active Fighters").toString(), bk);
 		}
