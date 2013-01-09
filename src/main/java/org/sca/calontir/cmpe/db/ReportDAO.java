@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.NotImplementedException;
 import org.sca.calontir.cmpe.dto.Report;
+import com.google.appengine.api.datastore.Text;
 
 /**
  *
@@ -43,7 +44,16 @@ public class ReportDAO {
 			PreparedQuery iPq = datastore.prepare(iQ);
 			Map<String, String> reportParams = new HashMap<String, String>();
 			for(Entity e : iPq.asQueryResultIterable()) {
-				reportParams.put(e.getProperty("name").toString(), e.getProperty("value").toString());
+				final Object value = e.getProperty("value");
+				String strValue;
+				if(value instanceof Text) {
+					strValue = ((Text)value).getValue();
+				} else if (value instanceof String) {
+					strValue = (String) value;
+				} else {
+					strValue = value.toString();
+				}
+				reportParams.put(e.getProperty("name").toString(), strValue);
 			}
 			report.setReportParams(reportParams);
 			retList.add(report);

@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.IndexPage;
+import org.sca.calontir.cmpe.client.ui.Shout;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.dto.Address;
@@ -126,7 +127,11 @@ public class PersonalInfo extends BaseReportPage {
 		membershipExpires.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Date> event) {
-				addReportInfo("Membership Expires", membershipExpires.getTextBox().getValue());
+				if (membershipExpires.getTextBox().getValue().matches("\\d{2}-\\d{2}-\\d{4}")) {
+					addReportInfo("Membership Expires", membershipExpires.getTextBox().getValue());
+				} else {
+					Shout.getInstance().tell("Date must be entered as MM/dd/yyyy");
+				}
 			}
 		});
 
