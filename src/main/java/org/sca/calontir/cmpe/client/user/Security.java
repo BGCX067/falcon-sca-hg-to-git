@@ -23,8 +23,9 @@ public class Security {
 	}
 
 	public boolean isLoggedIn() {
-		if(loginInfo == null)
+		if (loginInfo == null) {
 			return false;
+		}
 		return loginInfo.isLoggedIn();
 	}
 
@@ -62,7 +63,7 @@ public class Security {
 		return false;
 	}
 
-	public boolean canEditFighter(Long fighterId) {
+	public synchronized boolean canEditFighter(Long fighterId) {
 		if (loginInfo == null) {
 			return false;
 		}
@@ -78,25 +79,25 @@ public class Security {
 		FighterInfo fi = LookupController.getInstance().getFighter(fighterId);
 		FighterInfo user = LookupController.getInstance().getFighter(loginInfo.getFighterId());
 
-        if (isRole(UserRoles.KNIGHTS_MARSHAL) || isRole(UserRoles.GROUP_MARSHAL)) {
+		if (isRole(UserRoles.KNIGHTS_MARSHAL) || isRole(UserRoles.GROUP_MARSHAL)) {
 			ScaGroup userGroup = LookupController.getInstance().getScaGroup(user.getGroup());
-			ScaGroup fightersGroup =LookupController.getInstance().getScaGroup(fi.getGroup());
-            if (userGroup != null && fightersGroup != null) {
-                if (userGroup.getGroupName().equals(fightersGroup.getGroupName())) {
-                    return true;
-                }
-            }
-        }
+			ScaGroup fightersGroup = LookupController.getInstance().getScaGroup(fi.getGroup());
+			if (userGroup != null && fightersGroup != null) {
+				if (userGroup.getGroupName().equals(fightersGroup.getGroupName())) {
+					return true;
+				}
+			}
+		}
 
-        if (isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
+		if (isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
 			ScaGroup userGroup = LookupController.getInstance().getScaGroup(user.getGroup());
-			ScaGroup fightersGroup =LookupController.getInstance().getScaGroup(fi.getGroup());
-            if (userGroup != null && fightersGroup != null) {
-                if (userGroup.getGroupLocation().equals(fightersGroup.getGroupLocation())) {
-                    return true;
-                }
-            }
-        }
+			ScaGroup fightersGroup = LookupController.getInstance().getScaGroup(fi.getGroup());
+			if (userGroup != null && fightersGroup != null) {
+				if (userGroup.getGroupLocation().equals(fightersGroup.getGroupLocation())) {
+					return true;
+				}
+			}
+		}
 
 		return false;
 	}
