@@ -127,6 +127,9 @@ public class PersonalInfo extends BaseReportPage {
 		membershipExpires.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Date> event) {
+				if(event.getValue() != null) {
+
+				}
 				//if (membershipExpires.getTextBox().getValue().matches("\\d{2}/\\d{2}/\\d{4}")) {
 					addReportInfo("Membership Expires", membershipExpires.getTextBox().getValue());
 				//} else {

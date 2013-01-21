@@ -61,13 +61,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 		ButtonCell selectButton = new ButtonCell();
 		Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {
 			@Override
-			public void render(Cell.Context context, FighterInfo fighter, SafeHtmlBuilder sb) {
-				if (security.canView(fighter.getFighterId())) {
-				} else {
-				}
-				super.render(context, fighter, sb);
-			}
-			@Override
 			public String getValue(FighterInfo fighter) {
 				if (security.canView(fighter.getFighterId())) {
 					return "Select";
