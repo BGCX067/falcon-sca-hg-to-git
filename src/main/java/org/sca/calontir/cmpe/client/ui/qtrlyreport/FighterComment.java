@@ -30,7 +30,7 @@ public class FighterComment extends BaseReportPage {
 		final Panel bk = new FlowPanel();
 		bk.setStylePrimaryName(REPORTBG);
 
-		String p1 = "Below is the list of Active fighters for your group.  Please provaide any comments you have on any of the fighters in your group, such as you if they have not fought in six months.";
+		String p1 = "Below is the list of Active fighters for your group.  Please provide any comments you have on any of the fighters in your group, such as if they have not fought in six months.";
 		HTML para1 = new HTML(p1);
 		para1.setStylePrimaryName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
