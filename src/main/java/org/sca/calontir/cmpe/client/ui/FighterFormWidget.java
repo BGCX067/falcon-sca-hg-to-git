@@ -1131,8 +1131,12 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 						@Override
 						public void onSuccess(Fighter result) {
-							fireEvent(new DataUpdatedEvent(result));
-							fireEvent(new EditViewEvent(Mode.VIEW, result));
+							if(result == null) {
+								Shout.getInstance().tell("Error saving this record. Please retry later.");
+							} else {
+								fireEvent(new DataUpdatedEvent(result));
+								fireEvent(new EditViewEvent(Mode.VIEW, result));
+							}
 						}
 					});
 				}

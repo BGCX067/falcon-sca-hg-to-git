@@ -99,7 +99,7 @@ public class FighterServlet extends HttpServlet {
                 sb.append(".pdf");
 				String fn = sb.toString().replaceAll(" ", "_");
 				fn = fn.replaceAll("-", "_");
-                response.setHeader("Content-disposition", sb.toString());
+                response.setHeader("Content-disposition", fn);
                 response.setContentType("application/pdf");
                 response.setContentLength(baosPDF.size());
                 ServletOutputStream sos = response.getOutputStream();

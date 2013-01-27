@@ -14,7 +14,6 @@ import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.data.Address;
 import org.sca.calontir.cmpe.data.Fighter;
 import org.sca.calontir.cmpe.data.Note;
-import org.sca.calontir.cmpe.data.TableUpdates;
 import org.sca.calontir.cmpe.dto.DataTransfer;
 import org.sca.calontir.cmpe.dto.FighterListItem;
 
@@ -235,23 +234,12 @@ public class FighterDAO {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Saving {0}", f.getScaName());
             f = pm.makePersistent(f);
 
-            Query query = pm.newQuery(TableUpdates.class);
-            query.setFilter("tableName == tableNameParam");
-            query.declareParameters("String tableNameParam");
-            List<TableUpdates> tableUpdates = (List<TableUpdates>) query.execute("Fighter");
-
-            TableUpdates tu = tableUpdates.size() > 0 ? tableUpdates.get(0) : null;
-            if (tu == null) {
-                tu = new TableUpdates();
-                tu.setTableName("Fighter");
-                tu.setLastUpdated(new Date());
-            }
-            pm.makePersistent(tu);
             pm.flush();
             if (f.getFighterId() != null) {
                 keyValue = f.getFighterId().getId();
             }
 
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Saved {0}", f.getFighterId());
         } finally {
             pm.close();
         }
@@ -264,18 +252,6 @@ public class FighterDAO {
         Fighter f = (Fighter) pm.getObjectById(Fighter.class, fighterKey);
         try {
             pm.deletePersistent(f);
-            Query query = pm.newQuery(TableUpdates.class);
-            query.setFilter("tableName == tableNameParam");
-            query.declareParameters("String tableNameParam");
-            List<TableUpdates> tableUpdates = (List<TableUpdates>) query.execute("Fighter");
-
-            TableUpdates tu = tableUpdates.size() > 0 ? tableUpdates.get(0) : null;
-            if (tu == null) {
-                tu = new TableUpdates();
-                tu.setTableName("Fighter");
-                tu.setLastDeletion(new Date());
-            }
-            pm.makePersistent(tu);
         } finally {
             pm.close();
         }
