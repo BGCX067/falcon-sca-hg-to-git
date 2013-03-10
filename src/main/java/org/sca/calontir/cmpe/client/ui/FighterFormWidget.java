@@ -5,7 +5,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -13,12 +12,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.datepicker.client.DateBox;
 import java.util.*;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
+import org.sca.calontir.cmpe.client.ui.fighterform.FighterForm;
+import org.sca.calontir.cmpe.client.ui.fighterform.ScaNameField;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.common.FighterStatus;
@@ -99,21 +99,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		fighterIdBoxPanel.add(mode);
 
 		fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
-
-		final TextBox scaNameTextBox = new TextBox();
-		scaNameTextBox.setName("scaName");
-		scaNameTextBox.setVisibleLength(25);
-		scaNameTextBox.setStyleName("scaName");
-		scaNameTextBox.setValue(fighter.getScaName());
-		scaNameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				//validate
-				String change = cleanString(event.getValue());
-				fighter.setScaName(change);
-			}
-		});
-		fighterIdBoxPanel.add(scaNameTextBox);
+		fighterIdBoxPanel.add(new ScaNameField(fighter, true));
 
 		buildInfoPanel(DisplayMode.add);
 		buildAuthEdit(false);
@@ -143,26 +129,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 
 		fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
-
-		//move to inner class
-		//add field value to fighter when user types.
-		final TextBox scaNameTextBox = new TextBox();
-		scaNameTextBox.setName("scaName");
-		scaNameTextBox.getElement().setId("scaName");
-		scaNameTextBox.setVisibleLength(25);
-		scaNameTextBox.setStyleName("scaName");
-		scaNameTextBox.setValue(fighter.getScaName());
-		scaNameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				//validate
-				String change = cleanString(event.getValue());
-				fighter.setScaName(change);
-			}
-		});
-
-
-		fighterIdBoxPanel.add(scaNameTextBox);
+		fighterIdBoxPanel.add(new ScaNameField(fighter, true));
 
 		buildInfoPanel(DisplayMode.edit);
 
@@ -272,11 +239,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 
 
 		fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));
-
-		InlineLabel scaName = new InlineLabel();
-		scaName.setText(fighter.getScaName());
-		scaName.setStyleName("scaName");
-		fighterIdBoxPanel.add(scaName);
+		fighterIdBoxPanel.add(new ScaNameField(fighter, false));
 
 		if (this.fighter.getStatus().equals(FighterStatus.ACTIVE)) {
 			fighterIdBoxPanel.add(printButton());
@@ -331,71 +294,7 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		DOM.setElementAttribute(fighterInfo.getElement(), "id", "fighterInfo");
 		dataBody.add(fighterInfo);
 
-		FlexTable table = new FlexTable();
-		FlexTable.FlexCellFormatter formatter = table.getFlexCellFormatter();
-
-		int row = 0;
-		table.setStyleName("wide-table");
-		table.setText(row, 0, "Modern Name:");
-		table.setWidget(row, 1, modernName(edit));
-		table.setWidget(row, 2, status(edit));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-		formatter.setStyleName(row, 2, "rightCol");
-
-		++row;
-		table.setText(row, 0, "Address:");
-		table.setWidget(row, 1, address(edit));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-
-		table.setWidget(row, 2, treaty(edit));
-		formatter.setStyleName(row, 2, "rightCol");
-		formatter.setVerticalAlignment(row, 2, HasVerticalAlignment.ALIGN_TOP);
-
-		++row;
-		table.setText(row, 0, "SCA Membership:");
-		table.setWidget(row, 1, scaMemberNo(edit));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-
-		++row;
-		table.setText(row, 0, "Membership Expiration Date:");
-		table.setWidget(row, 1, membershipExpires(edit));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-
-		++row;
-		table.setText(row, 0, "Group:");
-		table.setWidget(row, 1, group(edit, dMode));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-
-		++row;
-		table.setText(row, 0, "Minor:");
-		table.setWidget(row, 1, minor(edit));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-
-		++row;
-		table.setText(row, 0, "DOB:");
-		table.setWidget(row, 1, dateOfBirth(edit));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-
-		++row;
-		table.setWidget(row, 0, new Label("Phone Number:"));
-		table.setWidget(row, 1, phoneNumber(edit));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-
-		++row;
-		table.setText(row, 0, "Email Address:");
-		table.setWidget(row, 1, emailAddress(edit));
-		formatter.setStyleName(row, 0, "label");
-		formatter.setStyleName(row, 1, "data");
-
-		fighterInfo.add(table);
+		fighterInfo.add(new FighterForm(fighter, edit, dMode == DisplayMode.add));
 
 		if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) { // or user admin
 			fighterInfo.add(adminInfo(edit));
@@ -406,299 +305,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		if (dMode == DisplayMode.add) {
 			SubmitButton addFighter = new SubmitButton("Add Fighter");
 			infoPanel.add(addFighter);
-		}
-	}
-
-	private Widget modernName(boolean edit) {
-		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			final TextBox modernName = new TextBox();
-			modernName.setName("modernName");
-			DOM.setElementAttribute(modernName.getElement(), "id", "modernName");
-			modernName.setVisibleLength(25);
-			modernName.setStyleName("modernName");
-			modernName.setValue(fighter.getModernName());
-			modernName.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String change = cleanString(event.getValue());
-					fighter.setModernName(modernName.getValue().trim());
-					//TODO: error, this cannot be blank
-				}
-			});
-			return modernName;
-		} else {
-			return new Label(fighter.getModernName());
-		}
-	}
-
-	private Widget status(boolean edit) {
-		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			final ListBox status = new ListBox();
-			status.setName("fighterStatus");
-			for (FighterStatus f_status : FighterStatus.values()) {
-				status.addItem(f_status.toString(), f_status.toString());
-			}
-
-			for (int i = 0; i < status.getItemCount(); ++i) {
-				if (status.getValue(i).equals(fighter.getStatus().toString())) {
-					status.setSelectedIndex(i);
-					break;
-				}
-			}
-			status.addChangeHandler(new ChangeHandler() {
-				@Override
-				public void onChange(ChangeEvent event) {
-					fighter.setStatus(FighterStatus.valueOf(status.getValue(status.getSelectedIndex())));
-				}
-			});
-			return status;
-		} else {
-			return new Label(fighter.getStatus().toString());
-		}
-	}
-
-	private Widget treaty(boolean edit) {
-		if (edit && security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
-			final CheckBox treaty = new CheckBox("Treaty");
-			treaty.setName("treaty");
-			if (fighter.getTreaty() != null) {
-				treaty.setValue(true);
-			}
-			treaty.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					if (event.getValue()) {
-						Treaty t = new Treaty();
-						t.setName("Treaty");
-						fighter.setTreaty(t);
-					} else {
-						fighter.setTreaty(null);
-					}
-				}
-			});
-			return treaty;
-		} else {
-			if (fighter.getTreaty() != null) {
-				return new Label("Treaty");
-			}
-		}
-		return new Label("");
-	}
-
-	private Widget group(boolean edit, DisplayMode dMode) {
-		if (edit) {
-			final ListBox group = new ListBox();
-			group.setName("scaGroup");
-			if (dMode == DisplayMode.add) {
-				group.addItem("Select a group", "SELECTGROUP");
-			}
-			for (ScaGroup g : lookupController.getScaGroups()) {
-				group.addItem(g.getGroupName(), g.getGroupName());
-			}
-
-			if (fighter.getScaGroup() != null) {
-				for (int i = 0; i < group.getItemCount(); ++i) {
-					if (group.getValue(i).equals(fighter.getScaGroup().getGroupName())) {
-						group.setSelectedIndex(i);
-						break;
-					}
-				}
-			}
-			group.addChangeHandler(new ChangeHandler() {
-				@Override
-				public void onChange(ChangeEvent event) {
-					for (ScaGroup g : lookupController.getScaGroups()) {
-						if (g.getGroupName().equals(group.getValue(group.getSelectedIndex()))) {
-							fighter.setScaGroup(g);
-							break;
-						}
-					}
-				}
-			});
-			return group;
-		} else {
-			return new Label(fighter.getScaGroup() == null ? "" : fighter.getScaGroup().getGroupName());
-		}
-	}
-
-	private Widget minor(boolean edit) {
-		if (!edit) {
-			if (fighter.getDateOfBirth() != null) {
-				Date d = DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getDateOfBirth());
-				return new Label(isMinor(d) ? "true" : "false");
-			} else {
-				return new Label("false");
-			}
-		}
-
-		return new Label("");
-	}
-
-	private Widget membershipExpires(boolean edit) {
-		if (edit) {
-			final DateBox membershipExpires = new DateBox();
-			final Flag ghost = new Flag();
-			membershipExpires.getTextBox().getElement().setId("membershipExpires");
-			membershipExpires.getTextBox().setName("membershipExpires");
-			membershipExpires.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("MM/dd/yyyy")));
-			membershipExpires.setStyleName("membershipExpires");
-			if (fighter.getMembershipExpires() != null) {
-				membershipExpires.setValue(DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getMembershipExpires()));
-			}
-			membershipExpires.addValueChangeHandler(new ValueChangeHandler<Date>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<Date> event) {
-					ghost.value = false;
-					if (membershipExpires.getTextBox().getValue().isEmpty()) {
-						fighter.setMembershipExpires(null);
-					} else {
-						fighter.setMembershipExpires(membershipExpires.getTextBox().getValue());
-					}
-				}
-			});
-			membershipExpires.getTextBox().addBlurHandler(new BlurHandler() {
-				@Override
-				public void onBlur(BlurEvent event) {
-					if (membershipExpires.getTextBox().getValue().isEmpty() && fighter.getMembershipExpires() != null) {
-						fighter.setMembershipExpires(null);
-						membershipExpires.setValue(null, false);
-					}
-				}
-			});
-			return membershipExpires;
-		} else if (fighter.getMembershipExpires() != null) {
-			return new Label(fighter.getMembershipExpires());
-		}
-		return new Label("");
-	}
-
-	private Widget dateOfBirth(boolean edit) {
-		if (edit) {
-			final DateBox dateOfBirth = new DateBox();
-			final Flag ghost = new Flag();
-			dateOfBirth.getTextBox().getElement().setId("dateOfBirth");
-			dateOfBirth.getTextBox().setName("dateOfBirth");
-			dateOfBirth.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("MM/dd/yyyy")));
-			dateOfBirth.setStyleName("dateOfBirth");
-			if (fighter.getDateOfBirth() != null) {
-				dateOfBirth.setValue(DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getDateOfBirth()));
-			}
-			dateOfBirth.addValueChangeHandler(new ValueChangeHandler<Date>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<Date> event) {
-					ghost.value = false;
-					if (dateOfBirth.getTextBox().getValue().isEmpty()) {
-						fighter.setDateOfBirth(null);
-					} else {
-						fighter.setDateOfBirth(dateOfBirth.getTextBox().getValue());
-					}
-//					dateOfBirth.getElement().getStyle().setColor("black");
-				}
-			});
-//			dateOfBirth.getTextBox().addFocusHandler(new FocusHandler() {
-//
-//				@Override
-//				public void onFocus(FocusEvent event) {
-//					if (dateOfBirth.getTextBox().getValue().isEmpty()) {
-//						ghost.value = true;
-//						Date sixteen = new Date();
-//						sixteen.setYear(sixteen.getYear() - 16);
-//						dateOfBirth.setValue(sixteen, false);
-//						dateOfBirth.getElement().getStyle().setColor("lightgrey");
-//						//dateOfBirth.getDatePicker().setCurrentMonth(sixteen);
-//					}
-//				}
-//			});
-			dateOfBirth.getTextBox().addBlurHandler(new BlurHandler() {
-				@Override
-				public void onBlur(BlurEvent event) {
-					if (dateOfBirth.getTextBox().getValue().isEmpty() && fighter.getDateOfBirth() != null) {
-						fighter.setDateOfBirth(null);
-						dateOfBirth.setValue(null, false);
-					}
-//					if (ghost.value) {
-//						dateOfBirth.setValue(null, false);
-//						dateOfBirth.getTextBox().setValue("", false);
-//					}
-//					dateOfBirth.getElement().getStyle().setColor("black");
-					//dateOfBirth.setValue(fighter.getDateOfBirth());
-				}
-			});
-			return dateOfBirth;
-		} else if (fighter.getDateOfBirth() != null) {
-			return new Label(fighter.getDateOfBirth());
-		}
-		return new Label("");
-	}
-
-	private Widget phoneNumber(boolean edit) {
-		if (edit) {
-			final TextBox phoneNumber = new TextBox();
-			phoneNumber.setName("phoneNumber");
-			phoneNumber.setVisibleLength(25);
-			phoneNumber.setStyleName("phoneNumber");
-			if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
-				phoneNumber.setValue(fighter.getPhone().get(0).getPhoneNumber());
-			}
-			phoneNumber.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					if (fighter.getPhone() == null || fighter.getPhone().isEmpty()) {
-						Phone phone = new Phone();
-						if (phoneNumber.getValue() == null) {
-							phone.setPhoneNumber("");
-						} else {
-							phone.setPhoneNumber(phoneNumber.getValue().trim());
-						}
-						List<Phone> phones = new ArrayList<Phone>();
-						phones.add(phone);
-						fighter.setPhone(phones);
-					} else {
-						fighter.getPhone().get(0).setPhoneNumber(phoneNumber.getValue());
-					}
-				}
-			});
-			return phoneNumber;
-		} else {
-			if (fighter.getPhone() != null && !fighter.getPhone().isEmpty()) {
-				return new Label(fighter.getPhone().get(0).getPhoneNumber());
-			}
-			return new Label("");
-		}
-
-	}
-
-	private Widget emailAddress(boolean edit) {
-		if (edit) {
-			final TextBox email = new TextBox();
-			email.setName("email");
-			email.setVisibleLength(25);
-			email.setStyleName("email");
-			if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
-				email.setValue(fighter.getEmail().get(0).getEmailAddress());
-			}
-			email.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String changed = cleanString(event.getValue());
-					if (fighter.getEmail() == null || fighter.getEmail().isEmpty()) {
-						Email e = new Email();
-						e.setEmailAddress(changed);
-						List<Email> emails = new ArrayList<Email>();
-						emails.add(e);
-						fighter.setEmail(emails);
-					} else {
-						fighter.getEmail().get(0).setEmailAddress(changed);
-					}
-				}
-			});
-			return email;
-		} else {
-			if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
-				String emailAddress = fighter.getEmail().get(0).getEmailAddress();
-				return new Anchor(emailAddress, "mailto:" + emailAddress, "_blank");
-			}
-			return new Label("");
 		}
 	}
 
@@ -765,147 +371,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 		return adminInfo;
 	}
 
-	private Widget address(boolean edit) {
-		final Address address;
-		if (fighter.getAddress() != null && !fighter.getAddress().isEmpty()) {
-			address = fighter.getAddress().get(0);
-		} else {
-			address = new Address();
-			List<Address> addresses = new ArrayList<Address>();
-			addresses.add(address);
-			fighter.setAddress(addresses);
-		}
-		if (edit) {
-			final FlexTable addressTable = new FlexTable();
-			addressTable.setText(0, 0, "Street:");
-			final TextBox address1 = new TextBox();
-			address1.setName("address1");
-			address1.setValue(address.getAddress1());
-			address1.setVisibleLength(60);
-			address1.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String changed = cleanString(event.getValue());
-					address.setAddress1(changed);
-					fighter.getAddress().get(0).setAddress1(changed);
-					address1.setValue(changed);
-				}
-			});
-			addressTable.setWidget(0, 1, address1);
-
-			addressTable.setText(1, 0, "Line 2:");
-			final TextBox address2 = new TextBox();
-			address2.setName("address2");
-			address2.setValue(address.getAddress2());
-			address2.setVisibleLength(60);
-			address2.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String changed = cleanString(event.getValue());
-					address.setAddress2(changed);
-					fighter.getAddress().get(0).setAddress2(changed);
-					address2.setValue(changed);
-				}
-			});
-			addressTable.setWidget(1, 1, address2);
-
-			addressTable.setText(2, 0, "City:");
-			final TextBox city = new TextBox();
-			city.setName("city");
-			city.setValue(address.getCity());
-			city.setVisibleLength(30);
-			city.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String changed = cleanString(event.getValue());
-					address.setCity(changed);
-					fighter.getAddress().get(0).setCity(changed);
-					city.setValue(changed);
-				}
-			});
-			addressTable.setWidget(2, 1, city);
-
-			addressTable.setText(3, 0, "State:");
-			final TextBox state = new TextBox();
-			state.setName("state");
-			state.setValue(address.getState());
-			state.setVisibleLength(20);
-			state.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String changed = cleanString(event.getValue());
-					address.setState(changed);
-					fighter.getAddress().get(0).setState(changed);
-					state.setValue(changed);
-				}
-			});
-			addressTable.setWidget(3, 1, state);
-
-			addressTable.setText(4, 0, "Postal Code:");
-			final TextBox postalCode = new TextBox();
-			postalCode.setName("postalCode");
-			postalCode.setValue(address.getPostalCode());
-			postalCode.setVisibleLength(30);
-			postalCode.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String changed = cleanString(event.getValue());
-					address.setPostalCode(changed);
-					fighter.getAddress().get(0).setPostalCode(changed);
-					postalCode.setValue(changed);
-				}
-			});
-			addressTable.setWidget(4, 1, postalCode);
-
-			return addressTable;
-		} else {
-			StringBuilder sb = new StringBuilder();
-			sb.append(address.getAddress1());
-			if (address.getAddress2() != null && !address.getAddress2().isEmpty()) {
-				sb.append(", ");
-				sb.append(address.getAddress2());
-			}
-			sb.append(", ");
-			sb.append(address.getCity());
-			sb.append(", ");
-			sb.append(address.getState());
-			sb.append("  ");
-			sb.append(address.getPostalCode());
-			return new Label(sb.toString());
-		}
-	}
-
-	private String cleanString(String target) {
-		if (target == null) {
-			return "";
-		}
-		String changed = target.trim();
-		changed = changed.replaceAll(",$", "");
-		changed = changed.trim();
-
-		return changed;
-	}
-
-	private Widget scaMemberNo(boolean edit) {
-		if (edit) {
-			final TextBox scaMemberNo = new TextBox();
-			scaMemberNo.setName("scaMemberNo");
-			scaMemberNo.setVisibleLength(20);
-			scaMemberNo.setStyleName("scaMemberNo");
-			scaMemberNo.setValue(fighter.getScaMemberNo());
-			scaMemberNo.addValueChangeHandler(new ValueChangeHandler<String>() {
-				@Override
-				public void onValueChange(ValueChangeEvent<String> event) {
-					String changed = cleanString(event.getValue());
-					fighter.setScaMemberNo(changed);
-				}
-			});
-			return scaMemberNo;
-		} else {
-			return new Label(fighter.getScaMemberNo());
-		}
-	}
-
 	private void buildNotePanel(boolean edit) {
 		notePanel.clear();
 		if (security.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL)) {
@@ -965,15 +430,6 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 	@Override
 	public void setFighter(Fighter fighter) {
 		this.fighter = fighter;
-	}
-
-	private boolean isMinor(Date dob) {
-		final Date now = new Date();
-		final Date targetDate = new Date(dob.getYear() + 18, dob.getMonth(), dob.getDate());
-		if (targetDate.after(now)) {
-			return true;
-		}
-		return false;
 	}
 
 	private Widget printButton() {
