@@ -70,7 +70,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 				info.setAuthorizations(fli.getAuthorizations() == null ? "" : fli.getAuthorizations());
 				info.setGroup(fli.getGroup() == null ? "" : fli.getGroup());
 				info.setStatus(fli.getStatus() == null ? "" : fli.getStatus().toString());
-				info.setMinor(new Boolean(fli.isMinor()));
+				info.setMinor(fli.isMinor());
 				retValList.add(info);
 			}
 		}
@@ -84,6 +84,17 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 		FighterDAO fighterDao = new FighterDAO();
 
 		return fighterDao.getFighter(id);
+	}
+	
+	@Override
+	public Long saveFighter(Fighter fighter) {
+		FighterDAO fighterDao = new FighterDAO();
+		try {
+			return fighterDao.saveFighter(fighter, fighter.getFighterId(), false);
+		} catch (ValidationException ex) {
+			Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+			return null;
+		}
 	}
 
 	@Override
@@ -244,4 +255,5 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 			NamespaceManager.set(namespace);
 		}
 	}
+
 }

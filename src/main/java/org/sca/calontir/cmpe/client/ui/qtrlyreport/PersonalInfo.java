@@ -107,7 +107,7 @@ public class PersonalInfo extends BaseReportPage {
 
 		return editButton;
 	}
-	
+
 	private Widget cancelButton(final Fighter user) {
 		final Anchor cancelButton = new Anchor("cancel");
 		cancelButton.addStyleName("buttonLink");
@@ -135,13 +135,26 @@ public class PersonalInfo extends BaseReportPage {
 				if (unclicked) {
 					unclicked = false;
 					saveButton.setEnabled(false);
-					// send to backend
+					FighterServiceAsync fighterService = GWT.create(FighterService.class);
+
+					fighterService.saveFighter(user, new AsyncCallback<Long>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							String msg = "getFighter: " + caught.getMessage();
+							log.severe(msg);
+						}
+
+						@Override
+						public void onSuccess(Long result) {
+							log.info("Success");
+						}
+					});
+					buildInfoPanel(user, false);
 				}
 			}
 		});
 		return saveButton;
 	}
-
 
 	@Override
 	public void onDisplay() {
@@ -155,5 +168,4 @@ public class PersonalInfo extends BaseReportPage {
 	@Override
 	public void onLeavePage() {
 	}
-	
 }

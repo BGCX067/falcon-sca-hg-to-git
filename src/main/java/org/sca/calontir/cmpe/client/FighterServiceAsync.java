@@ -23,6 +23,8 @@ public interface FighterServiceAsync {
     public void getFighter(Long id, AsyncCallback<Fighter> async);
 
 	public void getFighterByScaName(String scaName, AsyncCallback<Fighter> async);
+
+	public void saveFighter(Fighter fighter, AsyncCallback<Long> async);
     
     public void getAuthTypes(AsyncCallback<List<AuthType>> async);
     
