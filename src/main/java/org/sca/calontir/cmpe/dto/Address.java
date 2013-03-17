@@ -7,67 +7,85 @@ import java.io.Serializable;
  * @author rik
  */
 public class Address implements Serializable {
-    private String address1;
-    private String address2;
-    private String city;
-    private String district;
-    private String postalCode;
-    private String state;
-    private String type;
 
-    public String getAddress1() {
-        return address1;
-    }
+	private String address1;
+	private String address2;
+	private String city;
+	private String district;
+	private String postalCode;
+	private String state;
+	private String type;
 
-    public void setAddress1(String address1) {
-        this.address1 = address1;
-    }
+	public String getAddress1() {
+		return address1;
+	}
 
-    public String getAddress2() {
-        return address2;
-    }
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
 
-    public void setAddress2(String address2) {
-        this.address2 = address2;
-    }
+	public String getAddress2() {
+		return address2;
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public String getCity() {
+		return city;
+	}
 
-    public String getDistrict() {
-        return district;
-    }
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-    public void setDistrict(String district) {
-        this.district = district;
-    }
+	public String getDistrict() {
+		return district;
+	}
 
-    public String getPostalCode() {
-        return postalCode;
-    }
+	public void setDistrict(String district) {
+		this.district = district;
+	}
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
+	public String getPostalCode() {
+		return postalCode;
+	}
 
-    public String getState() {
-        return state;
-    }
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
 
-    public void setState(String state) {
-        this.state = state;
-    }
+	public String getState() {
+		return state;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public void setState(String state) {
+		this.state = state;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append(getAddress1());
+		if (getAddress2() != null && !getAddress2().isEmpty()) {
+			sb.append(", ");
+			sb.append(getAddress2());
+		}
+		sb.append(", ");
+		sb.append(getCity());
+		sb.append(", ");
+		sb.append(getState());
+		sb.append("  ");
+		sb.append(getPostalCode());
+		return sb.toString();
+	}
 }

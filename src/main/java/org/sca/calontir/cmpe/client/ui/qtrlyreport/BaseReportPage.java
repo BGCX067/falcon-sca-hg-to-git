@@ -49,7 +49,7 @@ public abstract class BaseReportPage extends SimplePanel {
 		return true;
 	}
 
-	public void addReportInfo(String key, Object value) {
+	public boolean addReportInfo(String key, Object value) {
 		boolean removeValue = false;
 		if (value == null) {
 			removeValue = true;
@@ -76,6 +76,7 @@ public abstract class BaseReportPage extends SimplePanel {
 		} else {
 			submitButton.setEnabled(false);
 		}
+		return !removeValue;
 	}
 
 	protected boolean allRequired() {

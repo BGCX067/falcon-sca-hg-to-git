@@ -28,6 +28,13 @@ public class Fighter implements Serializable {
     private Treaty treaty;
     private Note note;
 
+	public Address getPrimeAddress() {
+		if(address == null || address.isEmpty()) {
+			return null;
+		}
+		return address.get(0);
+	}
+
     public List<Address> getAddress() {
         return address;
     }
@@ -51,6 +58,13 @@ public class Fighter implements Serializable {
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+	public Email getPrimeEmail() {
+		if(email == null || email.isEmpty()) {
+			return null;
+		}
+		return email.get(0);
+	}
 
     public List<Email> getEmail() {
         return email;
@@ -83,6 +97,13 @@ public class Fighter implements Serializable {
     public void setModernName(String modernName) {
         this.modernName = modernName;
     }
+
+	public Phone getPrimePhone() {
+		if(phone == null || phone.isEmpty()) {
+			return null;
+		}
+		return phone.get(0);
+	}
 
     public List<Phone> getPhone() {
         return phone;

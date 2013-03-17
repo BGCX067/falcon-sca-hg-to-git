@@ -33,6 +33,7 @@ public class PersonalInfo extends BaseReportPage {
 	private static final Logger log = Logger.getLogger(IndexPage.class.getName());
 	final private Security security = SecurityFactory.getSecurity();
 	final private Panel infoPanel = new FlowPanel();
+	private Fighter user;
 
 	@Override
 	public void buildPage() {
@@ -51,19 +52,21 @@ public class PersonalInfo extends BaseReportPage {
 		fighterService.getFighter(security.getLoginInfo().getFighterId(), new AsyncCallback<Fighter>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				log.severe("getFighter: " + caught.getMessage());
+				String msg = "getFighter: " + caught.getMessage();
+				log.severe(msg);
 			}
 
 			@Override
 			public void onSuccess(Fighter result) {
-				bk.add(buildInfoPanel(result, false));
+				user = result;
+				bk.add(buildInfoPanel(false));
 			}
 		});
 
 		add(bk);
 	}
 
-	private Panel buildInfoPanel(final Fighter user, final boolean edit) {
+	private Panel buildInfoPanel(final boolean edit) {
 		infoPanel.clear();
 
 		infoPanel.setStylePrimaryName("dataBox");
@@ -75,10 +78,10 @@ public class PersonalInfo extends BaseReportPage {
 		buttonPanel.setStyleName("editButton");
 		buttonPanel.getElement().getStyle().setDisplay(Style.Display.INLINE);
 		if (edit) {
-			buttonPanel.add(cancelButton(user));
-			buttonPanel.add(saveButton(user));
+			buttonPanel.add(cancelButton());
+			buttonPanel.add(saveButton());
 		} else {
-			buttonPanel.add(editButton(user));
+			buttonPanel.add(editButton());
 		}
 		dataHeader.add(buttonPanel);
 
@@ -93,14 +96,14 @@ public class PersonalInfo extends BaseReportPage {
 		return infoPanel;
 	}
 
-	private Widget editButton(final Fighter user) {
+	private Widget editButton() {
 		final Anchor editButton = new Anchor("edit");
 		editButton.addStyleName("buttonLink");
 		editButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				editButton.setEnabled(false);
-				buildInfoPanel(user, true);
+				buildInfoPanel(true);
 			}
 		});
 
@@ -108,14 +111,14 @@ public class PersonalInfo extends BaseReportPage {
 		return editButton;
 	}
 
-	private Widget cancelButton(final Fighter user) {
+	private Widget cancelButton() {
 		final Anchor cancelButton = new Anchor("cancel");
 		cancelButton.addStyleName("buttonLink");
 		cancelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				cancelButton.setEnabled(false);
-				buildInfoPanel(user, false);
+				buildInfoPanel(false);
 			}
 		});
 
@@ -123,7 +126,7 @@ public class PersonalInfo extends BaseReportPage {
 		return cancelButton;
 	}
 
-	private Widget saveButton(final Fighter user) {
+	private Widget saveButton() {
 		final Anchor saveButton = new Anchor("save");
 		saveButton.addStyleName("buttonLink");
 		saveButton.getElement().getStyle().setMarginRight(1.5, Style.Unit.EM);
@@ -147,18 +150,35 @@ public class PersonalInfo extends BaseReportPage {
 						@Override
 						public void onSuccess(Long result) {
 							log.info("Success");
+							validate();
 						}
 					});
-					buildInfoPanel(user, false);
+					buildInfoPanel(false);
 				}
 			}
 		});
 		return saveButton;
 	}
 
+	private boolean validate() {
+		boolean retvalue = true;
+		retvalue = addReportInfo("Membership Expires", retvalue) && retvalue;
+		retvalue = addReportInfo("SCA Name", user.getScaName()) && retvalue;
+		retvalue = addReportInfo("Group", user.getScaGroup().getGroupName()) && retvalue;
+		retvalue = addReportInfo("Modern Name", user.getModernName()) && retvalue;
+		retvalue = addReportInfo("Address", user.getPrimeAddress()) && retvalue;
+		retvalue = addReportInfo("SCA Membership No", user.getScaMemberNo()) && retvalue;
+		retvalue = addReportInfo("SCA Group", user.getScaGroup().getGroupName()) && retvalue;
+		retvalue = addReportInfo("Phone Number", user.getPrimePhone()) && retvalue;
+		retvalue = addReportInfo("Email Address", user.getPrimeEmail()) && retvalue;
+
+		return retvalue;
+
+	}
+
 	@Override
 	public void onDisplay() {
-		if (getReportInfo().keySet().contains("Membership Expires")) {
+		if (validate()) {
 			nextButton.setEnabled(true);
 		} else {
 			nextButton.setEnabled(false);
