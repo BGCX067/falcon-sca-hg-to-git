@@ -17,6 +17,11 @@
 		</repository>
 	</repositories>
 
+	<scm>
+        <connection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</connection>
+        <developerConnection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</developerConnection>
+	</scm>
+
 	<properties>
 		<appengine.app.version>1-1-8</appengine.app.version>
 		<appengine.target.version>1.7.5</appengine.target.version>
