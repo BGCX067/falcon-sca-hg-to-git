@@ -162,7 +162,7 @@ public class PersonalInfo extends BaseReportPage {
 
 	private boolean validate() {
 		boolean retvalue = true;
-		retvalue = addReportInfo("Membership Expires", retvalue) && retvalue;
+		retvalue = addReportInfo("Membership Expires", user.getMembershipExpires()) && retvalue;
 		retvalue = addReportInfo("SCA Name", user.getScaName()) && retvalue;
 		retvalue = addReportInfo("Group", user.getScaGroup().getGroupName()) && retvalue;
 		retvalue = addReportInfo("Modern Name", user.getModernName()) && retvalue;
