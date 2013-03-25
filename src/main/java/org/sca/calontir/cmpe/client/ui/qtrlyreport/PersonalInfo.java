@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.IndexPage;
+import org.sca.calontir.cmpe.client.ui.Shout;
 import org.sca.calontir.cmpe.client.ui.fighterform.FighterForm;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
@@ -171,6 +172,10 @@ public class PersonalInfo extends BaseReportPage {
 		retvalue = addReportInfo("SCA Group", user.getScaGroup().getGroupName()) && retvalue;
 		retvalue = addReportInfo("Phone Number", user.getPrimePhone()) && retvalue;
 		retvalue = addReportInfo("Email Address", user.getPrimeEmail()) && retvalue;
+
+		if (!retvalue) {
+			Shout.getInstance().tell("Please update the require fields on this page.");
+		}
 
 		return retvalue;
 
