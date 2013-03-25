@@ -5,17 +5,10 @@
 	<!-- The Basics -->
 	<groupId>org.sca.calontir</groupId>
 	<artifactId>cmpe</artifactId>
-	<version>1.1.8-SNAPSHOT</version>
+	<version>1.1.9-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>cmpe</name>
-
-	<repositories>
-		<repository>
-			<id>gaelyk</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
+	<name>falcon-sca</name>
 
 	<scm>
         <connection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</connection>
@@ -23,12 +16,12 @@
 	</scm>
 
 	<properties>
-		<appengine.app.version>1-1-8</appengine.app.version>
-		<appengine.target.version>1.7.5</appengine.target.version>
+		<appengine.app.version>1-1-9</appengine.app.version>
+		<appengine.target.version>1.7.6</appengine.target.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<downloadSources>true</downloadSources>
-		<gwt.version>2.5.0</gwt.version>
-		<gaelyk.version>2.0-SNAPSHOT</gaelyk.version>
+		<gwt.version>2.5.1</gwt.version>
+		<gaelyk.version>2.0-RIK</gaelyk.version>
 		<gwt.style>DETAILED</gwt.style>
 		<datanucleus.version>1.1.5</datanucleus.version>
 		<kindleit.version>1.5.5</kindleit.version>
@@ -279,7 +272,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
-				<version>2.5.0</version>
+				<version>2.5.1</version>
 				<configuration>
 					<logLevel>INFO</logLevel>
 					<port>${gae.port}</port>
