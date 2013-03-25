@@ -11,8 +11,8 @@
 	<name>falcon-sca</name>
 
 	<scm>
-        <connection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</connection>
-        <developerConnection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</developerConnection>
+        <connection>scm:hg:https://code.google.com/p/calon-marshal-project-engine/</connection>
+        <developerConnection>scm:hg:https://code.google.com/p/calon-marshal-project-engine/</developerConnection>
 	</scm>
 
 	<properties>
