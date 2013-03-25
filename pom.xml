@@ -5,15 +5,16 @@
 	<!-- The Basics -->
 	<groupId>org.sca.calontir</groupId>
 	<artifactId>cmpe</artifactId>
-	<version>1.1.9</version>
+	<version>1.1.10-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>falcon-sca</name>
 
 	<scm>
-		<connection>scm:hg:https://code.google.com/p/calon-marshal-project-engine/</connection>
-		<developerConnection>scm:hg:https://code.google.com/p/calon-marshal-project-engine/</developerConnection>
-	</scm>
+		<connection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</connection>
+		<developerConnection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</developerConnection>
+	  <tag>HEAD</tag>
+  </scm>
 
 	<properties>
 		<appengine.app.version>1-1-9</appengine.app.version>
