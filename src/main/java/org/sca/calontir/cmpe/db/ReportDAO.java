@@ -29,7 +29,7 @@ public class ReportDAO {
 
 	public List<Report> select() {
 		List<Report> retList = new ArrayList<Report>();
-		Query q = new Query("Report").addSort("dateEntered", SortDirection.ASCENDING);
+		Query q = new Query("Report").addSort("dateEntered", SortDirection.DESCENDING);
 		PreparedQuery pq = datastore.prepare(q);
 		for (Entity entity : pq.asQueryResultIterable()) {
 			Report report = new Report();

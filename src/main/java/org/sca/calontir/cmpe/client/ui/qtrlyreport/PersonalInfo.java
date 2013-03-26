@@ -43,7 +43,7 @@ public class PersonalInfo extends BaseReportPage {
 		final Panel bk = new FlowPanel();
 		bk.setStylePrimaryName(REPORTBG);
 
-		String p1 = "Please review this information. If it is not correct, go back to the main page and update your personal information";
+		String p1 = "Please review this information. If it is not correct, click the \"Edit\" button to make changes. Click the \"Save\" button once your changes are complete.";
 		HTML para1 = new HTML(p1);
 		para1.addStyleName(REPORT_INSTRUCTIONS);
 		bk.add(para1);
