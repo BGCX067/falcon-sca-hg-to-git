@@ -13,11 +13,15 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Panel;
 import java.util.List;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
+import org.sca.calontir.cmpe.client.user.Security;
+import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.Report;
 
 /**
@@ -25,9 +29,10 @@ import org.sca.calontir.cmpe.dto.Report;
  * @author rikscarborough
  */
 public class ReportView extends Composite {
-	private static final Logger log = Logger.getLogger(ReportView.class.getName());
 
+	private static final Logger log = Logger.getLogger(ReportView.class.getName());
 	private FighterServiceAsync fighterService = GWT.create(FighterService.class);
+	final private Security security = SecurityFactory.getSecurity();
 
 	public void init() {
 		final Panel background = new FlowPanel();
@@ -42,28 +47,36 @@ public class ReportView extends Composite {
 			@Override
 			public void onSuccess(List<Report> result) {
 				for (final Report r : result) {
-					String header = r.getMarshalName() + " " + r.getReportType() + " Date Entered: " + r.getDateEntered();
+					String header = r.getMarshalName() + " <<>> "
+							+ "Report Type: " + r.getReportType() + " <<>> "
+							+ "Marshal Type: " + r.getReportParams().get("Marshal Type") + " <<>> "
+							+ "Date Entered: " + r.getDateEntered();
+
 					final DisclosurePanel twisty = new DisclosurePanel(header);
+					twisty.setStylePrimaryName("reportHeader");
 					twisty.getHeader().getElement().getStyle().setBackgroundColor("white");
 					Panel content = new FlowPanel();
-					final Anchor deleteButton = new Anchor("Delete");
-					deleteButton.addStyleName("buttonLink");
-					deleteButton.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							fighterService.deleteReport(r, new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									log.severe("deleteReport " + caught.getMessage());
-								}
+					Anchor deleteButton = null;
+					if (security.isRole(UserRoles.EARL_MARSHAL)) {
+						deleteButton = new Anchor("Delete");
+						deleteButton.addStyleName("buttonLink");
+						deleteButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								fighterService.deleteReport(r, new AsyncCallback<Void>() {
+									@Override
+									public void onFailure(Throwable caught) {
+										log.severe("deleteReport " + caught.getMessage());
+									}
 
-								@Override
-								public void onSuccess(Void result) {
-									background.remove(twisty);
-								}
-							});
-						}
-					});
+									@Override
+									public void onSuccess(Void result) {
+										background.remove(twisty);
+									}
+								});
+							}
+						});
+					}
 					buildReport(content, r, deleteButton);
 					twisty.setContent(content);
 					twisty.setAnimationEnabled(true);
@@ -79,7 +92,9 @@ public class ReportView extends Composite {
 		header.setInnerText("Marshal Report");
 		bk.getElement().insertAfter(header, null);
 
-		bk.add(deleteButton);
+		if (deleteButton != null) {
+			bk.add(deleteButton);
+		}
 
 		buildOne("Reporting Period: ", report.getReportType(), bk);
 		buildOne("Marshal Type: ", report.getReportParams().get("Marshal Type"), bk);

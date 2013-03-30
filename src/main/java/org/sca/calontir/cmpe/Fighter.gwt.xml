@@ -3,7 +3,7 @@
 <module rename-to="fighter">
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.user.theme.standard.Standard" />
-	<stylesheet src="/css/cmp_006.css" />
+	<stylesheet src="/css/cmp_007.css" />
 	<stylesheet src="/css/calonbar_03.css" />
 	<inherits name="com.google.gwt.json.JSON" />
 	<inherits name="com.google.gwt.http.HTTP"/>
