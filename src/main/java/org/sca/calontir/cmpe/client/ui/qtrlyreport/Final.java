@@ -5,11 +5,8 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 
 /**
@@ -97,8 +94,7 @@ public class Final extends BaseReportPage {
 		hthree.getStyle().setDisplay(Style.Display.INLINE);
 		hthree.setInnerText(title);
 		SpanElement span = Document.get().createSpanElement();
-		SafeHtml html = SimpleHtmlSanitizer.sanitizeHtml(body);
-		span.setInnerSafeHtml(html);
+		span.setInnerText(body);
 		para.insertFirst(hthree);
 		para.insertAfter(span, null);
 
@@ -109,8 +105,7 @@ public class Final extends BaseReportPage {
 		HeadingElement hthree = Document.get().createHElement(3);
 		hthree.setInnerText(title);
 		ParagraphElement para = Document.get().createPElement();
-		SafeHtml html = SimpleHtmlSanitizer.sanitizeHtml(body);
-		para.setInnerSafeHtml(html);
+		para.setInnerHTML(body);
 		bk.getElement().insertAfter(hthree, null);
 		bk.getElement().insertAfter(para, null);
 	}
@@ -122,7 +117,6 @@ public class Final extends BaseReportPage {
 		bk.add(report);
 		nextButton.getElement().getStyle().setDisplay(Style.Display.NONE);
 		submitButton.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
-		report.add(new Label("Some html tags could have been sanitized for saftey"));
 	}
 
 	@Override

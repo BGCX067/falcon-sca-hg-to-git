@@ -34,7 +34,7 @@ public class Summary extends BaseReportPage {
 				addReportInfo(SUMMARY, summary.getHTML());
 			}
 		});
-		summary.addKeyPressHandler(requiredFieldKeyPressHandler);
+		summary.addKeyPressHandler(new RequiredFieldKeyPressHandler(SUMMARY));
 
 		add(bk);
 	}

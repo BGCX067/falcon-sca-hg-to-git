@@ -58,7 +58,7 @@ public class Activities extends BaseReportPage {
 				addReportInfo("Activities", activities.getHTML());
 			}
 		});
-		activities.addKeyPressHandler(requiredFieldKeyPressHandler);
+		activities.addKeyPressHandler(new RequiredFieldKeyPressHandler("Activities"));
 
 		add(bk);
 	}
@@ -151,7 +151,7 @@ public class Activities extends BaseReportPage {
 		}
 		eventDate.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("MM/dd/yyyy")));
 		addRequired("Event Date");
-		eventDate.getTextBox().addKeyPressHandler(requiredFieldKeyPressHandler);
+		eventDate.getTextBox().addKeyPressHandler(new RequiredFieldKeyPressHandler("Event Date"));
 		eventDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Date> event) {

@@ -29,7 +29,6 @@ public abstract class BaseReportPage extends SimplePanel {
 	public static final String REPORT_INSTRUCTIONS = "reportInstructions";
 	public static final String REPORT_TEXT_BOX = "reportTextBox";
 	public static final String PERSONAL_INFO = "personalInfo";
-	public RequiredFieldKeyPressHandler requiredFieldKeyPressHandler = new RequiredFieldKeyPressHandler();
 
 	public void init(Map<String, Object> reportInfo, List<String> required, FocusWidget submitButton, FocusWidget nextButton) {
 		this.reportInfo = reportInfo;
@@ -105,11 +104,16 @@ public abstract class BaseReportPage extends SimplePanel {
 	}
 
 	public class RequiredFieldKeyPressHandler implements KeyPressHandler {
+		private String requiredField;
+		public RequiredFieldKeyPressHandler(String requiredField) {
+			this.requiredField = requiredField;
+		}
 
 		@Override
 		public void onKeyPress(KeyPressEvent event) {
 			if (event.getSource() instanceof RichTextArea) {
 				RichTextArea textBox = (RichTextArea) event.getSource();
+				addReportInfo(requiredField, textBox.getHTML());
 				if (textBox.getText().isEmpty()) {
 					nextButton.setEnabled(false);
 				} else {

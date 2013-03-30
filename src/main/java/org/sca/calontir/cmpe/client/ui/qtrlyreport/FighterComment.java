@@ -46,7 +46,7 @@ public class FighterComment extends BaseReportPage {
 			}
 		});
 
-		fighterComments.addKeyPressHandler(requiredFieldKeyPressHandler);
+		fighterComments.addKeyPressHandler(new RequiredFieldKeyPressHandler("Fighter Comments"));
 
 
 		List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
