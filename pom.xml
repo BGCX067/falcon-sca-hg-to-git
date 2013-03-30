@@ -4,15 +4,15 @@
 
 	<!-- The Basics -->
 	<groupId>org.sca.calontir</groupId>
-	<artifactId>cmpe</artifactId>
+	<artifactId>falcon</artifactId>
 	<version>1.1.12-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>falcon-sca</name>
 
 	<scm>
-		<connection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</connection>
-		<developerConnection>scm:hg:https://riksca@code.google.com/p/calon-marshal-project-engine/</developerConnection>
+		<connection>scm:hg:https://riksca@code.google.com/p/falcon-sca/</connection>
+		<developerConnection>scm:hg:https://riksca@code.google.com/p/falcon-sca/</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
@@ -23,7 +23,7 @@
 		<downloadSources>true</downloadSources>
 		<gwt.version>2.5.1</gwt.version>
 		<gaelyk.version>2.0-RIK</gaelyk.version>
-		<gwt.style>DETAILED</gwt.style>
+		<gwt.style>OBF</gwt.style>
 		<datanucleus.version>1.1.5</datanucleus.version>
 		<kindleit.version>1.5.5</kindleit.version>
 	</properties>
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
-			<version>5.3.4</version>
+			<version>5.4.0</version>
 			<type>jar</type>
 		</dependency>
 
@@ -141,7 +141,7 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
+			<version>2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
