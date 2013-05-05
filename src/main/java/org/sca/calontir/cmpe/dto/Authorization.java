@@ -11,7 +11,7 @@ public class Authorization implements Serializable {
     private String code;
     private String description;
     private Date date;
-	private Integer orderValue;
+	private Long orderValue;
 
     public String getCode() {
         return code;
@@ -37,11 +37,11 @@ public class Authorization implements Serializable {
         this.description = description;
     }
 
-	public Integer getOrderValue() {
+	public Long getOrderValue() {
 		return orderValue;
 	}
 
-	public void setOrderValue(Integer orderValue) {
+	public void setOrderValue(Long orderValue) {
 		this.orderValue = orderValue;
 	}
 

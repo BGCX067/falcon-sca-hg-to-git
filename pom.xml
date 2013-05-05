@@ -17,8 +17,8 @@
   </scm>
 
 	<properties>
-		<appengine.app.version>1-1-12</appengine.app.version>
-		<appengine.target.version>1.7.6</appengine.target.version>
+		<appengine.app.version>test</appengine.app.version>
+		<appengine.target.version>1.7.7</appengine.target.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<downloadSources>true</downloadSources>
 		<gwt.version>2.5.1</gwt.version>
@@ -195,14 +195,14 @@
 					<goals>appengine:update appengine:backends_update</goals>
 				</configuration>
 			</plugin>
-			<plugin>
+<!--			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>maven-datanucleus-plugin</artifactId>
 				<version>1.1.4</version>
 				<configuration>
-					<!--
+					
 						Make sure this path contains your persistent classes!
-					-->
+					
 					<mappingIncludes>**/data/*.class</mappingIncludes>
 					<verbose>true</verbose>
 					<enhancerName>ASM</enhancerName>
@@ -245,15 +245,15 @@
 						<scope>runtime</scope>
 					</dependency>
 				</dependencies>
-			</plugin>
+			</plugin>-->
 			<!-- Java compiler version -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>7</source>
+					<target>7</target>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -51,6 +51,13 @@ public class IndexPage implements EntryPoint {
 				log.log(Level.SEVERE, "Uncaught Exception", e);
 			}
 		});
+		String userAgent = Window.Navigator.getUserAgent().toLowerCase();
+		if (userAgent.contains("msie 7") || userAgent.contains("msie 6")) {
+			shout.tell("This application will not work with any verison of IE below 8.\n"
+					+ "Please upgrade to a more modern browser such as Chrome, FireFox, or IE8.\n"
+					+ "The application works best in Chrome.");
+			return;
+		}
 		shout.tell("Please wait, retrieving data");
 		LookupController.getInstance();
 		final Timer t = new Timer() {
@@ -77,13 +84,6 @@ public class IndexPage implements EntryPoint {
 	}
 
 	public void onModuleLoad2() {
-		String userAgent = Window.Navigator.getUserAgent();
-		if (userAgent.contains("MSIE 7.") || userAgent.contains("MSIE 6.")) {
-			Window.alert("This application will not work with any verison of IE below 8.\n"
-					+ "Please upgrade to a more modern browser such as Chrome, FireFox, or IE8.\n"
-					+ "The application works best in Chrome.");
-			return;
-		}
 		tilePanel = RootPanel.get("tile");
 		//LookupController.getInstance();
 

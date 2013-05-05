@@ -28,7 +28,7 @@ public class ReportDAO {
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 	public List<Report> select() {
-		List<Report> retList = new ArrayList<Report>();
+		List<Report> retList = new ArrayList<>();
 		Query q = new Query("Report").addSort("dateEntered", SortDirection.DESCENDING);
 		PreparedQuery pq = datastore.prepare(q);
 		for (Entity entity : pq.asQueryResultIterable()) {
@@ -42,7 +42,7 @@ public class ReportDAO {
 			Filter reportKeyFilter = new FilterPredicate("reportKey", FilterOperator.EQUAL, entity.getKey());
 			Query iQ = new Query("ReportParams").setFilter(reportKeyFilter);
 			PreparedQuery iPq = datastore.prepare(iQ);
-			Map<String, String> reportParams = new HashMap<String, String>();
+			Map<String, String> reportParams = new HashMap<>();
 			for(Entity e : iPq.asQueryResultIterable()) {
 				final Object value = e.getProperty("value");
 				String strValue;

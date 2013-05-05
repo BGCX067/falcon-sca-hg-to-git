@@ -5,7 +5,6 @@
 package org.sca.calontir.cmpe.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  *
@@ -14,15 +13,6 @@ import java.util.List;
 public class Treaty implements Serializable {
     private Long treatyId;
     private String name;
-    private List<Fighter> fighters;
-
-    public List<Fighter> getFighters() {
-        return fighters;
-    }
-
-    public void setFighters(List<Fighter> fighters) {
-        this.fighters = fighters;
-    }
 
     public String getName() {
         return name;

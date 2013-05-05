@@ -25,34 +25,41 @@ scaGroup.groupName = "Forgotten Sea"
 scaGroup.groupLocation = "Central"
 scaGroup.save()
 
+def i = 0
 def wsh = new Entity("AuthType")
 wsh.code = "WSH"
 wsh.description = "Weapon and Shield"
+wsh.orderValue = ++i
 wsh.save()
 
 def tw = new Entity("AuthType")
 tw.code = "TW"
 tw.description = "Two Weapons"
+tw.orderValue = ++i
 tw.save()
 
 def ths = new Entity("AuthType")
 ths.code = "THS"
 ths.description = "Two Handed Sword"
+ths.orderValue = ++i
 ths.save()
 
 def pa = new Entity("AuthType")
 pa.code = "PA"
 pa.description = "Pole Arm"
+pa.orderValue = ++i
 pa.save()
 
 def sp = new Entity("AuthType")
 sp.code = "SP"
 sp.description = "Spear"
+sp.orderValue = ++i
 sp.save()
 
 def marshal = new Entity("AuthType")
 marshal.code = "Marshal"
 marshal.description = "Marshal"
+marshal.orderValue = ++i
 marshal.save()
 
 

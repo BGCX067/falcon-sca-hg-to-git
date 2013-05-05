@@ -1,15 +1,18 @@
 package org.sca.calontir.cmpe.db;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import org.sca.calontir.cmpe.data.AuthType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.DataTransfer;
 
 /**
@@ -17,6 +20,7 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
  * @author rik
  */
 public class AuthTypeDAO {
+	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     public static class LocalCacheImpl extends LocalCacheAbImpl {
         private static LocalCacheImpl _instance = new LocalCacheImpl();
 
@@ -27,73 +31,86 @@ public class AuthTypeDAO {
     static private LocalCacheImpl localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
 
 
-    public org.sca.calontir.cmpe.dto.AuthType getAuthType(long authTypeId) {
+    public AuthType getAuthType(long authTypeId) throws NotFoundException {
         AuthType authType = (AuthType) localCache.getValue(new Long(authTypeId));
         if (authType == null) {
-            PersistenceManager pm = PMF.get().getPersistenceManager();
-            authType = (AuthType) pm.getObjectById(AuthType.class, authTypeId);
+			Key key = KeyFactory.createKey("AuthType", authTypeId);
+			Entity authEntity;
+			try {
+				authEntity = datastore.get(key);
+			} catch (EntityNotFoundException ex) {
+				Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+				throw new NotFoundException("AuthType", authTypeId);
+			}
+			authType = DataTransfer.convertAuthType(authEntity);
             localCache.put(new Long(authTypeId), authType);
         }
-        org.sca.calontir.cmpe.dto.AuthType at = DataTransfer.convert(authType);
-        return at;
+        return authType;
     }
 
-    public org.sca.calontir.cmpe.dto.AuthType getAuthTypeByCode(String code) {
-        AuthType at = getAuthTypeDOByCode(code);
-        return DataTransfer.convert(at);
-    }
+	public Key getAuthTypeKeyByCode(String code) {
+		Query.Filter codeFilter = new Query.FilterPredicate("code", Query.FilterOperator.EQUAL, code);
+		Query query = new Query("AuthType").setFilter(codeFilter);
+		List<Entity> atList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		if (!atList.isEmpty()) {
+			return atList.get(0).getKey();
+		}
+		return null;
+	}
 
-    public AuthType getAuthTypeDOByCode(String code) {
+    public AuthType getAuthTypeByCode(String code) {
         AuthType at = (AuthType) localCache.getValue(code);
         if (at == null) {
-            PersistenceManager pm = PMF.get().getPersistenceManager();
-            Query query = pm.newQuery(AuthType.class);
-            query.setFilter("code == authTypeCode");
-            query.declareParameters("String authTypeCode");
-            List<AuthType> atList = (List<AuthType>) query.execute(code);
-            if (atList.size() > 0) {
-                at = atList.get(0);
+			Query.Filter codeFilter = new Query.FilterPredicate("code", Query.FilterOperator.EQUAL, code);
+            Query query = new Query("AuthType").setFilter(codeFilter);
+			List<Entity> atList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+            if (!atList.isEmpty()) {
+                at = DataTransfer.convertAuthType(atList.get(0));
             }
             localCache.put(code, at);
         }
         return at;
     }
 
-    public List<org.sca.calontir.cmpe.dto.AuthType> getAuthType() {
+    public List<AuthType> getAuthType() {
         List<AuthType> atList = (List<AuthType>) localCache.getValue("atlist");
         if (atList == null) {
-            PersistenceManager pm = PMF.get().getPersistenceManager();
-            Query query = pm.newQuery(AuthType.class);
-            atList = (List<AuthType>) query.execute();
-            localCache.put("atlist", atList);
+            Query query = new Query("AuthType").addSort("orderValue");
+			List<Entity> entityList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+            atList = new ArrayList<>(entityList.size());
+			for(Entity entity : entityList) {
+				AuthType newAt = new AuthType();
+				newAt.setAuthTypeId(entity.getKey().getId());
+				newAt.setCode((String) entity.getProperty("code"));
+				newAt.setDescription((String) entity.getProperty("description"));
+				atList.add(newAt);
+			}
         }
-        List<org.sca.calontir.cmpe.dto.AuthType> retList = new ArrayList<org.sca.calontir.cmpe.dto.AuthType>();
-        for (AuthType at : atList) {
-            org.sca.calontir.cmpe.dto.AuthType newAt = new org.sca.calontir.cmpe.dto.AuthType();
-            newAt.setAuthTypeId(at.getAuthTypeId().getId());
-            newAt.setCode(at.getCode());
-            newAt.setDescription(at.getDescription());
-            retList.add(newAt);
-        }
-        return retList;
+		localCache.put("atlist", atList);
+        return atList;
     }
 
-    public void saveAuthType(org.sca.calontir.cmpe.dto.AuthType authType) {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
+    public Key saveAuthType(AuthType authType) {
         localCache.clear();
 
-        AuthType at = null;
+        Entity at = null;
         if (authType.getAuthTypeId() != null && authType.getAuthTypeId() > 0) {
             Key authTypeKey = KeyFactory.createKey(AuthType.class.getSimpleName(), authType.getAuthTypeId());
-            at = (AuthType) pm.getObjectById(AuthType.class, authTypeKey);
-        } else {
-            at = new AuthType();
+			try {
+				at = datastore.get(authTypeKey);
+			} catch (EntityNotFoundException ex) {
+				Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
         }
-        at = DataTransfer.convert(authType, at);
-        try {
-            at = pm.makePersistent(at);
-        } finally {
-            pm.close();
-        }
+		if(at == null) {
+			at = new Entity("AuthType");
+		}
+		at.setProperty("code", authType.getCode());
+		at.setProperty("description", authType.getDescription());
+		at.setProperty("orderValue", authType.getOrderValue());
+
+		Key key = datastore.put(at);
+
+		return key;
     }
 }

@@ -1,11 +1,18 @@
 package org.sca.calontir.cmpe.db;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query;
 import java.util.ArrayList;
-import javax.jdo.Query;
 import java.util.List;
-import javax.jdo.PersistenceManager;
-import org.sca.calontir.cmpe.data.ScaGroup;
-import org.sca.calontir.cmpe.dto.DataTransfer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
  *
@@ -13,95 +20,88 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
  */
 public class ScaGroupDAO {
 
-    public static class LocalCacheImpl extends LocalCacheAbImpl {
+	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        private static LocalCacheImpl _instance = new LocalCacheImpl();
+	public static class LocalCacheImpl extends LocalCacheAbImpl {
 
-        public static LocalCacheImpl getInstance() {
-            return _instance;
-        }
-    }
-    static private LocalCacheImpl localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
+		private static LocalCacheImpl _instance = new LocalCacheImpl();
 
-    public org.sca.calontir.cmpe.dto.ScaGroup getScaGroup(long scaGroupId) {
-        org.sca.calontir.cmpe.dto.ScaGroup sg =
-                (org.sca.calontir.cmpe.dto.ScaGroup) localCache.getValue(scaGroupId);
-        if (sg == null) {
-            PersistenceManager pm = PMF.get().getPersistenceManager();
-            ScaGroup scaGroup = (ScaGroup) pm.getObjectById(ScaGroup.class, scaGroupId);
-            sg = DataTransfer.convert(scaGroup);
-            localCache.put(scaGroupId, sg);
-        }
-        return sg;
-    }
+		public static LocalCacheImpl getInstance() {
+			return _instance;
+		}
+	}
+	static private LocalCacheImpl localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
 
-    public org.sca.calontir.cmpe.dto.ScaGroup getScaGroupByName(String groupName) {
-        org.sca.calontir.cmpe.dto.ScaGroup sg =
-                (org.sca.calontir.cmpe.dto.ScaGroup) localCache.getValue(groupName);
-        if (sg == null) {
-            PersistenceManager pm = PMF.get().getPersistenceManager();
-            Query query = pm.newQuery(ScaGroup.class);
-            query.setFilter("groupName == scaGroupName");
-            query.declareParameters("String scaGroupName");
-            List<ScaGroup> sgList = (List<ScaGroup>) query.execute(groupName);
-            if (sgList.size() > 0) {
-                sg = DataTransfer.convert(sgList.get(0));
-                localCache.put(groupName, sg);
-            } else {
-                sg = null;
-            }
-        }
-        return sg;
-    }
+	public ScaGroup getScaGroup(long scaGroupId) throws NotFoundException {
+		ScaGroup sg = (ScaGroup) localCache.getValue(scaGroupId);
+		if (sg == null) {
+			try {
+				Key key = KeyFactory.createKey("ScaGroup", scaGroupId);
+				Entity groupEntity = datastore.get(key);
+				sg = new ScaGroup();
+				sg.setGroupLocation((String) groupEntity.getProperty("groupLocation"));
+				sg.setGroupName((String) groupEntity.getProperty("groupName"));
+				localCache.put(scaGroupId, sg);
+			} catch (EntityNotFoundException ex) {
+				Logger.getLogger(ScaGroupDAO.class.getName()).log(Level.SEVERE, null, ex);
+				throw new NotFoundException("ScaGroup", scaGroupId);
+			}
+		}
+		return sg;
+	}
 
-    public List<org.sca.calontir.cmpe.dto.ScaGroup> getScaGroup() {
-        List<org.sca.calontir.cmpe.dto.ScaGroup> retList =
-                (List<org.sca.calontir.cmpe.dto.ScaGroup>) localCache.getValue("sgList");
-        if (retList == null) {
-            PersistenceManager pm = PMF.get().getPersistenceManager();
-            Query query = pm.newQuery(ScaGroup.class);
-            query.setOrdering("groupName");
-            List<ScaGroup> sgList = (List<ScaGroup>) query.execute();
-            retList = new ArrayList<org.sca.calontir.cmpe.dto.ScaGroup>();
-            for (ScaGroup group : sgList) {
-                retList.add(DataTransfer.convert(group));
-            }
-            localCache.put("sgList", retList);
-        }
-        return retList;
-    }
+	public ScaGroup getScaGroupByName(String groupName) {
+		ScaGroup sg = (ScaGroup) localCache.getValue(groupName);
+		if (sg == null) {
+			Query.Filter groupNameFilter = new Query.FilterPredicate("groupName", Query.FilterOperator.EQUAL, groupName);
+			Query query = new Query("ScaGroup").setFilter(groupNameFilter);
+			Entity entity = datastore.prepare(query).asSingleEntity();
+			if (entity != null) {
+				sg = new ScaGroup();
+				sg.setGroupLocation((String) entity.getProperty("groupLocation"));
+				sg.setGroupName((String) entity.getProperty("groupName"));
+				localCache.put(groupName, sg);
+			}
+		}
+		return sg;
+	}
 
-    public void saveScaGroup(org.sca.calontir.cmpe.dto.ScaGroup scaGroup) {
-        localCache.clear();
-        PersistenceManager pm = PMF.get().getPersistenceManager();
+	public Key getScaGroupKey(String groupName) {
+		Query.Filter groupNameFilter = new Query.FilterPredicate("groupName", Query.FilterOperator.EQUAL, groupName);
+		Query query = new Query("ScaGroup").setFilter(groupNameFilter);
+		Entity entity = datastore.prepare(query).asSingleEntity();
+		return entity == null ? null : entity.getKey();
+	}
 
-        ScaGroup sg = null;
-        Query query = pm.newQuery(ScaGroup.class);
-        query.setFilter("groupName == scaGroupName");
-        query.declareParameters("String scaGroupName");
-        List<ScaGroup> sgList = (List<ScaGroup>) query.execute(scaGroup.getGroupName());
-        if (sgList != null && sgList.size() > 0) {
-            sg = sgList.get(0);
-        }
+	public List<ScaGroup> getScaGroup() {
+		List<ScaGroup> retList = (List<ScaGroup>) localCache.getValue("sgList");
+		if (retList == null) {
+			Query query = new Query("ScaGroup").addSort("groupName");
+			List<Entity> sgList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+			retList = new ArrayList<>();
+			for (Entity groupEntity : sgList) {
+				ScaGroup group = new ScaGroup();
+				group.setGroupLocation((String) groupEntity.getProperty("groupLocation"));
+				group.setGroupName((String) groupEntity.getProperty("groupName"));
+				retList.add(group);
+			}
+			localCache.put("sgList", retList);
+		}
+		return retList;
+	}
 
-        sg = DataTransfer.convert(scaGroup, sg);
-        try {
-            pm.makePersistent(sg);
-        } finally {
-            pm.close();
-        }
-    }
+	public Key saveScaGroup(ScaGroup scaGroup) {
+		localCache.clear();
 
-    public ScaGroup getScaGroupDOByName(String groupName) {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        Query query = pm.newQuery(ScaGroup.class);
-        query.setFilter("groupName == scaGroupName");
-        query.declareParameters("String scaGroupName");
-        List<ScaGroup> sgList = (List<ScaGroup>) query.execute(groupName);
-        if (sgList.size() > 0) {
-            return sgList.get(0);
-        } else {
-            return null;
-        }
-    }
+		Query.Filter groupNameFilter = new Query.FilterPredicate("groupName", Query.FilterOperator.EQUAL, scaGroup.getGroupName());
+		Query query = new Query("ScaGroup").setFilter(groupNameFilter);
+		Entity groupEntity = datastore.prepare(query).asSingleEntity();
+		if (groupEntity == null) {
+			groupEntity = new Entity("ScaGroup");
+		}
+		groupEntity.setProperty("groupLocation", scaGroup.getGroupLocation());
+		groupEntity.setProperty("groupName", scaGroup.getGroupName());
+
+		return datastore.put(groupEntity);
+	}
 }

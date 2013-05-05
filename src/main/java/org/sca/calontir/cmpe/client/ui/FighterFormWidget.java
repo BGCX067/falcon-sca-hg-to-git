@@ -610,8 +610,8 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
 			Collections.sort(authorizations, new Comparator<Authorization>() {
 				@Override
 				public int compare(Authorization l, Authorization r) {
-					int left = l.getOrderValue() == null ? 99 : l.getOrderValue();
-					int right = r.getOrderValue() == null ? 99 : r.getOrderValue();
+					long left = l.getOrderValue() == null ? 99 : l.getOrderValue();
+					long right = r.getOrderValue() == null ? 99 : r.getOrderValue();
 					return (left < right ? -1 : (left == right ? 0 : 1));
 				}
 			});

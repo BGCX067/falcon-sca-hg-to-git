@@ -15,8 +15,8 @@ public class PropertiesDao {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		try {
 			NamespaceManager.set("system");
-			final Query query = new Query("properties");
-			query.addFilter("name", Query.FilterOperator.EQUAL, name);
+			Query.Filter nameFilter = new Query.FilterPredicate("name", Query.FilterOperator.GREATER_THAN, name);
+			final Query query = new Query("properties").setFilter(nameFilter);
 			PreparedQuery pq = datastore.prepare(query);
 
 			final Entity entity = pq.asSingleEntity();

@@ -222,12 +222,12 @@ public class CalonBar extends Composite {
 
 	private void loadLogin() {
 		signInLink.setHref(loginInfo.getLoginUrl());
-		signInLink.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				Window.open("", "loginwindow", "width=940,height=400,status=1,resizeable=1,scrollbars=1");
-			}
-		});
+//		signInLink.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				Window.open("", "loginwindow", "width=940,height=400,status=1,resizeable=1,scrollbars=1");
+//			}
+//		});
 		signInLink.setTarget("loginwindow");
 		signInLink.setStyleName(CALONBARLINK);
 		signInLink.setTitle(SIGN_IN_TEXT);
