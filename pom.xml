@@ -18,11 +18,11 @@
 
 	<properties>
 		<appengine.app.version>test</appengine.app.version>
-		<appengine.target.version>1.7.7</appengine.target.version>
+		<appengine.target.version>1.8.0</appengine.target.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<downloadSources>true</downloadSources>
 		<gwt.version>2.5.1</gwt.version>
-		<gaelyk.version>2.0-RIK</gaelyk.version>
+		<gaelyk.version>2.0</gaelyk.version>
 		<gwt.style>OBF</gwt.style>
 		<datanucleus.version>1.1.5</datanucleus.version>
 		<kindleit.version>1.5.5</kindleit.version>

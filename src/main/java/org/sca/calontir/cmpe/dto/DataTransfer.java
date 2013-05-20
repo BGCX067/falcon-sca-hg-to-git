@@ -265,12 +265,6 @@ public class DataTransfer {
 		return retValue;
 	}
 
-	public static org.sca.calontir.cmpe.data.AuthType convert(AuthType authType, org.sca.calontir.cmpe.data.AuthType at) {
-		at.setCode(authType.getCode());
-		at.setDescription(authType.getDescription());
-		return at;
-	}
-
 	public static FighterListItem convertToListItem(Entity f, DatastoreService datastore) {
 		FighterListItem fli = new FighterListItem();
 		fli.setFighterId(f.getKey().getId());
