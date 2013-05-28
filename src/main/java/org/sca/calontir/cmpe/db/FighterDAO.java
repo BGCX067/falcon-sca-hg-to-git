@@ -17,7 +17,6 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.dto.Address;
-import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Authorization;
 import org.sca.calontir.cmpe.dto.DataTransfer;
 import org.sca.calontir.cmpe.dto.Email;
@@ -304,22 +303,31 @@ public class FighterDAO {
 			}
 			datastore.delete(keys);
 		} else {
-			List<Entity> auths = new ArrayList<>();
+			final List<Entity> auths = new ArrayList<>();
 			int i = 0;
-			AuthTypeDAO authTypeDAO = new AuthTypeDAO();
+			final AuthTypeDAO authTypeDAO = new AuthTypeDAO();
 			for (Authorization auth : fighter.getAuthorization()) {
-				Entity authEntity;
+				final Entity authEntity;
 				if (authorizationEntities.size() > i) {
 					authEntity = authorizationEntities.get(i);
 				} else {
 					authEntity = new Entity("Authorization", key);
 				}
-				Key authTypeKey = authTypeDAO.getAuthTypeKeyByCode(auth.getCode());
+				final Key authTypeKey = authTypeDAO.getAuthTypeKeyByCode(auth.getCode());
 				authEntity.setProperty("authType", authTypeKey);
 				authEntity.setProperty("date", auth.getDate());
 				auths.add(authEntity);
+				++i;
 			}
 			datastore.put(auths);
+			final List<Key> keys = new ArrayList<>();
+			for (; i < authorizationEntities.size(); ++i) {
+				final Entity authEntity = authorizationEntities.get(i);
+				keys.add(authEntity.getKey());
+			}
+			if (!keys.isEmpty()) {
+				datastore.delete(keys);
+			}
 		}
 	}
 

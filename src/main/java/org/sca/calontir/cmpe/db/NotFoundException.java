@@ -8,7 +8,7 @@ package org.sca.calontir.cmpe.db;
  *
  * @author rikscarborough
  */
-class NotFoundException extends Exception {
+public class NotFoundException extends Exception {
 
 	public NotFoundException(String table, long id) {
 		this(String.format("Data of type %s not found with key %d", table, id));

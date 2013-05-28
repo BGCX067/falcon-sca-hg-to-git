@@ -17,6 +17,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.common.UserRoles;
+import org.sca.calontir.cmpe.db.AuthTypeDAO;
+import org.sca.calontir.cmpe.db.NotFoundException;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.db.TreatyDao;
 import org.sca.calontir.cmpe.utils.MarshalUtils;
@@ -85,25 +87,26 @@ public class DataTransfer {
 			phone.setType((String) phoneEntity.getProperty("type"));
 			phones.add(phone);
 		}
-		Logger.getLogger(DataTransfer.class.getName()).log(Level.INFO, "Phones " + phones.size());
+		Logger.getLogger(DataTransfer.class.getName()).log(Level.INFO, "Phones {0}", phones.size());
 		fighter.setPhone(phones);
 
 		Query authQuery = new Query("Authorization").setAncestor(fighterEntity.getKey());
 		List<Entity> authEntities = datastore.prepare(authQuery).asList(FetchOptions.Builder.withDefaults());
 		List<Authorization> authorizations = new ArrayList<>();
+		AuthTypeDAO authTypeDao = new AuthTypeDAO();
 		for (Entity authorizationEntity : authEntities) {
 			Key authTypeKey = (Key) authorizationEntity.getProperty("authType");
 			try {
 				if (authTypeKey != null) {
-					Entity authTypeEntity = datastore.get(authTypeKey);
+					AuthType authType = authTypeDao.getAuthType(authTypeKey);
 					Authorization authorization = new Authorization();
-					authorization.setCode((String) authTypeEntity.getProperty("code"));
+					authorization.setCode(authType.getCode());
 					authorization.setDate((Date) authorizationEntity.getProperty("date"));
-					authorization.setDescription((String) authTypeEntity.getProperty("description"));
-					authorization.setOrderValue((Long) authTypeEntity.getProperty("orderValue"));
+					authorization.setDescription(authType.getDescription());
+					authorization.setOrderValue(authType.getOrderValue());
 					authorizations.add(authorization);
 				}
-			} catch (EntityNotFoundException ex) {
+			} catch (NotFoundException ex) {
 				Logger.getLogger(DataTransfer.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
@@ -281,13 +284,22 @@ public class DataTransfer {
 		Query query = new Query("Authorization").setAncestor(f.getKey());
 		List<Entity> authorizations = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		List<Authorization> auths = new ArrayList<>();
+		AuthTypeDAO authTypeDao = new AuthTypeDAO();
 		for (Entity authEntity : authorizations) {
-			Authorization auth = new Authorization();
-			auth.setCode((String) authEntity.getProperty("code"));
-			auth.setDate((Date) authEntity.getProperty("date"));
-			auth.setDescription((String) authEntity.getProperty("description"));
-			auth.setOrderValue((Long) authEntity.getProperty("orderValue"));
-			auths.add(auth);
+			Key authTypeKey = (Key) authEntity.getProperty("authType");
+			try {
+				if (authTypeKey != null) {
+					AuthType authType = authTypeDao.getAuthType(authTypeKey);
+					Authorization authorization = new Authorization();
+					authorization.setCode(authType.getCode());
+					authorization.setDate((Date) authEntity.getProperty("date"));
+					authorization.setDescription(authType.getDescription());
+					authorization.setOrderValue(authType.getOrderValue());
+					auths.add(authorization);
+				}
+			} catch (NotFoundException ex) {
+				Logger.getLogger(DataTransfer.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 		String s = MarshalUtils.getAuthsAsString(auths);
 		fli.setAuthorizations(s);

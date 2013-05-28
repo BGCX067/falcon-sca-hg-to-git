@@ -30,6 +30,21 @@ public class AuthTypeDAO {
     }
     static private LocalCacheImpl localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
 
+	public AuthType getAuthType(Key key) throws NotFoundException {
+        AuthType authType = (AuthType) localCache.getValue(key.getId());
+        if (authType == null) {
+			Entity authEntity;
+			try {
+				authEntity = datastore.get(key);
+			} catch (EntityNotFoundException ex) {
+				Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+				throw new NotFoundException("AuthType", key.getId());
+			}
+			authType = DataTransfer.convertAuthType(authEntity);
+            localCache.put(key.getId(), authType);
+        }
+        return authType;
+	}
 
     public AuthType getAuthType(long authTypeId) throws NotFoundException {
         AuthType authType = (AuthType) localCache.getValue(new Long(authTypeId));
