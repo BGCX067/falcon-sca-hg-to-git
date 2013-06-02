@@ -2,7 +2,6 @@ package org.sca.calontir.cmpe.db;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
@@ -22,6 +21,7 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
 import org.sca.calontir.cmpe.dto.Email;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.FighterListItem;
+import org.sca.calontir.cmpe.dto.Note;
 import org.sca.calontir.cmpe.dto.Phone;
 
 /**
@@ -235,16 +235,29 @@ public class FighterDAO {
 		if (validate) {
 			validate(fighter);
 		}
-		if (fighterEntity.hasProperty("note") && fighter.getNote() == null) {
-			EmbeddedEntity embeddedNote = (EmbeddedEntity) fighterEntity.getProperty("note");
-			if (embeddedNote != null) {
-				datastore.delete(embeddedNote.getKey());
-			}
-		}
+
 		fighterEntity.setProperty("lastUpdated", new Date());
 		fighterEntity.setProperty("userUpdated", userId);
 		Logger.getLogger(getClass().getName()).log(Level.INFO, "Saving {0}", fighter.getScaName());
-		Key key = datastore.put(fighterEntity);
+		final Key key = datastore.put(fighterEntity);
+
+		final Query noteQuery = new Query("Note").setAncestor(key);
+		Entity noteEntity = datastore.prepare(noteQuery).asSingleEntity();
+		if (fighter.getNote() != null) {
+			if (StringUtils.isBlank(fighter.getNote().getBody())) {
+				if (noteEntity != null) {
+					datastore.delete(noteEntity.getKey());
+				}
+			} else {
+				final Note note = fighter.getNote();
+				if (noteEntity == null) {
+					noteEntity = new Entity("Note", key);
+				}
+				noteEntity.setProperty("body", note.getBody());
+				noteEntity.setProperty("updated", note.getUpdated());
+				datastore.put(noteEntity);
+			}
+		}
 
 		final Query authQuery = new Query("Authorization").setAncestor(key);
 		List<Entity> authorizationEntities = datastore.prepare(authQuery).asList(FetchOptions.Builder.withDefaults());

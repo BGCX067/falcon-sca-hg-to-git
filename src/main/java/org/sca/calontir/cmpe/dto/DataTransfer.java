@@ -1,7 +1,6 @@
 package org.sca.calontir.cmpe.dto;
 
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
@@ -221,16 +220,6 @@ public class DataTransfer {
 			entity.setProperty("treatyKey", k);
 		} else {
 			entity.removeProperty("treatyKey");
-		}
-
-		if (fighter.getNote() != null) {
-			Note note = fighter.getNote();
-			if (StringUtils.isNotBlank(note.getBody())) {
-				EmbeddedEntity noteEntity = new EmbeddedEntity();
-				noteEntity.setProperty("body", note.getBody());
-				noteEntity.setProperty("updated", note.getUpdated());
-				entity.setProperty("note", noteEntity);
-			}
 		}
 
 		return entity;
