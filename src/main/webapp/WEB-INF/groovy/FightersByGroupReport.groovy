@@ -3,7 +3,6 @@ import org.sca.calontir.cmpe.user.SecurityFactory
 import org.sca.calontir.cmpe.dto.Fighter
 import org.sca.calontir.cmpe.db.FighterDAO
 import org.sca.calontir.cmpe.db.ScaGroupDAO
-import org.sca.calontir.cmpe.groovy.Storage
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.blobstore.BlobInfo
 import com.google.appengine.api.blobstore.BlobKey
@@ -11,7 +10,6 @@ import org.sca.calontir.cmpe.dto.FighterListItem
 import org.sca.calontir.cmpe.dto.Authorization
 import org.sca.calontir.cmpe.utils.MarshalUtils
 import org.sca.calontir.cmpe.common.*
-import org.sca.calontir.cmpe.groovy.WorkbookBuilder
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 import groovy.json.JsonSlurper
@@ -79,7 +77,7 @@ fighters.each {
 		mapList.remove(tempF)
 		scaNameMap.remove(it.scaName)
 	}
-	
+
 	mapList << fmap
 }
 
@@ -88,14 +86,14 @@ mapList.each { f ->
 }
 scaGroups.sort()
 
-StringWriter writer = new StringWriter()  
-def build = new MarkupBuilder(writer)  
-build.html{  
-	head{  
+StringWriter writer = new StringWriter()
+def build = new MarkupBuilder(writer)
+build.html{
+	head{
 		title('Report')
-	}  
-	body{  
-		scaGroups.keySet().each { key -> 
+	}
+	body{
+		scaGroups.keySet().each { key ->
 			p() {
 				h2(key)
 				fList = scaGroups[key]
@@ -110,9 +108,9 @@ build.html{
 					}
 				}
 			}
-		}  
-	}  
-}  
+		}
+	}
+}
 println writer.toString()
 
 def email = security.user.email[0]?.emailAddress

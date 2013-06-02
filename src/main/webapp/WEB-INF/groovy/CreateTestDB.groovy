@@ -2,7 +2,6 @@ import org.sca.calontir.cmpe.user.Security
 import org.sca.calontir.cmpe.user.SecurityFactory
 import org.sca.calontir.cmpe.dto.Fighter
 import org.sca.calontir.cmpe.db.FighterDAO
-import org.sca.calontir.cmpe.groovy.Storage
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.blobstore.BlobInfo
 import com.google.appengine.api.blobstore.BlobKey

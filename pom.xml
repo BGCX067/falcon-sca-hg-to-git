@@ -72,13 +72,13 @@
 			<version>${datanucleus.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-        
+
 		<dependency>
 			<groupId>org.gaelyk</groupId>
 			<artifactId>gaelyk</artifactId>
 			<version>${gaelyk.version}</version>
 		</dependency>
-        
+
 		<!-- GWT dependencies -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -93,7 +93,7 @@
 			<version>${gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
-    
+
 		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
@@ -200,167 +200,123 @@
 				<artifactId>maven-datanucleus-plugin</artifactId>
 				<version>1.1.4</version>
 				<configuration>
-					
+
 						Make sure this path contains your persistent classes!
-					
-					<mappingIncludes>**/data/*.class</mappingIncludes>
-					<verbose>true</verbose>
-					<enhancerName>ASM</enhancerName>
-					<api>JDO</api>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>enhance</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.datanucleus</groupId>
-						<artifactId>datanucleus-core</artifactId>
-						<version>${datanucleus.version}</version>
-						<exclusions>
-							<exclusion>
-								<groupId>javax.transaction</groupId>
-								<artifactId>transaction-api</artifactId>
-							</exclusion>
-						</exclusions>
-					</dependency>
-					<dependency>
-						<groupId>org.datanucleus</groupId>
-						<artifactId>datanucleus-rdbms</artifactId>
-						<version>${datanucleus.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.datanucleus</groupId>
-						<artifactId>datanucleus-enhancer</artifactId>
-						<version>1.1.4</version>
-					</dependency>
-					<dependency>
-						<groupId>javax.jdo</groupId>
-						<artifactId>jdo2-api</artifactId>
-						<version>2.3-ec</version>
-						<scope>runtime</scope>
-					</dependency>
-				</dependencies>
-			</plugin>-->
-			<!-- Java compiler version -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
-				<configuration>
-					<source>7</source>
-					<target>7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.google.appengine</groupId>
-				<artifactId>appengine-maven-plugin</artifactId>
-				<version>${appengine.target.version}</version>
-			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<archiveClasses>true</archiveClasses>
-					<webResources>
-						<!-- in order to interpolate version from pom into appengine-web.xml -->
-						<resource>
-							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
-							<filtering>true</filtering>
-							<targetPath>WEB-INF</targetPath>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<logLevel>INFO</logLevel>
-					<port>${gae.port}</port>
+                    <mappingIncludes>**/data/*.class</mappingIncludes>
+                    <verbose>true</verbose>
+                    <enhancerName>ASM</enhancerName>
+                    <api>JDO</api>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-core</artifactId>
+                        <version>${datanucleus.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>javax.transaction</groupId>
+                                <artifactId>transaction-api</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-rdbms</artifactId>
+                        <version>${datanucleus.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-enhancer</artifactId>
+                        <version>1.1.4</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.jdo</groupId>
+                        <artifactId>jdo2-api</artifactId>
+                        <version>2.3-ec</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>-->
+            <!-- Java compiler version -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>7</source>
+                    <target>7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>${appengine.target.version}</version>
+            </plugin>
 
-					<!-- This must point to your GWT modules! -->
-					<compileTargets>
-						<value>org.sca.calontir.cmpe.Fighter</value>
-						<value>org.sca.calontir.cmpe.Goodbye</value>
-						<value>org.sca.calontir.cmpe.Loggedin</value>
-					</compileTargets>
-					<!-- This is for generating Asynch interfaces -->
-					<!-- <servicePattern>**/client/*Service.java</servicePattern> -->
-					<extraJvmArgs>-Xss1M -Xmx512m</extraJvmArgs>
-					<!--<jvm>${JAVA_HOME}/bin/java</jvm> -->
-					<!--<noServer>false</noServer> -->
-					<!-- TODO This should help running GAE stuff in hosted mode (when gwt-maven-plugin-1.2 is released, see http://jira.codehaus.org/browse/MGWT-112) -->
-					<server>com.google.appengine.tools.development.gwt.AppEngineLauncher </server>
-					<runTarget>/index.jsp</runTarget>
-					<style>DETAILED</style>
-					<webXml>war/WEB-INF/web.xml</webXml>
-					<!-- this parameter is VERY important with automatic mode - has to match the version in your declared deps -->
-					<!-- if this is set incorrect (not a match), or left out (default is 1.5.2 for 2.0-beta23) you will have mysterious errors -->
-					<gwtVersion>${gwt.version}</gwtVersion>
-				</configuration>
-				<executions>
-					<!-- <execution> <id>generateAsynch</id> <phase>generate-sources</phase> <goals> <goal>generateAsync</goal> </goals> </execution> -->
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <archiveClasses>true</archiveClasses>
+                    <webResources>
+                        <!-- in order to interpolate version from pom into appengine-web.xml -->
+                        <resource>
+                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                            <filtering>true</filtering>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <logLevel>INFO</logLevel>
+                    <port>${gae.port}</port>
 
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>compile</id>
-						<phase>compile</phase>
-						<configuration>
-							<tasks>
-								<mkdir dir="${basedir}/src/main/groovy" />
-								<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
-									<classpath refid="maven.compile.classpath" />
-								</taskdef>
-								<mkdir dir="${project.build.outputDirectory}" />
-								<groovyc destdir="${project.build.outputDirectory}" srcdir="${basedir}/src/main/groovy/" listfiles="true">
-									<classpath refid="maven.compile.classpath" />
-								</groovyc>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>test-compile</id>
-						<phase>test-compile</phase>
-						<configuration>
-							<tasks>
-								<mkdir dir="${basedir}/src/test/groovy" />
-								<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
-									<classpath refid="maven.test.classpath" />
-								</taskdef>
-								<mkdir dir="${project.build.testOutputDirectory}" />
-								<groovyc destdir="${project.build.testOutputDirectory}" srcdir="${basedir}/src/test/groovy/" listfiles="true">
-									<classpath refid="maven.test.classpath" />
-								</groovyc>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+                    <!-- This must point to your GWT modules! -->
+                    <compileTargets>
+                        <value>org.sca.calontir.cmpe.Fighter</value>
+                        <value>org.sca.calontir.cmpe.Goodbye</value>
+                        <value>org.sca.calontir.cmpe.Loggedin</value>
+                    </compileTargets>
+                    <!-- This is for generating Asynch interfaces -->
+                    <!-- <servicePattern>**/client/*Service.java</servicePattern> -->
+                    <extraJvmArgs>-Xss1M -Xmx512m</extraJvmArgs>
+                    <!--<jvm>${JAVA_HOME}/bin/java</jvm> -->
+                    <!--<noServer>false</noServer> -->
+                    <!-- TODO This should help running GAE stuff in hosted mode (when gwt-maven-plugin-1.2 is released, see http://jira.codehaus.org/browse/MGWT-112) -->
+                    <server>com.google.appengine.tools.development.gwt.AppEngineLauncher </server>
+                    <runTarget>/index.jsp</runTarget>
+                    <style>DETAILED</style>
+                    <webXml>war/WEB-INF/web.xml</webXml>
+                    <!-- this parameter is VERY important with automatic mode - has to match the version in your declared deps -->
+                    <!-- if this is set incorrect (not a match), or left out (default is 1.5.2 for 2.0-beta23) you will have mysterious errors -->
+                    <gwtVersion>${gwt.version}</gwtVersion>
+                </configuration>
+                <executions>
+                    <!-- <execution> <id>generateAsynch</id> <phase>generate-sources</phase> <goals> <goal>generateAsync</goal> </goals> </execution> -->
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

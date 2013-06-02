@@ -3,7 +3,6 @@ import org.sca.calontir.cmpe.user.SecurityFactory
 import org.sca.calontir.cmpe.dto.Fighter
 import org.sca.calontir.cmpe.db.FighterDAO
 import org.sca.calontir.cmpe.db.ScaGroupDAO
-import org.sca.calontir.cmpe.groovy.Storage
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.blobstore.BlobInfo
 import com.google.appengine.api.blobstore.BlobKey
@@ -11,7 +10,6 @@ import org.sca.calontir.cmpe.dto.FighterListItem
 import org.sca.calontir.cmpe.dto.Authorization
 import org.sca.calontir.cmpe.utils.MarshalUtils
 import org.sca.calontir.cmpe.common.*
-import org.sca.calontir.cmpe.groovy.WorkbookBuilder
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 import groovy.json.JsonSlurper
@@ -71,7 +69,7 @@ fighters.each {
 		mapList.remove(tempF)
 		keyMap.remove(it.fighterId)
 	}
-	
+
 	mapList << fmap
 }
 
@@ -89,16 +87,16 @@ mapList.each { f ->
 	}
 }
 
-StringWriter writer = new StringWriter()  
-def build = new MarkupBuilder(writer)  
-build.html{  
-	head{  
+StringWriter writer = new StringWriter()
+def build = new MarkupBuilder(writer)
+build.html{
+	head{
 		title('Report')
-	}  
-	body{  
+	}
+	body{
 		p"Number of fighters ${count}"
 		p"Number of active fighters ${active}"
 		p"Number of marshals ${marshal}"
-	}  
-}  
+	}
+}
 println writer.toString()
