@@ -10,3 +10,23 @@
 .right {
     float: right;
 }
+
+.left {
+    float: left;
+}
+
+.inline {
+    display: inline;
+}
+
+.inline_table {
+    display: inline-table;
+}
+
+.top {
+    vertical-align: top;
+}
+
+.bottom {
+    vertical-align: bottom;
+}

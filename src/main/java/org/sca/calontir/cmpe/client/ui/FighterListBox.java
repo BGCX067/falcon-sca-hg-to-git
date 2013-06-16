@@ -53,6 +53,8 @@ public class FighterListBox extends Composite implements SearchEventHandler {
         listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
 
         Panel listPanel = new FlowPanel();
+        listPanel.addStyleName("top");
+        listPanel.addStyleName("inline_table");
 
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
@@ -190,13 +192,15 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
         dataProvider.addDataDisplay(table);
 
-
-
         listPanel.add(table);
         listPanel.add(pager);
 
         listBackground.add(listPanel);
-        listBackground.add(legendImage);
+        Panel legendPanel = new FlowPanel();
+        legendPanel.addStyleName("inline");
+        legendPanel.add(legendImage);
+        listBackground.add(legendPanel);
+
         initWidget(listBackground);
 
     }
