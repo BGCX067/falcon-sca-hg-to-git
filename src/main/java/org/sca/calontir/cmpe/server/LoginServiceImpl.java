@@ -11,10 +11,11 @@ import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.dto.Fighter;
 
 public class LoginServiceImpl extends RemoteServiceServlet implements LoginService {
-	private static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
-	@Override
-	public LoginInfo login(String loginTargetUri, String logoutTargetUri) {
+    private static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
+
+    @Override
+    public LoginInfo login(String loginTargetUri, String logoutTargetUri) {
         UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
         LoginInfo loginInfo = new LoginInfo();
@@ -25,14 +26,14 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
             loginInfo.setNickname(user.getNickname());
             loginInfo.setLogoutUrl(userService.createLogoutURL(logoutTargetUri));
             FighterDAO fDao = new FighterDAO();
-            Fighter f_ub = fDao.getFighterByGoogleId(user.getEmail()); // TODO: Change to only returning SCA Name, not entire object.
+            Fighter f_ub = fDao.getFighterByGoogleId(user.getEmail());
             if (f_ub != null) {
                 loginInfo.setScaName(f_ub.getScaName());
                 loginInfo.setUserRole(f_ub.getRole());
                 loginInfo.setFighterId(f_ub.getFighterId());
             } else {
-				log.info(String.format("Cannot find a user for %s; Email: %s Federated Id: %s", user.getNickname(), user.getEmail(), user.getFederatedIdentity()));
-			}
+                log.info(String.format("Cannot find a user for %s; Email: %s Federated Id: %s", user.getNickname(), user.getEmail(), user.getFederatedIdentity()));
+            }
         } else {
             loginInfo.setLoggedIn(false);
             loginInfo.setLoginUrl(userService.createLoginURL(loginTargetUri));

@@ -109,13 +109,16 @@ public class IndexPage implements EntryPoint {
 
             @Override
             public void onSuccess(LoginInfo loginInfo) {
+                boolean needToRegister = false;
                 SecurityFactory.setLoginInfo(loginInfo);
                 if (security.isLoggedIn()) {
                     final Label hello;
                     if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
+                        needToRegister = true;
                         hello = new Label("Welcome " + loginInfo.getNickname());
                         log.info("Logged in with " + loginInfo.getNickname());
                     } else {
+                        needToRegister = false;
                         hello = new Label("Welcome " + loginInfo.getScaName());
                         log.info("Logged in as " + loginInfo.getScaName() + ":" + loginInfo.getNickname());
                     }
@@ -126,6 +129,12 @@ public class IndexPage implements EntryPoint {
                 shout.tell("Building pages.");
                 buildIndexPage();
                 shout.hide();
+                if (needToRegister) {
+                    // this user was not found in our system.
+                    shout.tell("A Falcon user for "
+                            + loginInfo.getNickname()
+                            + " was not found. Please register if you have not, or contact the support team if there is a problem.", false);
+                }
             }
         });
 
