@@ -29,11 +29,9 @@ fighters.each {
 		fmap.scaName = it.scaName
 		fmap.id = it.fighterId
 		fmap.authorizations = MarshalUtils.getAuthsAsString(it.authorization)
-		if(it.scaGroup)
-			fmap.group = it.scaGroup.groupName
-		else
-			fmap.group = "Unknown or Out of Kingdom"
+		fmap.group = it.scaGroup ? it.scaGroup.groupName : "Unknown or Out of Kingdom"
 		fmap.status = it.status
+        fmap.role = it.role ?  it.role : "USER"
 		mapList << fmap
 	}
 }
@@ -54,10 +52,10 @@ namespace.of("system") {
 	query.addFilter("name", Query.FilterOperator.EQUAL, name)
 	PreparedQuery preparedQuery = datastore.prepare(query)
 	def entities = preparedQuery.asList( withLimit(10) )
-	entities.each { 
+	entities.each {
 		BlobKey blobKey = new BlobKey(it.property)
 		blobKey.delete()
-		it.delete() 
+		it.delete()
 	}
 
 	Entity sysTable = new Entity("properties")

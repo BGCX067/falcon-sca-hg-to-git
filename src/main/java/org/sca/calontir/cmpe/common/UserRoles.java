@@ -7,9 +7,9 @@ import java.io.Serializable;
  * @author rik
  */
 public enum UserRoles implements Serializable {
+
     USER,
-	MARSHAL_OF_THE_FIELD,
-	GROUP_MARSHAL,
+    MARSHAL_OF_THE_FIELD,
     KNIGHTS_MARSHAL,
     DEPUTY_EARL_MARSHAL,
     CARD_MARSHAL,

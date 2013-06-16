@@ -5,11 +5,10 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
@@ -18,6 +17,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -41,182 +41,208 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  * @author rikscarborough
  */
 public class FighterListBox extends Composite implements SearchEventHandler {
-	private static final Logger log = Logger.getLogger(FighterListBox.class.getName());
 
-	final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
-	final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
-	final private Security security = SecurityFactory.getSecurity();
+    private static final Logger log = Logger.getLogger(FighterListBox.class.getName());
+    final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
+    final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
+    final private Security security = SecurityFactory.getSecurity();
 
-	public FighterListBox() {
-		Panel listBackground = new FlowPanel();
-		listBackground.getElement().setId(DisplayUtils.Displays.ListBox.toString());
-		listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
+    public FighterListBox() {
+        Panel listBackground = new FlowPanel();
+        listBackground.getElement().setId(DisplayUtils.Displays.ListBox.toString());
+        listBackground.getElement().getStyle().setDisplay(Style.Display.NONE);
 
-		Panel listPanel = new FlowPanel();
+        Panel listPanel = new FlowPanel();
 
-		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-		SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
-		pager.setDisplay(table);
+        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+        SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
+        pager.setDisplay(table);
 
-		ButtonCell selectButton = new ButtonCell();
-		Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {
-			@Override
-			public String getValue(FighterInfo fighter) {
-				if (security.canView(fighter.getFighterId())) {
-					return "Select";
-				} else {
-					return "...";
-				}
-			}
-		};
-		selectColumn.setSortable(false);
-		selectColumn.setFieldUpdater(new FieldUpdater<FighterInfo, String>() {
+        ButtonCell selectButton = new ButtonCell();
+        Column<FighterInfo, String> selectColumn = new Column<FighterInfo, String>(selectButton) {
+            @Override
+            public String getValue(FighterInfo fighter) {
+                if (security.canView(fighter.getFighterId())) {
+                    return "Select";
+                } else {
+                    return "...";
+                }
+            }
+        };
+        selectColumn.setSortable(false);
+        selectColumn.setFieldUpdater(new FieldUpdater<FighterInfo, String>() {
+            @Override
+            public void update(int index, FighterInfo fighter, String value) {
+                if (!security.canView(fighter.getFighterId())) {
+                    Shout.getInstance().tell("You do not have rights to update this record");
+                }
+            }
+        });
 
-			@Override
-			public void update(int index, FighterInfo fighter, String value) {
-				if (!security.canView(fighter.getFighterId())) {
-					Shout.getInstance().tell("You do not have rights to update this record");
-				}
-			}
-		});
+        ImageCell imageCell = new ImageCell();
+        final Image legendImage = new Image();
+        legendImage.setUrl("/images/falcon_icon_legend.png");
 
-		TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
-			@Override
-			public String getValue(FighterInfo fli) {
-				return fli.getScaName();
-			}
-		};
-		scaNameColumn.setSortable(true);
+        Column<FighterInfo, String> imageColumn = new Column<FighterInfo, String>(imageCell) {
+            @Override
+            public String getValue(FighterInfo fighter) {
+                if (fighter.getRole().equals(UserRoles.USER.toString())) {
+                    return "/images/authorizedFighter.png";
+                } else if (fighter.getRole().equals(UserRoles.MARSHAL_OF_THE_FIELD.toString())) {
+                    return "/images/warrantedMarshal.png";
+                } else if (fighter.getRole().equals(UserRoles.KNIGHTS_MARSHAL.toString())) {
+                    return "/images/knightsMarshal.png";
+                } else if (fighter.getRole().equals(UserRoles.DEPUTY_EARL_MARSHAL.toString())) {
+                    return "/images/regionalDeputy.png";
+                } else if (fighter.getRole().equals(UserRoles.CARD_MARSHAL.toString())) {
+                    return "/images/warrantedMarshal.png";
+                } else if (fighter.getRole().equals(UserRoles.EARL_MARSHAL.toString())) {
+                    return "/images/earlMarshal.png";
+                }
+                return "/images/authorizedFighter.png";
+            }
+        };
+        imageColumn.setSortable(false);
 
-		TextColumn<FighterInfo> authorizationColumn = new TextColumn<FighterInfo>() {
-			@Override
-			public String getValue(FighterInfo fli) {
-				return fli.getAuthorizations();
-			}
-		};
+        TextColumn<FighterInfo> scaNameColumn = new TextColumn<FighterInfo>() {
+            @Override
+            public String getValue(FighterInfo fli) {
+                return fli.getScaName();
+            }
+        };
+        scaNameColumn.setSortable(true);
 
-		TextColumn<FighterInfo> groupColumn = new TextColumn<FighterInfo>() {
-			@Override
-			public String getValue(FighterInfo fli) {
-				return fli.getGroup();
-			}
-		};
-		groupColumn.setSortable(true);
+        TextColumn<FighterInfo> authorizationColumn = new TextColumn<FighterInfo>() {
+            @Override
+            public String getValue(FighterInfo fli) {
+                return fli.getAuthorizations();
+            }
+        };
 
-		table.addColumn(selectColumn, "");
-		table.addColumn(scaNameColumn, "SCA Name");
-		ColumnSortEvent.ListHandler<FighterInfo> columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
-		columnSortHandler.setComparator(scaNameColumn, new Comparator<FighterInfo>() {
-			@Override
-			public int compare(FighterInfo left, FighterInfo right) {
-				return left.getScaName().compareTo(right.getScaName());
-			}
-		});
-		table.addColumnSortHandler(columnSortHandler);
-		table.addColumn(authorizationColumn, "Authorizations");
-		table.addColumn(groupColumn, "Group");
-		columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
-		columnSortHandler.setComparator(groupColumn, new Comparator<FighterInfo>() {
-			@Override
-			public int compare(FighterInfo left, FighterInfo right) {
-				return left.getGroup().compareTo(right.getGroup());
-			}
-		});
-		table.addColumnSortHandler(columnSortHandler);
+        TextColumn<FighterInfo> groupColumn = new TextColumn<FighterInfo>() {
+            @Override
+            public String getValue(FighterInfo fli) {
+                return fli.getGroup();
+            }
+        };
+        groupColumn.setSortable(true);
 
-		if(security.isRoleOrGreater(UserRoles.GROUP_MARSHAL)) {
-			TextColumn<FighterInfo> statusColumn = new TextColumn<FighterInfo>() {
-				@Override
-				public String getValue(FighterInfo fli) {
-					return fli.getStatus();
-				}
-			};
-			statusColumn.setSortable(false);
+        table.addColumn(selectColumn, "");
+        table.addColumn(imageColumn);
+        table.addColumn(scaNameColumn, "SCA Name");
+        ColumnSortEvent.ListHandler<FighterInfo> columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
+        columnSortHandler.setComparator(scaNameColumn, new Comparator<FighterInfo>() {
+            @Override
+            public int compare(FighterInfo left, FighterInfo right) {
+                return left.getScaName().compareTo(right.getScaName());
+            }
+        });
+        table.addColumnSortHandler(columnSortHandler);
+        table.addColumn(authorizationColumn, "Authorizations");
+        table.addColumn(groupColumn, "Group");
+        columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
+        columnSortHandler.setComparator(groupColumn, new Comparator<FighterInfo>() {
+            @Override
+            public int compare(FighterInfo left, FighterInfo right) {
+                return left.getGroup().compareTo(right.getGroup());
+            }
+        });
+        table.addColumnSortHandler(columnSortHandler);
 
-			table.addColumn(statusColumn, "Status");
-		}
+        if (security.isRoleOrGreater(UserRoles.KNIGHTS_MARSHAL)) {
+            TextColumn<FighterInfo> statusColumn = new TextColumn<FighterInfo>() {
+                @Override
+                public String getValue(FighterInfo fli) {
+                    return fli.getStatus();
+                }
+            };
+            statusColumn.setSortable(false);
 
-		final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<FighterInfo>();
-		table.setSelectionModel(selectionModel);
-		selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-			@Override
-			public void onSelectionChange(SelectionChangeEvent event) {
-				FighterInfo selected = selectionModel.getSelectedObject();
-				if (selected != null) {
-					if (security.canView(selected.getFighterId())) {
-						FighterServiceAsync fighterService = GWT.create(FighterService.class);
+            table.addColumn(statusColumn, "Status");
+        }
 
-						fighterService.getFighter(selected.getFighterId(), new AsyncCallback<Fighter>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								log.severe("getFighter " + caught.getMessage());
-							}
+        final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<FighterInfo>();
+        table.setSelectionModel(selectionModel);
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                FighterInfo selected = selectionModel.getSelectedObject();
+                if (selected != null) {
+                    if (security.canView(selected.getFighterId())) {
+                        FighterServiceAsync fighterService = GWT.create(FighterService.class);
 
-							@Override
-							public void onSuccess(Fighter result) {
-								fireEvent(new EditViewEvent(Mode.VIEW, result));
-							}
-						});
-					}
-				}
-			}
-		});
+                        fighterService.getFighter(selected.getFighterId(), new AsyncCallback<Fighter>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                log.severe("getFighter " + caught.getMessage());
+                            }
+
+                            @Override
+                            public void onSuccess(Fighter result) {
+                                fireEvent(new EditViewEvent(Mode.VIEW, result));
+                            }
+                        });
+                    }
+                }
+            }
+        });
 
 
-		dataProvider.addDataDisplay(table);
+        dataProvider.addDataDisplay(table);
 
 
 
-		listPanel.add(table);
-		listPanel.add(pager);
+        listPanel.add(table);
+        listPanel.add(pager);
 
-		listBackground.add(listPanel);
-		initWidget(listBackground);
+        listBackground.add(listPanel);
+        listBackground.add(legendImage);
+        initWidget(listBackground);
 
-	}
+    }
 
-	@Override
-	public void find(String searchName) {
-		List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(searchName);
-		table.setRowCount(fighterList.size());
-		List data = dataProvider.getList();
-		data.clear();
-		for (FighterInfo fli : fighterList) {
-			data.add(fli);
-		}
+    @Override
+    public void find(String searchName) {
+        List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(searchName);
+        table.setRowCount(fighterList.size());
+        List data = dataProvider.getList();
+        data.clear();
+        for (FighterInfo fli : fighterList) {
+            data.add(fli);
+        }
 
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
-	}
+        DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
+    }
 
-	@Override
-	public void loadAll() {
-		List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
-		table.setRowCount(fighterList.size());
-		List data = dataProvider.getList();
-		data.clear();
-		for (FighterInfo fli : fighterList) {
-			data.add(fli);
-		}
+    @Override
+    public void loadAll() {
+        List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
+        table.setRowCount(fighterList.size());
+        List data = dataProvider.getList();
+        data.clear();
+        for (FighterInfo fli : fighterList) {
+            data.add(fli);
+        }
 
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
-	}
+        DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
+    }
 
-	@Override
-	public void loadGroup(ScaGroup group) {
-		List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
-		table.setRowCount(fighterList.size());
-		List data = dataProvider.getList();
-		data.clear();
-		for (FighterInfo fli : fighterList) {
-			if (fli.getGroup().equals(group.getGroupName())) {
-				data.add(fli);
-			}
-		}
+    @Override
+    public void loadGroup(ScaGroup group) {
+        List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
+        table.setRowCount(fighterList.size());
+        List data = dataProvider.getList();
+        data.clear();
+        for (FighterInfo fli : fighterList) {
+            if (fli.getGroup().equals(group.getGroupName())) {
+                data.add(fli);
+            }
+        }
 
-		DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
-	}
+        DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
+    }
 
-	@Override
-	public void switchSearchType(SearchType searchType) {
-	}
+    @Override
+    public void switchSearchType(SearchType searchType) {
+    }
 }

@@ -41,151 +41,149 @@ import org.sca.calontir.cmpe.common.UserRoles;
  */
 public class ReportGen extends Composite {
 
-	final private Security security = SecurityFactory.getSecurity();
-	Map<String, Object> reportInfo = new HashMap<String, Object>();
+    final private Security security = SecurityFactory.getSecurity();
+    Map<String, Object> reportInfo = new HashMap<String, Object>();
 
-	public void init() {
-		final DeckPanel deck = new DeckPanel();
-		deck.setAnimationEnabled(true);
-		History.newItem("qrtlyreport:Welcome");
+    public void init() {
+        final DeckPanel deck = new DeckPanel();
+        deck.setAnimationEnabled(true);
+        History.newItem("qrtlyreport:Welcome");
 
-		final FocusWidget next = buildNextLink(deck);
-		next.setEnabled(true);
+        final FocusWidget next = buildNextLink(deck);
+        next.setEnabled(true);
 
-		final Button submit = new Button("Submit Report");
-		submit.setEnabled(false);
-		submit.getElement().getStyle().setTextAlign(Style.TextAlign.RIGHT);
-		submit.getElement().getStyle().setDisplay(Style.Display.NONE);
-		submit.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (submit.isEnabled()) {
-					submit.setEnabled(false);
-					FighterServiceAsync fighterService = GWT.create(FighterService.class);
-					fighterService.sendReportInfo(reportInfo, new AsyncCallback<Void>() {
-						@Override
-						public void onFailure(Throwable caught) {
-						}
+        final Button submit = new Button("Submit Report");
+        submit.setEnabled(false);
+        submit.getElement().getStyle().setTextAlign(Style.TextAlign.RIGHT);
+        submit.getElement().getStyle().setDisplay(Style.Display.NONE);
+        submit.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (submit.isEnabled()) {
+                    submit.setEnabled(false);
+                    FighterServiceAsync fighterService = GWT.create(FighterService.class);
+                    fighterService.sendReportInfo(reportInfo, new AsyncCallback<Void>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                        }
 
-						@Override
-						public void onSuccess(Void result) {
-							LookupController.getInstance().updateLocalData();
-							Shout shout = Shout.getInstance();
-							shout.tell("Thank you for submitting your report");
-							DisplayUtils.resetDisplay();
-						}
-					});
-				}
-			}
-		});
+                        @Override
+                        public void onSuccess(Void result) {
+                            LookupController.getInstance().updateLocalData();
+                            Shout shout = Shout.getInstance();
+                            shout.tell("Thank you for submitting your report");
+                            DisplayUtils.resetDisplay();
+                        }
+                    });
+                }
+            }
+        });
 
-		//reportInfo.put("Email Cc", user.);
-		reportInfo.put("user.googleid", security.getLoginInfo().getEmailAddress());
-		List<String> required = new ArrayList<String>();
+        //reportInfo.put("Email Cc", user.);
+        reportInfo.put("user.googleid", security.getLoginInfo().getEmailAddress());
+        List<String> required = new ArrayList<String>();
 
-		Welcome welcome = new Welcome();
-		welcome.init(reportInfo, required, submit, next);
-		welcome.setDeck(deck);
-		deck.add(welcome);
-
-
-		PersonalInfo pi = new PersonalInfo();
-		pi.init(reportInfo, required, submit, next);
-		pi.getElement().setId("personalinfo");
-		pi.getElement().getStyle().setDisplay(Style.Display.NONE);
-		deck.add(pi);
-
-		Activities activities = new Activities();
-		activities.init(reportInfo, required, submit, next);
-		deck.add(activities);
-
-		if (security.isRole(UserRoles.GROUP_MARSHAL)
-				|| security.isRole(UserRoles.KNIGHTS_MARSHAL)
-				|| security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
-			InjuryReport injuryReport = new InjuryReport();
-			injuryReport.init(reportInfo, required, submit, next);
-			deck.add(injuryReport);
-
-			FighterComment fc = new FighterComment();
-			fc.init(reportInfo, required, submit, next);
-			deck.add(fc);
-		}
-
-		Summary summary = new Summary();
-		summary.init(reportInfo, required, submit, next);
-		deck.add(summary);
-
-		Final finalPage = new Final();
-		finalPage.init(reportInfo, required, submit, next);
-		deck.add(finalPage);
-
-		Panel background = new FlowPanel();
-
-		background.add(deck);
-		deck.showWidget(0);
-
-		background.add(buildPrevLink(deck));
-		background.add(next);
-		background.add(submit);
+        Welcome welcome = new Welcome();
+        welcome.init(reportInfo, required, submit, next);
+        welcome.setDeck(deck);
+        deck.add(welcome);
 
 
-		initWidget(background);
-	}
+        PersonalInfo pi = new PersonalInfo();
+        pi.init(reportInfo, required, submit, next);
+        pi.getElement().setId("personalinfo");
+        pi.getElement().getStyle().setDisplay(Style.Display.NONE);
+        deck.add(pi);
 
-	private FocusWidget buildNextLink(final DeckPanel deck) {
-		final Button nextLink = new Button("Next >>");
-		nextLink.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (nextLink.isEnabled()) {
-					int index = deck.getVisibleWidget();
-					if (index < deck.getWidgetCount() - 1) {
-						if(index >= 0) {
-							BaseReportPage prevPage = (BaseReportPage) deck.getWidget(index);
-							prevPage.onLeavePage();
-						}
-						index++;
-						BaseReportPage nextPage = (BaseReportPage) deck.getWidget(index);
-						nextPage.onDisplay();
-						deck.showWidget(index);
-					}
-				}
-			}
-		});
-		nextLink.setWidth("90px");
+        Activities activities = new Activities();
+        activities.init(reportInfo, required, submit, next);
+        deck.add(activities);
+
+        if (security.isRole(UserRoles.KNIGHTS_MARSHAL)
+                || security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
+            InjuryReport injuryReport = new InjuryReport();
+            injuryReport.init(reportInfo, required, submit, next);
+            deck.add(injuryReport);
+
+            FighterComment fc = new FighterComment();
+            fc.init(reportInfo, required, submit, next);
+            deck.add(fc);
+        }
+
+        Summary summary = new Summary();
+        summary.init(reportInfo, required, submit, next);
+        deck.add(summary);
+
+        Final finalPage = new Final();
+        finalPage.init(reportInfo, required, submit, next);
+        deck.add(finalPage);
+
+        Panel background = new FlowPanel();
+
+        background.add(deck);
+        deck.showWidget(0);
+
+        background.add(buildPrevLink(deck));
+        background.add(next);
+        background.add(submit);
+
+
+        initWidget(background);
+    }
+
+    private FocusWidget buildNextLink(final DeckPanel deck) {
+        final Button nextLink = new Button("Next >>");
+        nextLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (nextLink.isEnabled()) {
+                    int index = deck.getVisibleWidget();
+                    if (index < deck.getWidgetCount() - 1) {
+                        if (index >= 0) {
+                            BaseReportPage prevPage = (BaseReportPage) deck.getWidget(index);
+                            prevPage.onLeavePage();
+                        }
+                        index++;
+                        BaseReportPage nextPage = (BaseReportPage) deck.getWidget(index);
+                        nextPage.onDisplay();
+                        deck.showWidget(index);
+                    }
+                }
+            }
+        });
+        nextLink.setWidth("90px");
 //		nextLink.setHeight(".90em");
 //		nextLink.getElement().getStyle().setFontSize(0.75, Style.Unit.EM);
 
-		return nextLink;
-	}
+        return nextLink;
+    }
 
-	private FocusWidget buildPrevLink(final DeckPanel deck) {
-		final Button prevLink = new Button("<< Prev");
-		prevLink.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (prevLink.isEnabled()) {
-					int index = deck.getVisibleWidget();
-					if (index == 1) {
-						Shout.getInstance().tell("To reselect the report type, select the Report link from the menu and start again.");
-					} else if (index > 1) {
-						if(index < deck.getWidgetCount()) {
-							BaseReportPage prevPage = (BaseReportPage) deck.getWidget(index);
-							prevPage.onLeavePage();
-						}
-						--index;
-						BaseReportPage nextPage = (BaseReportPage) deck.getWidget(index);
-						nextPage.onDisplay();
-						deck.showWidget(index);
-					}
-				}
-			}
-		});
-		prevLink.setWidth("90px");
+    private FocusWidget buildPrevLink(final DeckPanel deck) {
+        final Button prevLink = new Button("<< Prev");
+        prevLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (prevLink.isEnabled()) {
+                    int index = deck.getVisibleWidget();
+                    if (index == 1) {
+                        Shout.getInstance().tell("To reselect the report type, select the Report link from the menu and start again.");
+                    } else if (index > 1) {
+                        if (index < deck.getWidgetCount()) {
+                            BaseReportPage prevPage = (BaseReportPage) deck.getWidget(index);
+                            prevPage.onLeavePage();
+                        }
+                        --index;
+                        BaseReportPage nextPage = (BaseReportPage) deck.getWidget(index);
+                        nextPage.onDisplay();
+                        deck.showWidget(index);
+                    }
+                }
+            }
+        });
+        prevLink.setWidth("90px");
 //		nextLink.setHeight(".90em");
 //		nextLink.getElement().getStyle().setFontSize(0.75, Style.Unit.EM);
 
-		return prevLink;
-	}
-
+        return prevLink;
+    }
 }

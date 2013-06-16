@@ -8,12 +8,14 @@ import org.sca.calontir.cmpe.common.FighterStatus;
  * @author rik
  */
 public class FighterListItem implements Serializable, Comparable<FighterListItem> {
+
     private Long fighterId;
     private String scaName;
     private String authorizations;
     private String group;
     private boolean minor;
     private FighterStatus status = FighterStatus.ACTIVE;
+    private String role;
 
     public String getAuthorizations() {
         return authorizations;
@@ -55,17 +57,24 @@ public class FighterListItem implements Serializable, Comparable<FighterListItem
         this.scaName = scaName;
     }
 
-	public FighterStatus getStatus() {
-		return status;
-	}
+    public FighterStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(FighterStatus status) {
-		this.status = status;
-	}
+    public void setStatus(FighterStatus status) {
+        this.status = status;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     @Override
     public int compareTo(FighterListItem o) {
         return this.scaName.compareTo(o.getScaName());
     }
-    
 }

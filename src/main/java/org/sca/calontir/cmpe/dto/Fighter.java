@@ -1,7 +1,6 @@
 package org.sca.calontir.cmpe.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.common.UserRoles;
@@ -11,10 +10,11 @@ import org.sca.calontir.cmpe.common.UserRoles;
  * @author rik
  */
 public class Fighter implements Serializable {
+
     private Long fighterId;
     private String scaName;
     private String scaMemberNo;
-	private String membershipExpires;
+    private String membershipExpires;
     private String modernName;
     private String dateOfBirth;
     private String googleId;
@@ -28,12 +28,12 @@ public class Fighter implements Serializable {
     private Treaty treaty;
     private Note note;
 
-	public Address getPrimeAddress() {
-		if(address == null || address.isEmpty()) {
-			return null;
-		}
-		return address.get(0);
-	}
+    public Address getPrimeAddress() {
+        if (address == null || address.isEmpty()) {
+            return null;
+        }
+        return address.get(0);
+    }
 
     public List<Address> getAddress() {
         return address;
@@ -59,12 +59,12 @@ public class Fighter implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
-	public Email getPrimeEmail() {
-		if(email == null || email.isEmpty()) {
-			return null;
-		}
-		return email.get(0);
-	}
+    public Email getPrimeEmail() {
+        if (email == null || email.isEmpty()) {
+            return null;
+        }
+        return email.get(0);
+    }
 
     public List<Email> getEmail() {
         return email;
@@ -98,12 +98,12 @@ public class Fighter implements Serializable {
         this.modernName = modernName;
     }
 
-	public Phone getPrimePhone() {
-		if(phone == null || phone.isEmpty()) {
-			return null;
-		}
-		return phone.get(0);
-	}
+    public Phone getPrimePhone() {
+        if (phone == null || phone.isEmpty()) {
+            return null;
+        }
+        return phone.get(0);
+    }
 
     public List<Phone> getPhone() {
         return phone;
@@ -129,13 +129,13 @@ public class Fighter implements Serializable {
         this.scaMemberNo = scaMemberNo;
     }
 
-	public String getMembershipExpires() {
-		return membershipExpires;
-	}
+    public String getMembershipExpires() {
+        return membershipExpires;
+    }
 
-	public void setMembershipExpires(String membershipExpires) {
-		this.membershipExpires = membershipExpires;
-	}
+    public void setMembershipExpires(String membershipExpires) {
+        this.membershipExpires = membershipExpires;
+    }
 
     public String getScaName() {
         return scaName;
@@ -176,12 +176,9 @@ public class Fighter implements Serializable {
     public void setTreaty(Treaty treaty) {
         this.treaty = treaty;
     }
-    
-    
+
     @Override
     public String toString() {
         return "Fighter{" + "fighterId=" + fighterId + ", scaName=" + scaName + ", scaMemberNo=" + scaMemberNo + ", modernName=" + modernName + ", dateOfBirth=" + dateOfBirth + ", googleId=" + googleId + ", email=" + email + ", address=" + address + ", phone=" + phone + ", authorization=" + authorization + ", scaGroup=" + scaGroup + ", role=" + role + ", status=" + status + ", treaty=" + treaty + ", note=" + note + '}';
     }
-
-    
 }
