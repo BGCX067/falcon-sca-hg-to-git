@@ -38,8 +38,10 @@ public class DataTransfer {
         fighter.setModernName((String) fighterEntity.getProperty("modernName"));
         if (fighterEntity.hasProperty("membershipExpires")) {
             Date expires = (Date) fighterEntity.getProperty("membershipExpires");
-            String dt = new DateTime(expires.getTime()).toString("MM/dd/yyyy");
-            fighter.setMembershipExpires(dt);
+            if (expires != null) {
+                String dt = new DateTime(expires.getTime()).toString("MM/dd/yyyy");
+                fighter.setMembershipExpires(dt);
+            }
         }
         if (fighterEntity.hasProperty("dateOfBirth")) {
             Date dob = (Date) fighterEntity.getProperty("dateOfBirth");
@@ -59,7 +61,6 @@ public class DataTransfer {
             email.setType((String) emailEntity.getProperty("type"));
             emails.add(email);
         }
-        Logger.getLogger(DataTransfer.class.getName()).log(Level.INFO, "Emails " + emails.size());
         fighter.setEmail(emails);
 
         Query addressQuery = new Query("Address").setAncestor(fighterEntity.getKey());
@@ -76,7 +77,6 @@ public class DataTransfer {
             address.setType((String) addressEntity.getProperty("type"));
             addresses.add(address);
         }
-        Logger.getLogger(DataTransfer.class.getName()).log(Level.INFO, "Address " + addresses.size());
         fighter.setAddress(addresses);
 
         Query phoneQuery = new Query("Phone").setAncestor(fighterEntity.getKey());
@@ -88,7 +88,6 @@ public class DataTransfer {
             phone.setType((String) phoneEntity.getProperty("type"));
             phones.add(phone);
         }
-        Logger.getLogger(DataTransfer.class.getName()).log(Level.INFO, "Phones {0}", phones.size());
         fighter.setPhone(phones);
 
         Query authQuery = new Query("Authorization").setAncestor(fighterEntity.getKey());
@@ -111,7 +110,6 @@ public class DataTransfer {
                 Logger.getLogger(DataTransfer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        Logger.getLogger(DataTransfer.class.getName()).log(Level.INFO, "Auths {0}", authorizations.size());
         fighter.setAuthorization(authorizations);
 
         if (fighterEntity.hasProperty("scaGroup")) {
@@ -129,13 +127,21 @@ public class DataTransfer {
         fighter.setGoogleId((String) fighterEntity.getProperty("googleId"));
 
         if (fighterEntity.hasProperty("role")) {
-            fighter.setRole(UserRoles.valueOf((String) fighterEntity.getProperty("role")));
+            String role = (String) fighterEntity.getProperty("role");
+            if (role != null) {
+                fighter.setRole(UserRoles.valueOf(role));
+            }
         }
 
-        if (fighterEntity.hasProperty("status")) { // for now set to Active
-            fighter.setStatus(FighterStatus.ACTIVE);
+        if (fighterEntity.hasProperty("status")) { 
+            String status = (String) fighterEntity.getProperty("status");
+            if(status == null) { // for now set to Active
+                fighter.setStatus(FighterStatus.ACTIVE);
+            } else {
+                fighter.setStatus(FighterStatus.valueOf(status));
+            }
         } else {
-            fighter.setStatus(FighterStatus.valueOf((String) fighterEntity.getProperty("status")));
+            fighter.setStatus(FighterStatus.ACTIVE);
         }
 
         if (fighterEntity.hasProperty("treatyKey")) {
@@ -155,10 +161,8 @@ public class DataTransfer {
             note.setBody((String) noteEntity.getProperty("body"));
             note.setUpdated((Date) noteEntity.getProperty("updated"));
             fighter.setNote(note);
-            Logger.getLogger(DataTransfer.class.getName()).log(Level.INFO, "Note " + note.getBody());
         }
 
-        Logger.getLogger(DataTransfer.class.getName()).log(Level.INFO, "return");
         return fighter;
     }
 
