@@ -198,6 +198,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
         listBackground.add(listPanel);
         Panel legendPanel = new FlowPanel();
         legendPanel.addStyleName("inline");
+        legendPanel.getElement().getStyle().setMargin(2.5, Style.Unit.EM);
         legendPanel.add(legendImage);
         listBackground.add(legendPanel);
 
