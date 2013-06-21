@@ -20,8 +20,11 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
  * @author rik
  */
 public class AuthTypeDAO {
-	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
     public static class LocalCacheImpl extends LocalCacheAbImpl {
+
         private static LocalCacheImpl _instance = new LocalCacheImpl();
 
         public static LocalCacheImpl getInstance() {
@@ -30,55 +33,55 @@ public class AuthTypeDAO {
     }
     static private LocalCacheImpl localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
 
-	public AuthType getAuthType(Key key) throws NotFoundException {
+    public AuthType getAuthType(Key key) throws NotFoundException {
         AuthType authType = (AuthType) localCache.getValue(key.getId());
         if (authType == null) {
-			Entity authEntity;
-			try {
-				authEntity = datastore.get(key);
-			} catch (EntityNotFoundException ex) {
-				Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
-				throw new NotFoundException("AuthType", key.getId());
-			}
-			authType = DataTransfer.convertAuthType(authEntity);
+            Entity authEntity;
+            try {
+                authEntity = datastore.get(key);
+            } catch (EntityNotFoundException ex) {
+                Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+                throw new NotFoundException("AuthType", key.getId());
+            }
+            authType = DataTransfer.convertAuthType(authEntity);
             localCache.put(key.getId(), authType);
         }
         return authType;
-	}
+    }
 
     public AuthType getAuthType(long authTypeId) throws NotFoundException {
         AuthType authType = (AuthType) localCache.getValue(new Long(authTypeId));
         if (authType == null) {
-			Key key = KeyFactory.createKey("AuthType", authTypeId);
-			Entity authEntity;
-			try {
-				authEntity = datastore.get(key);
-			} catch (EntityNotFoundException ex) {
-				Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
-				throw new NotFoundException("AuthType", authTypeId);
-			}
-			authType = DataTransfer.convertAuthType(authEntity);
+            Key key = KeyFactory.createKey("AuthType", authTypeId);
+            Entity authEntity;
+            try {
+                authEntity = datastore.get(key);
+            } catch (EntityNotFoundException ex) {
+                Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+                throw new NotFoundException("AuthType", authTypeId);
+            }
+            authType = DataTransfer.convertAuthType(authEntity);
             localCache.put(new Long(authTypeId), authType);
         }
         return authType;
     }
 
-	public Key getAuthTypeKeyByCode(String code) {
-		Query.Filter codeFilter = new Query.FilterPredicate("code", Query.FilterOperator.EQUAL, code);
-		Query query = new Query("AuthType").setFilter(codeFilter);
-		List<Entity> atList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-		if (!atList.isEmpty()) {
-			return atList.get(0).getKey();
-		}
-		return null;
-	}
+    public Key getAuthTypeKeyByCode(String code) {
+        Query.Filter codeFilter = new Query.FilterPredicate("code", Query.FilterOperator.EQUAL, code);
+        Query query = new Query("AuthType").setFilter(codeFilter);
+        List<Entity> atList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+        if (!atList.isEmpty()) {
+            return atList.get(0).getKey();
+        }
+        return null;
+    }
 
     public AuthType getAuthTypeByCode(String code) {
         AuthType at = (AuthType) localCache.getValue(code);
         if (at == null) {
-			Query.Filter codeFilter = new Query.FilterPredicate("code", Query.FilterOperator.EQUAL, code);
+            Query.Filter codeFilter = new Query.FilterPredicate("code", Query.FilterOperator.EQUAL, code);
             Query query = new Query("AuthType").setFilter(codeFilter);
-			List<Entity> atList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+            List<Entity> atList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
             if (!atList.isEmpty()) {
                 at = DataTransfer.convertAuthType(atList.get(0));
             }
@@ -88,20 +91,18 @@ public class AuthTypeDAO {
     }
 
     public List<AuthType> getAuthType() {
+        Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.INFO, "start");
         List<AuthType> atList = (List<AuthType>) localCache.getValue("atlist");
-        if (atList == null) {
+        if (atList == null || atList.isEmpty()) {
             Query query = new Query("AuthType").addSort("orderValue");
-			List<Entity> entityList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+            List<Entity> entityList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
             atList = new ArrayList<>(entityList.size());
-			for(Entity entity : entityList) {
-				AuthType newAt = new AuthType();
-				newAt.setAuthTypeId(entity.getKey().getId());
-				newAt.setCode((String) entity.getProperty("code"));
-				newAt.setDescription((String) entity.getProperty("description"));
-				atList.add(newAt);
-			}
+            for (Entity entity : entityList) {
+                AuthType newAt = DataTransfer.convertAuthType(entity);
+                atList.add(newAt);
+            }
         }
-		localCache.put("atlist", atList);
+        localCache.put("atlist", atList);
         return atList;
     }
 
@@ -111,21 +112,21 @@ public class AuthTypeDAO {
         Entity at = null;
         if (authType.getAuthTypeId() != null && authType.getAuthTypeId() > 0) {
             Key authTypeKey = KeyFactory.createKey(AuthType.class.getSimpleName(), authType.getAuthTypeId());
-			try {
-				at = datastore.get(authTypeKey);
-			} catch (EntityNotFoundException ex) {
-				Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
-			}
+            try {
+                at = datastore.get(authTypeKey);
+            } catch (EntityNotFoundException ex) {
+                Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-		if(at == null) {
-			at = new Entity("AuthType");
-		}
-		at.setProperty("code", authType.getCode());
-		at.setProperty("description", authType.getDescription());
-		at.setProperty("orderValue", authType.getOrderValue());
+        if (at == null) {
+            at = new Entity("AuthType");
+        }
+        at.setProperty("code", authType.getCode());
+        at.setProperty("description", authType.getDescription());
+        at.setProperty("orderValue", authType.getOrderValue());
 
-		Key key = datastore.put(at);
+        Key key = datastore.put(at);
 
-		return key;
+        return key;
     }
 }

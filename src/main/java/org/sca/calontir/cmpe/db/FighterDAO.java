@@ -304,6 +304,7 @@ public class FighterDAO {
                 phoneEntity.setProperty("phoneNumber", phone.getPhoneNumber());
                 phoneEntity.setProperty("type", phone.getType());
                 phones.add(phoneEntity);
+                ++i;
             }
 
             datastore.put(phones);
@@ -365,6 +366,7 @@ public class FighterDAO {
                 addressEntity.setProperty("state", address.getState());
                 addressEntity.setProperty("type", address.getType());
                 addresses.add(addressEntity);
+                ++i;
             }
             datastore.put(addresses);
         } else {
@@ -378,21 +380,32 @@ public class FighterDAO {
 
     private void saveEmails(Fighter fighter, Key fighterKey, List<Entity> emailEntities) {
         if (fighter.getEmail() != null && !fighter.getEmail().isEmpty()) {
-            List<Entity> emails = new ArrayList<>();
+            final List<Entity> emails = new ArrayList<>();
             int i = 0;
             for (Email email : fighter.getEmail()) {
-                Entity emailEntity;
-                if (emailEntities.size() > i) {
-                    emailEntity = emailEntities.get(i);
-                } else {
-                    emailEntity = new Entity("Email", fighterKey);
+                if (StringUtils.isNotEmpty(email.getEmailAddress())) {
+                    final Entity emailEntity;
+                    if (emailEntities.size() > i) {
+                        emailEntity = emailEntities.get(i);
+                    } else {
+                        emailEntity = new Entity("Email", fighterKey);
+                    }
+                    emailEntity.setProperty("emailAddress", email.getEmailAddress());
+                    emailEntity.setProperty("type", email.getType());
+                    emails.add(emailEntity);
+                    ++i;
                 }
-                emailEntity.setProperty("emailAddress", email.getEmailAddress());
-                emailEntity.setProperty("type", email.getType());
-                emails.add(emailEntity);
             }
-
             datastore.put(emails);
+
+            final List<Key> keys = new ArrayList<>();
+            for (; i < emailEntities.size(); ++i) {
+                final Entity entity = emailEntities.get(i);
+                keys.add(entity.getKey());
+            }
+            if (!keys.isEmpty()) {
+                datastore.delete(keys);
+            }
         } else {
             List<Key> keys = new ArrayList<>();
             for (Entity entity : emailEntities) {
