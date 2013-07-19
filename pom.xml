@@ -17,8 +17,8 @@
     </scm>
 
     <properties>
-        <appengine.app.version>1-2-2</appengine.app.version>
-        <appengine.target.version>1.8.1</appengine.target.version>
+        <appengine.app.version>1-2-3</appengine.app.version>
+        <appengine.target.version>1.8.2</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
         <gwt.version>2.5.1</gwt.version>
@@ -109,17 +109,6 @@
             <version>1.0.9</version>
         </dependency>
         <dependency>
-            <groupId>javax.jdo</groupId>
-            <artifactId>jdo2-api</artifactId>
-            <version>2.3-eb</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.transaction</groupId>
-                    <artifactId>transaction-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <version>2.0</version>
@@ -169,6 +158,11 @@
             <version>${appengine.target.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <artifactId>groovy-all</artifactId>
+            <groupId>org.codehaus.groovy</groupId>
+            <version>2.1.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -186,15 +180,23 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-compiler</artifactId>
+                        <version>2.6.0-01</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <compilerId>groovy-eclipse-compiler</compilerId>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
-                <version>${appengine.target.version}</version>
+                <version>1.8.1.1</version>
             </plugin>
 
             <plugin>
@@ -250,6 +252,12 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>groovy-eclipse-compiler</artifactId>
+                <groupId>org.codehaus.groovy</groupId>
+                <version>2.6.0-01</version>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>

@@ -5,14 +5,6 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     <servlet>
-        <servlet-name>AuthTypesServlet</servlet-name>
-        <servlet-class>org.sca.calontir.cmpe.AuthTypesServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ScaGroupServlet</servlet-name>
-        <servlet-class>org.sca.calontir.cmpe.ScaGroupServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>FighterServlet</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.FighterServlet</servlet-class>
     </servlet>
@@ -21,14 +13,6 @@
         <servlet-class>org.sca.calontir.cmpe.AdminServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AuthTypesServlet</servlet-name>
-        <url-pattern>/AuthTypesServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ScaGroupServlet</servlet-name>
-        <url-pattern>/ScaGroupServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>FighterServlet</servlet-name>
         <url-pattern>/FighterServlet</url-pattern>
     </servlet-mapping>
@@ -36,7 +20,7 @@
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/AdminServlet</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>loginService</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.server.LoginServiceImpl</servlet-class>
@@ -46,7 +30,7 @@
         <servlet-name>loginService</servlet-name>
         <url-pattern>/fighter/login</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>fighterService</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.server.FighterServiceImpl</servlet-class>
@@ -56,8 +40,8 @@
         <servlet-name>fighterService</servlet-name>
         <url-pattern>/fighter/fighter</url-pattern>
     </servlet-mapping>
-    
-        
+
+
     <!-- The Gaelyk Groovlet servlet -->
     <servlet>
         <servlet-name>GroovletServlet</servlet-name>
@@ -68,13 +52,13 @@
         <servlet-name>GroovletServlet</servlet-name>
         <url-pattern>*.groovy</url-pattern>
     </servlet-mapping>
-	<servlet>  
-	  <servlet-name>remoteLogging</servlet-name>  
-	  <servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>  
-	</servlet>  
-	<servlet-mapping>  
-	  <servlet-name>remoteLogging</servlet-name>  
-	  <url-pattern>/fighter/remote_logging</url-pattern>  
-	</servlet-mapping> 
-    
+    <servlet>
+        <servlet-name>remoteLogging</servlet-name>
+        <servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>remoteLogging</servlet-name>
+        <url-pattern>/fighter/remote_logging</url-pattern>
+    </servlet-mapping>
+
 </web-app>

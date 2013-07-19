@@ -16,7 +16,7 @@ namespace.of("system") {
 	def query = new Query("properties")
 	query.addFilter("name", Query.FilterOperator.EQUAL, name)
 	PreparedQuery preparedQuery = datastore.prepare(query)
-	def entities = preparedQuery.asList( withLimit(10) )
+	def entities = preparedQuery.asList( withDefaults() )
 	if(entities != null && entities.size() > 0) {
 		def entity = entities[0]
 		Date savedDate = new Date(entity.property).clearTime()
@@ -30,7 +30,7 @@ if(runToday) {
 		body {
 			p "Back already run today"
 		}
-	}	
+	}
 	return
 }
 
@@ -91,9 +91,9 @@ fighters.each { f ->
 	}
 	fmap.authorization = authList
 	if(f.scaGroup)
-		fmap.group = f.scaGroup.groupName
+    fmap.group = f.scaGroup.groupName
 	else
-		fmap.group = "Unknown or Out of Kingdom"
+    fmap.group = "Unknown or Out of Kingdom"
 	fmap.role = f.role
 	fmap.status = f.status
 	fmap.treaty = f.treaty?.name
@@ -135,11 +135,11 @@ namespace.of("system") {
 	def query = new Query("properties")
 	query.addFilter("name", Query.FilterOperator.EQUAL, name)
 	PreparedQuery preparedQuery = datastore.prepare(query)
-	def entities = preparedQuery.asList( withLimit(10) )
-	entities.each { 
+	def entities = preparedQuery.asList( withDefaults() )
+	entities.each {
 		BlobKey blobKey = new BlobKey(it.property)
 		blobKey.delete()
-		it.delete() 
+		it.delete()
 	}
 
 	Entity sysTable = new Entity("properties")
@@ -147,7 +147,7 @@ namespace.of("system") {
 	sysTable.property = file.blobKey.keyString
 
 	sysTable.save()
-	
+
 	def lastbackupKey = "calontir.lastbackup"
 	sysTable = new Entity("properties")
 	sysTable.name = lastbackupKey

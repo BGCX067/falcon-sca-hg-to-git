@@ -39,7 +39,6 @@ public class FighterDAO {
     public Fighter getFighter(long fighterId) {
         Fighter retVal = fCache.getFighter(fighterId);
         if (retVal == null) {
-            Logger.getLogger(getClass().getName()).log(Level.INFO, String.format("Getting %d from datastore", fighterId));
             Entity fighter;
             try {
                 fighter = getFighterEntity(fighterId);
@@ -157,7 +156,6 @@ public class FighterDAO {
     }
 
     public List<FighterListItem> getFighterListItems(DateTime dt) {
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Getting fighter list from datastore as of {0}", dt);
         if (dt == null || dt.getYear() == 1966) {
             return getFighterListItems();
         }
@@ -174,7 +172,6 @@ public class FighterDAO {
     }
 
     public List<FighterListItem> getFighterListItems() {
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Getting fighter list from datastore as of {0}", fCache.getLastUpdate());
         List<Entity> fighters = getAllFightersAsOf(fCache.getLastUpdate());
         Map<Long, FighterListItem> fighterListMap = new HashMap<>();
         for (Entity f : fighters) {
@@ -193,15 +190,12 @@ public class FighterDAO {
         Query query = new Query("Fighter").setFilter(lastUpdatedFilter);
         List<Entity> fighters = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 
-        Logger.getLogger(getClass().getName()).log(Level.INFO,
-                "Getting updated fighters: {0} as of {1}", new Object[]{fighters.size(), dt.toString()});
         return fighters;
     }
 
     private List<Entity> returnAllFighters() {
         Query query = new Query("Fighter").addSort("scaName");
         List<Entity> fighters = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Getting all fighters: {0}", fighters.size());
         return fighters;
     }
 
@@ -227,7 +221,6 @@ public class FighterDAO {
             Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighter.getFighterId());
             try {
                 fighterEntity = datastore.get(fighterKey);
-                Logger.getLogger(getClass().getName()).log(Level.INFO, "Got {0}", fighterEntity);
             } catch (EntityNotFoundException ex) {
                 fighterEntity = null;
             }
@@ -240,7 +233,6 @@ public class FighterDAO {
 
         fighterEntity.setProperty("lastUpdated", new Date());
         fighterEntity.setProperty("userUpdated", userId);
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Saving {0}", fighter.getScaName());
         final Key key = datastore.put(fighterEntity);
 
         final Query noteQuery = new Query("Note").setAncestor(key);
@@ -280,7 +272,6 @@ public class FighterDAO {
 
         keyValue = key.getId();
 
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Saved {0}", keyValue);
         return keyValue;
     }
 

@@ -71,7 +71,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
                 info.setGroup(fli.getGroup() == null ? "" : fli.getGroup());
                 info.setStatus(fli.getStatus() == null ? "" : fli.getStatus().toString());
                 info.setMinor(fli.isMinor());
-                info.setRole(fli.getRole());
+                info.setRole(fli.getRole() == null ? "" : fli.getRole());
                 retValList.add(info);
             }
         }
@@ -125,7 +125,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<String, Object>();
         // get application version
-        iMap.put("appversion", "1.2.2");
+        iMap.put("appversion", "1.2.3");
 
         // get from blob
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

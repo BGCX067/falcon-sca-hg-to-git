@@ -77,31 +77,25 @@ public class FighterServlet extends HttpServlet {
                 Fighter f = dao.getFighter(fighter.getFighterId());
                 ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
                 CardMaker cardMaker = new CardMaker();
-                List<Fighter> flist = new ArrayList<Fighter>();
+                List<Fighter> flist = new ArrayList<>();
                 flist.add(f);
-				PropertiesDao propDao = new PropertiesDao();
-				String start = propDao.getProperty("calontir.validStart");
-				String end = propDao.getProperty("calontir.validEnd");
-				DateTime startDt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(start);
-				DateTime endDt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(end);
+                PropertiesDao propDao = new PropertiesDao();
+                String start = propDao.getProperty("calontir.validStart");
+                String end = propDao.getProperty("calontir.validEnd");
+                DateTime startDt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(start);
+                DateTime endDt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(end);
                 try {
                     cardMaker.build(baosPDF, flist, startDt, endDt);
                 } catch (Exception ex) {
                     Logger.getLogger(FighterServlet.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException("Error building the cards", ex);
                 }
-                StringBuilder sb = new StringBuilder();
-                sb.append("attachment; filename=");
-                sb.append("FighterCard_");
-                sb.append(f.getScaName());
-				sb.append("_");
-				sb.append(String.format("%tF", new Date()));
-                sb.append(".pdf");
-				String fn = sb.toString().replaceAll(" ", "_");
-				fn = fn.replaceAll("-", "_");
-                response.setHeader("Content-disposition", fn);
+                Date today = new Date();
+                response.addHeader("Content-Disposition", String.format("attachment;filename=\"FighterCard_%s%ty%tm%td.pdf\"",
+                        f.getScaName().replaceAll(" ", "_"), today, today, today));
                 response.setContentType("application/pdf");
                 response.setContentLength(baosPDF.size());
+                System.out.println(response.toString());
                 ServletOutputStream sos = response.getOutputStream();
                 baosPDF.writeTo(sos);
                 sos.flush();
@@ -133,28 +127,30 @@ public class FighterServlet extends HttpServlet {
 //                        include(request, response);
             }
         }
-        
+
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-           // /* TODO output your page here
+            // /* TODO output your page here
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Fighter Servlet</title>");  
+            out.println("<title>Fighter Servlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
 
-        } finally { 
+        } finally {
             out.close();
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -166,8 +162,10 @@ public class FighterServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -179,8 +177,9 @@ public class FighterServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
