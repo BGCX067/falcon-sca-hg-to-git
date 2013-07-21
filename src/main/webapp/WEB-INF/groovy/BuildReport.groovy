@@ -10,8 +10,12 @@ import org.apache.commons.lang.StringEscapeUtils
 
 def now = new DateTime()
 FighterDAO dao = new FighterDAO()
-def kingdom = "Calontir" 
+def kingdom = "Calontir"
 Fighter user = dao.getFighterByGoogleId(params["user.googleid"])
+if(user == null) {
+    logger.BuildReport.error "Report failed no user found for " + params["user.googleId"]
+    return // no
+}
 logger.BuildReport.info "Generating report for ${user.scaName}"
 def ccs = params["Email Cc"]?.split(",")
 if(!ccs) {
@@ -59,9 +63,9 @@ namespace.of(kingdom.toLowerCase()) {
 	reportInfo.marshalName = user?.scaName
 	reportInfo.marshalId = user?.fighterId
 	reportInfo.googleId = user?.googleId
-	
+
 	def reportInfoId = reportInfo.save()
-	
+
 	params.keySet().each {
 		def reportParams = new Entity("ReportParams")
 		reportParams.reportKey = reportInfoId
@@ -72,21 +76,21 @@ namespace.of(kingdom.toLowerCase()) {
 	}
 }
 
-//backends.run { 
+//backends.run {
 
-StringWriter writer = new StringWriter()  
-def build = new MarkupBuilder(writer)  
-build.html{  
-	head{  
+StringWriter writer = new StringWriter()
+def build = new MarkupBuilder(writer)
+build.html{
+	head{
 		title('Marshal Report')
-		style(type:"text/css", '''  
+		style(type:"text/css", '''
 			.sect_title {
 				text-decoration:underline;
 			}
 			.sect_body {
 			}
 			''')
-	}  
+	}
 	body {
 		h1 "Marshal Report"
 
@@ -172,7 +176,7 @@ build.html{
 }
 
 logger.BuildReport.info "Sending report for ${params["Report Type"]}: to ${to}, from ${from}, cc ${ccs}"
-	
+
 mail.send from: from,
 to: to,
 cc: ccs,

@@ -125,7 +125,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<String, Object>();
         // get application version
-        iMap.put("appversion", "1.2.3");
+        iMap.put("appversion", "1.2.4");
 
         // get from blob
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -218,7 +218,6 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
                 }
             }
         }
-
 
         Queue queue = QueueFactory.getDefaultQueue();
         TaskOptions to = withUrl("/BuildReport.groovy");
