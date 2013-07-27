@@ -1,7 +1,3 @@
-import org.sca.calontir.cmpe.user.Security
-import org.sca.calontir.cmpe.user.SecurityFactory
-import org.sca.calontir.cmpe.dto.Fighter
-import org.sca.calontir.cmpe.db.FighterDAO
 import org.sca.calontir.cmpe.utils.MarshalUtils
 import org.sca.calontir.cmpe.common.*
 import com.google.appengine.api.blobstore.BlobKey
@@ -9,13 +5,11 @@ import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
 
-Security security = SecurityFactory.getSecurity()
-
-// Remove the dao, it will not be able to scan the whole database anymore.
-// also, only return active fighters. Inactive will have another getter.
-dao = new FighterDAO()
-
-fighters = dao.getFighters()
+logger.StoreDatabase.info "Storing database"
+def fighters = datastore.execute {
+    select all from Fighter
+    where status != "DELETED"
+}
 
 def file = files.createNewBlobFile("text/json", "fighters.json")
 
@@ -23,17 +17,30 @@ def file = files.createNewBlobFile("text/json", "fighters.json")
 def json = new groovy.json.JsonBuilder()
 
 def mapList = []
-fighters.each {
-	if(it.status != FighterStatus.DELETED) {
-		def fmap = [:]
-		fmap.scaName = it.scaName
-		fmap.id = it.fighterId
-		fmap.authorizations = MarshalUtils.getAuthsAsString(it.authorization)
-		fmap.group = it.scaGroup ? it.scaGroup.groupName : "Unknown or Out of Kingdom"
-		fmap.status = it.status
-        fmap.role = it.role ?  it.role : "USER"
-		mapList << fmap
-	}
+fighters.each { fighter ->
+    def fmap = [:]
+    fmap.scaName = fighter.scaName
+    fmap.id = fighter.key.id
+    def authorizations = datastore.execute {
+        select all from Authorization
+        ancestor fighter.key
+    }
+    def auths = []
+    authorizations.each { a ->
+        def auth = new org.sca.calontir.cmpe.dto.Authorization()
+        def authType = a.authType.get()
+        auth.code = authType.code
+        auth.description = authType.description
+        auth.date = a.date
+        auth.orderValue = authType.orderValue
+        auths << auth
+    }
+    fmap.authorizations = MarshalUtils.getAuthsAsString(auths)
+    def group = fighter.scaGroup.get()
+    fmap.group = group.groupName
+    fmap.status = fighter.status
+    fmap.role = fighter.role ?  fighter.role : "USER"
+    mapList << fmap
 }
 
 def now = new Date()
