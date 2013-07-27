@@ -43,10 +43,10 @@ public class FighterServlet extends HttpServlet {
             throws ServletException, IOException {
         Security security = SecurityFactory.getSecurity();
 
-        FighterDAO dao = new FighterDAO();
+        final FighterDAO dao = new FighterDAO();
 
-        String fighterIdStr = request.getParameter("fighterId");
-        int fighterId = (fighterIdStr == null || fighterIdStr.equalsIgnoreCase("null")) ? 0 : Integer.parseInt(fighterIdStr);
+        final String fighterIdStr = request.getParameter("fighterId");
+        final long fighterId = (fighterIdStr == null || fighterIdStr.equalsIgnoreCase("null")) ? 0 : Long.parseLong(fighterIdStr);
         Fighter fighter;
         if (fighterId > 0) {
             String mode = request.getParameter("mode");
@@ -66,13 +66,9 @@ public class FighterServlet extends HttpServlet {
                 request.setAttribute("mode", mode);
                 request.setAttribute("fighter", fighter);
                 request.setAttribute("uimessage", fighter.getScaName() + " saved");
-//                this.getServletContext().getRequestDispatcher("/fighter.jsp").
-//                        include(request, response);
             } else if (mode.equals("deleteFighter")) {
                 dao.deleteFighter(fighter.getFighterId());
                 request.setAttribute("uimessage", fighter.getScaName() + " deleted");
-//                this.getServletContext().getRequestDispatcher("/index.jsp").
-//                        include(request, response);
             } else if (mode.equals("printFighter")) {
                 Fighter f = dao.getFighter(fighter.getFighterId());
                 ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
@@ -95,7 +91,6 @@ public class FighterServlet extends HttpServlet {
                         f.getScaName().replaceAll(" ", "_"), today, today, today));
                 response.setContentType("application/pdf");
                 response.setContentLength(baosPDF.size());
-                System.out.println(response.toString());
                 ServletOutputStream sos = response.getOutputStream();
                 baosPDF.writeTo(sos);
                 sos.flush();
@@ -103,8 +98,6 @@ public class FighterServlet extends HttpServlet {
             } else {
                 request.setAttribute("mode", mode);
                 request.setAttribute("fighter", fighter);
-//                this.getServletContext().getRequestDispatcher("/fighter.jsp").
-//                        include(request, response);
             }
         } else {
             fighter = FighterUpdater.fromRequest(request, new Fighter());
@@ -118,13 +111,9 @@ public class FighterServlet extends HttpServlet {
                 request.setAttribute("mode", "add");
                 request.setAttribute("error", ex.getMessage());
                 request.setAttribute("fighter", fighter);
-//                this.getServletContext().getRequestDispatcher("/fighter.jsp").
-//                        include(request, response);
             }
             if (success) {
                 request.setAttribute("uimessage", fighter.getScaName() + " added");
-//                this.getServletContext().getRequestDispatcher("/index.jsp").
-//                        include(request, response);
             }
         }
 

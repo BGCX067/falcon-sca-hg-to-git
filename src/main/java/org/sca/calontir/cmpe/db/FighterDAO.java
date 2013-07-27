@@ -30,10 +30,12 @@ import org.sca.calontir.cmpe.dto.Phone;
  */
 public class FighterDAO {
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    private FighterCache fCache = FighterCache.getInstance();
+    final DatastoreService datastore;
+    final private FighterCache fCache;
 
     public FighterDAO() {
+        this.datastore = DatastoreServiceFactory.getDatastoreService();
+        this.fCache = FighterCache.getInstance();
     }
 
     public Fighter getFighter(long fighterId) {
@@ -260,7 +262,6 @@ public class FighterDAO {
         final Query phoneQuery = new Query("Phone").setAncestor(key);
         List<Entity> phoneEntities = datastore.prepare(phoneQuery).asList(FetchOptions.Builder.withDefaults());
         savePhone(fighter, key, phoneEntities);
-
 
         final Query emailQuery = new Query("Email").setAncestor(key);
         final List<Entity> emailEntities = datastore.prepare(emailQuery).asList(FetchOptions.Builder.withDefaults());

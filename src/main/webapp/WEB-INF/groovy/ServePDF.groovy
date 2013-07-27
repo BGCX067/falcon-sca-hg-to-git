@@ -12,7 +12,7 @@ Entity fighter = new Entity("Fighter");
 fighter << params
 
 def dao = new FighterDAO()
-def f = dao.getFighter(fighter.fighterId.toInteger())
+def f = dao.getFighter(fighter.fighterId.toLong())
 def startDate
 def endDate
 
@@ -44,8 +44,8 @@ try {
 	throw new IOException("Error building the cards", ex)
 }
 
-response.addHeader("Content-disposition", "attachment; filename=FighterCard " + 
-	f.getScaName() + "-" + String.format('%tF', new Date()) + ".pdf")
+response.addHeader("Content-Disposition", String.format("attachment;filename=\"FighterCard_%s%ty%tm%td.pdf\"",
+        f.getScaName().replaceAll(" ", "_"), today, today, today));
 
 response.contentType = "application/pdf"
 response.contentLength = baosPDF.size()

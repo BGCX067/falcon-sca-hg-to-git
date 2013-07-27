@@ -4,7 +4,7 @@ To setup or upgrade the appengine environment, run mvn gae:unpack
 
 Maven should work with your favorite IDE with the correct plugin.
 
-To run the project locally run mvn gae:run (or mvn clean gae:run).
+To run the project locally run mvn appengine:devserver (or mvn clean appengine:devserver).
 
 After running the first time, or after a clean, access the pages (in order).
 
@@ -13,4 +13,8 @@ http://localhost:8080/StoreDatabase.groovy
 http://localhost:8080/
 
 
-If you are having problems with the service freezing when loading the default page, load http://localhost:8080/RehydrateDatabase.groovy
+
+Use Maven's prepare to update the server and the source repository.
+mvn -Dusername=<repository-uid> -Dpassword=<repository-pw> release:prepare
+mvn release:perform
+
