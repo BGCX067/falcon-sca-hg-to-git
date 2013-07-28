@@ -1,10 +1,12 @@
 //defaultQueue.add countdownMillis: 1000, url: "/StoreDatabase.groovy",
 //		taskName: "storeDatabase",
 //		method: 'GET', retryOptions: RetryOptions.Builder.withDefaults()
+import com.google.appengine.api.backends.BackendServiceFactory
 
 defaultQueue << [
-	countdownMillis: 1000, url: "adminb.localhost:8080/BackupData.groovy",
+	countdownMillis: 1000, url: "/BackupData.groovy",
 	taskName: "backup" + String.format('%tY%<tm%<td%<tH%<tM%<tS', new Date()),
+    headers: ["Host": BackendServiceFactory.getBackendService().getBackendAddress("adminb")],
 	method: 'GET',
 	retryOptions: [
 		taskRetryLimit: 1,

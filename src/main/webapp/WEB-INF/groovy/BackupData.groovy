@@ -1,8 +1,6 @@
+import org.sca.calontir.cmpe.utils.MarshalUtils
 import org.sca.calontir.cmpe.user.Security
 import org.sca.calontir.cmpe.user.SecurityFactory
-import org.sca.calontir.cmpe.dto.Fighter
-import org.sca.calontir.cmpe.db.FighterDAO
-import org.sca.calontir.cmpe.db.ReportDAO
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.blobstore.BlobKey
 import com.google.appengine.api.datastore.*
@@ -37,31 +35,38 @@ if(runToday) {
 
 Security security = SecurityFactory.getSecurity()
 
-// Remove the dao, it will not be able to scan the whole database anymore.
-// also, only return active fighters. Inactive will have another getter.
-dao = new FighterDAO()
-
-fighters = dao.getFighters()
+def fightersInterater = datastore.iterate {
+    select all from Fighter
+    restart automatically
+}
 
 def mapList = []
-fighters.each { f ->
+fightersInterater.each { f ->
 	def fmap = [:]
-	fmap.fighterId = f.fighterId
+	fmap.fighterId = f.key.id
 	fmap.scaName = f.scaName
 	fmap.scaMemberNo = f.scaMemberNo
 	fmap.modernName = f.modernName
 	fmap.dateOfBirth = f.dateOfBirth
 	fmap.googleId = f.googleId
 	def emailList = []
-	f.email.each {email ->
+    def emails = datastore.execute {
+        select all from 'Email'
+        ancestor f.key
+    }
+	emails.each {email ->
 		def emailMap = [:]
 		emailMap.emailAddress = email.emailAddress
 		emailMap.type = email.type
 		emailList << emailMap
 	}
 	fmap.email = emailList
+    def addresses = datastore.execute {
+        select all from Address
+        ancestor f.key
+    }
 	def addressList = []
-	f.address.each { address->
+	addresses.each { address->
 		def addressMap = [:]
 		addressMap.address1 = address.address1
 		addressMap.address2 = address.address2
@@ -73,8 +78,12 @@ fighters.each { f ->
 		addressList << addressMap
 	}
 	fmap.address = addressList
+    def phones = datastore.execute {
+        select all from Phone
+        ancestor f.key
+    }
 	def phoneList = []
-	f.phone.each {phone ->
+	phones.each {phone ->
 		def phoneMap = [:]
 		phoneMap.phoneNumber = phone.phoneNumber
 		phoneMap.type = phone.type
@@ -82,18 +91,26 @@ fighters.each { f ->
 	}
 	fmap.phone = phoneList
 	def authList = []
-	f.authorization.each { auth ->
+    def authorizations = datastore.execute {
+        select all from Authorization
+        ancestor f.key
+    }
+	authorizations.each { auth ->
 		def authMap = [:]
-		authMap.code = auth.code
-		authMap.description = auth.description
+        def authType = auth.authType.get()
+		authMap.code = authType.code
+		authMap.description = authType.description
 		authMap.date = auth.date
+        authMap.orderValue = authType.orderValue
 		authList << authMap
 	}
 	fmap.authorization = authList
-	if(f.scaGroup)
-    fmap.group = f.scaGroup.groupName
-	else
-    fmap.group = "Unknown or Out of Kingdom"
+	if(f.scaGroup) {
+        def group = f.scaGroup.get()
+        fmap.group = group.groupName
+    } else {
+        fmap.group = "Unknown or Out of Kingdom"
+    }
 	fmap.role = f.role
 	fmap.status = f.status
 	fmap.treaty = f.treaty?.name
@@ -101,8 +118,9 @@ fighters.each { f ->
 }
 def reportList = []
 namespace.of("calontir") {
-	dao = new ReportDAO();
-	reports = dao.select()
+    def reports = datastore.execute {
+        select all from Report
+    }
 	reports.each { r ->
 		def rmap = [:]
 		rmap.id = r.id
@@ -149,6 +167,14 @@ namespace.of("system") {
 	sysTable.save()
 
 	def lastbackupKey = "calontir.lastbackup"
+    query = new Query("properties")
+	query.addFilter("name", Query.FilterOperator.EQUAL, lastbackupKey)
+	preparedQuery = datastore.prepare(query)
+	entities = preparedQuery.asList( withDefaults() )
+	entities.each {
+		it.delete()
+	}
+
 	sysTable = new Entity("properties")
 	sysTable.name = lastbackupKey
 	sysTable.property = new Date().time
