@@ -6,9 +6,10 @@ import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
 
 logger.StoreDatabase.info "Storing database"
-def fighters = datastore.execute {
+def fighters = datastore.iterate {
     select all from Fighter
     where status != "DELETED"
+    restart automatically
 }
 
 def file = files.createNewBlobFile("text/json", "fighters.json")
