@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -30,6 +31,46 @@ import org.sca.calontir.cmpe.common.UserRoles;
  * @author rikscarborough
  */
 public class Activities extends BaseReportPage {
+
+    private class ActiveFighter extends Composite {
+
+        public ActiveFighter() {
+            Integer retVal = 0;
+            List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
+            FighterInfo userInfo = LookupController.getInstance().getFighter(security.getLoginInfo().getFighterId());
+            for (FighterInfo fli : fighterList) {
+                if (fli.getGroup().equals(userInfo.getGroup())) {
+                    ++retVal;
+                }
+            }
+            initWidget(new Label(retVal.toString()));
+            addReportInfo("Active Fighters", retVal.toString());
+        }
+    }
+
+    private class MinorFighters extends Composite {
+
+        public MinorFighters() {
+            FighterInfo userInfo = LookupController.getInstance().getFighter(security.getLoginInfo().getFighterId());
+            final Label minors = new Label();
+
+            FighterServiceAsync fighterService = GWT.create(FighterService.class);
+            fighterService.getMinorTotal(userInfo.getGroup(), new AsyncCallback<Integer>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    log.severe("getMinorTotal: " + caught.getMessage());
+                }
+
+                @Override
+                public void onSuccess(Integer result) {
+                    minors.setText(result.toString());
+                    addReportInfo("Minor Fighters", result.toString());
+                }
+            });
+
+            initWidget(minors);
+        }
+    }
 
     private static final Logger log = Logger.getLogger(Activities.class.getName());
     final private Security security = SecurityFactory.getSecurity();
@@ -61,37 +102,6 @@ public class Activities extends BaseReportPage {
         activities.addKeyPressHandler(new RequiredFieldKeyPressHandler("Activities"));
 
         add(bk);
-    }
-
-    private void updateActiveFighters(TextBox target) {
-        Integer retVal = 0;
-        List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
-        FighterInfo userInfo = LookupController.getInstance().getFighter(security.getLoginInfo().getFighterId());
-        for (FighterInfo fli : fighterList) {
-            if (fli.getGroup().equals(userInfo.getGroup())) {
-                ++retVal;
-            }
-        }
-        target.setText(retVal.toString());
-        addReportInfo("Active Fighters", retVal.toString());
-    }
-
-    private void updateMinorFighters(final TextBox target) {
-        FighterInfo userInfo = LookupController.getInstance().getFighter(security.getLoginInfo().getFighterId());
-
-        FighterServiceAsync fighterService = GWT.create(FighterService.class);
-        fighterService.getMinorTotal(userInfo.getGroup(), new AsyncCallback<Integer>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                log.severe("getMinorTotal: " + caught.getMessage());
-            }
-
-            @Override
-            public void onSuccess(Integer result) {
-                target.setText(result.toString());
-                addReportInfo("Minor Fighters", result.toString());
-            }
-        });
     }
 
     @Override
@@ -182,19 +192,13 @@ public class Activities extends BaseReportPage {
             authFightersLabel.setText("Number of Authorized Fighters: ");
             persInfo.add(authFightersLabel);
 
-            TextBox authFighters = new TextBox();
-            authFighters.setReadOnly(true);
-            persInfo.add(authFighters);
-            updateActiveFighters(authFighters);
+            persInfo.add(new ActiveFighter());
 
             Label minorFightersLabel = new Label();
             minorFightersLabel.setText("Number of Minor Fighters: ");
             persInfo.add(minorFightersLabel);
 
-            TextBox minorFighters = new TextBox();
-            minorFighters.setReadOnly(true);
-            persInfo.add(minorFighters);
-            updateMinorFighters(minorFighters);
+            persInfo.add(new MinorFighters());
         }
     }
 
