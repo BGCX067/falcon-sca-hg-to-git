@@ -17,8 +17,8 @@
     </scm>
 
     <properties>
-        <appengine.app.version>1-2-6</appengine.app.version>
-        <appengine.target.version>1.8.2</appengine.target.version>
+        <appengine.app.version>1-2-7</appengine.app.version>
+        <appengine.target.version>1.8.3</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
         <gwt.version>2.5.1</gwt.version>
@@ -229,7 +229,7 @@
                     <!-- TODO This should help running GAE stuff in hosted mode (when gwt-maven-plugin-1.2 is released, see http://jira.codehaus.org/browse/MGWT-112) -->
                     <server>com.google.appengine.tools.development.gwt.AppEngineLauncher </server>
                     <runTarget>/index.jsp</runTarget>
-                    <style>DETAILED</style>
+                    <style>OBF</style>
                     <webXml>war/WEB-INF/web.xml</webXml>
                     <!-- this parameter is VERY important with automatic mode - has to match the version in your declared deps -->
                     <!-- if this is set incorrect (not a match), or left out (default is 1.5.2 for 2.0-beta23) you will have mysterious errors -->
