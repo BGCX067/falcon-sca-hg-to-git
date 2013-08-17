@@ -24,7 +24,6 @@
         <gwt.version>2.5.1</gwt.version>
         <gaelyk.version>2.0</gaelyk.version>
         <gwt.style>OBF</gwt.style>
-        <datanucleus.version>1.1.5</datanucleus.version>
     </properties>
 
     <dependencies>
@@ -50,13 +49,6 @@
             <artifactId>itextpdf</artifactId>
             <version>5.4.0</version>
             <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-core</artifactId>
-            <version>${datanucleus.version}</version>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
