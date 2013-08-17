@@ -24,12 +24,12 @@ public class CardMaker {
     private static Font smallNormalFont = new Font(Font.FontFamily.TIMES_ROMAN, 10f, Font.NORMAL);
     private static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 8f, Font.NORMAL);
     private static Font smallerFont = new Font(Font.FontFamily.TIMES_ROMAN, 6f, Font.NORMAL);
-	private DateTime startDate;
-	private DateTime endDate;
+    private DateTime startDate;
+    private DateTime endDate;
 
     public void build(final OutputStream os, final List<Fighter> data, final DateTime startDate, final DateTime endDate) throws Exception {
-		this.startDate = startDate;
-		this.endDate = endDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document document = new Document(PageSize.LETTER);
         PdfWriter writer = PdfWriter.getInstance(document, baos);
@@ -100,7 +100,7 @@ public class CardMaker {
         Rectangle size = document.getPageSize();
         PdfPTable table = new PdfPTable(1);
         PdfPCell cell;
-		float padding = 65.5f;
+        float padding = 65.5f;
 
         table.setTotalWidth(size.getRight());
         cell = new PdfPCell(new Phrase("\n\n\n\n\n\n", largFont));
@@ -164,16 +164,16 @@ public class CardMaker {
 
         try {
             Image sig = loadSignature();
-			float orgHeight = sig.getHeight();
-			float percent = (33/orgHeight)*100;
-			sig.scalePercent(percent);
+            float orgHeight = sig.getHeight();
+            float percent = (33 / orgHeight) * 100;
+            sig.scalePercent(percent);
             cell = new PdfPCell(sig);
             cell.setBorder(Rectangle.NO_BORDER);
             cell.setPaddingLeft(padding);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-			cell.setPaddingBottom(0);
-			cell.setBorderWidthBottom(0);
-			cell.setFixedHeight(33);
+            cell.setPaddingBottom(0);
+            cell.setBorderWidthBottom(0);
+            cell.setFixedHeight(33);
             table.addCell(cell);
         } catch (BadElementException ex) {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
@@ -190,7 +190,6 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         table.addCell(cell);
 
-
         document.add(table);
     }
 
@@ -201,7 +200,7 @@ public class CardMaker {
         PdfPCell cell;
 
         // Back of card
-        PdfPTable back = new PdfPTable(3); 
+        PdfPTable back = new PdfPTable(3);
         back.setWidths(new float[]{1, 3, 1});  //the middle number controls the QR code size
         back.setTotalWidth(144);
         Paragraph p = new Paragraph();
@@ -216,11 +215,11 @@ public class CardMaker {
         back.addCell(cell);
 
         PdfPTable middleTable = new PdfPTable(2);
-		middleTable.setWidths(new int[]{ 3, 2 }); 
-		
-		PdfPCell innerCell = new PdfPCell();
-		innerCell.setNoWrap(false);   //true
-		innerCell.setVerticalAlignment(Element.ALIGN_TOP);
+        middleTable.setWidths(new int[]{3, 2});
+
+        PdfPCell innerCell = new PdfPCell();
+        innerCell.setNoWrap(false);   //true
+        innerCell.setVerticalAlignment(Element.ALIGN_TOP);
 
         p = new Paragraph();
         if (StringUtils.isBlank(fighter.getScaName())) {
@@ -229,14 +228,14 @@ public class CardMaker {
             p.add(new Phrase(String.format("\nSCA Name: %s\n", fighter.getScaName()), smallNormalFont));
         }
         p.add(new Phrase(String.format("Modern Name: %s\n", fighter.getModernName()), smallNormalFont));
-        if(MarshalUtils.isMinor(fighter)) {
+        if (MarshalUtils.isMinor(fighter)) {
             p.add(new Phrase(String.format("Group: %s  Minor X\n", fighter.getScaGroup().getGroupName()), smallNormalFont));
         } else {
             p.add(new Phrase(String.format("Group: %s\n", fighter.getScaGroup().getGroupName()), smallNormalFont));
         }
-		innerCell.setPhrase(p);
-		innerCell.setBorder(Rectangle.NO_BORDER);
-		middleTable.addCell(innerCell);
+        innerCell.setPhrase(p);
+        innerCell.setBorder(Rectangle.NO_BORDER);
+        middleTable.addCell(innerCell);
 
         StringBuilder sb = new StringBuilder(fighter.getScaName());
         sb.append(" - ");
@@ -247,16 +246,16 @@ public class CardMaker {
             }
         }
 
-		innerCell = new PdfPCell();
+        innerCell = new PdfPCell();
         BarcodeQRCode qrcode = new BarcodeQRCode(sb.toString(), 1, 1, null);
         Image img = qrcode.getImage();
         img.setAlignment(Image.RIGHT);
-		innerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-		innerCell.setBorder(Rectangle.NO_BORDER);
-		innerCell.setPadding(0f);
-		innerCell.setPaddingRight(1.5f);
+        innerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        innerCell.setBorder(Rectangle.NO_BORDER);
+        innerCell.setPadding(0f);
+        innerCell.setPaddingRight(1.5f);
         innerCell.setImage(img);
-		middleTable.addCell(innerCell);
+        middleTable.addCell(innerCell);
 
         cell = new PdfPCell(middleTable);
         cell.setBorder(Rectangle.TOP + Rectangle.BOTTOM);
@@ -266,7 +265,7 @@ public class CardMaker {
         back.addCell(cell);
 
         cell = new PdfPCell(new Phrase("The Society for Creative Anachronism, Inc\nKingdom of Calontir\nCombat Authorization Card", smallFont));
-		cell.setExtraParagraphSpace(1.5f);
+        cell.setExtraParagraphSpace(1.5f);
         cell.setBorder(Rectangle.BOTTOM + Rectangle.TOP + Rectangle.RIGHT);
         cell.setRotation(-90);
         cell.setFixedHeight(50.0f);
@@ -274,45 +273,42 @@ public class CardMaker {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         back.addCell(cell);
 
-		table.addCell(back);
-
+        table.addCell(back);
 
         // Front of card
         PdfPTable front = new PdfPTable(4);
         front.setTotalWidth(144);
 
         PdfPTable headerTable = new PdfPTable(3);
-		headerTable.setWidths(new int[]{ 1, 4, 1 });
+        headerTable.setWidths(new int[]{1, 4, 1});
 
-		innerCell = new PdfPCell();
+        innerCell = new PdfPCell();
         try {
             Image calontrava = loadImage("calontrava_black.gif");
-			calontrava.setAlignment(Image.RIGHT | Image.TEXTWRAP);
-			//calontrava.setAbsolutePosition(350, 90);
-			calontrava.scaleToFit(40f, 40f);
-			innerCell.addElement(calontrava);
-			innerCell.setBorder(Rectangle.NO_BORDER);
-			headerTable.addCell(innerCell);
-        } catch (BadElementException ex) {
-            Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+            calontrava.setAlignment(Image.RIGHT | Image.TEXTWRAP);
+            //calontrava.setAbsolutePosition(350, 90);
+            calontrava.scaleToFit(40f, 40f);
+            innerCell.addElement(calontrava);
+            innerCell.setBorder(Rectangle.NO_BORDER);
+            headerTable.addCell(innerCell);
+        } catch (BadElementException | IOException ex) {
             Logger.getLogger(CardMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-		innerCell = new PdfPCell(new Phrase("Kingdom of Calontir\nFighter Authorization Card\n\n", smallFont));
-		innerCell.setExtraParagraphSpace(1.5f);
+        innerCell = new PdfPCell(new Phrase("Kingdom of Calontir\nFighter Authorization Card\n\n", smallFont));
+        innerCell.setExtraParagraphSpace(1.5f);
         innerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         innerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		innerCell.setBorder(Rectangle.NO_BORDER);
-		headerTable.addCell(innerCell);
-
-		innerCell = new PdfPCell();
-		innerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-		innerCell.setBorder(Rectangle.NO_BORDER);
-		innerCell.addElement(new Phrase());
+        innerCell.setBorder(Rectangle.NO_BORDER);
         headerTable.addCell(innerCell);
 
-		cell = new PdfPCell(headerTable);
+        innerCell = new PdfPCell();
+        innerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        innerCell.setBorder(Rectangle.NO_BORDER);
+        innerCell.addElement(new Phrase());
+        headerTable.addCell(innerCell);
+
+        cell = new PdfPCell(headerTable);
         cell.setRotation(90);
         cell.setBorder(Rectangle.TOP + Rectangle.LEFT + Rectangle.BOTTOM);
         cell.setFixedHeight(250.0f);
@@ -327,7 +323,7 @@ public class CardMaker {
         p.add(new Phrase(String.format("Date Issued: %s  Expires: %s\n", startDate.toString("MM/dd/yyyy"), endDate.toString("MM/dd/yyyy")), smallFont));
         p.add(new Phrase(String.format("Issuing Official: %s\n", "Sir Gustav Jameson"), smallFont));
         cell = new PdfPCell(p);
-		//cell.setExtraParagraphSpace(1.5f);
+        //cell.setExtraParagraphSpace(1.5f);
         cell.setBorder(Rectangle.TOP + Rectangle.BOTTOM);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -351,9 +347,8 @@ public class CardMaker {
         cell.setRotation(90);
         front.addCell(cell);
 
+        table.addCell(front);
 
-		table.addCell(front);
-
-        table.writeSelectedRows(0, -1, 200, 328, cb);
+        table.writeSelectedRows(0, -1, 200, 300, cb);
     }
 }

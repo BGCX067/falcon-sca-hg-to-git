@@ -61,6 +61,23 @@ marshal.description = "Marshal"
 marshal.orderValue = ++i
 marshal.save()
 
+def ct = new Entity("AuthType")
+ct.code = "HR/CT"
+ct.description = "Heavy Rapier/Cut and Thrust"
+ct.orderValue = ++i
+ct.save()
+
+def ca = new Entity("AuthType")
+ca.code = "CA"
+ca.description = "Combat Archery"
+ca.orderValue = ++i
+ca.save()
+
+def se = new Entity("AuthType")
+se.code = "SE"
+se.description = "Siege Engines"
+se.orderValue = ++i
+se.save()
 
 def json = """
 """
