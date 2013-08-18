@@ -229,7 +229,7 @@
                     <!-- TODO This should help running GAE stuff in hosted mode (when gwt-maven-plugin-1.2 is released, see http://jira.codehaus.org/browse/MGWT-112) -->
                     <server>com.google.appengine.tools.development.gwt.AppEngineLauncher </server>
                     <runTarget>/index.jsp</runTarget>
-                    <style>OBF</style>
+                    <style>${gwt.style}</style>
                     <webXml>war/WEB-INF/web.xml</webXml>
                     <!-- this parameter is VERY important with automatic mode - has to match the version in your declared deps -->
                     <!-- if this is set incorrect (not a match), or left out (default is 1.5.2 for 2.0-beta23) you will have mysterious errors -->
