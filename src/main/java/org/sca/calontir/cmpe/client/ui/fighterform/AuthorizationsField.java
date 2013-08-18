@@ -36,7 +36,7 @@ public class AuthorizationsField extends AbstractFieldWidget {
                 final CheckBox cb = new CheckBox(at.getCode());
                 cb.setFormValue(at.getCode());
                 cb.setName("authorization");
-                if (edit) {
+                if (fighter.getAuthorization() != null) {
                     for (Authorization a : fighter.getAuthorization()) {
                         if (a.getCode().equals(at.getCode())) {
                             cb.setValue(true);
