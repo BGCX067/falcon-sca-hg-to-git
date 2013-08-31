@@ -36,6 +36,13 @@ public class DataTransfer {
         fighter.setScaName((String) fighterEntity.getProperty("scaName"));
         fighter.setScaMemberNo((String) fighterEntity.getProperty("scaMemberNo"));
         fighter.setModernName((String) fighterEntity.getProperty("modernName"));
+        if (fighterEntity.hasProperty("kingdom")) {
+            try {
+                Kingdom kingdom = Kingdom.valueOf("kingdom");
+                fighter.setKingdom(kingdom);
+            } catch (IllegalArgumentException e) {
+            }
+        }
         if (fighterEntity.hasProperty("membershipExpires")) {
             Date expires = (Date) fighterEntity.getProperty("membershipExpires");
             if (expires != null) {
@@ -133,9 +140,9 @@ public class DataTransfer {
             }
         }
 
-        if (fighterEntity.hasProperty("status")) { 
+        if (fighterEntity.hasProperty("status")) {
             String status = (String) fighterEntity.getProperty("status");
-            if(status == null) { // for now set to Active
+            if (status == null) { // for now set to Active
                 fighter.setStatus(FighterStatus.ACTIVE);
             } else {
                 fighter.setStatus(FighterStatus.valueOf(status));
@@ -191,6 +198,9 @@ public class DataTransfer {
         entity.setProperty("scaName", fighter.getScaName());
         entity.setProperty("scaMemberNo", fighter.getScaMemberNo());
         entity.setProperty("modernName", fighter.getModernName());
+        if (fighter.getKingdom() != null) {
+            entity.setProperty("kingdom", fighter.getKingdom().toString());
+        }
         if (StringUtils.isNotBlank(fighter.getMembershipExpires())) {
             DateTime dt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(fighter.getMembershipExpires());
             entity.setProperty("membershipExpires", dt.toDate());

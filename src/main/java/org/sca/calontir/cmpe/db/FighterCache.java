@@ -1,6 +1,10 @@
 package org.sca.calontir.cmpe.db;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.dto.Fighter;
@@ -11,13 +15,13 @@ import org.sca.calontir.cmpe.dto.FighterListItem;
  * @author rik
  */
 public class FighterCache implements LocalCache {
-  // TODO: Realized that this is not threadsafe. Most methods hear have to be syncorized our we 
-  // are going to be handing different records because of race conditions.
+    // TODO: Realized that this is not threadsafe. Most methods hear have to be syncorized our we
+    // are going to be handing different records because of race conditions.
 
     final private static FighterCache _instance = new FighterCache();
-    private Map<Long, Fighter> _fighterMap = Collections.synchronizedMap(new HashMap<Long, Fighter>());
-    private Map<String, Long> _fighterByGoogleId = Collections.synchronizedMap(new HashMap<String, Long>());
-    private Map<Long, FighterListItem> _fighterListMap = Collections.synchronizedMap(new HashMap<Long, FighterListItem>());
+    private final Map<Long, Fighter> _fighterMap = Collections.synchronizedMap(new HashMap<Long, Fighter>());
+    private final Map<String, Long> _fighterByGoogleId = Collections.synchronizedMap(new HashMap<String, Long>());
+    private final Map<Long, FighterListItem> _fighterListMap = Collections.synchronizedMap(new HashMap<Long, FighterListItem>());
     private static DateTime lastUpdated = null;
 
     private FighterCache() {
@@ -92,7 +96,10 @@ public class FighterCache implements LocalCache {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Clear Not supported yet.");
+        _fighterMap.clear();
+        _fighterByGoogleId.clear();
+        _fighterListMap.clear();
+        lastUpdated = null;
     }
 
     @Override

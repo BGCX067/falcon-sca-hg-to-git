@@ -7,10 +7,12 @@ import java.io.Serializable;
  * @author rik
  */
 public class AuthType implements Serializable {
+
     private Long authTypeId;
     private String code;
     private String description;
-	private Long orderValue;
+    private Long orderValue;
+    private Kingdom kingdom;
 
     public Long getAuthTypeId() {
         return authTypeId;
@@ -36,12 +38,20 @@ public class AuthType implements Serializable {
         this.description = description;
     }
 
-	public Long getOrderValue() {
-		return orderValue;
-	}
+    public Long getOrderValue() {
+        return orderValue;
+    }
 
-	public void setOrderValue(Long orderValue) {
-		this.orderValue = orderValue;
-	}
-	
+    public void setOrderValue(Long orderValue) {
+        this.orderValue = orderValue;
+    }
+
+    public Kingdom getKingdom() {
+        return kingdom;
+    }
+
+    public void setKingdom(Kingdom kingdom) {
+        this.kingdom = kingdom;
+    }
+
 }

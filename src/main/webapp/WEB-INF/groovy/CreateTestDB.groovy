@@ -118,14 +118,12 @@ namespace.of("system") {
 	sysTable.save()
 }
 
-// add myself so I can use the system
+// add users
 def fighter = new Entity("Fighter")
-fighter.scaName = "Brendan Mac an tSaoir"
+fighter.scaName = "Sir Cardmarshal"
 fighter.scaMemberNo = "22222"
-fighter.modernName = "Rik Scarborough"
-fighter.googleId = "riksca@gmail.com"
-//fighter.authorization = [wsh.key, tw.key, ths.key, pa.key, sp.key, marshal.key]
-//fighter.email = ["riksca@gmail.com"]
+fighter.modernName = "Bob Somebody"
+fighter.googleId = "test@example.com"
 fighter.scaGroup = scaGroup.key
 fighter.role = UserRoles.CARD_MARSHAL.toString()
 fighter.status = "ACTIVE"
@@ -133,5 +131,57 @@ fighter.lastUpdated = new Date();
 
 fighter.save()
 
+def authEntity = new Entity("Authorization", fighter.key);
+authEntity.authType = wsh.key
+authEntity.date = new Date()
+authEntity.save()
+
+authEntity = new Entity("Authorization", fighter.key);
+authEntity.authType = tw.key
+authEntity.date = new Date()
+authEntity.save()
+
+def addressEntity = new Entity("Address", fighter.key)
+addressEntity.address1 = "123 Coast Street"
+addressEntity.city = "Coast City"
+addressEntity.postalCode = "123654"
+addressEntity.state = "Coast State"
+addressEntity.type = "Home"
+addressEntity.save()
+
+def emailEntity = new Entity("Email", fighter.key)
+emailEntity.emailAddress = "text@example.com"
+emailEntity.type = "Home"
+emailEntity.save()
+
+fighter = new Entity("Fighter")
+fighter.scaName = "Lord Fencer"
+fighter.scaMemberNo = "22222"
+fighter.modernName = "Bob Cutandthrust"
+fighter.googleId = "ct@example.com"
+fighter.scaGroup = scaGroup.key
+fighter.role = UserRoles.User.toString()
+fighter.status = "ACTIVE"
+fighter.lastUpdated = new Date();
+
+fighter.save()
+
+authEntity = new Entity("Authorization", fighter.key);
+authEntity.authType = ct.key
+authEntity.date = new Date()
+authEntity.save()
+
+addressEntity = new Entity("Address", fighter.key)
+addressEntity.address1 = "345 Here"
+addressEntity.city = "Somewhere City"
+addressEntity.postalCode = "123654"
+addressEntity.state = "Coast State"
+addressEntity.type = "Home"
+addressEntity.save()
+
+emailEntity = new Entity("Email", fighter.key)
+emailEntity.emailAddress = "ct@example.com"
+emailEntity.type = "Home"
+emailEntity.save()
 
 forward "/StoreDatabase.groovy"

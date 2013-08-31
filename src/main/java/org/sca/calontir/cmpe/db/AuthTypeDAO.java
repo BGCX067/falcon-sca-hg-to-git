@@ -25,13 +25,13 @@ public class AuthTypeDAO {
 
     public static class LocalCacheImpl extends LocalCacheAbImpl {
 
-        private static LocalCacheImpl _instance = new LocalCacheImpl();
+        private static final LocalCacheImpl _instance = new LocalCacheImpl();
 
         public static LocalCacheImpl getInstance() {
             return _instance;
         }
     }
-    static private LocalCacheImpl localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
+    private static final LocalCacheImpl localCache = (LocalCacheImpl) LocalCacheImpl.getInstance();
 
     public AuthType getAuthType(Key key) throws NotFoundException {
         AuthType authType = (AuthType) localCache.getValue(key.getId());

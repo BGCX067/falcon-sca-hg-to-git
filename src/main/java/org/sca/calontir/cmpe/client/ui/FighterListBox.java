@@ -158,9 +158,17 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                     return fli.getStatus();
                 }
             };
-            statusColumn.setSortable(false);
+            statusColumn.setSortable(true);
 
             table.addColumn(statusColumn, "Status");
+            columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
+            columnSortHandler.setComparator(groupColumn, new Comparator<FighterInfo>() {
+                @Override
+                public int compare(FighterInfo left, FighterInfo right) {
+                    return left.getStatus().compareTo(right.getStatus());
+                }
+            });
+            table.addColumnSortHandler(columnSortHandler);
         }
 
         final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<FighterInfo>();
@@ -188,7 +196,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                 }
             }
         });
-
 
         dataProvider.addDataDisplay(table);
 
