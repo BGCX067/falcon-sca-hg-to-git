@@ -2,17 +2,34 @@ package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import java.util.*;
+import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.SubmitButton;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+import java.util.Date;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterService;
@@ -24,7 +41,8 @@ import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.common.FighterStatus;
 import org.sca.calontir.cmpe.common.UserRoles;
-import org.sca.calontir.cmpe.dto.*;
+import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.dto.Note;
 
 /**
  * This class displays the fighter view/edit/add page. It contains the logic to submit the form itself and handle the
@@ -93,6 +111,10 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         final Hidden fighterId = new Hidden("fighterId");
         fighterId.setValue("0");
         fighterIdBoxPanel.add(fighterId);
+        final Hidden kingdom = new Hidden("kingdom");
+        kingdom.setValue(security.getLoginInfo().getKingdom().toString());
+        fighterIdBoxPanel.add(kingdom);
+        fighter.setKingdom(security.getLoginInfo().getKingdom());
 
         mode.setValue("add");
         fighterIdBoxPanel.add(mode);
@@ -114,15 +136,15 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         this.form = form;
     }
 
-    // TODO: All fields should update the local fighter variable if they change
-    // on both edit and add.
-    // Consider creating each object as a sperate widget to enclose the functionality.
     public void buildInfoEdit() {
         fighterIdBoxPanel.clear();
 
         final Hidden fighterId = new Hidden("fighterId");
         fighterId.setValue(fighter.getFighterId().toString());
         fighterIdBoxPanel.add(fighterId);
+        final Hidden kingdom = new Hidden("kingdom");
+        kingdom.setValue(fighter.getKingdom().toString());
+        fighterIdBoxPanel.add(kingdom);
 
         fighterIdBoxPanel.add(mode);
 
@@ -188,6 +210,9 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
         final Hidden fighterId = new Hidden("fighterId");
         fighterId.setValue(fighter.getFighterId() == null ? "0" : fighter.getFighterId().toString());
         fighterIdBoxPanel.add(fighterId);
+        final Hidden kingdom = new Hidden("kingdom");
+        kingdom.setValue(fighter.getKingdom().toString());
+        fighterIdBoxPanel.add(kingdom);
         fighterIdBoxPanel.add(mode);
 
         fighterIdBoxPanel.add(new InlineLabel("SCA Name:"));

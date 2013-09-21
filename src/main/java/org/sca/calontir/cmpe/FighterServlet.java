@@ -76,8 +76,8 @@ public class FighterServlet extends HttpServlet {
                 List<Fighter> flist = new ArrayList<>();
                 flist.add(f);
                 PropertiesDao propDao = new PropertiesDao();
-                String start = propDao.getProperty("calontir.validStart");
-                String end = propDao.getProperty("calontir.validEnd");
+                String start = propDao.getProperty(String.format("%s.validStart", f.getKingdom().toString()));
+                String end = propDao.getProperty(String.format("%s.validEnd", f.getKingdom().toString()));
                 DateTime startDt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(start);
                 DateTime endDt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(end);
                 try {
@@ -120,7 +120,6 @@ public class FighterServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            // /* TODO output your page here
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Fighter Servlet</title>");

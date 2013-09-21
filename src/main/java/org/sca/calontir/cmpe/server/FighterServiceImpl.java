@@ -4,8 +4,6 @@ import com.google.appengine.api.NamespaceManager;
 import com.google.appengine.api.backends.BackendServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -14,7 +12,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,12 +31,20 @@ import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.common.Kingdom;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.ReportDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.db.TableUpdatesDao;
-import org.sca.calontir.cmpe.dto.*;
+import org.sca.calontir.cmpe.dto.AuthType;
+import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.dto.FighterListItem;
+import org.sca.calontir.cmpe.dto.Report;
+import org.sca.calontir.cmpe.dto.ScaGroup;
+import org.sca.calontir.cmpe.dto.TableUpdates;
+import org.sca.calontir.cmpe.user.Security;
+import org.sca.calontir.cmpe.user.SecurityFactory;
 
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
 
@@ -61,7 +67,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
             retval.setUpdateInfo(true);
         }
 
-        List<FighterInfo> retValList = new ArrayList<FighterInfo>();
+        List<FighterInfo> retValList = new ArrayList<>();
         for (FighterListItem fli : fighters) {
             if (fli != null) {
                 FighterInfo info = new FighterInfo();
@@ -123,9 +129,12 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     @Override
     public Map<String, Object> initialLookup() {
         Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
-        Map<String, Object> iMap = new HashMap<String, Object>();
+        Map<String, Object> iMap = new HashMap<>();
         // get application version
         iMap.put("appversion", "1.2.7");
+
+        Security security = SecurityFactory.getSecurity();
+        Kingdom usersKingdom = security.getUser().getKingdom() == null ? Kingdom.getDefault() : security.getUser().getKingdom();
 
         // get from blob
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -134,7 +143,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         try {
             NamespaceManager.set("system");
 
-            String name = "calontir.snapshotkey";
+            String name = String.format("%s.snapshotkey", usersKingdom.toString());
             Query query = new Query("properties");
             query.setFilter(new Query.FilterPredicate("name", Query.FilterOperator.EQUAL, name));
             PreparedQuery preparedQuery = datastore.prepare(query);
@@ -144,7 +153,6 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
             NamespaceManager.set(namespace);
         }
         BlobKey blobKey = new BlobKey(blobKeyStr);
-        BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
         try {
             BlobstoreInputStream bis = new BlobstoreInputStream(blobKey);
             BufferedReader reader = new BufferedReader(new InputStreamReader(bis));
@@ -193,7 +201,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     public List<Fighter> getMinorFighters(String group) {
         FighterDAO fighterDao = new FighterDAO();
         List<Fighter> fList = fighterDao.getMinorCount();
-        List<Fighter> retList = new ArrayList<Fighter>();
+        List<Fighter> retList = new ArrayList<>();
         for (Fighter f : fList) {
             if (f.getScaGroup().getGroupName().equals(group)) {
                 retList.add(f);
@@ -235,8 +243,10 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     @Override
     public List<Report> getAllReports() {
         String namespace = NamespaceManager.get();
+        Security security = SecurityFactory.getSecurity();
+        Kingdom usersKingdom = security.getUser().getKingdom();
         try {
-            NamespaceManager.set("calontir");
+            NamespaceManager.set(usersKingdom.toString());
             ReportDAO dao = new ReportDAO();
             return dao.select();
         } finally {
@@ -247,8 +257,10 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     @Override
     public void deleteReport(Report report) {
         String namespace = NamespaceManager.get();
+        Security security = SecurityFactory.getSecurity();
+        Kingdom usersKingdom = security.getUser().getKingdom();
         try {
-            NamespaceManager.set("calontir");
+            NamespaceManager.set(usersKingdom.toString());
             ReportDAO dao = new ReportDAO();
             dao.delete(report);
         } finally {

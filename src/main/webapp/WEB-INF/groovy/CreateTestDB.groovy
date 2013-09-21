@@ -160,7 +160,7 @@ fighter.scaMemberNo = "22222"
 fighter.modernName = "Bob Cutandthrust"
 fighter.googleId = "ct@example.com"
 fighter.scaGroup = scaGroup.key
-fighter.role = UserRoles.User.toString()
+fighter.role = UserRoles.USER.toString()
 fighter.status = "ACTIVE"
 fighter.lastUpdated = new Date();
 

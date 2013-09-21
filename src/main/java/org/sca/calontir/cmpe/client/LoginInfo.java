@@ -5,6 +5,7 @@
 package org.sca.calontir.cmpe.client;
 
 import java.io.Serializable;
+import org.sca.calontir.cmpe.common.Kingdom;
 import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
@@ -21,6 +22,7 @@ public class LoginInfo implements Serializable {
     private String scaName;
     private UserRoles userRole;
     private long fighterId;
+    private Kingdom kingdom;
 
     public boolean isLoggedIn() {
         return loggedIn;
@@ -85,7 +87,13 @@ public class LoginInfo implements Serializable {
     public void setFighterId(long fighterId) {
         this.fighterId = fighterId;
     }
-    
-    
-    
+
+    public Kingdom getKingdom() {
+        return kingdom;
+    }
+
+    public void setKingdom(Kingdom kingdom) {
+        this.kingdom = kingdom;
+    }
+
 }

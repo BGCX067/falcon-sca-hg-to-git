@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.sca.calontir.cmpe.common.FighterStatus;
+import org.sca.calontir.cmpe.common.Kingdom;
 import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.NotFoundException;
@@ -37,10 +38,16 @@ public class DataTransfer {
         fighter.setScaMemberNo((String) fighterEntity.getProperty("scaMemberNo"));
         fighter.setModernName((String) fighterEntity.getProperty("modernName"));
         if (fighterEntity.hasProperty("kingdom")) {
-            try {
-                Kingdom kingdom = Kingdom.valueOf("kingdom");
-                fighter.setKingdom(kingdom);
-            } catch (IllegalArgumentException e) {
+            String kingdomValue = (String) fighterEntity.getProperty("kingdom");
+            if (StringUtils.isBlank(kingdomValue)) {
+                //For now, set all defaults to Calontir.
+                fighter.setKingdom(Kingdom.Calontir);
+            } else {
+                try {
+                    Kingdom kingdom = Kingdom.valueOf(kingdomValue);
+                    fighter.setKingdom(kingdom);
+                } catch (IllegalArgumentException e) {
+                }
             }
         }
         if (fighterEntity.hasProperty("membershipExpires")) {
@@ -200,6 +207,9 @@ public class DataTransfer {
         entity.setProperty("modernName", fighter.getModernName());
         if (fighter.getKingdom() != null) {
             entity.setProperty("kingdom", fighter.getKingdom().toString());
+        } else {
+            //TODO: Set defaults to Calontir
+            entity.setProperty("kingdom", Kingdom.Calontir.toString());
         }
         if (StringUtils.isNotBlank(fighter.getMembershipExpires())) {
             DateTime dt = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(fighter.getMembershipExpires());

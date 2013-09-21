@@ -4,6 +4,7 @@ import org.sca.calontir.cmpe.user.SecurityFactory
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.blobstore.BlobKey
 import com.google.appengine.api.datastore.*
+import org.sca.calontir.cmpe.common.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
 
@@ -37,6 +38,7 @@ Security security = SecurityFactory.getSecurity()
 
 def fightersInterater = datastore.iterate {
     select all from Fighter
+    where kingdom == Kingdom.Calontir.toString()
     restart automatically
 }
 
@@ -49,6 +51,7 @@ fightersInterater.each { f ->
 	fmap.modernName = f.modernName
 	fmap.dateOfBirth = f.dateOfBirth
 	fmap.googleId = f.googleId
+    fmap.kingdom = f.kingdom
 	def emailList = []
     def emails = datastore.execute {
         select all from 'Email'

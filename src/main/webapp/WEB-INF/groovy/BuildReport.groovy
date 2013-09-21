@@ -10,8 +10,8 @@ import org.apache.commons.lang.StringEscapeUtils
 
 def now = new DateTime()
 FighterDAO dao = new FighterDAO()
-def kingdom = "Calontir"
 Fighter user = dao.getFighterByGoogleId(params["user.googleid"])
+String kingdom = user.getKingdom().toString()
 if(user == null) {
     logger.BuildReport.error "Report failed no user found for " + params["user.googleId"]
     return // no

@@ -1,5 +1,6 @@
 package org.sca.calontir.cmpe.dto;
 
+import org.sca.calontir.cmpe.common.Kingdom;
 import java.io.Serializable;
 import java.util.List;
 import org.sca.calontir.cmpe.common.FighterStatus;
