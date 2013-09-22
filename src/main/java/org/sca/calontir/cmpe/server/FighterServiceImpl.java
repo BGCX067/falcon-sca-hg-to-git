@@ -12,7 +12,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +36,12 @@ import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.ReportDAO;
 import org.sca.calontir.cmpe.db.ScaGroupDAO;
 import org.sca.calontir.cmpe.db.TableUpdatesDao;
-import org.sca.calontir.cmpe.dto.*;
+import org.sca.calontir.cmpe.dto.AuthType;
+import org.sca.calontir.cmpe.dto.Fighter;
+import org.sca.calontir.cmpe.dto.FighterListItem;
+import org.sca.calontir.cmpe.dto.Report;
+import org.sca.calontir.cmpe.dto.ScaGroup;
+import org.sca.calontir.cmpe.dto.TableUpdates;
 
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
 
@@ -123,7 +128,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<>();
         // get application version
-        iMap.put("appversion", "1.2.7");
+        iMap.put("appversion", "1.2.8");
 
         // get from blob
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
