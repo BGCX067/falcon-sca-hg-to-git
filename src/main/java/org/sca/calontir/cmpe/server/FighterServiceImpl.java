@@ -4,8 +4,6 @@ import com.google.appengine.api.NamespaceManager;
 import com.google.appengine.api.backends.BackendServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -61,7 +59,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
             retval.setUpdateInfo(true);
         }
 
-        List<FighterInfo> retValList = new ArrayList<FighterInfo>();
+        List<FighterInfo> retValList = new ArrayList<>();
         for (FighterListItem fli : fighters) {
             if (fli != null) {
                 FighterInfo info = new FighterInfo();
@@ -123,7 +121,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     @Override
     public Map<String, Object> initialLookup() {
         Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
-        Map<String, Object> iMap = new HashMap<String, Object>();
+        Map<String, Object> iMap = new HashMap<>();
         // get application version
         iMap.put("appversion", "1.2.7");
 
@@ -144,7 +142,6 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
             NamespaceManager.set(namespace);
         }
         BlobKey blobKey = new BlobKey(blobKeyStr);
-        BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
         try {
             BlobstoreInputStream bis = new BlobstoreInputStream(blobKey);
             BufferedReader reader = new BufferedReader(new InputStreamReader(bis));
@@ -193,7 +190,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     public List<Fighter> getMinorFighters(String group) {
         FighterDAO fighterDao = new FighterDAO();
         List<Fighter> fList = fighterDao.getMinorCount();
-        List<Fighter> retList = new ArrayList<Fighter>();
+        List<Fighter> retList = new ArrayList<>();
         for (Fighter f : fList) {
             if (f.getScaGroup().getGroupName().equals(group)) {
                 retList.add(f);

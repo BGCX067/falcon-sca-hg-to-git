@@ -15,26 +15,24 @@ import org.sca.calontir.cmpe.dto.Fighter;
  */
 public class MinorField extends AbstractFieldWidget {
 
-	public MinorField(final Fighter fighter, final boolean edit) {
-		if (edit) {
-			initWidget(new Label(""));
-		} else {
-			if (fighter.getDateOfBirth() != null) {
-				Date d = DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getDateOfBirth());
-				initWidget(new Label(isMinor(d) ? "true" : "false"));
-			} else {
-				initWidget(new Label("false"));
-			}
-		}
+    public MinorField(final Fighter fighter, final boolean edit) {
+        if (edit) {
+            initWidget(new Label(""));
+        } else {
+            if (fighter.getDateOfBirth() != null) {
+                Date d = DateTimeFormat.getFormat("MM/dd/yyyy").parse(fighter.getDateOfBirth());
+                initWidget(new Label(isMinor(d) ? "true" : "false"));
+            } else {
+                initWidget(new Label("false"));
+            }
+        }
 
-	}
+    }
 
-	private boolean isMinor(Date dob) {
-		final Date now = new Date();
-		final Date targetDate = new Date(dob.getYear() + 18, dob.getMonth(), dob.getDate());
-		if (targetDate.after(now)) {
-			return true;
-		}
-		return false;
-	}
+    @SuppressWarnings(/* Required to use Date API in gwt */{"deprecation"})
+    private boolean isMinor(Date dob) {
+        final Date now = new Date();
+        final Date targetDate = new Date(dob.getYear() + 18, dob.getMonth(), dob.getDate());
+        return targetDate.after(now);
+    }
 }

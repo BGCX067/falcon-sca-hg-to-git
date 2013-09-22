@@ -12,7 +12,6 @@ public class AuthType implements Serializable {
     private String code;
     private String description;
     private Long orderValue;
-    private Kingdom kingdom;
 
     public Long getAuthTypeId() {
         return authTypeId;
@@ -45,13 +44,4 @@ public class AuthType implements Serializable {
     public void setOrderValue(Long orderValue) {
         this.orderValue = orderValue;
     }
-
-    public Kingdom getKingdom() {
-        return kingdom;
-    }
-
-    public void setKingdom(Kingdom kingdom) {
-        this.kingdom = kingdom;
-    }
-
 }

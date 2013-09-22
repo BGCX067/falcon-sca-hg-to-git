@@ -11,21 +11,22 @@ import org.sca.calontir.cmpe.dto.Email;
  * @author rik
  */
 public class EmailTag extends CMPExtendedTagSupport {
-    private List emails;
-    
+
+    private List<Email> emails;
+
     // local
     private Email email;
 
     @Override
     protected void init() {
-        List<Email> emailList = (List<Email>) emails;
-            email = (emailList == null || emailList.isEmpty()) ? null : emailList.get(0);
-            if (email == null) {
-                email = new Email();
-            }      
+        List<Email> emailList = emails;
+        email = (emailList == null || emailList.isEmpty()) ? null : emailList.get(0);
+        if (email == null) {
+            email = new Email();
+        }
     }
 
-    public void setEmails(List emails) {
+    public void setEmails(List<Email> emails) {
         this.emails = emails;
     }
 
@@ -36,7 +37,7 @@ public class EmailTag extends CMPExtendedTagSupport {
 
     @Override
     protected void doEdit(JspWriter out) throws IOException {
-         out.print("<input type=\"text\" name=\"email\"");
+        out.print("<input type=\"text\" name=\"email\"");
         out.print(" value=\"" + StringUtils.trimToEmpty(email.getEmailAddress()) + "\"");
         out.print(" size=\"40\"");
         out.print(" />");
@@ -45,7 +46,7 @@ public class EmailTag extends CMPExtendedTagSupport {
 
     @Override
     protected void doAdd(JspWriter out) throws IOException {
-         out.print("<input type=\"text\" name=\"email\"");
+        out.print("<input type=\"text\" name=\"email\"");
         out.print(" value=\"" + StringUtils.trimToEmpty(email.getEmailAddress()) + "\"");
         out.print(" size=\"40\"");
         out.print(" onfocus=\"if (this.value==this.defaultValue) this.value='';"

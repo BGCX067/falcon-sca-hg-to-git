@@ -27,7 +27,6 @@ public class Fighter implements Serializable {
     private FighterStatus status = FighterStatus.ACTIVE;
     private Treaty treaty;
     private Note note;
-    private Kingdom kingdom;
 
     public Address getPrimeAddress() {
         if (address == null || address.isEmpty()) {
@@ -176,14 +175,6 @@ public class Fighter implements Serializable {
 
     public void setTreaty(Treaty treaty) {
         this.treaty = treaty;
-    }
-
-    public Kingdom getKingdom() {
-        return kingdom;
-    }
-
-    public void setKingdom(Kingdom kingdom) {
-        this.kingdom = kingdom;
     }
 
     @Override

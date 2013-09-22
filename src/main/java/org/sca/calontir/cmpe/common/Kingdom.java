@@ -1,4 +1,4 @@
-package org.sca.calontir.cmpe.dto;
+package org.sca.calontir.cmpe.common;
 
 /**
  *

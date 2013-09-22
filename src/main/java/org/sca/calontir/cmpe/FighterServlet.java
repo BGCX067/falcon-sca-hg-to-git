@@ -120,7 +120,6 @@ public class FighterServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            // /* TODO output your page here
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Fighter Servlet</title>");
