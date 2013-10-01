@@ -191,11 +191,14 @@ public class FighterDAO {
 
     private List<Entity> getAllFightersAsOf(DateTime dt) {
         if (dt == null || dt.toDateMidnight().equals(new DateMidnight(1966, 3, 1))) {
+            Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting all fighters");
             return returnAllFighters();
         }
+        Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting fighters as of {0}", dt.toString());
         Query.Filter lastUpdatedFilter = new Query.FilterPredicate("lastUpdated", Query.FilterOperator.GREATER_THAN, dt.toDate());
         Query query = new Query("Fighter").setFilter(lastUpdatedFilter);
         List<Entity> fighters = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+        Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting {0} fighters ", fighters.size());
 
         return fighters;
     }

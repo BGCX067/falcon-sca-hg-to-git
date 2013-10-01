@@ -12,10 +12,25 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.sca.calontir.cmpe.client.ui.*;
+import org.sca.calontir.cmpe.client.ui.CalonBar;
+import org.sca.calontir.cmpe.client.ui.DataUpdatedEvent;
+import org.sca.calontir.cmpe.client.ui.EditViewEvent;
+import org.sca.calontir.cmpe.client.ui.FighterFormWidget;
+import org.sca.calontir.cmpe.client.ui.FighterListBox;
+import org.sca.calontir.cmpe.client.ui.LookupController;
+import org.sca.calontir.cmpe.client.ui.SearchBar;
+import org.sca.calontir.cmpe.client.ui.SearchEvent;
+import org.sca.calontir.cmpe.client.ui.Shout;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 
@@ -36,7 +51,7 @@ public class IndexPage implements EntryPoint {
     private FighterFormWidget fighterFormWidget;
     private FighterListBox flb;
     private Panel tilePanel;
-    private Shout shout = Shout.getInstance();
+    private final Shout shout = Shout.getInstance();
 
     /**
      * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
@@ -80,7 +95,6 @@ public class IndexPage implements EntryPoint {
 
         t.schedule(500);
 
-
     }
 
     public void onModuleLoad2() {
@@ -102,41 +116,41 @@ public class IndexPage implements EntryPoint {
         loginService.login(GWT.getHostPageBaseURL(),
                 GWT.getHostPageBaseURL() + "goodbye.jsp",
                 new AsyncCallback<LoginInfo>() {
-            @Override
-            public void onFailure(Throwable error) {
-                Window.alert("Error in contacting the server, try later");
-            }
-
-            @Override
-            public void onSuccess(LoginInfo loginInfo) {
-                boolean needToRegister = false;
-                SecurityFactory.setLoginInfo(loginInfo);
-                if (security.isLoggedIn()) {
-                    final Label hello;
-                    if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
-                        needToRegister = true;
-                        hello = new Label("Welcome " + loginInfo.getNickname());
-                        log.info("Logged in with " + loginInfo.getNickname());
-                    } else {
-                        needToRegister = false;
-                        hello = new Label("Welcome " + loginInfo.getScaName());
-                        log.info("Logged in as " + loginInfo.getScaName() + ":" + loginInfo.getNickname());
+                    @Override
+                    public void onFailure(Throwable error) {
+                        Window.alert("Error in contacting the server, try later");
                     }
-                    hello.setStyleName("hello", true);
-                    tilePanel.add(hello);
-                }
 
-                shout.tell("Building pages.");
-                buildIndexPage();
-                shout.hide();
-                if (needToRegister) {
-                    // this user was not found in our system.
-                    shout.tell("A Falcon user for "
+                    @Override
+                    public void onSuccess(LoginInfo loginInfo) {
+                        boolean needToRegister = false;
+                        SecurityFactory.setLoginInfo(loginInfo);
+                        if (security.isLoggedIn()) {
+                            final Label hello;
+                            if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
+                                needToRegister = true;
+                                hello = new Label("Welcome " + loginInfo.getNickname());
+                                log.info("Logged in with " + loginInfo.getNickname());
+                            } else {
+                                needToRegister = false;
+                                hello = new Label("Welcome " + loginInfo.getScaName());
+                                log.info("Logged in as " + loginInfo.getScaName() + ":" + loginInfo.getNickname());
+                            }
+                            hello.setStyleName("hello", true);
+                            tilePanel.add(hello);
+                        }
+
+                        shout.tell("Building pages.");
+                        buildIndexPage();
+                        shout.hide();
+                        if (needToRegister) {
+                            // this user was not found in our system.
+                            shout.tell("A Falcon user for "
                             + loginInfo.getNickname()
                             + " was not found. Please register if you have not, or contact the support team if there is a problem.", false);
-                }
-            }
-        });
+                        }
+                    }
+                });
 
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
@@ -167,7 +181,6 @@ public class IndexPage implements EntryPoint {
         // remove Loading-Message from page
         tilePanel.getElement().removeChild(DOM.getElementById("Loading-Message"));
 
-
         CalonBar calonBar = new CalonBar();
         tilePanel.add(calonBar);
 
@@ -180,7 +193,6 @@ public class IndexPage implements EntryPoint {
         searchBar.addHandler(searchBar, SearchEvent.TYPE);
         fighterFormWidget.addHandler(searchBar, DataUpdatedEvent.TYPE);
         tilePanel.add(searchBar);
-
 
         onIndexPage();
         GWT.runAsync(new RunAsyncCallback() {
@@ -239,7 +251,6 @@ public class IndexPage implements EntryPoint {
         fighterForm.add(fighterFormWidget);
         fighterForm.addSubmitHandler(fighterFormWidget);
         fighterForm.addSubmitCompleteHandler(fighterFormWidget);
-
 
         tilePanel.add(fighterForm);
     }

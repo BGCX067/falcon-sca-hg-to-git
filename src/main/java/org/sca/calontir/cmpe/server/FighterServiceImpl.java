@@ -52,17 +52,8 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         TableUpdatesDao tuDao = new TableUpdatesDao();
         TableUpdates tu = tuDao.getTableUpdates("Fighter");
         List<FighterListItem> fighters;
-        if (targetDate == null
-                || (tu != null
-                && tu.getLastDeletion() != null
-                && new DateTime(tu.getLastDeletion()).isAfter(new DateTime(targetDate)))) {
-
-            fighters = fighterDao.getFighterListItems();
-            retval.setUpdateInfo(false);
-        } else {
-            fighters = fighterDao.getFighterListItems(new DateTime(targetDate));
-            retval.setUpdateInfo(true);
-        }
+        fighters = fighterDao.getFighterListItems(new DateTime(targetDate));
+        retval.setUpdateInfo(true);
 
         List<FighterInfo> retValList = new ArrayList<>();
         for (FighterListItem fli : fighters) {
