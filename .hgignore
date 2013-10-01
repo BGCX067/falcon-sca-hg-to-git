@@ -19,3 +19,4 @@ upldev.sh
 cmpedata
 ^nb-configuration\.xml$
 data
+build.gradle
