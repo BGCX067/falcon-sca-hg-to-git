@@ -29,24 +29,39 @@ public class ReportDAO {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     public List<Report> select() {
-        List<Report> retList = new ArrayList<>();
         Query q = new Query("Report").addSort("dateEntered", SortDirection.DESCENDING);
-        PreparedQuery pq = datastore.prepare(q);
-        for (Entity entity : pq.asQueryResultIterable()) {
-            Report report = new Report();
+
+        return executeQuery(q);
+    }
+
+    public List<Report> getForDays(Integer days) {
+        Query q = new Query("Report").addSort("dateEntered", SortDirection.DESCENDING);
+        DateTime dt = new DateTime().minusDays(days);
+        String dateEnteredString = dt.toString();
+        Filter reportKeyFilter = new FilterPredicate("dateEntered", FilterOperator.GREATER_THAN_OR_EQUAL, dateEnteredString);
+        q.setFilter(reportKeyFilter);
+
+        return executeQuery(q);
+    }
+
+    private List<Report> executeQuery(Query q) {
+        final List<Report> retList = new ArrayList<>();
+        final PreparedQuery pq = datastore.prepare(q);
+        for (final Entity entity : pq.asQueryResultIterable()) {
+            final Report report = new Report();
             report.setId(entity.getKey().getId());
             report.setGoogleId((String) entity.getProperty("googleId"));
             String dateEnteredString = (String) entity.getProperty("dateEntered");
-            DateTime dt = new DateTime(dateEnteredString);
+            final DateTime dt = new DateTime(dateEnteredString);
             report.setDateEntered(dt.toDate());
             report.setMarshalId((Long) entity.getProperty("marshalId"));
             report.setMarshalName((String) entity.getProperty("marshalName"));
             report.setReportType((String) entity.getProperty("reportType"));
             Filter reportKeyFilter = new FilterPredicate("reportKey", FilterOperator.EQUAL, entity.getKey());
-            Query iQ = new Query("ReportParams").setFilter(reportKeyFilter);
-            PreparedQuery iPq = datastore.prepare(iQ);
-            Map<String, String> reportParams = new HashMap<>();
-            for (Entity e : iPq.asQueryResultIterable()) {
+            final Query iQ = new Query("ReportParams").setFilter(reportKeyFilter);
+            final PreparedQuery iPq = datastore.prepare(iQ);
+            final Map<String, String> reportParams = new HashMap<>();
+            for (final Entity e : iPq.asQueryResultIterable()) {
                 final Object value = e.getProperty("value");
                 String strValue;
                 if (value instanceof Text) {

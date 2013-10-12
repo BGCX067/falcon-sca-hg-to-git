@@ -11,28 +11,31 @@ import org.sca.calontir.cmpe.dto.Report;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
 @RemoteServiceRelativePath("fighter")
-public interface FighterService  extends RemoteService {
+public interface FighterService extends RemoteService {
+
     public FighterListInfo getListItems(Date targetDate);
 
     public Fighter getFighter(Long id);
 
-	public Fighter getFighterByScaName(String scaName);
+    public Fighter getFighterByScaName(String scaName);
 
-	public Long saveFighter(Fighter fighter);
-    
+    public Long saveFighter(Fighter fighter);
+
     public List<AuthType> getAuthTypes();
-    
+
     public List<ScaGroup> getGroups();
 
-	public Map<String, Object> initialLookup();
+    public Map<String, Object> initialLookup();
 
-	public Integer getMinorTotal(String group);
+    public Integer getMinorTotal(String group);
 
-	public List<Fighter> getMinorFighters(String group);
+    public List<Fighter> getMinorFighters(String group);
 
-	public void sendReportInfo(Map<String, Object> reportInfo);
+    public void sendReportInfo(Map<String, Object> reportInfo);
 
-	public List<Report> getAllReports();
+    public List<Report> getAllReports();
 
-	public void deleteReport(Report report);
+    public List<Report> getReports(Integer days);
+
+    public void deleteReport(Report report);
 }

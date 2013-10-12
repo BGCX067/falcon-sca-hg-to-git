@@ -200,18 +200,6 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         FighterDAO fighterDao = new FighterDAO();
         Fighter user = fighterDao.getFighterByGoogleId((String) reportInfo.get("user.googleid"));
 
-        if (user != null) {
-            String membershipExpires = (String) reportInfo.get("Membership Expires");
-            if (!membershipExpires.equals(user.getMembershipExpires())) {
-                user.setMembershipExpires(membershipExpires);
-                try {
-                    fighterDao.saveFighter(user, user.getFighterId(), false);
-                } catch (ValidationException ex) {
-                    Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-
         Queue queue = QueueFactory.getDefaultQueue();
         TaskOptions to = withUrl("/BuildReport.groovy");
         to.method(TaskOptions.Method.POST);
@@ -244,6 +232,19 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
             NamespaceManager.set("calontir");
             ReportDAO dao = new ReportDAO();
             dao.delete(report);
+        } finally {
+            NamespaceManager.set(namespace);
+        }
+    }
+
+    @Override
+    public List<Report> getReports(Integer days) {
+        log(String.format("Getting reports for the last %d days", days));
+        String namespace = NamespaceManager.get();
+        try {
+            NamespaceManager.set("calontir");
+            ReportDAO dao = new ReportDAO();
+            return dao.getForDays(days);
         } finally {
             NamespaceManager.set(namespace);
         }
