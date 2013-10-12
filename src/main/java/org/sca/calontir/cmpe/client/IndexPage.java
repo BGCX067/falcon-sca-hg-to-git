@@ -113,8 +113,7 @@ public class IndexPage implements EntryPoint {
 
         tilePanel.add(titleLabel);
         LoginServiceAsync loginService = GWT.create(LoginService.class);
-        loginService.login(GWT.getHostPageBaseURL(),
-                GWT.getHostPageBaseURL() + "goodbye.jsp",
+        loginService.login(GWT.getHostPageBaseURL(), GWT.getHostPageBaseURL(),
                 new AsyncCallback<LoginInfo>() {
                     @Override
                     public void onFailure(Throwable error) {

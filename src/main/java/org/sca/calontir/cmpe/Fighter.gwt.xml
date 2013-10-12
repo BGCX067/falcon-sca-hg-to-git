@@ -6,6 +6,7 @@
     <stylesheet src="/css/default.css" />
     <stylesheet src="/css/cmp_007.css" />
     <stylesheet src="/css/calonbar_03.css" />
+    <stylesheet src="/css/media.css" />
     <inherits name="com.google.gwt.json.JSON" />
     <inherits name="com.google.gwt.http.HTTP"/>
 

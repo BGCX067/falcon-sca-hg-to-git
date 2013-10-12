@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -30,8 +31,8 @@ import org.sca.calontir.cmpe.dto.Report;
 public class ReportView extends Composite {
 
     private static final Logger log = Logger.getLogger(ReportView.class.getName());
-    private FighterServiceAsync fighterService = GWT.create(FighterService.class);
-    final private Security security = SecurityFactory.getSecurity();
+    private final FighterServiceAsync fighterService = GWT.create(FighterService.class);
+    private final Security security = SecurityFactory.getSecurity();
 
     public void init() {
         final Panel background = new FlowPanel();
@@ -50,7 +51,7 @@ public class ReportView extends Composite {
                             + (r.getReportType().toLowerCase().equals("event")
                             ? "Event Name: " + r.getReportParams().get("Event Name")
                             : "Marshal Type: " + r.getReportParams().get("Marshal Type")) + " <<>> "
-                            + "Date Entered: " + r.getDateEntered();
+                            + "Date Entered: " + DateTimeFormat.getMediumDateTimeFormat().format(r.getDateEntered());
 
                     final DisclosurePanel twisty = new DisclosurePanel(header);
                     twisty.setStylePrimaryName("reportHeader");

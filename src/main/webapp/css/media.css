@@ -1,0 +1,33 @@
+/*
+    Created on : Oct 12, 2013, 9:26:47 AM
+    Author     : rikscarborough
+*/
+
+
+// Landscape phones and down
+@media (max-width: 480px) {
+    root {
+        font-size: 250%;
+    }
+    #calonbar {
+        position: absolute;
+    }
+}
+
+// Landscape phone to portrait tablet
+@media (max-width: 768px) {
+    #calonbar {
+        position: absolute;
+    }
+}
+
+// Portrait tablet to landscape and desktop
+@media (min-width: 768px) and (max-width: 980px) {
+    #calonbar {
+        position: absolute;
+    }
+}
+
+// Large desktop
+@media (min-width: 1200px) {
+}

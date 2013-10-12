@@ -162,7 +162,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
             table.addColumn(statusColumn, "Status");
             columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
-            columnSortHandler.setComparator(groupColumn, new Comparator<FighterInfo>() {
+            columnSortHandler.setComparator(statusColumn, new Comparator<FighterInfo>() {
                 @Override
                 public int compare(FighterInfo left, FighterInfo right) {
                     return left.getStatus().compareTo(right.getStatus());
