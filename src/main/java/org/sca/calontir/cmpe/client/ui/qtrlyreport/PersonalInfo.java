@@ -31,166 +31,165 @@ import org.sca.calontir.cmpe.dto.Fighter;
  */
 public class PersonalInfo extends BaseReportPage {
 
-	private static final Logger log = Logger.getLogger(IndexPage.class.getName());
-	final private Security security = SecurityFactory.getSecurity();
-	final private Panel infoPanel = new FlowPanel();
-	private Fighter user;
+    private static final Logger log = Logger.getLogger(IndexPage.class.getName());
+    final private Security security = SecurityFactory.getSecurity();
+    final private Panel infoPanel = new FlowPanel();
+    private Fighter user;
 
-	@Override
-	public void buildPage() {
-		clear();
+    @Override
+    public void buildPage() {
+        clear();
 
-		final Panel bk = new FlowPanel();
-		bk.setStylePrimaryName(REPORTBG);
+        final Panel bk = new FlowPanel();
+        bk.setStylePrimaryName(REPORTBG);
 
-		String p1 = "Please review this information. If it is not correct, click the \"Edit\" button to make changes. Click the \"Save\" button once your changes are complete.";
-		HTML para1 = new HTML(p1);
-		para1.addStyleName(REPORT_INSTRUCTIONS);
-		bk.add(para1);
+        String p1 = "Please review this information. If it is not correct, click the \"Edit\" button to make changes. Click the \"Save\" button once your changes are complete.";
+        HTML para1 = new HTML(p1);
+        para1.addStyleName(REPORT_INSTRUCTIONS);
+        bk.add(para1);
 
-		FighterServiceAsync fighterService = GWT.create(FighterService.class);
+        FighterServiceAsync fighterService = GWT.create(FighterService.class);
 
-		fighterService.getFighter(security.getLoginInfo().getFighterId(), new AsyncCallback<Fighter>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				String msg = "getFighter: " + caught.getMessage();
-				log.severe(msg);
-			}
+        fighterService.getFighter(security.getLoginInfo().getFighterId(), new AsyncCallback<Fighter>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                String msg = "getFighter: " + caught.getMessage();
+                log.severe(msg);
+            }
 
-			@Override
-			public void onSuccess(Fighter result) {
-				user = result;
-				bk.add(buildInfoPanel(false));
-			}
-		});
+            @Override
+            public void onSuccess(Fighter result) {
+                user = result;
+                bk.add(buildInfoPanel(false));
+            }
+        });
 
-		add(bk);
-	}
+        add(bk);
+    }
 
-	private Panel buildInfoPanel(final boolean edit) {
-		infoPanel.clear();
+    private Panel buildInfoPanel(final boolean edit) {
+        infoPanel.clear();
 
-		infoPanel.setStylePrimaryName("dataBox");
+        infoPanel.setStylePrimaryName("dataBox");
 
-		Panel dataHeader = new FlowPanel();
-		dataHeader.setStyleName("dataHeader");
-		dataHeader.add(new InlineLabel("Personal Info"));
-		Panel buttonPanel = new FlowPanel();
-		buttonPanel.setStyleName("editButton");
-		buttonPanel.getElement().getStyle().setDisplay(Style.Display.INLINE);
-		if (edit) {
-			buttonPanel.add(cancelButton());
-			buttonPanel.add(saveButton());
-		} else {
-			buttonPanel.add(editButton());
-		}
-		dataHeader.add(buttonPanel);
+        Panel dataHeader = new FlowPanel();
+        dataHeader.setStyleName("dataHeader");
+        dataHeader.add(new InlineLabel("Personal Info"));
+        Panel buttonPanel = new FlowPanel();
+        buttonPanel.setStyleName("editButton");
+        buttonPanel.getElement().getStyle().setDisplay(Style.Display.INLINE);
+        if (edit) {
+            buttonPanel.add(cancelButton());
+            buttonPanel.add(saveButton());
+        } else {
+            buttonPanel.add(editButton());
+        }
+        dataHeader.add(buttonPanel);
 
-		Panel dataBody = new FlowPanel();
-		dataBody.setStyleName("dataBody");
-		dataBody.add(new FighterForm(user, edit, false));
+        Panel dataBody = new FlowPanel();
+        dataBody.setStyleName("dataBody");
+        dataBody.add(new FighterForm(user, edit, false));
 
+        infoPanel.add(dataHeader);
+        infoPanel.add(dataBody);
 
-		infoPanel.add(dataHeader);
-		infoPanel.add(dataBody);
+        return infoPanel;
+    }
 
-		return infoPanel;
-	}
+    private Widget editButton() {
+        final Anchor editButton = new Anchor("edit");
+        editButton.addStyleName("buttonLink");
+        editButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                editButton.setEnabled(false);
+                buildInfoPanel(true);
+            }
+        });
 
-	private Widget editButton() {
-		final Anchor editButton = new Anchor("edit");
-		editButton.addStyleName("buttonLink");
-		editButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				editButton.setEnabled(false);
-				buildInfoPanel(true);
-			}
-		});
+        return editButton;
+    }
 
+    private Widget cancelButton() {
+        final Anchor cancelButton = new Anchor("cancel");
+        cancelButton.addStyleName("buttonLink");
+        cancelButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                cancelButton.setEnabled(false);
+                buildInfoPanel(false);
+            }
+        });
 
-		return editButton;
-	}
+        return cancelButton;
+    }
 
-	private Widget cancelButton() {
-		final Anchor cancelButton = new Anchor("cancel");
-		cancelButton.addStyleName("buttonLink");
-		cancelButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				cancelButton.setEnabled(false);
-				buildInfoPanel(false);
-			}
-		});
+    private Widget saveButton() {
+        final Anchor saveButton = new Anchor("save");
+        saveButton.addStyleName("buttonLink");
+        saveButton.getElement().getStyle().setMarginRight(1.5, Style.Unit.EM);
+        saveButton.addClickHandler(new ClickHandler() {
+            private boolean unclicked = true;
 
+            @Override
+            public void onClick(ClickEvent event) {
+                if (unclicked) {
+                    unclicked = false;
+                    saveButton.setEnabled(false);
+                    FighterServiceAsync fighterService = GWT.create(FighterService.class);
 
-		return cancelButton;
-	}
+                    fighterService.saveFighter(user, new AsyncCallback<Long>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            String msg = "getFighter: " + caught.getMessage();
+                            log.severe(msg);
+                        }
 
-	private Widget saveButton() {
-		final Anchor saveButton = new Anchor("save");
-		saveButton.addStyleName("buttonLink");
-		saveButton.getElement().getStyle().setMarginRight(1.5, Style.Unit.EM);
-		saveButton.addClickHandler(new ClickHandler() {
-			private boolean unclicked = true;
+                        @Override
+                        public void onSuccess(Long result) {
+                            log.info("Success");
+                            nextButton.setEnabled(validate());
+                        }
+                    });
+                    buildInfoPanel(false);
+                }
+            }
+        });
+        return saveButton;
+    }
 
-			@Override
-			public void onClick(ClickEvent event) {
-				if (unclicked) {
-					unclicked = false;
-					saveButton.setEnabled(false);
-					FighterServiceAsync fighterService = GWT.create(FighterService.class);
+    @Override
+    public boolean enableNext() {
+        // prevent addReportInfo from turning next on. We'll do that in this class.
+        return false;
+    }
 
-					fighterService.saveFighter(user, new AsyncCallback<Long>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							String msg = "getFighter: " + caught.getMessage();
-							log.severe(msg);
-						}
+    private boolean validate() {
+        boolean retvalue = true;
+        retvalue = addReportInfo("Membership Expires", user.getMembershipExpires()) && retvalue;
+        retvalue = addReportInfo("SCA Name", user.getScaName()) && retvalue;
+        retvalue = addReportInfo("Group", user.getScaGroup().getGroupName()) && retvalue;
+        retvalue = addReportInfo("Modern Name", user.getModernName()) && retvalue;
+        retvalue = addReportInfo("Address", user.getPrimeAddress()) && retvalue;
+        retvalue = addReportInfo("SCA Membership No", user.getScaMemberNo()) && retvalue;
+        retvalue = addReportInfo("SCA Group", user.getScaGroup().getGroupName()) && retvalue;
+        retvalue = addReportInfo("Phone Number", user.getPrimePhone()) && retvalue;
+        retvalue = addReportInfo("Email Address", user.getPrimeEmail()) && retvalue;
 
-						@Override
-						public void onSuccess(Long result) {
-							log.info("Success");
-							validate();
-						}
-					});
-					buildInfoPanel(false);
-				}
-			}
-		});
-		return saveButton;
-	}
+        if (!retvalue) {
+            Shout.getInstance().tell("Please update the require fields on this page.");
+        }
 
-	private boolean validate() {
-		boolean retvalue = true;
-		retvalue = addReportInfo("Membership Expires", user.getMembershipExpires()) && retvalue;
-		retvalue = addReportInfo("SCA Name", user.getScaName()) && retvalue;
-		retvalue = addReportInfo("Group", user.getScaGroup().getGroupName()) && retvalue;
-		retvalue = addReportInfo("Modern Name", user.getModernName()) && retvalue;
-		retvalue = addReportInfo("Address", user.getPrimeAddress()) && retvalue;
-		retvalue = addReportInfo("SCA Membership No", user.getScaMemberNo()) && retvalue;
-		retvalue = addReportInfo("SCA Group", user.getScaGroup().getGroupName()) && retvalue;
-		retvalue = addReportInfo("Phone Number", user.getPrimePhone()) && retvalue;
-		retvalue = addReportInfo("Email Address", user.getPrimeEmail()) && retvalue;
+        return retvalue;
 
-		if (!retvalue) {
-			Shout.getInstance().tell("Please update the require fields on this page.");
-		}
+    }
 
-		return retvalue;
+    @Override
+    public void onDisplay() {
+        nextButton.setEnabled(validate());
+    }
 
-	}
-
-	@Override
-	public void onDisplay() {
-		if (validate()) {
-			nextButton.setEnabled(true);
-		} else {
-			nextButton.setEnabled(false);
-		}
-	}
-
-	@Override
-	public void onLeavePage() {
-	}
+    @Override
+    public void onLeavePage() {
+    }
 }
