@@ -17,8 +17,8 @@
     </scm>
 
     <properties>
-        <appengine.app.version>1-2-9</appengine.app.version>
-        <appengine.target.version>1.8.5</appengine.target.version>
+        <appengine.app.version>1-2-10</appengine.app.version>
+        <appengine.target.version>1.8.8</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
         <gwt.version>2.5.1</gwt.version>
