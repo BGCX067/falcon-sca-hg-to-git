@@ -25,6 +25,7 @@ import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.ReportingMarshalType;
 import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.Report;
 
@@ -107,7 +108,10 @@ public class ReportView extends Composite {
         twistyPanel.clear();
 
         for (final Report r : result) {
-            String header = r.getMarshalName() + " <<>> "
+            final String rmType = (String) r.getReportParams().get("Reporting Marshal Type");
+            final ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
+            final String header = r.getMarshalName() + " <<>> "
+                    + "Report Marshal Type: " + rmt.getValue() + " <<>> "
                     + "Report Type: " + r.getReportType() + " <<>> "
                     + (r.getReportType().toLowerCase().equals("event")
                     ? "Event Name: " + r.getReportParams().get("Event Name")
@@ -156,6 +160,10 @@ public class ReportView extends Composite {
             bk.add(deleteButton);
         }
 
+        final String rmType = (String) report.getReportParams().get("Reporting Marshal Type");
+        final ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
+
+        buildOne("Reporting Marshal Type: ", rmt.getValue(), bk);
         buildOne("Reporting Period: ", report.getReportType(), bk);
         buildOne("Marshal Type: ", report.getReportParams().get("Marshal Type"), bk);
         if (report.getReportParams().containsKey("Event Name")) {
