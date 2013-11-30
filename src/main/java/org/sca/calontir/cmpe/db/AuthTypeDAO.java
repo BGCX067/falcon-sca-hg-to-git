@@ -91,7 +91,6 @@ public class AuthTypeDAO {
     }
 
     public List<AuthType> getAuthType() {
-        Logger.getLogger(AuthTypeDAO.class.getName()).log(Level.INFO, "start");
         List<AuthType> atList = (List<AuthType>) localCache.getValue("atlist");
         if (atList == null || atList.isEmpty()) {
             Query query = new Query("AuthType").addSort("orderValue");

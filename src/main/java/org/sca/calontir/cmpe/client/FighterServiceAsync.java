@@ -35,8 +35,6 @@ public interface FighterServiceAsync {
 
     public void getMinorTotal(String group, AsyncCallback<Integer> async);
 
-    public void getMinorFighters(String group, AsyncCallback<Fighter> async);
-
     public void sendReportInfo(Map<String, Object> reportInfo, AsyncCallback<Void> async);
 
     public void getAllReports(AsyncCallback<List<Report>> async);
@@ -44,4 +42,6 @@ public interface FighterServiceAsync {
     public void getReports(Integer days, AsyncCallback<List<Report>> async);
 
     public void deleteReport(Report report, AsyncCallback<Void> async);
+
+    public void getMinorFighters(String group, AsyncCallback<List<Fighter>> asyncCallback);
 }

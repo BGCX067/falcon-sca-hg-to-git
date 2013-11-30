@@ -101,19 +101,25 @@ namespace.of("system") {
 
 	sysTable = new Entity("properties")
 	sysTable.name = "calontir.earlmarshal.email"
-	sysTable.property = "riksca@gmail.com"
+	sysTable.property = "earlmarshal@test.com"
+
+	sysTable.save()
+
+	sysTable = new Entity("properties")
+	sysTable.name = "calontir.calonsteel.email"
+	sysTable.property = "calonsteel@test.com"
 
 	sysTable.save()
 
 	sysTable = new Entity("properties")
 	sysTable.name = "calontir.central.email"
-	sysTable.property = "brendanmacantsaoir@gmail.com"
+	sysTable.property = "centraldeputy@test.com"
 
 	sysTable.save()
 
 	sysTable = new Entity("properties")
 	sysTable.name = "calontir.from.email"
-	sysTable.property = "brendanmacantsaoir@gmail.com"
+	sysTable.property = "from@test.com"
 
 	sysTable.save()
 }

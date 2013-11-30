@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import java.util.Date;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.ReportingMarshalType;
 import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
@@ -45,6 +46,35 @@ public class Welcome extends BaseReportPage {
         HTML para2 = new HTML(p2);
         para2.setStylePrimaryName(REPORT_INSTRUCTIONS);
         bk.add(para2);
+
+        Panel marshalTypePanel = new HorizontalPanel();
+        marshalTypePanel.setStylePrimaryName(REPORT_BUTTON_PANEL);
+
+        final RadioButton armoredCombatButton = new RadioButton("marshalType", ReportingMarshalType.ARMORED_COMBAT.getValue());
+        armoredCombatButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                if (event.getValue()) {
+                    addReportInfo("Reporting Marshal Type", ReportingMarshalType.ARMORED_COMBAT.getCode());
+                }
+            }
+        });
+        armoredCombatButton.setValue(Boolean.TRUE, true);
+        marshalTypePanel.add(armoredCombatButton);
+
+        final RadioButton calonSteelButton = new RadioButton("marshalType", ReportingMarshalType.CALON_STEEL.getValue());
+        calonSteelButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                if (event.getValue()) {
+                    addReportInfo("Reporting Marshal Type", ReportingMarshalType.CALON_STEEL.getCode());
+                }
+            }
+        });
+        calonSteelButton.setValue(Boolean.FALSE, true);
+        marshalTypePanel.add(calonSteelButton);
+
+        bk.add(marshalTypePanel);
 
         int quarter = getQuarter();
 
@@ -160,12 +190,25 @@ public class Welcome extends BaseReportPage {
     public void onLeavePage() {
         String reportType = (String) getReportInfo().get("Report Type");
         if (reportType.equals("Event")) {
-            if (!(security.isRole(UserRoles.KNIGHTS_MARSHAL)
-                    || security.isRole(UserRoles.DEPUTY_EARL_MARSHAL))) {
-                InjuryReport injuryReport = new InjuryReport();
-                injuryReport.init(reportInfo, required, submitButton, nextButton);
-                getDeck().insert(injuryReport, getDeck().getWidgetCount() - 2);
+            InjuryReport injuryReport = new InjuryReport();
+            injuryReport.init(reportInfo, required, submitButton, nextButton);
+            getDeck().insert(injuryReport, getDeck().getWidgetCount() - 2);
+        } else {
+            String rmType = (String) getReportInfo().get("Reporting Marshal Type");
+            ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
+            if (ReportingMarshalType.ARMORED_COMBAT.equals(rmt)) {
+                if (security.isRole(UserRoles.KNIGHTS_MARSHAL)
+                        || security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
+                    InjuryReport injuryReport = new InjuryReport();
+                    injuryReport.init(reportInfo, required, submitButton, nextButton);
+                    getDeck().insert(injuryReport, getDeck().getWidgetCount() - 2);
+
+                    FighterComment fc = new FighterComment();
+                    fc.init(reportInfo, required, submitButton, nextButton);
+                    getDeck().insert(fc, getDeck().getWidgetCount() - 2);
+                }
             }
         }
+
     }
 }

@@ -20,20 +20,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Activities;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.BaseReportPage;
-import org.sca.calontir.cmpe.client.ui.qtrlyreport.FighterComment;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Final;
-import org.sca.calontir.cmpe.client.ui.qtrlyreport.InjuryReport;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.PersonalInfo;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Summary;
 import org.sca.calontir.cmpe.client.ui.qtrlyreport.Welcome;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
-import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
  *
@@ -41,6 +40,7 @@ import org.sca.calontir.cmpe.common.UserRoles;
  */
 public class ReportGen extends Composite {
 
+    private static final Logger log = Logger.getLogger(ReportGen.class.getName());
     final private Security security = SecurityFactory.getSecurity();
     Map<String, Object> reportInfo = new HashMap<String, Object>();
 
@@ -60,17 +60,22 @@ public class ReportGen extends Composite {
             @Override
             public void onClick(ClickEvent event) {
                 if (submit.isEnabled()) {
+                    final Shout shout = Shout.getInstance();
+                    shout.tell("Submitting report, please wait");
                     submit.setEnabled(false);
                     FighterServiceAsync fighterService = GWT.create(FighterService.class);
                     fighterService.sendReportInfo(reportInfo, new AsyncCallback<Void>() {
                         @Override
                         public void onFailure(Throwable caught) {
+                            shout.hide();
+                            shout.tell("Error on submitting report", false);
+                            log.log(Level.INFO, "Error on submitting report", caught);
                         }
 
                         @Override
                         public void onSuccess(Void result) {
+                            shout.hide();
                             LookupController.getInstance().updateLocalData();
-                            Shout shout = Shout.getInstance();
                             shout.tell("Thank you for submitting your report");
                             DisplayUtils.resetDisplay();
                         }
@@ -88,7 +93,6 @@ public class ReportGen extends Composite {
         welcome.setDeck(deck);
         deck.add(welcome);
 
-
         PersonalInfo pi = new PersonalInfo();
         pi.init(reportInfo, required, submit, next);
         pi.getElement().setId("personalinfo");
@@ -98,17 +102,6 @@ public class ReportGen extends Composite {
         Activities activities = new Activities();
         activities.init(reportInfo, required, submit, next);
         deck.add(activities);
-
-        if (security.isRole(UserRoles.KNIGHTS_MARSHAL)
-                || security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
-            InjuryReport injuryReport = new InjuryReport();
-            injuryReport.init(reportInfo, required, submit, next);
-            deck.add(injuryReport);
-
-            FighterComment fc = new FighterComment();
-            fc.init(reportInfo, required, submit, next);
-            deck.add(fc);
-        }
 
         Summary summary = new Summary();
         summary.init(reportInfo, required, submit, next);
@@ -126,7 +119,6 @@ public class ReportGen extends Composite {
         background.add(buildPrevLink(deck));
         background.add(next);
         background.add(submit);
-
 
         initWidget(background);
     }

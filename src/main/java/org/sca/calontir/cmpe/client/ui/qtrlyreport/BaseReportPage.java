@@ -17,128 +17,138 @@ import java.util.logging.Logger;
  */
 public abstract class BaseReportPage extends SimplePanel {
 
-	private static final Logger log = Logger.getLogger(BaseReportPage.class.getName());
-	protected Map<String, Object> reportInfo;
-	protected List<String> required;
-	protected FocusWidget submitButton;
-	protected FocusWidget nextButton;
-	protected DeckPanel deck;
-	public static final String REPORT_BUTTON_PANEL = "reportButtonPanel";
-	public static final String REPORTBG = "reportbg";
-	public static final String REPORT_TITLE = "reportTitle";
-	public static final String REPORT_INSTRUCTIONS = "reportInstructions";
-	public static final String REPORT_TEXT_BOX = "reportTextBox";
-	public static final String PERSONAL_INFO = "personalInfo";
+    private static final Logger log = Logger.getLogger(BaseReportPage.class.getName());
+    protected Map<String, Object> reportInfo;
+    protected List<String> required;
+    protected FocusWidget submitButton;
+    protected FocusWidget nextButton;
+    protected DeckPanel deck;
+    public static final String REPORT_BUTTON_PANEL = "reportButtonPanel";
+    public static final String REPORTBG = "reportbg";
+    public static final String REPORT_TITLE = "reportTitle";
+    public static final String REPORT_INSTRUCTIONS = "reportInstructions";
+    public static final String REPORT_TEXT_BOX = "reportTextBox";
+    public static final String PERSONAL_INFO = "personalInfo";
 
-	public void init(Map<String, Object> reportInfo, List<String> required, FocusWidget submitButton, FocusWidget nextButton) {
-		this.reportInfo = reportInfo;
-		this.required = required;
-		this.submitButton = submitButton;
-		this.nextButton = nextButton;
-		buildPage();
-	}
+    public void init(Map<String, Object> reportInfo, List<String> required, FocusWidget submitButton, FocusWidget nextButton) {
+        this.reportInfo = reportInfo;
+        this.required = required;
+        this.submitButton = submitButton;
+        this.nextButton = nextButton;
+        buildPage();
+    }
 
-	public abstract void buildPage();
+    public abstract void buildPage();
 
-	public abstract void onDisplay();
+    public abstract void onDisplay();
 
-	public abstract void onLeavePage();
+    public abstract void onLeavePage();
 
-	public boolean enableNext() {
-		return true;
-	}
+    public boolean enableNext() {
+        return true;
+    }
 
-	public boolean addReportInfo(String key, Object value) {
-		boolean removeValue = false;
-		if (value == null) {
-			removeValue = true;
-		} else if (value instanceof String) {
-			String strValue = (String) value;
-			if (strValue.trim().isEmpty()) {
-				removeValue = true;
-			}
-		}
+    public boolean addReportInfo(String key, Object value, boolean required) {
+        boolean retVal = addReportInfo(key, value);
+        if (required) {
+            addRequired(key);
+        }
+        return retVal;
+    }
 
-		if (removeValue) {
-			if (reportInfo.containsKey(key)) {
-				reportInfo.remove(key);
-			}
-		} else {
-			reportInfo.put(key, value);
-			if(enableNext()) {
-				nextButton.setEnabled(true);
-			}
-		}
+    public boolean addReportInfo(String key, Object value) {
+        boolean removeValue = false;
+        if (value == null) {
+            removeValue = true;
+        } else if (value instanceof String) {
+            String strValue = (String) value;
+            if (strValue.trim().isEmpty()) {
+                removeValue = true;
+            }
+        }
 
-		if (allRequired()) {
-			submitButton.setEnabled(true);
-		} else {
-			submitButton.setEnabled(false);
-		}
-		return !removeValue;
-	}
+        if (removeValue) {
+            if (reportInfo.containsKey(key)) {
+                reportInfo.remove(key);
+            }
+        } else {
+            reportInfo.put(key, value);
+            if (enableNext()) {
+                nextButton.setEnabled(true);
+            }
+        }
 
-	protected boolean allRequired() {
-		int count = required.size();
-		for (String test : required) {
-			if (reportInfo.containsKey(test)) {
-				--count;
-			}
-		}
-		return count == 0;
-	}
+        if (allRequired()) {
+            submitButton.setEnabled(true);
+        } else {
+            submitButton.setEnabled(false);
+        }
+        return !removeValue;
+    }
 
-	public void addRequired(String newRequired) {
-		required.add(newRequired);
-		if (!allRequired()) {
-			submitButton.setEnabled(false);
-		}
-	}
+    protected boolean allRequired() {
+        int count = required.size();
+        for (String test : required) {
+            if (reportInfo.containsKey(test)) {
+                --count;
+            }
+        }
+        return count == 0;
+    }
 
-	public Map<String, Object> getReportInfo() {
-		return reportInfo;
-	}
+    public void addRequired(String newRequired) {
+        required.add(newRequired);
+        if (!allRequired()) {
+            submitButton.setEnabled(false);
+        }
+    }
 
-	public List<String> getRequired() {
-		return required;
-	}
+    public Map<String, Object> getReportInfo() {
+        return reportInfo;
+    }
 
-	public class RequiredFieldKeyPressHandler implements KeyPressHandler {
-		private String requiredField;
-		public RequiredFieldKeyPressHandler(String requiredField) {
-			this.requiredField = requiredField;
-		}
+    public List<String> getRequired() {
+        return required;
+    }
 
-		@Override
-		public void onKeyPress(KeyPressEvent event) {
-			if (event.getSource() instanceof RichTextArea) {
-				RichTextArea textBox = (RichTextArea) event.getSource();
-				addReportInfo(requiredField, textBox.getHTML());
-				if (textBox.getText().isEmpty()) {
-					nextButton.setEnabled(false);
-				} else {
-					if(enableNext()) {
-						nextButton.setEnabled(true);
-					}
-				}
-			} else {
-				TextBoxBase textBox = (TextBoxBase) event.getSource();
-				if (textBox.getValue().isEmpty()) {
-					nextButton.setEnabled(false);
-				} else {
-					if(enableNext()) {
-						nextButton.setEnabled(true);
-					}
-				}
-			}
-		}
-	}
+    public class RequiredFieldKeyPressHandler implements KeyPressHandler {
 
-	public DeckPanel getDeck() {
-		return deck;
-	}
+        private final String requiredField;
 
-	public void setDeck(DeckPanel deck) {
-		this.deck = deck;
-	}
+        public RequiredFieldKeyPressHandler(String requiredField) {
+            this.requiredField = requiredField;
+        }
+
+        @Override
+        public void onKeyPress(KeyPressEvent event) {
+            if (event.getSource() instanceof RichTextArea) {
+                RichTextArea textBox = (RichTextArea) event.getSource();
+                addReportInfo(requiredField, textBox.getHTML());
+                if (textBox.getText().isEmpty()) {
+                    nextButton.setEnabled(false);
+                } else {
+                    if (enableNext()) {
+                        nextButton.setEnabled(true);
+                    }
+                }
+            } else {
+                TextBoxBase textBox = (TextBoxBase) event.getSource();
+                if (textBox.getValue().isEmpty()) {
+                    nextButton.setEnabled(false);
+                } else {
+                    if (enableNext()) {
+                        nextButton.setEnabled(true);
+                    }
+                }
+            }
+        }
+    }
+
+    public DeckPanel getDeck() {
+        return deck;
+    }
+
+    public void setDeck(DeckPanel deck) {
+        this.deck = deck;
+    }
 }

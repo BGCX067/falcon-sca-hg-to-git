@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
+import org.sca.calontir.cmpe.common.ReportingMarshalType;
 
 /**
  *
@@ -40,10 +41,18 @@ public class Final extends BaseReportPage {
         header.setInnerText("Marshal Report");
         bk.getElement().insertAfter(header, null);
 
+        String rmType = (String) getReportInfo().get("Reporting Marshal Type");
+        ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
+
+        buildOne("Reporting Marshal Type: ", rmt.getValue(), bk);
+
+        if (getReportInfo().containsKey("Marshal Type")) {
+            buildOne("Marshal Type: ", getReportInfo().get("Marshal Type").toString(), bk);
+        }
         if (getReportInfo().containsKey("Report Type")) {
             buildOne("Reporting Period: ", getReportInfo().get("Report Type").toString(), bk);
         }
-        if (getReportInfo().containsKey("Marshal Type")) {
+        if (rmt.equals(ReportingMarshalType.ARMORED_COMBAT) && getReportInfo().containsKey("Marshal Type")) {
             buildOne("Marshal Type: ", getReportInfo().get("Marshal Type").toString(), bk);
         }
         if (getReportInfo().containsKey("SCA Name")) {

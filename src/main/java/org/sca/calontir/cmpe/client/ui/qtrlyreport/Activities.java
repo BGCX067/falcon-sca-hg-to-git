@@ -24,6 +24,7 @@ import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.LookupController;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.ReportingMarshalType;
 import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
@@ -108,7 +109,6 @@ public class Activities extends BaseReportPage {
     public void onDisplay() {
         final String p1;
         String reportType = (String) getReportInfo().get("Report Type");
-        log.info("Report type = " + reportType);
         if (reportType.equals("Event")) {
             p1 = "Please describe the activities that took place at this event. Tournaments, pickup fights, melees, and what generally occured.";
             buildEventInfo();
@@ -187,18 +187,21 @@ public class Activities extends BaseReportPage {
 
     private void buildQuarterlyInfo() {
         persInfo.clear();
-        if (security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
-            Label authFightersLabel = new Label();
-            authFightersLabel.setText("Number of Authorized Fighters: ");
-            persInfo.add(authFightersLabel);
+        String rmType = (String) getReportInfo().get("Reporting Marshal Type");
+        if (rmType != null && rmType.equals(ReportingMarshalType.ARMORED_COMBAT.getCode())) {
+            if (security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
+                Label authFightersLabel = new Label();
+                authFightersLabel.setText("Number of Authorized Fighters: ");
+                persInfo.add(authFightersLabel);
 
-            persInfo.add(new ActiveFighter());
+                persInfo.add(new ActiveFighter());
 
-            Label minorFightersLabel = new Label();
-            minorFightersLabel.setText("Number of Minor Fighters: ");
-            persInfo.add(minorFightersLabel);
+                Label minorFightersLabel = new Label();
+                minorFightersLabel.setText("Number of Minor Fighters: ");
+                persInfo.add(minorFightersLabel);
 
-            persInfo.add(new MinorFighters());
+                persInfo.add(new MinorFighters());
+            }
         }
     }
 

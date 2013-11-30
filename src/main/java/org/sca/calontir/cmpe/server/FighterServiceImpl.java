@@ -197,9 +197,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
     @Override
     public void sendReportInfo(Map<String, Object> reportInfo) {
-        FighterDAO fighterDao = new FighterDAO();
-        Fighter user = fighterDao.getFighterByGoogleId((String) reportInfo.get("user.googleid"));
-
+        log("send report");
         Queue queue = QueueFactory.getDefaultQueue();
         TaskOptions to = withUrl("/BuildReport.groovy");
         to.method(TaskOptions.Method.POST);

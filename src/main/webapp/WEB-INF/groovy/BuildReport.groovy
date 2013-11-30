@@ -7,6 +7,7 @@ import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 import org.sca.calontir.cmpe.db.FighterDAO
 import org.sca.calontir.cmpe.dto.Fighter
 import org.apache.commons.lang.StringEscapeUtils
+import org.sca.calontir.cmpe.common.*
 
 def now = new DateTime()
 FighterDAO dao = new FighterDAO()
@@ -26,6 +27,7 @@ def from
 def to
 def location = user?.scaGroup?.groupLocation
 def activities = StringEscapeUtils.unescapeHtml(params["Activities"])
+def rmType = params["Reporting Marshal Type"]
 
 namespace.of("system") {
 	def query = new Query("properties")
@@ -36,6 +38,17 @@ namespace.of("system") {
 		def entity = entities[0]
 		ccs += entity.property
 	}
+
+    if (rmType.equals(ReportingMarshalType.CALON_STEEL.code)) {
+        query = new Query("properties")
+        query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + ".calonsteel.email")
+        preparedQuery = datastore.prepare(query)
+        entities = preparedQuery.asList( withLimit(10) )
+        if(entities != null && entities.size() > 0) {
+            def entity = entities[0]
+            ccs += entity.property
+        }
+    }
 
 	query = new Query("properties")
 	query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + ".from.email")
@@ -95,14 +108,21 @@ build.html{
 		h1 "Marshal Report"
 
 		p {
+			h3 ('class':'sect_title', 'style':'display: inline;', "Reporting Marshal Type: " )
+			span ('class':'sect_body', rmType)
+		}
+
+		p {
 			h3 ('class':'sect_title', 'style':'display: inline;', "Reporting Period: " )
 			span ('class':'sect_body', params["Report Type"])
 		}
 
-		p {
-			h3 ('class':'sect_title', 'style':'display: inline;',  "Marshal Type: "  )
-			span ('class':'sect_body', params["Marshal Type"])
-		}
+        if (rmType.equals(ReportingMarshalType.ARMORED_COMBAT.code)) {
+            p {
+                h3 ('class':'sect_title', 'style':'display: inline;',  "Marshal Type: "  )
+                span ('class':'sect_body', params["Marshal Type"])
+            }
+        }
 
 		p {
 			h3 ('class':'sect_title', 'style':'display: inline;',  "SCA Name: "  )

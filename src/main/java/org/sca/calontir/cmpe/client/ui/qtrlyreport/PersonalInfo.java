@@ -160,19 +160,18 @@ public class PersonalInfo extends BaseReportPage {
 
     @Override
     public boolean enableNext() {
-        // prevent addReportInfo from turning next on. We'll do that in this class.
-        return false;
+        return allRequired();
     }
 
     private boolean validate() {
         boolean retvalue = true;
-        retvalue = addReportInfo("Membership Expires", user.getMembershipExpires()) && retvalue;
-        retvalue = addReportInfo("SCA Name", user.getScaName()) && retvalue;
-        retvalue = addReportInfo("Group", user.getScaGroup().getGroupName()) && retvalue;
-        retvalue = addReportInfo("Modern Name", user.getModernName()) && retvalue;
-        retvalue = addReportInfo("Address", user.getPrimeAddress()) && retvalue;
-        retvalue = addReportInfo("SCA Membership No", user.getScaMemberNo()) && retvalue;
-        retvalue = addReportInfo("SCA Group", user.getScaGroup().getGroupName()) && retvalue;
+        retvalue = addReportInfo("Membership Expires", user.getMembershipExpires(), true) && retvalue;
+        retvalue = addReportInfo("SCA Name", user.getScaName(), true) && retvalue;
+        retvalue = addReportInfo("Group", user.getScaGroup().getGroupName(), true) && retvalue;
+        retvalue = addReportInfo("Modern Name", user.getModernName(), true) && retvalue;
+        retvalue = addReportInfo("Address", user.getPrimeAddress(), true) && retvalue;
+        retvalue = addReportInfo("SCA Membership No", user.getScaMemberNo(), true) && retvalue;
+        retvalue = addReportInfo("SCA Group", user.getScaGroup().getGroupName(), true) && retvalue;
         retvalue = addReportInfo("Phone Number", user.getPrimePhone()) && retvalue;
         retvalue = addReportInfo("Email Address", user.getPrimeEmail()) && retvalue;
 
