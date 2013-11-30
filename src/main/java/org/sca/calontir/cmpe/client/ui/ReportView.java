@@ -109,7 +109,8 @@ public class ReportView extends Composite {
 
         for (final Report r : result) {
             final String rmType = (String) r.getReportParams().get("Reporting Marshal Type");
-            final ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
+            final ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType) == null
+                    ? ReportingMarshalType.ARMORED_COMBAT : ReportingMarshalType.getByCode(rmType);
             final String header = r.getMarshalName() + " <<>> "
                     + "Report Marshal Type: " + rmt.getValue() + " <<>> "
                     + "Report Type: " + r.getReportType() + " <<>> "
@@ -161,7 +162,8 @@ public class ReportView extends Composite {
         }
 
         final String rmType = (String) report.getReportParams().get("Reporting Marshal Type");
-        final ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
+        final ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType) == null
+                ? ReportingMarshalType.ARMORED_COMBAT : ReportingMarshalType.getByCode(rmType);
 
         buildOne("Reporting Marshal Type: ", rmt.getValue(), bk);
         buildOne("Reporting Period: ", report.getReportType(), bk);

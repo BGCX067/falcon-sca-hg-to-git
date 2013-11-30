@@ -43,6 +43,7 @@ public class Welcome extends BaseReportPage {
             p2 = "To complete Marshal of the Field Report, press the Next>> button then follow the instructions.";
             addReportInfo("Marshal Type", "Marshal of the Field");
         }
+        p2 = p2 + " Please note, the correct quarter should be selected; do not change unless you need a different quarter.";
         HTML para2 = new HTML(p2);
         para2.setStylePrimaryName(REPORT_INSTRUCTIONS);
         bk.add(para2);
@@ -80,7 +81,7 @@ public class Welcome extends BaseReportPage {
 
         Panel qtrButtonPanel = new HorizontalPanel();
         qtrButtonPanel.setStylePrimaryName(REPORT_BUTTON_PANEL);
-        RadioButton qtr1Button = new RadioButton("reportType", "1st Quarter");
+        RadioButton qtr1Button = new RadioButton("reportType", "1st Quarter (April 15th)");
         qtr1Button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -91,7 +92,7 @@ public class Welcome extends BaseReportPage {
         });
         qtrButtonPanel.add(qtr1Button);
 
-        RadioButton qtr2Button = new RadioButton("reportType", "2nd Quarter");
+        RadioButton qtr2Button = new RadioButton("reportType", "2nd Quarter (July 15th)");
         qtr2Button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -102,7 +103,7 @@ public class Welcome extends BaseReportPage {
         });
         qtrButtonPanel.add(qtr2Button);
 
-        RadioButton qtr3Button = new RadioButton("reportType", "3rd Quarter");
+        RadioButton qtr3Button = new RadioButton("reportType", "3rd Quarter (October 15th)");
         qtr3Button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -113,7 +114,7 @@ public class Welcome extends BaseReportPage {
         });
         qtrButtonPanel.add(qtr3Button);
 
-        RadioButton qtr4Button = new RadioButton("reportType", "4th Quarter/Domesday");
+        RadioButton qtr4Button = new RadioButton("reportType", "4th Quarter/Domesday (January 15th)");
         qtr4Button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {

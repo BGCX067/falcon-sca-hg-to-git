@@ -28,6 +28,7 @@ def to
 def location = user?.scaGroup?.groupLocation
 def activities = StringEscapeUtils.unescapeHtml(params["Activities"])
 def rmType = params["Reporting Marshal Type"]
+def rmt = ReportingMarshalType.getByCode(rmType)
 
 namespace.of("system") {
 	def query = new Query("properties")
@@ -39,7 +40,7 @@ namespace.of("system") {
 		ccs += entity.property
 	}
 
-    if (rmType.equals(ReportingMarshalType.CALON_STEEL.code)) {
+    if (rmt.equals(ReportingMarshalType.CALON_STEEL)) {
         query = new Query("properties")
         query.addFilter("name", Query.FilterOperator.EQUAL, kingdom.toLowerCase() + ".calonsteel.email")
         preparedQuery = datastore.prepare(query)
@@ -109,7 +110,7 @@ build.html{
 
 		p {
 			h3 ('class':'sect_title', 'style':'display: inline;', "Reporting Marshal Type: " )
-			span ('class':'sect_body', rmType)
+			span ('class':'sect_body', rmt.value)
 		}
 
 		p {
@@ -117,7 +118,7 @@ build.html{
 			span ('class':'sect_body', params["Report Type"])
 		}
 
-        if (rmType.equals(ReportingMarshalType.ARMORED_COMBAT.code)) {
+        if (rmt.equals(ReportingMarshalType.ARMORED_COMBAT)) {
             p {
                 h3 ('class':'sect_title', 'style':'display: inline;',  "Marshal Type: "  )
                 span ('class':'sect_body', params["Marshal Type"])

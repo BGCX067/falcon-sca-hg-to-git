@@ -1,11 +1,22 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.*;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterInfo;
@@ -26,7 +37,7 @@ public class LookupController {
 
     private static final Logger log = Logger.getLogger(LookupController.class.getName());
     private final static long DAY = 86400000L;
-    private static LookupController _instance = new LookupController();
+    private static final LookupController _instance = new LookupController();
     private List<AuthType> authTypes = null;
     private List<ScaGroup> scaGroups = null;
     private Map<Long, FighterInfo> fighterMap = new HashMap<Long, FighterInfo>();
@@ -35,7 +46,6 @@ public class LookupController {
     private boolean fighterDLComplete = false;
     private FighterServiceAsync fighterService = GWT.create(FighterService.class);
     private Storage stockStore = Storage.getLocalStorageIfSupported();
-    private Shout shout = Shout.getInstance();
     public String versionId;
 
     private LookupController() {
