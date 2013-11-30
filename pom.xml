@@ -21,7 +21,7 @@
         <appengine.target.version>1.8.8</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
-        <gwt.version>2.5.1</gwt.version>
+        <gwt.version>2.6.0-rc1</gwt.version>
         <gaelyk.version>2.0</gaelyk.version>
         <gwt.style>OBF</gwt.style>
     </properties>
@@ -197,7 +197,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${gwt.version}</version>
                 <configuration>
                     <logLevel>INFO</logLevel>
                     <port>${gae.port}</port>
