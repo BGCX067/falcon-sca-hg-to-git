@@ -49,6 +49,12 @@ public class Final extends BaseReportPage {
         if (getReportInfo().containsKey("Marshal Type")) {
             buildOne("Marshal Type: ", getReportInfo().get("Marshal Type").toString(), bk);
         }
+        if (getReportInfo().containsKey("Event Name")) {
+            buildOne("Event Name: ", getReportInfo().get("Event Name").toString(), bk);
+        }
+        if (getReportInfo().containsKey("Event Date")) {
+            buildOne("Event Date: ", getReportInfo().get("Event Date").toString(), bk);
+        }
         if (getReportInfo().containsKey("Report Type")) {
             buildOne("Reporting Period: ", getReportInfo().get("Report Type").toString(), bk);
         }

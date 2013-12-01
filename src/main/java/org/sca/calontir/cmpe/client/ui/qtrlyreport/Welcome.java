@@ -195,19 +195,15 @@ public class Welcome extends BaseReportPage {
             injuryReport.init(reportInfo, required, submitButton, nextButton);
             getDeck().insert(injuryReport, getDeck().getWidgetCount() - 2);
         } else {
-            String rmType = (String) getReportInfo().get("Reporting Marshal Type");
-            ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
-            if (ReportingMarshalType.ARMORED_COMBAT.equals(rmt)) {
-                if (security.isRole(UserRoles.KNIGHTS_MARSHAL)
-                        || security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
-                    InjuryReport injuryReport = new InjuryReport();
-                    injuryReport.init(reportInfo, required, submitButton, nextButton);
-                    getDeck().insert(injuryReport, getDeck().getWidgetCount() - 2);
+            if (security.isRole(UserRoles.KNIGHTS_MARSHAL)
+                    || security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
+                InjuryReport injuryReport = new InjuryReport();
+                injuryReport.init(reportInfo, required, submitButton, nextButton);
+                getDeck().insert(injuryReport, getDeck().getWidgetCount() - 2);
 
-                    FighterComment fc = new FighterComment();
-                    fc.init(reportInfo, required, submitButton, nextButton);
-                    getDeck().insert(fc, getDeck().getWidgetCount() - 2);
-                }
+                FighterComment fc = new FighterComment();
+                fc.init(reportInfo, required, submitButton, nextButton);
+                getDeck().insert(fc, getDeck().getWidgetCount() - 2);
             }
         }
 

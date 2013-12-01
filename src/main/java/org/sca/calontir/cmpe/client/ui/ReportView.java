@@ -63,6 +63,7 @@ public class ReportView extends Composite {
         daysDropBox.addItem("30 Days", String.valueOf(30));
         daysDropBox.addItem("60 Days", String.valueOf(60));
         daysDropBox.addItem("90 Days", String.valueOf(90));
+        daysDropBox.addItem("180 Days", String.valueOf(180));
         daysDropBox.addItem("All", "ALL");
         background.add(daysDropBox);
 
