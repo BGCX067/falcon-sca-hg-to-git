@@ -92,6 +92,8 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                     return "/images/authorizedFighter.png";
                 } else if (fighter.getRole().equals(UserRoles.MARSHAL_OF_THE_FIELD.toString())) {
                     return "/images/warrantedMarshal.png";
+                } else if (fighter.getRole().equals(UserRoles.CUT_AND_THRUST_MARSHAL.toString())) {
+                    return "/images/falconCutAndThrustMarshal.png";
                 } else if (fighter.getRole().equals(UserRoles.KNIGHTS_MARSHAL.toString())) {
                     return "/images/knightsMarshal.png";
                 } else if (fighter.getRole().equals(UserRoles.DEPUTY_EARL_MARSHAL.toString())) {
