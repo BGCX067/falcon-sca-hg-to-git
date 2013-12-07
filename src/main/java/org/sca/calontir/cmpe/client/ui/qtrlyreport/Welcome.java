@@ -39,6 +39,9 @@ public class Welcome extends BaseReportPage {
         } else if (security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
             p2 = "To complete Group Marshal Report, press the Next>> button then follow the instructions.";
             addReportInfo("Marshal Type", "Group Marshal");
+        } else if (security.isRole(UserRoles.CUT_AND_THRUST_MARSHAL)) {
+            p2 = "To complete Cut and Thrust Marshal Report, press the Next>> button then follow the instructions.";
+            addReportInfo("Marshal Type", "Cut and Thrust Marshal");
         } else {
             p2 = "To complete Marshal of the Field Report, press the Next>> button then follow the instructions.";
             addReportInfo("Marshal Type", "Marshal of the Field");

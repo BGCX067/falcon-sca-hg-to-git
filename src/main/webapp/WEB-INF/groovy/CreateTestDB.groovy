@@ -67,6 +67,12 @@ ct.description = "Heavy Rapier/Cut and Thrust"
 ct.orderValue = ++i
 ct.save()
 
+def ctMarshal = new Entity("AuthType")
+ctMarshal.code = "CT Marshal"
+ctMarshal.description = "Cut and Thrust Marshal"
+ctMarshal.orderValue = ++i
+ctMarshal.save()
+
 def ca = new Entity("AuthType")
 ca.code = "CA"
 ca.description = "Combat Archery"
