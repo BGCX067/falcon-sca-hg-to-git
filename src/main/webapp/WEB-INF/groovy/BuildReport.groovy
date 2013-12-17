@@ -29,6 +29,9 @@ def location = user?.scaGroup?.groupLocation
 def activities = StringEscapeUtils.unescapeHtml(params["Activities"])
 def rmType = params["Reporting Marshal Type"]
 def rmt = ReportingMarshalType.getByCode(rmType)
+if (rmt == null) {
+    rmt = ReportingMarshalType.ARMORED_COMBAT
+}
 
 namespace.of("system") {
 	def query = new Query("properties")
