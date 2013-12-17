@@ -128,13 +128,15 @@ build.html{
             }
         }
 
-        if (params("Event Name")) {
-			h3 ('class':'sect_title', 'style':'display: inline;',  "Event Name: "  )
-			span ('class':'sect_body', params["Event Name"])
-        }
-        if (params("Event Date")) {
-			h3 ('class':'sect_title', 'style':'display: inline;',  "Event Date: "  )
-			span ('class':'sect_body', params["Event Date"])
+        if("Event".equals(params["Report Type"])) {
+            p {
+                h3 ('class':'sect_title', 'style':'display: inline;',  "Event Name: "  )
+                span ('class':'sect_body', params["Event Name"])
+            }
+            p {
+                h3 ('class':'sect_title', 'style':'display: inline;',  "Event Date: "  )
+                span ('class':'sect_body', params["Event Date"])
+            }
         }
 
 		p {
