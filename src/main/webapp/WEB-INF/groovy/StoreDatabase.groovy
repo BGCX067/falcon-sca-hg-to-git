@@ -6,7 +6,15 @@ import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
 
 logger.StoreDatabase.info "Storing database"
-def fighters = datastore.iterate {
+
+def fighterCount = datastore.execute {
+    select count from Fighter
+    where status != "DELETED"
+}
+
+logger.StoreDatabase.info "Count returns " + fighterCount
+
+def fighters = datastore.build {
     select all from Fighter
     where status != "DELETED"
     restart automatically
@@ -14,11 +22,11 @@ def fighters = datastore.iterate {
 
 def file = files.createNewBlobFile("text/json", "fighters.json")
 
-
 def json = new groovy.json.JsonBuilder()
 
 def mapList = []
-fighters.each { fighter ->
+long savedCount = 0L
+fighters.iterate().each { fighter ->
     def fmap = [:]
     fmap.scaName = fighter.scaName
     fmap.id = fighter.key.id
@@ -42,6 +50,15 @@ fighters.each { fighter ->
     fmap.status = fighter.status
     fmap.role = fighter.role ?  fighter.role : "USER"
     mapList << fmap
+    ++savedCount
+}
+logger.StoreDatabase.info "mapList size " + mapList.size()
+
+if (savedCount == fighterCount) {
+    logger.StoreDatabase.info "Saved " + savedCount + " fighters"
+} else {
+    logger.StoreDatabase.info "Only found " + savedCount + " fighters. Ending"
+    return
 }
 
 def now = new Date()
