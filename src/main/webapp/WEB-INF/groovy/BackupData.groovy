@@ -32,8 +32,14 @@ if(runToday) {
 	return
 }
 
-
 Security security = SecurityFactory.getSecurity()
+
+def fighterCount = datastore.execute {
+    select count from Fighter
+    where status != "DELETED"
+}
+
+logger.StoreDatabase.info "Count returns " + fighterCount
 
 def fightersInterater = datastore.iterate {
     select all from Fighter
@@ -41,6 +47,7 @@ def fightersInterater = datastore.iterate {
 }
 
 def mapList = []
+long savedCount = 0L
 fightersInterater.each { f ->
 	def fmap = [:]
 	fmap.fighterId = f.key.id
@@ -115,7 +122,18 @@ fightersInterater.each { f ->
 	fmap.status = f.status
 	fmap.treaty = f.treaty?.name
 	mapList << fmap
+    ++savedCount
 }
+
+logger.StoreDatabase.info "mapList size " + mapList.size()
+
+if (savedCount == fighterCount) {
+    logger.StoreDatabase.info "Saved " + savedCount + " fighters"
+} else {
+    logger.StoreDatabase.info "Only found " + savedCount + " fighters. Ending"
+    return
+}
+
 def reportList = []
 namespace.of("calontir") {
     def reports = datastore.execute {
