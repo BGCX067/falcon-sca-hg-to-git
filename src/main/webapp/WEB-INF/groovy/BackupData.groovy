@@ -41,14 +41,14 @@ def fighterCount = datastore.execute {
 
 logger.StoreDatabase.info "Count returns " + fighterCount
 
-def fightersInterater = datastore.iterate {
+def fighters = datastore.iterate {
     select all from Fighter
     restart automatically
 }
 
 def mapList = []
 long savedCount = 0L
-fightersInterater.each { f ->
+for (fighter in fighters) {
 	def fmap = [:]
 	fmap.fighterId = f.key.id
 	fmap.scaName = f.scaName
