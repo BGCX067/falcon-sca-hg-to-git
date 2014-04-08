@@ -18,12 +18,12 @@
 
     <properties>
         <appengine.app.version>1-2-12</appengine.app.version>
-        <appengine.target.version>1.8.9</appengine.target.version>
+        <appengine.target.version>1.9.2</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
         <gwt.version>2.6.0</gwt.version>
-        <gaelyk.version>2.0</gaelyk.version>
-        <gwt.style>OBF</gwt.style>
+        <gaelyk.version>2.1.1</gaelyk.version>
+        <gwt.style>DETAILED</gwt.style>
     </properties>
 
     <dependencies>
@@ -197,7 +197,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${gwt.version}</version>
                 <configuration>
                     <logLevel>INFO</logLevel>
                     <port>${gae.port}</port>
@@ -208,12 +208,6 @@
                         <value>org.sca.calontir.cmpe.Goodbye</value>
                         <value>org.sca.calontir.cmpe.Loggedin</value>
                     </compileTargets>
-                    <!-- This is for generating Asynch interfaces -->
-                    <!-- <servicePattern>**/client/*Service.java</servicePattern> -->
-                    <!-- <extraJvmArgs>-Xss1M -Xmx512m</extraJvmArgs> -->
-                    <!--<jvm>${JAVA_HOME}/bin/java</jvm> -->
-                    <!--<noServer>false</noServer> -->
-                    <!-- TODO This should help running GAE stuff in hosted mode (when gwt-maven-plugin-1.2 is released, see http://jira.codehaus.org/browse/MGWT-112) -->
                     <server>com.google.appengine.tools.development.gwt.AppEngineLauncher </server>
                     <runTarget>/index.jsp</runTarget>
                     <style>${gwt.style}</style>

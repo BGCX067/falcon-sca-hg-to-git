@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
@@ -185,6 +186,11 @@ public class PersonalInfo extends BaseReportPage {
 
     @Override
     public void onDisplay() {
+        if (nextButton == null) {
+            log.log(Level.SEVERE, "Next button was not created");
+            Shout.getInstance().tell("An error has occured. Please contact the support team.");
+            return;
+        }
         nextButton.setEnabled(validate());
     }
 
