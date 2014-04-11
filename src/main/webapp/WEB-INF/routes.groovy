@@ -1,0 +1,1 @@
+get "/EarlMarshalReport", forward: "EarlMarshalReport.groovy"
