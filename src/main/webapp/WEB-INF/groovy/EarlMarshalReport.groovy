@@ -68,18 +68,54 @@ for (key in fighterKeys) {
 
 StringWriter writer = new StringWriter()
 def build = new MarkupBuilder(writer)
+def row = 1
 build.html {
 	head {
 		title('Report')
-	}
-	body {
-        p"Earl Marshal Report"
-		p"Number of Active, Inactive, and Suspended ${fighterCount}"
-		p"Number of active fighters ${activeCount}"
-		p"Number of Active fighters with CR/HT Authorization ${ctCount}"
-		p"Number of Active fighters with CT Marshal Authorization ${ctCount}"
-		p"Number of Active fighters with Marshal Authorization ${marshalCount}"
-		p"Number of Warranted Marshals ${warrantedMarshals}"
+        link(href:'css/default.css', type:'text/css', rel:'stylesheet')
+        link(href:'css/cmp_007.css', type:'text/css', rel:'stylesheet')
+        link(href:'css/report.css', type:'text/css', rel:'stylesheet')
+    }
+
+    body {
+        a(class: "buttonLink", href:'/', "Home")
+        div (class: "dataBox") {
+            table {
+                tr {
+                    td(class: "header", colspan: "2", "Earl Marshal Report")
+                }
+                tr {
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", "Number of Active, Inactive, and Suspended")
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", fighterCount)
+                    row++
+                }
+                tr {
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", "Number of active fighters")
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", activeCount)
+                    row++
+                }
+                tr {
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", "Number of Active fighters with CR/HT Authorization")
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", ctCount)
+                    row++
+                }
+                tr {
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", "Number of Active fighters with CT Marshal Authorization")
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", ctMarshalCount)
+                    row++
+                }
+                tr {
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", "Number of Active fighters with Marshal Authorization")
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", marshalCount)
+                    row++
+                }
+                tr {
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", "Number of Warranted Marshals")
+                    td(class: "${row%2 == 0 ? 'row_even': 'row_odd'}", warrantedMarshals)
+                    row++
+                }
+            }
+        }
     }
 }
 println writer.toString()
