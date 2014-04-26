@@ -42,6 +42,7 @@ logger.StoreDatabase.info "Count returns " + fighterCount
 
 def fighters = datastore.iterate {
     select all from Fighter
+    sort asc  by scaName
     prefetchSize fighterCount
     chunkSize 100
     restart automatically
