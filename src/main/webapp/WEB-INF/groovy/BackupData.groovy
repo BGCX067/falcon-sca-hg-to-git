@@ -52,16 +52,16 @@ def mapList = []
 long savedCount = 0L
 for (fighter in fighters) {
 	def fmap = [:]
-	fmap.fighterId = f.key.id
-	fmap.scaName = f.scaName
-	fmap.scaMemberNo = f.scaMemberNo
-	fmap.modernName = f.modernName
-	fmap.dateOfBirth = f.dateOfBirth
-	fmap.googleId = f.googleId
+	fmap.fighterId = fighter.key.id
+	fmap.scaName = fighter.scaName
+	fmap.scaMemberNo = fighter.scaMemberNo
+	fmap.modernName = fighter.modernName
+	fmap.dateOfBirth = fighter.dateOfBirth
+	fmap.googleId = fighter.googleId
 	def emailList = []
     def emails = datastore.execute {
         select all from 'Email'
-        ancestor f.key
+        ancestor fighter.key
     }
 	emails.each {email ->
 		def emailMap = [:]
@@ -72,7 +72,7 @@ for (fighter in fighters) {
 	fmap.email = emailList
     def addresses = datastore.execute {
         select all from Address
-        ancestor f.key
+        ancestor fighter.key
     }
 	def addressList = []
 	addresses.each { address->
@@ -89,7 +89,7 @@ for (fighter in fighters) {
 	fmap.address = addressList
     def phones = datastore.execute {
         select all from Phone
-        ancestor f.key
+        ancestor fighter.key
     }
 	def phoneList = []
 	phones.each {phone ->
@@ -102,7 +102,7 @@ for (fighter in fighters) {
 	def authList = []
     def authorizations = datastore.execute {
         select all from Authorization
-        ancestor f.key
+        ancestor fighter.key
     }
 	authorizations.each { auth ->
 		def authMap = [:]
@@ -114,15 +114,15 @@ for (fighter in fighters) {
 		authList << authMap
 	}
 	fmap.authorization = authList
-	if(f.scaGroup) {
-        def group = f.scaGroup.get()
+	if(fighter.scaGroup) {
+        def group = fighter.scaGroup.get()
         fmap.group = group.groupName
     } else {
         fmap.group = "Unknown or Out of Kingdom"
     }
-	fmap.role = f.role
-	fmap.status = f.status
-	fmap.treaty = f.treaty?.name
+	fmap.role = fighter.role
+	fmap.status = fighter.status
+	fmap.treaty = fighter.treaty?.name
 	mapList << fmap
     ++savedCount
 }
