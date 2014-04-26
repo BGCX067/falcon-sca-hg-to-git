@@ -36,13 +36,14 @@ Security security = SecurityFactory.getSecurity()
 
 def fighterCount = datastore.execute {
     select count from Fighter
-    where status != "DELETED"
 }
 
 logger.StoreDatabase.info "Count returns " + fighterCount
 
 def fighters = datastore.iterate {
     select all from Fighter
+    prefetchSize fighterCount
+    chunkSize 100
     restart automatically
 }
 

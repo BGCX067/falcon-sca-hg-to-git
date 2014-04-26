@@ -9,14 +9,15 @@ logger.StoreDatabase.info "Storing database"
 
 def fighterCount = datastore.execute {
     select count from Fighter
-    where status != "DELETED"
+    where status != FighterStatus.DELETED.toString()
 }
 
 logger.StoreDatabase.info "Count returns " + fighterCount
 
 def fighters = datastore.iterate {
     select all from Fighter
-    where status != "DELETED"
+    prefetchSize fighterCount
+    chunkSize 100
     restart automatically
 }
 
@@ -27,6 +28,9 @@ def json = new groovy.json.JsonBuilder()
 def mapList = []
 long savedCount = 0L
 for (fighter in fighters) {
+    if(fighter.status == FighterStatus.DELETED.toString()) {
+        continue
+    }
     def fmap = [:]
     fmap.scaName = fighter.scaName
     fmap.id = fighter.key.id
