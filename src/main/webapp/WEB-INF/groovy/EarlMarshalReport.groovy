@@ -78,7 +78,6 @@ build.html {
     }
 
     body {
-        a(class: "buttonLink", href:'/', "Home")
         div (class: "dataBox") {
             table {
                 tr {
@@ -115,6 +114,9 @@ build.html {
                     row++
                 }
             }
+        }
+        div (style:'width: 90%;') {
+            a(class: "buttonLink", href:'/', style:'float: right; padding-right: 1em;', "Home")
         }
     }
 }

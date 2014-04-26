@@ -5,7 +5,6 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -47,7 +46,7 @@ public class CalonBar extends Composite {
     private final Anchor feedBackLink = new Anchor("Feedback");
     private final Anchor supportLink = new Anchor("Support");
     private final Anchor reportLink = new Anchor("Report");
-    private final Anchor reportViewLink = new Anchor("Report View");
+    private final Anchor reportsLink = new Anchor("Report View");
 
     private static class AboutPanel extends PopupPanel {
 
@@ -95,8 +94,7 @@ public class CalonBar extends Composite {
     }
 
     public CalonBar() {
-
-        DOM.setElementAttribute(barPanel.getElement(), "id", CALONBAR);
+        barPanel.getElement().setId(CALONBAR);
 
         final FlowPanel linkbarPanel = new FlowPanel();
         linkbarPanel.setStyleName("linkbar");
@@ -150,8 +148,8 @@ public class CalonBar extends Composite {
 
         if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
             linkbarPanel.add(getDivBar());
-            reportViewLink.setStyleName(CALONBARLINK);
-            reportViewLink.addClickHandler(new ClickHandler() {
+            reportsLink.setStyleName(CALONBARLINK);
+            reportsLink.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
                     GWT.runAsync(new RunAsyncCallback() {
@@ -163,17 +161,17 @@ public class CalonBar extends Composite {
                         @Override
                         public void onSuccess() {
                             DisplayUtils.clearDisplay();
-                            ReportView reportView = new ReportView();
-                            reportView.init();
-                            reportView.getElement().setId(DisplayUtils.Displays.ReportView.toString());
+                            Reports reports = new Reports();
+                            reports.init();
+                            reports.getElement().setId(DisplayUtils.Displays.Reports.toString());
 
                             Panel tilePanel = RootPanel.get("tile");
-                            tilePanel.add(reportView);
+                            tilePanel.add(reports);
                         }
                     });
                 }
             });
-            linkbarPanel.add(reportViewLink);
+            linkbarPanel.add(reportsLink);
         }
 
         linkbarPanel.add(getDivBar());

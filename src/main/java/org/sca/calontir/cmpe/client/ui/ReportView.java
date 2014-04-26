@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
@@ -45,7 +46,7 @@ public class ReportView extends Composite {
         fighterService.getReports(30, new AsyncCallback<List<Report>>() {
             @Override
             public void onFailure(Throwable caught) {
-                log.severe("getAllReports" + caught);
+                log.log(Level.SEVERE, "getAllReports{0}", caught);
             }
 
             @Override
