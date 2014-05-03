@@ -23,7 +23,7 @@ public class LoginInfo implements Serializable {
     private long fighterId;
 
     public boolean isUser() {
-        return getScaName() != null && !getScaName().trim().isEmpty();
+        return isLoggedIn() && getScaName() != null && !getScaName().trim().isEmpty();
     }
 
     public boolean isLoggedIn() {

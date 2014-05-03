@@ -27,11 +27,13 @@ import org.sca.calontir.cmpe.client.ui.EditViewEvent;
 import org.sca.calontir.cmpe.client.ui.FighterFormWidget;
 import org.sca.calontir.cmpe.client.ui.FighterListBox;
 import org.sca.calontir.cmpe.client.ui.LookupController;
+import org.sca.calontir.cmpe.client.ui.Mode;
 import org.sca.calontir.cmpe.client.ui.SearchBar;
 import org.sca.calontir.cmpe.client.ui.SearchEvent;
 import org.sca.calontir.cmpe.client.ui.Shout;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.dto.Fighter;
 
 /**
  * Entry Point.
@@ -205,6 +207,21 @@ public class IndexPage implements EntryPoint {
             public void onSuccess() {
                 foundMultibleResults();
                 buildFighterForm();
+                if (loginInfo.isUser()) {
+                    FighterServiceAsync fighterService = GWT.create(FighterService.class);
+
+                    fighterService.getFighter(loginInfo.getFighterId(), new AsyncCallback<Fighter>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            log.severe("getFighter " + caught.getMessage());
+                        }
+
+                        @Override
+                        public void onSuccess(Fighter result) {
+                            flb.fireEvent(new EditViewEvent(Mode.VIEW, result));
+                        }
+                    });
+                }
             }
         });
     }
