@@ -42,9 +42,8 @@ logger.StoreDatabase.info "Count returns " + fighterCount
 
 def fighters = datastore.iterate {
     select all from Fighter
-    sort asc  by scaName
     prefetchSize fighterCount
-    chunkSize 100
+    chunkSize 1000
     restart automatically
 }
 
@@ -130,9 +129,9 @@ for (fighter in fighters) {
 logger.StoreDatabase.info "mapList size " + mapList.size()
 
 if (savedCount == fighterCount) {
-    logger.StoreDatabase.info "Saved " + savedCount + " fighters"
+    logger.BackupData.info "Saved " + savedCount + " fighters"
 } else {
-    logger.StoreDatabase.info "Only found " + savedCount + " fighters. Ending"
+    logger.BackupData.warning "Only found " + savedCount + " fighters. Ending"
     return
 }
 
