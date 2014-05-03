@@ -124,14 +124,14 @@ public class IndexPage implements EntryPoint {
                         SecurityFactory.setLoginInfo(loginInfo);
                         if (security.isLoggedIn()) {
                             final Label hello;
-                            if (loginInfo.getScaName() == null || loginInfo.getScaName().trim().isEmpty()) {
-                                needToRegister = true;
-                                hello = new Label("Welcome " + loginInfo.getNickname());
-                                log.info("Logged in with " + loginInfo.getNickname());
-                            } else {
+                            if (loginInfo.isUser()) {
                                 needToRegister = false;
                                 hello = new Label("Welcome " + loginInfo.getScaName());
                                 log.info("Logged in as " + loginInfo.getScaName() + ":" + loginInfo.getNickname());
+                            } else {
+                                needToRegister = true;
+                                hello = new Label("Welcome " + loginInfo.getNickname());
+                                log.info("Logged in with " + loginInfo.getNickname());
                             }
                             hello.setStyleName("hello", true);
                             tilePanel.add(hello);
@@ -191,7 +191,10 @@ public class IndexPage implements EntryPoint {
         fighterFormWidget.addHandler(searchBar, DataUpdatedEvent.TYPE);
         tilePanel.add(searchBar);
 
-        onIndexPage();
+        final LoginInfo loginInfo = security.getLoginInfo();
+        if (!loginInfo.isUser()) {
+            buildSignUp(loginInfo);
+        }
         GWT.runAsync(new RunAsyncCallback() {
             @Override
             public void onFailure(Throwable reason) {
@@ -206,24 +209,31 @@ public class IndexPage implements EntryPoint {
         });
     }
 
-    private void onIndexPage() {
-        Panel signupPanel = new FlowPanel();
+    private void buildSignUp(LoginInfo loginInfo) {
+        final Panel signupPanel = new FlowPanel();
         signupPanel.setStyleName("dataBox");
         signupPanel.getElement().setId(DisplayUtils.Displays.SignupForm.toString());
 
-        Panel innerSignupPanel = new FlowPanel();
+        final Panel innerSignupPanel = new FlowPanel();
         innerSignupPanel.setStyleName("dataBody");
         innerSignupPanel.setStyleName("signupPanel", true);
         innerSignupPanel.getElement().setId("innerSignupPanel");
 
-        Anchor register = new Anchor("Not registered? Sign up now!");
+        if (!loginInfo.isLoggedIn()) {
+            final Anchor signInLink = new Anchor("Sign In with Google ID");
+            signInLink.setHref(loginInfo.getLoginUrl());
+            signInLink.getElement().getStyle().setFloat(Style.Float.LEFT);
+            innerSignupPanel.add(signInLink);
+        }
+
+        final Anchor register = new Anchor("Not registered? Sign up now!");
         register.setHref("https://docs.google.com/spreadsheet/viewform?formkey=dEhpX0tCWmhGRU9tNjF4OVdtTjZpcHc6MQ");
+        register.getElement().getStyle().setFloat(Style.Float.RIGHT);
         innerSignupPanel.add(register);
 
         signupPanel.add(innerSignupPanel);
 
         tilePanel.add(signupPanel);
-
     }
 
     private void foundMultibleResults() {

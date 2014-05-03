@@ -22,6 +22,10 @@ public class LoginInfo implements Serializable {
     private UserRoles userRole;
     private long fighterId;
 
+    public boolean isUser() {
+        return getScaName() != null && !getScaName().trim().isEmpty();
+    }
+
     public boolean isLoggedIn() {
         return loggedIn;
     }
@@ -85,7 +89,5 @@ public class LoginInfo implements Serializable {
     public void setFighterId(long fighterId) {
         this.fighterId = fighterId;
     }
-    
-    
-    
+
 }
