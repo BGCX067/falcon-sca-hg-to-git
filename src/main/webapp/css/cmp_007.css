@@ -1,4 +1,4 @@
-/* 
+/*
     Document   : default
     Created on : Apr 24, 2011, 6:09:30 PM
     Author     : rik
@@ -7,58 +7,58 @@
 */
 
 
-root { 
+root {
     display: block;
 }
 
 body {
-	background-color: #2D1155;
+    background-color: #2D1155;
 }
 
 .gwt-RichTextArea {
-	width: 100%;
-	height: 20em;
+    width: 100%;
+    height: 20em;
 }
 
 #base {
-	background-color: transparent;
-	border-left: 3px double #ffcc00;
-	border-right: 3px double #ffcc00;
-	border-bottom: 3px double #ffcc00;
-	margin-left: 22px;
-	margin-right: 22px;
-	margin-bottom: 1em;
+    background-color: transparent;
+    border-left: 3px double #ffcc00;
+    border-right: 3px double #ffcc00;
+    border-bottom: 3px double #ffcc00;
+    margin-left: 22px;
+    margin-right: 22px;
+    margin-bottom: 1em;
 }
 
 #tile {
-	background-color: #F8F3E2;
-	border-left: ridge 2px #f8f3e2;
-	border-right: groove 2px #f8f3e2;
-	border-bottom: groove 2px #f8f3e2;
-	border-top: ridge 2px #f8f3e2;
-	margin-left: 1em;
-	margin-right: 1em;
-	margin-top: 0;
-	margin-bottom: 1em;
+    background-color: #F8F3E2;
+    border-left: ridge 2px #f8f3e2;
+    border-right: groove 2px #f8f3e2;
+    border-bottom: groove 2px #f8f3e2;
+    border-top: ridge 2px #f8f3e2;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 0;
+    margin-bottom: 1em;
 }
 
 .title {
-	display: inline;
-	text-align: left;
+    display: inline;
+    text-align: left;
     color:#2D1155;
-	font-size: x-large;
-	vertical-align: top;
+    font-size: x-large;
+    vertical-align: top;
 }
 
 .titleImage {
-	padding: .25em;
+    padding: .25em;
 }
 
 .hello {
-	display: block;
-	text-align: left;
+    display: block;
+    text-align: left;
     color:#2D1155;
-	margin: .25em;
+    margin: .25em;
 }
 
 .userbox {
@@ -80,7 +80,7 @@ body {
     width: 100%;
 }
 
-a.buttonLink, a.buttonLink:visited, a.buttonLink:link { 
+a.buttonLink, a.buttonLink:visited, a.buttonLink:link {
     display: inline;
     border-style: solid;
     border-width : 2px;
@@ -95,7 +95,7 @@ a.buttonLink, a.buttonLink:visited, a.buttonLink:link {
     border-radius: 5px;
     background-color: white;
     font-size: smaller;
-	color: black;
+    color: black;
 }
 
 a.buttonLink:active, a.buttonLink:hover {
@@ -104,7 +104,7 @@ a.buttonLink:active, a.buttonLink:hover {
 }
 
 #searchBar {
-	color: #F8F3E2;
+    color: #F8F3E2;
     background-color: #2D1155;
     display: block;
     border: 1px solid #2D1155;
@@ -138,7 +138,7 @@ a.buttonLink:active, a.buttonLink:hover {
     -moz-transition: opacity 0.5s ease-out;  /* FF4+ */
     -ms-transition: opacity 0.5s ease-out;  /* IE10? */
     -o-transition: opacity 0.5s ease-out;  /* Opera 10.5+ */
-    transition: opacity 0.5s ease-out;      
+    transition: opacity 0.5s ease-out;
 }
 
 #uimessage {
@@ -159,7 +159,7 @@ a.buttonLink:active, a.buttonLink:hover {
     -moz-transition: opacity 0.5s ease-out;  /* FF4+ */
     -ms-transition: opacity 0.5s ease-out;  /* IE10? */
     -o-transition: opacity 0.5s ease-out;  /* Opera 10.5+ */
-    transition: opacity 0.5s ease-out;  
+    transition: opacity 0.5s ease-out;
 }
 
 .figherIdBox {
@@ -182,8 +182,8 @@ a.buttonLink:active, a.buttonLink:hover {
     border: 1px solid darkblue;
     text-align: left;
     vertical-align: middle;
-	margin-left:auto;
-	margin-right:auto;
+    margin-left:auto;
+    margin-right:auto;
     margin-bottom: .25em;
     margin-top: 4em;
     width: 90%;
@@ -251,15 +251,9 @@ a.buttonLink:active, a.buttonLink:hover {
 }
 
 .signupPanel {
-	color: #2D1155;
-	font-family: Georgia, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", serif;
-}
-
-.gettingStarted {
-	text-align: right;
-    float: right;
-    display: inline;
-	vertical-align: top;
+    color: #2D1155;
+    font-family: Georgia, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", serif;
+    text-align: right;
 }
 
 #fighterInfo {
@@ -267,7 +261,7 @@ a.buttonLink:active, a.buttonLink:hover {
 }
 
 #adminInfo {
-    border: 3px double #666666 
+    border: 3px double #666666
 }
 
 a.Delete:active, a.Delete:visited, a.Delete:link {
@@ -323,7 +317,7 @@ table.wide-table {
 }
 
 .loplabel {
-   display: inline;
+    display: inline;
 }
 
 .loplink {
@@ -346,7 +340,7 @@ a.loplink:link, a.loplink:visited {
     border-radius: 5px;
     background-color: white;
     font-size: smaller;
-	color: black;
+    color: black;
 }
 
 a.loplink:hover, a.loplink:active {
@@ -356,7 +350,7 @@ a.loplink:hover, a.loplink:active {
 
 .reportTextBox {
     width: 99%;
-	min-height: 10em;
+    min-height: 10em;
 }
 
 .reportButtonPanel {
@@ -382,20 +376,20 @@ a.loplink:hover, a.loplink:active {
 
 .reportTitle {
     font-size: larger;
-	color: black;
+    color: black;
 }
 
 .reportInstructions {
-	color: black;
-	margin-bottom: 1em;
+    color: black;
+    margin-bottom: 1em;
 }
 
 .personalInfo {
-	color: black;
+    color: black;
 }
 
 .personalInfo table {
-	width: 100%;
+    width: 100%;
 }
 
 .activitiesInfo {
@@ -403,16 +397,16 @@ a.loplink:hover, a.loplink:active {
 }
 
 .activitiesInfo .gwt-Label {
-	display: inline;
-	padding-right: 1em;
+    display: inline;
+    padding-right: 1em;
 }
 
 .activitiesInfo text {
-	display: inline;
-	width: 1.5em;
-	margin-right: 1em;
+    display: inline;
+    width: 1.5em;
+    margin-right: 1em;
 }
 
 #ReportGen .buttonLink {
-	margin-right: 2em;
+    margin-right: 2em;
 }

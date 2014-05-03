@@ -15,7 +15,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -46,7 +45,6 @@ import org.sca.calontir.cmpe.client.user.SecurityFactory;
 public class IndexPage implements EntryPoint {
 
     private static final Logger log = Logger.getLogger(IndexPage.class.getName());
-    protected static final String GETTING_STARTED = "https://sites.google.com/site/calontirmmproject/support";
     final private Security security = SecurityFactory.getSecurity();
     private FighterFormWidget fighterFormWidget;
     private FighterListBox flb;
@@ -145,8 +143,8 @@ public class IndexPage implements EntryPoint {
                         if (needToRegister) {
                             // this user was not found in our system.
                             shout.tell("A Falcon user for "
-                            + loginInfo.getNickname()
-                            + " was not found. Please register if you have not, or contact the support team if there is a problem.", false);
+                                    + loginInfo.getNickname()
+                                    + " was not found. Please register if you have not, or contact the support team if there is a problem.", false);
                         }
                     }
                 });
@@ -218,15 +216,9 @@ public class IndexPage implements EntryPoint {
         innerSignupPanel.setStyleName("signupPanel", true);
         innerSignupPanel.getElement().setId("innerSignupPanel");
 
-        HTML p = new HTML();
-        p.setHTML("<a href=\"https://docs.google.com/spreadsheet/viewform?formkey=dEhpX0tCWmhGRU9tNjF4OVdtTjZpcHc6MQ\">Not registered? Sign up now!</a>");
-        p.getElement().getStyle().setDisplay(Style.Display.INLINE);
-        innerSignupPanel.add(p);
-
-        Anchor gettingStarted = new Anchor("Getting Started>>");
-        gettingStarted.setHref(GETTING_STARTED);
-        gettingStarted.setStyleName("gettingStarted");
-        innerSignupPanel.add(gettingStarted);
+        Anchor register = new Anchor("Not registered? Sign up now!");
+        register.setHref("https://docs.google.com/spreadsheet/viewform?formkey=dEhpX0tCWmhGRU9tNjF4OVdtTjZpcHc6MQ");
+        innerSignupPanel.add(register);
 
         signupPanel.add(innerSignupPanel);
 
