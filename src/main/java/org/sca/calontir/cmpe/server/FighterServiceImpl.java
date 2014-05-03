@@ -119,7 +119,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<>();
         // get application version
-        iMap.put("appversion", "1.2.13");
+        iMap.put("appversion", "1.2.14");
 
         // get from blob
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
