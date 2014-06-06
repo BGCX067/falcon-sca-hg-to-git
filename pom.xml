@@ -17,7 +17,7 @@
     </scm>
 
     <properties>
-        <appengine.app.version>1-2-14</appengine.app.version>
+        <appengine.app.version>1-2-15</appengine.app.version>
         <appengine.target.version>1.9.5</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>

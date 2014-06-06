@@ -1,5 +1,6 @@
 package org.sca.calontir.cmpe.db;
 
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -7,7 +8,9 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.QueryResultList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,6 +29,7 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
 import org.sca.calontir.cmpe.dto.Email;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.FighterListItem;
+import org.sca.calontir.cmpe.dto.FighterResultWrapper;
 import org.sca.calontir.cmpe.dto.Note;
 import org.sca.calontir.cmpe.dto.Phone;
 
@@ -57,6 +61,26 @@ public class FighterDAO {
         }
 
         return retVal;
+    }
+
+    public FighterResultWrapper getFighters(int pageSize, Cursor cursor) {
+        final Query query = new Query("Fighter").addSort("scaName");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        if (cursor != null) {
+            fetchOptions.startCursor(cursor);
+        }
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
     }
 
     private Entity getFighterEntity(long fighterId) throws EntityNotFoundException {
@@ -470,5 +494,12 @@ public class FighterDAO {
             }
         }
         return true;
+    }
+
+    public int getTotalCount() {
+        Query query = new Query("Fighter").setKeysOnly();
+        FetchOptions fetchOptions = FetchOptions.Builder.withDefaults();
+        PreparedQuery pq = datastore.prepare(query);
+        return pq.countEntities(fetchOptions);
     }
 }

@@ -19,14 +19,19 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.DisplayUtils;
 import org.sca.calontir.cmpe.client.FighterInfo;
+import org.sca.calontir.cmpe.client.FighterListResultWrapper;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.SearchEvent.SearchType;
@@ -43,9 +48,10 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
 public class FighterListBox extends Composite implements SearchEventHandler {
 
     private static final Logger log = Logger.getLogger(FighterListBox.class.getName());
-    final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
-    final private CellTable<FighterInfo> table = new CellTable<FighterInfo>();
+    final private ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<>();
+    final private CellTable<FighterInfo> table = new CellTable<>();
     final private Security security = SecurityFactory.getSecurity();
+    private String cursor = null;
 
     public FighterListBox() {
         Panel listBackground = new FlowPanel();
@@ -134,7 +140,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
         table.addColumn(selectColumn, "");
         table.addColumn(imageColumn);
         table.addColumn(scaNameColumn, "SCA Name");
-        ColumnSortEvent.ListHandler<FighterInfo> columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
+        ColumnSortEvent.ListHandler<FighterInfo> columnSortHandler = new ColumnSortEvent.ListHandler<>(dataProvider.getList());
         columnSortHandler.setComparator(scaNameColumn, new Comparator<FighterInfo>() {
             @Override
             public int compare(FighterInfo left, FighterInfo right) {
@@ -144,7 +150,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
         table.addColumnSortHandler(columnSortHandler);
         table.addColumn(authorizationColumn, "Authorizations");
         table.addColumn(groupColumn, "Group");
-        columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
+        columnSortHandler = new ColumnSortEvent.ListHandler<>(dataProvider.getList());
         columnSortHandler.setComparator(groupColumn, new Comparator<FighterInfo>() {
             @Override
             public int compare(FighterInfo left, FighterInfo right) {
@@ -163,7 +169,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
             statusColumn.setSortable(true);
 
             table.addColumn(statusColumn, "Status");
-            columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
+            columnSortHandler = new ColumnSortEvent.ListHandler<>(dataProvider.getList());
             columnSortHandler.setComparator(statusColumn, new Comparator<FighterInfo>() {
                 @Override
                 public int compare(FighterInfo left, FighterInfo right) {
@@ -173,7 +179,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
             table.addColumnSortHandler(columnSortHandler);
         }
 
-        final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<FighterInfo>();
+        final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<>();
         table.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
@@ -186,7 +192,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                         fighterService.getFighter(selected.getFighterId(), new AsyncCallback<Fighter>() {
                             @Override
                             public void onFailure(Throwable caught) {
-                                log.severe("getFighter " + caught.getMessage());
+                                log.log(Level.SEVERE, "getFighter {0}", caught);
                             }
 
                             @Override
@@ -230,13 +236,34 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
     @Override
     public void loadAll() {
-        List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
-        table.setRowCount(fighterList.size());
-        List data = dataProvider.getList();
-        data.clear();
-        for (FighterInfo fli : fighterList) {
-            data.add(fli);
-        }
+        AsyncDataProvider<FighterInfo> aDataProvider = new AsyncDataProvider<FighterInfo>() {
+
+            @Override
+            protected void onRangeChanged(final HasData<FighterInfo> display) {
+                FighterServiceAsync fighterService = GWT.create(FighterService.class);
+                fighterService.getFighters(cursor, 10, new AsyncCallback<FighterListResultWrapper>() {
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        log.log(Level.SEVERE, "loadAll:", caught);
+                    }
+
+                    @Override
+                    public void onSuccess(FighterListResultWrapper result) {
+                        final Range range = display.getVisibleRange();
+                        int start = range.getStart();
+                        log.info("Adding " + result.getFighters().getFighterInfo());
+                        table.setRowData(start, result.getFighters().getFighterInfo());
+                        table.setRowCount(result.getCount());
+                        cursor = result.getCursor();
+                    }
+
+                });
+            }
+        };
+        aDataProvider.addDataDisplay(table);
+
+        table.setVisibleRangeAndClearData(new Range(0, 10), true);
 
         DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
     }

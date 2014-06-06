@@ -4,6 +4,7 @@ import com.google.appengine.api.NamespaceManager;
 import com.google.appengine.api.backends.BackendServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -30,7 +31,9 @@ import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
+import org.sca.calontir.cmpe.client.FighterListResultWrapper;
 import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.ReportDAO;
@@ -39,11 +42,16 @@ import org.sca.calontir.cmpe.db.TableUpdatesDao;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.FighterListItem;
+import org.sca.calontir.cmpe.dto.FighterResultWrapper;
 import org.sca.calontir.cmpe.dto.Report;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 import org.sca.calontir.cmpe.dto.TableUpdates;
+import org.sca.calontir.cmpe.user.Security;
+import org.sca.calontir.cmpe.user.SecurityFactory;
 
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
+
+    private static final Logger log = Logger.getLogger(FighterServiceImpl.class.getName());
 
     @Override
     public FighterListInfo getListItems(Date targetDate) {
@@ -55,10 +63,15 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         fighters = fighterDao.getFighterListItems(new DateTime(targetDate));
         retval.setUpdateInfo(true);
 
+        return convert(fighters);
+    }
+
+    private FighterListInfo convert(List<FighterListItem> fighters) {
+        FighterListInfo retval = new FighterListInfo();
         List<FighterInfo> retValList = new ArrayList<>();
         for (FighterListItem fli : fighters) {
             if (fli != null) {
-                FighterInfo info = new FighterInfo();
+                final FighterInfo info = new FighterInfo();
                 info.setFighterId(fli.getFighterId() == null ? 0 : fli.getFighterId());
                 info.setScaName(fli.getScaName() == null ? "" : fli.getScaName());
                 info.setAuthorizations(fli.getAuthorizations() == null ? "" : fli.getAuthorizations());
@@ -79,6 +92,20 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         FighterDAO fighterDao = new FighterDAO();
 
         return fighterDao.getFighter(id);
+    }
+
+    @Override
+    public FighterListResultWrapper getFighters(String cursor, Integer pageSize) {
+        final FighterDAO fighterDao = new FighterDAO();
+        FighterResultWrapper fighterResults = fighterDao.getFighters(pageSize, cursor == null ? null : Cursor.fromWebSafeString(cursor));
+        String newCursor = fighterResults.getCursor().toWebSafeString();
+
+        FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
     }
 
     @Override
@@ -119,7 +146,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<>();
         // get application version
-        iMap.put("appversion", "1.2.14");
+        iMap.put("appversion", "1.2.15");
 
         // get from blob
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -237,14 +264,37 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
     @Override
     public List<Report> getReports(Integer days) {
+        final Security security = SecurityFactory.getSecurity();
         log(String.format("Getting reports for the last %d days", days));
-        String namespace = NamespaceManager.get();
-        try {
-            NamespaceManager.set("calontir");
-            ReportDAO dao = new ReportDAO();
-            return dao.getForDays(days);
-        } finally {
-            NamespaceManager.set(namespace);
+        List<Report> reports = null;
+        log.log(Level.INFO, security.getUser().toString());
+        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            log.log(Level.INFO, "Card Marshal");
+            final String namespace = NamespaceManager.get();
+            try {
+                NamespaceManager.set("calontir");
+                ReportDAO dao = new ReportDAO();
+                reports = dao.getForDays(days);
+            } finally {
+                NamespaceManager.set(namespace);
+            }
+        } else if (security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
+            log.log(Level.INFO, "Deputy Earl Marshal");
+            ScaGroupDAO groupDao = new ScaGroupDAO();
+            List<String> groups = groupDao.getScaGroupNamesByRegion(security.getUser().getScaGroup().getGroupLocation());
+            final String namespace = NamespaceManager.get();
+            try {
+                NamespaceManager.set("calontir");
+                ReportDAO dao = new ReportDAO();
+                reports = dao.getForRegionAndDays(days, groups);
+            } finally {
+                NamespaceManager.set(namespace);
+            }
+        } else {
+            log.log(Level.INFO, "No reports allowed");
         }
+
+        return reports;
     }
+
 }

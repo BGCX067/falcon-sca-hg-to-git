@@ -19,6 +19,8 @@ public interface FighterService extends RemoteService {
 
     public Fighter getFighterByScaName(String scaName);
 
+    public FighterListResultWrapper getFighters(String cursor, Integer pageSize);
+
     public Long saveFighter(Fighter fighter);
 
     public List<AuthType> getAuthTypes();

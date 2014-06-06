@@ -16,6 +16,7 @@ import org.sca.calontir.cmpe.client.DisplayUtils;
 import static org.sca.calontir.cmpe.client.ui.CalonBar.CALONBARLINK;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
+import org.sca.calontir.cmpe.common.UserRoles;
 
 /**
  *
@@ -32,38 +33,45 @@ public class Reports extends Composite {
 
     public void init() {
         initWidget(background);
+        boolean needDivBar = false;
 
-        reportViewLink.setStyleName(CALONBARLINK);
-        reportViewLink.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                GWT.runAsync(new RunAsyncCallback() {
-                    @Override
-                    public void onFailure(Throwable reason) {
-                        log.log(Level.SEVERE, reason.getMessage(), reason);
-                    }
+        if (security.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL)) {
+            reportViewLink.setStyleName(CALONBARLINK);
+            reportViewLink.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    GWT.runAsync(new RunAsyncCallback() {
+                        @Override
+                        public void onFailure(Throwable reason) {
+                            log.log(Level.SEVERE, reason.getMessage(), reason);
+                        }
 
-                    @Override
-                    public void onSuccess() {
-                        DisplayUtils.clearDisplay();
-                        ReportView reportView = new ReportView();
-                        reportView.init();
-                        reportView.getElement().setId(DisplayUtils.Displays.ReportView.toString());
+                        @Override
+                        public void onSuccess() {
+                            DisplayUtils.clearDisplay();
+                            ReportView reportView = new ReportView();
+                            reportView.init();
+                            reportView.getElement().setId(DisplayUtils.Displays.ReportView.toString());
 
-                        Panel tilePanel = RootPanel.get("tile");
-                        tilePanel.add(reportView);
-                    }
-                });
+                            Panel tilePanel = RootPanel.get("tile");
+                            tilePanel.add(reportView);
+                        }
+                    });
+                }
+            });
+            background.add(reportViewLink);
+            needDivBar = true;
+        }
+
+        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            if (needDivBar) {
+                background.add(getDivBar());
             }
-        });
-        background.add(reportViewLink);
-
-        background.add(getDivBar());
-
-        earlMarshalReportLink.setHref("/EarlMarshalReport");
-        earlMarshalReportLink.setStyleName(CALONBARLINK);
-        earlMarshalReportLink.setTarget("reports");
-        background.add(earlMarshalReportLink);
+            earlMarshalReportLink.setHref("/EarlMarshalReport");
+            earlMarshalReportLink.setStyleName(CALONBARLINK);
+            earlMarshalReportLink.setTarget("reports");
+            background.add(earlMarshalReportLink);
+        }
     }
 
     private Label getDivBar() {
