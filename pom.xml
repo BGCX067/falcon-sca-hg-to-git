@@ -17,12 +17,12 @@
     </scm>
 
     <properties>
-        <appengine.app.version>1-2-13</appengine.app.version>
-        <appengine.target.version>1.9.3</appengine.target.version>
+        <appengine.app.version>1-2-14</appengine.app.version>
+        <appengine.target.version>1.9.5</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
-        <gwt.version>2.6.0</gwt.version>
-        <gaelyk.version>2.1.1</gaelyk.version>
+        <gwt.version>2.6.1</gwt.version>
+        <gaelyk.version>2.1.2</gaelyk.version>
         <gwt.style>OBF</gwt.style>
     </properties>
 
@@ -149,6 +149,11 @@
             <artifactId>appengine-api-stubs</artifactId>
             <version>${appengine.target.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>groovy-all</artifactId>
+            <groupId>org.codehaus.groovy</groupId>
+            <version>2.1.9</version>
         </dependency>
     </dependencies>
 

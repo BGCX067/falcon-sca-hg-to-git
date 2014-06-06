@@ -109,6 +109,9 @@ public class ReportView extends Composite {
     private void buildReportPage(List<Report> result) {
         twistyPanel.clear();
 
+        if (result == null) {
+            return;
+        }
         for (final Report r : result) {
             final String rmType = (String) r.getReportParams().get("Reporting Marshal Type");
             final ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType) == null

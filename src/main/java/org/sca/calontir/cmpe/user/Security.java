@@ -25,6 +25,10 @@ public class Security {
         return user == null ? false : user.getRole().ordinal() >= userRole.ordinal();
     }
 
+    public UserRoles getUserRole() {
+        return user == null ? null : user.getRole();
+    }
+
     public User getAeUser() {
         return aeUser;
     }
@@ -40,12 +44,12 @@ public class Security {
     protected void setUser(Fighter user) {
         this.user = user;
     }
-    
+
     public boolean canEdit(Long fighterId, String target) {
-        if("Authorizations".equals(target)) {
+        if ("Authorizations".equals(target)) {
             return canEditAuthorizations(fighterId);
         }
-        
+
         return canEditFighter(fighterId);
     }
 
@@ -57,7 +61,7 @@ public class Security {
         if (isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
             return true;
         }
-        
+
         return false;
     }
 

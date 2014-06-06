@@ -6,7 +6,8 @@ import java.io.Serializable;
  *
  * @author rik
  */
-public class ScaGroup implements Serializable, Comparable<ScaGroup>  {
+public class ScaGroup implements Serializable, Comparable<ScaGroup> {
+
     private String groupName;
     private String groupLocation;
 
@@ -29,5 +30,10 @@ public class ScaGroup implements Serializable, Comparable<ScaGroup>  {
     @Override
     public int compareTo(ScaGroup o) {
         return this.groupName.compareTo(o.getGroupName());
+    }
+
+    @Override
+    public String toString() {
+        return "ScaGroup{" + "groupName=" + groupName + ", groupLocation=" + groupLocation + '}';
     }
 }
