@@ -5,8 +5,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
@@ -151,29 +149,6 @@ public class IndexPage implements EntryPoint {
                     }
                 });
 
-        History.addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                String historyToken = event.getValue();
-                try {
-                    if (historyToken.substring(0, 8).equals("display:")) {
-                        String display = historyToken.substring(8);
-                        // Select the specified tab panel
-                        DisplayUtils.changeDisplay(DisplayUtils.Displays.valueOf(display));
-                    } else if (historyToken.startsWith("qrtlyreport:")) {
-                        DisplayUtils.clearDisplay();
-                        DisplayUtils.changeDisplay(DisplayUtils.Displays.ReportGen);
-                    } else {
-                        DisplayUtils.resetDisplay();
-                        DisplayUtils.changeDisplay(DisplayUtils.Displays.SignupForm);
-                    }
-
-                } catch (IndexOutOfBoundsException e) {
-                    DisplayUtils.changeDisplay(DisplayUtils.Displays.SignupForm);
-                }
-            }
-        });
-
     }
 
     private void buildIndexPage() {
@@ -219,6 +194,7 @@ public class IndexPage implements EntryPoint {
                         @Override
                         public void onSuccess(Fighter result) {
                             flb.fireEvent(new EditViewEvent(Mode.VIEW, result));
+                            History.addValueChangeHandler(new HistoryChangeHandlerImpl());
                         }
                     });
                 }
