@@ -63,11 +63,21 @@ public class FighterDAO {
         return retVal;
     }
 
+    public FighterResultWrapper getFighters(int pageSize, int offset) {
+        return getFighters(pageSize, null, offset);
+    }
+
     public FighterResultWrapper getFighters(int pageSize, Cursor cursor) {
+        return getFighters(pageSize, cursor, 0);
+    }
+
+    protected FighterResultWrapper getFighters(int pageSize, Cursor cursor, int offset) {
         final Query query = new Query("Fighter").addSort("scaName");
         final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
         if (cursor != null) {
             fetchOptions.startCursor(cursor);
+        } else if (offset > 0) {
+            fetchOptions.offset(offset);
         }
         final PreparedQuery pq = datastore.prepare(query);
         final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);

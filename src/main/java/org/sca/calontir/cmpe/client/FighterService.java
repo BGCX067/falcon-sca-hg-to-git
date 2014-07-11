@@ -19,7 +19,7 @@ public interface FighterService extends RemoteService {
 
     public Fighter getFighterByScaName(String scaName);
 
-    public FighterListResultWrapper getFighters(String cursor, Integer pageSize);
+    public FighterListResultWrapper getFighters(String cursor, Integer pageSize, Integer offset);
 
     public Long saveFighter(Fighter fighter);
 

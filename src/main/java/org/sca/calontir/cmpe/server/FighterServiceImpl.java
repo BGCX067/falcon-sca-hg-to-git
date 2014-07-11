@@ -95,12 +95,19 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     }
 
     @Override
-    public FighterListResultWrapper getFighters(String cursor, Integer pageSize) {
+    public FighterListResultWrapper getFighters(String cursor, Integer pageSize, Integer offset) {
         final FighterDAO fighterDao = new FighterDAO();
-        FighterResultWrapper fighterResults = fighterDao.getFighters(pageSize, cursor == null ? null : Cursor.fromWebSafeString(cursor));
-        String newCursor = fighterResults.getCursor().toWebSafeString();
+        Cursor startCursor = null;
+        FighterResultWrapper fighterResults;
+        if (cursor == null) {
+            fighterResults = fighterDao.getFighters(pageSize, offset);
+        } else {
+            startCursor = Cursor.fromWebSafeString(cursor);
+            fighterResults = fighterDao.getFighters(pageSize, startCursor);
+        }
+        final String newCursor = fighterResults.getCursor().toWebSafeString();
 
-        FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
         fighterListResults.setFighters(convert(fighterResults.getFighters()));
         fighterListResults.setCursor(newCursor);
         fighterListResults.setPageSize(pageSize);
@@ -146,7 +153,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<>();
         // get application version
-        iMap.put("appversion", "1.2.15");
+        iMap.put("appversion", "1.3.0 Alpha");
 
         // get from blob
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

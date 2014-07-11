@@ -52,6 +52,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
     final private CellTable<FighterInfo> table = new CellTable<>();
     final private Security security = SecurityFactory.getSecurity();
     private String cursor = null;
+    private int prevStart = 0;
 
     public FighterListBox() {
         Panel listBackground = new FlowPanel();
@@ -240,8 +241,21 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
             @Override
             protected void onRangeChanged(final HasData<FighterInfo> display) {
-                FighterServiceAsync fighterService = GWT.create(FighterService.class);
-                fighterService.getFighters(cursor, 10, new AsyncCallback<FighterListResultWrapper>() {
+                int dispStart = display.getVisibleRange().getStart();
+                int dispLength = display.getVisibleRange().getLength();
+                log.info("display start: " + dispStart + " length " + dispLength);
+
+                int prevPageStart = dispStart - dispLength;
+                prevPageStart = prevPageStart < 0 ? 0 : dispStart;
+                if (prevStart >= dispStart) {
+                    cursor = null;
+                }
+                if (dispStart >= table.getRowCount() - 10) {
+                    cursor = null;
+                    prevPageStart = table.getRowCount() - 10;
+                }
+                final FighterServiceAsync fighterService = GWT.create(FighterService.class);
+                fighterService.getFighters(cursor, dispLength, prevPageStart, new AsyncCallback<FighterListResultWrapper>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
@@ -252,7 +266,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                     public void onSuccess(FighterListResultWrapper result) {
                         final Range range = display.getVisibleRange();
                         int start = range.getStart();
-                        log.info("Adding " + result.getFighters().getFighterInfo());
+                        prevStart = start;
                         table.setRowData(start, result.getFighters().getFighterInfo());
                         table.setRowCount(result.getCount());
                         cursor = result.getCursor();
