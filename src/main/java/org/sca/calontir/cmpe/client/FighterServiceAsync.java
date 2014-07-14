@@ -5,6 +5,7 @@
 package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,4 +47,6 @@ public interface FighterServiceAsync {
     public void deleteReport(Report report, AsyncCallback<Void> async);
 
     public void getMinorFighters(String group, AsyncCallback<List<Fighter>> asyncCallback);
+
+    public void suggestScaName(SuggestOracle.Request request, AsyncCallback<SuggestOracle.Response> callback);
 }

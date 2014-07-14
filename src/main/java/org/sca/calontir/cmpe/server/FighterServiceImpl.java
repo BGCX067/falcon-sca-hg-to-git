@@ -14,6 +14,7 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterListResultWrapper;
 import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.client.ui.ScaNameSuggestion;
 import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
@@ -97,12 +99,11 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     @Override
     public FighterListResultWrapper getFighters(String cursor, Integer pageSize, Integer offset) {
         final FighterDAO fighterDao = new FighterDAO();
-        Cursor startCursor = null;
         FighterResultWrapper fighterResults;
         if (cursor == null) {
             fighterResults = fighterDao.getFighters(pageSize, offset);
         } else {
-            startCursor = Cursor.fromWebSafeString(cursor);
+            Cursor startCursor = Cursor.fromWebSafeString(cursor);
             fighterResults = fighterDao.getFighters(pageSize, startCursor);
         }
         final String newCursor = fighterResults.getCursor().toWebSafeString();
@@ -302,6 +303,22 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         }
 
         return reports;
+    }
+
+    @Override
+    public SuggestOracle.Response suggestScaName(SuggestOracle.Request request) {
+        log.log(Level.INFO, "Query: {0}", request.getQuery());
+        SuggestOracle.Response resp = new SuggestOracle.Response();
+        if (request.getQuery().length() > 3) {
+
+            List<SuggestOracle.Suggestion> suggestions = new ArrayList<>();
+            suggestions.add(new ScaNameSuggestion("Brendan"));
+            suggestions.add(new ScaNameSuggestion("Gustav"));
+            suggestions.add(new ScaNameSuggestion("Logan"));
+
+            resp.setSuggestions(suggestions);
+        }
+        return resp;
     }
 
 }

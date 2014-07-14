@@ -2,6 +2,7 @@ package org.sca.calontir.cmpe.client;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,4 +41,6 @@ public interface FighterService extends RemoteService {
     public List<Report> getReports(Integer days);
 
     public void deleteReport(Report report);
+
+    public SuggestOracle.Response suggestScaName(SuggestOracle.Request request);
 }
