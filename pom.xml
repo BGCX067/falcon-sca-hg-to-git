@@ -17,7 +17,7 @@
     </scm>
 
     <properties>
-        <appengine.app.version>1-2-15</appengine.app.version>
+        <appengine.app.version>1-2-16</appengine.app.version>
         <appengine.target.version>1.9.6</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
@@ -173,8 +173,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

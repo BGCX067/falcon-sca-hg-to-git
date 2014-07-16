@@ -146,7 +146,7 @@ public class CalonBar extends Composite {
             linkbarPanel.add(reportLink);
         }
 
-        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+        if (security.isRoleOrGreater(UserRoles.DEPUTY_EARL_MARSHAL)) {
             linkbarPanel.add(getDivBar());
             reportsLink.setStyleName(CALONBARLINK);
             reportsLink.addClickHandler(new ClickHandler() {
