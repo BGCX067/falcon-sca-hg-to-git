@@ -40,90 +40,99 @@ def fighterCount = datastore.execute {
 
 logger.StoreDatabase.info "Count returns " + fighterCount
 
-def fighters = datastore.iterate {
-    select all from Fighter
-    prefetchSize fighterCount
-    chunkSize 1000
-    restart automatically
-}
+def loopTimes = fighterCount.div(8000).intValue()
+
+logger.StoreDatabase.info "Looping " + loopTimes + " times"
 
 def mapList = []
 long savedCount = 0L
-for (fighter in fighters) {
-	def fmap = [:]
-	fmap.fighterId = fighter.key.id
-	fmap.scaName = fighter.scaName
-	fmap.scaMemberNo = fighter.scaMemberNo
-	fmap.modernName = fighter.modernName
-	fmap.dateOfBirth = fighter.dateOfBirth
-	fmap.googleId = fighter.googleId
-	def emailList = []
-    def emails = datastore.execute {
-        select all from 'Email'
-        ancestor fighter.key
+for (i in 0..loopTimes) {
+
+    def fighters = datastore.iterate {
+        select all from Fighter
+        prefetchSize fighterCount
+        chunkSize 1000
+        limit 8000
+        offset i == 0 ? 0 : 8000 * i + 1
+        restart automatically
     }
-	emails.each {email ->
-		def emailMap = [:]
-		emailMap.emailAddress = email.emailAddress
-		emailMap.type = email.type
-		emailList << emailMap
-	}
-	fmap.email = emailList
-    def addresses = datastore.execute {
-        select all from Address
-        ancestor fighter.key
+
+    for (fighter in fighters) {
+        def fmap = [:]
+        fmap.fighterId = fighter.key.id
+        fmap.scaName = fighter.scaName
+        fmap.scaMemberNo = fighter.scaMemberNo
+        fmap.modernName = fighter.modernName
+        fmap.dateOfBirth = fighter.dateOfBirth
+        fmap.googleId = fighter.googleId
+        def emailList = []
+        def emails = datastore.execute {
+            select all from 'Email'
+            ancestor fighter.key
+        }
+        emails.each {email ->
+            def emailMap = [:]
+            emailMap.emailAddress = email.emailAddress
+            emailMap.type = email.type
+            emailList << emailMap
+        }
+        fmap.email = emailList
+        def addresses = datastore.execute {
+            select all from Address
+            ancestor fighter.key
+        }
+        def addressList = []
+        addresses.each { address->
+            def addressMap = [:]
+            addressMap.address1 = address.address1
+            addressMap.address2 = address.address2
+            addressMap.city = address.city
+            addressMap.district = address.district
+            addressMap.postalCode = address.postalCode
+            addressMap.state = address.state
+            addressMap.type = address.type
+            addressList << addressMap
+        }
+        fmap.address = addressList
+        def phones = datastore.execute {
+            select all from Phone
+            ancestor fighter.key
+        }
+        def phoneList = []
+        phones.each {phone ->
+            def phoneMap = [:]
+            phoneMap.phoneNumber = phone.phoneNumber
+            phoneMap.type = phone.type
+            phoneList << phoneMap
+        }
+        fmap.phone = phoneList
+        def authList = []
+        def authorizations = datastore.execute {
+            select all from Authorization
+            ancestor fighter.key
+        }
+        authorizations.each { auth ->
+            def authMap = [:]
+            def authType = auth.authType.get()
+            authMap.code = authType.code
+            authMap.description = authType.description
+            authMap.date = auth.date
+            authMap.orderValue = authType.orderValue
+            authList << authMap
+        }
+        fmap.authorization = authList
+        if(fighter.scaGroup) {
+            def group = fighter.scaGroup.get()
+            fmap.group = group.groupName
+        } else {
+            fmap.group = "Unknown or Out of Kingdom"
+        }
+        fmap.role = fighter.role
+        fmap.status = fighter.status
+        fmap.treaty = fighter.treaty?.name
+        mapList << fmap
+        ++savedCount
     }
-	def addressList = []
-	addresses.each { address->
-		def addressMap = [:]
-		addressMap.address1 = address.address1
-		addressMap.address2 = address.address2
-		addressMap.city = address.city
-		addressMap.district = address.district
-		addressMap.postalCode = address.postalCode
-		addressMap.state = address.state
-		addressMap.type = address.type
-		addressList << addressMap
-	}
-	fmap.address = addressList
-    def phones = datastore.execute {
-        select all from Phone
-        ancestor fighter.key
-    }
-	def phoneList = []
-	phones.each {phone ->
-		def phoneMap = [:]
-		phoneMap.phoneNumber = phone.phoneNumber
-		phoneMap.type = phone.type
-		phoneList << phoneMap
-	}
-	fmap.phone = phoneList
-	def authList = []
-    def authorizations = datastore.execute {
-        select all from Authorization
-        ancestor fighter.key
-    }
-	authorizations.each { auth ->
-		def authMap = [:]
-        def authType = auth.authType.get()
-		authMap.code = authType.code
-		authMap.description = authType.description
-		authMap.date = auth.date
-        authMap.orderValue = authType.orderValue
-		authList << authMap
-	}
-	fmap.authorization = authList
-	if(fighter.scaGroup) {
-        def group = fighter.scaGroup.get()
-        fmap.group = group.groupName
-    } else {
-        fmap.group = "Unknown or Out of Kingdom"
-    }
-	fmap.role = fighter.role
-	fmap.status = fighter.status
-	fmap.treaty = fighter.treaty?.name
-	mapList << fmap
-    ++savedCount
 }
 
 logger.StoreDatabase.info "mapList size " + mapList.size()

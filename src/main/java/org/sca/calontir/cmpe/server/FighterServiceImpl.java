@@ -2,23 +2,12 @@ package org.sca.calontir.cmpe.server;
 
 import com.google.appengine.api.NamespaceManager;
 import com.google.appengine.api.backends.BackendServiceFactory;
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreInputStream;
 import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -154,39 +143,6 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         Map<String, Object> iMap = new HashMap<>();
         // get application version
         iMap.put("appversion", "1.3.0 Alpha");
-
-        // get from blob
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        String namespace = NamespaceManager.get();
-        String blobKeyStr;
-        try {
-            NamespaceManager.set("system");
-
-            String name = "calontir.snapshotkey";
-            Query query = new Query("properties");
-            query.setFilter(new Query.FilterPredicate("name", Query.FilterOperator.EQUAL, name));
-            PreparedQuery preparedQuery = datastore.prepare(query);
-            Entity entity = preparedQuery.asSingleEntity();
-            blobKeyStr = (String) entity.getProperty("property");
-        } finally {
-            NamespaceManager.set(namespace);
-        }
-        BlobKey blobKey = new BlobKey(blobKeyStr);
-        try {
-            BlobstoreInputStream bis = new BlobstoreInputStream(blobKey);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(bis));
-            StringWriter sw = new StringWriter();
-            char[] buffer = new char[1024 * 4];
-            int n = 0;
-            while (-1 != (n = reader.read(buffer))) {
-                sw.write(buffer, 0, n);
-            }
-            String text = sw.toString();
-
-            iMap.put("stored", text);
-        } catch (IOException ex) {
-            Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         // get groups
         ScaGroupDAO groupDao = new ScaGroupDAO();

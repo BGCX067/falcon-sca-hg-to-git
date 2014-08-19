@@ -81,7 +81,6 @@ public class IndexPage implements EntryPoint {
                         @Override
                         public void execute() {
                             shout.tell("Updating Initial data");
-                            LookupController.getInstance().updateLocalData();
                             onModuleLoad2();
                         }
                     });
