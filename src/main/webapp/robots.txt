@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /index.jsp
+Disallow: /fighter
 Disallow: /fighter.jsp
 Disallow: /fighterList.jsp
 Disallow: /FighterServlet

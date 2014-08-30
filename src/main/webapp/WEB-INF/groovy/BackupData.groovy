@@ -8,6 +8,7 @@ import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
 
 def runToday = false
+final int limitNum = 200
 
 namespace.of("system") {
 	name = "calontir.lastbackup"
@@ -40,7 +41,7 @@ def fighterCount = datastore.execute {
 
 logger.StoreDatabase.info "Count returns " + fighterCount
 
-def loopTimes = fighterCount.div(8000).intValue()
+def loopTimes = fighterCount.div(limitNum).intValue()
 
 logger.StoreDatabase.info "Looping " + loopTimes + " times"
 
@@ -52,8 +53,8 @@ for (i in 0..loopTimes) {
         select all from Fighter
         prefetchSize fighterCount
         chunkSize 1000
-        limit 8000
-        offset i == 0 ? 0 : 8000 * i + 1
+        limit limitNum
+        offset i == 0 ? 0 : limitNum * i + 1
         restart automatically
     }
 
