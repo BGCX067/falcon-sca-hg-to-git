@@ -41,9 +41,11 @@ def fighterCount = datastore.execute {
 
 logger.StoreDatabase.info "Count returns " + fighterCount
 
-def loopTimes = fighterCount.div(limitNum).intValue()
+def loopTimes = fighterCount.div(limitNum).intValue() + 1
 
 logger.StoreDatabase.info "Looping " + loopTimes + " times"
+
+def index = search.index("fighters")
 
 def mapList = []
 long savedCount = 0L
@@ -52,13 +54,20 @@ for (i in 0..loopTimes) {
     def fighters = datastore.iterate {
         select all from Fighter
         prefetchSize fighterCount
-        chunkSize 1000
+        chunkSize limitNum
         limit limitNum
-        offset i == 0 ? 0 : limitNum * i + 1
+        offset i == 0 ? 0 : limitNum * i
         restart automatically
     }
 
     for (fighter in fighters) {
+        def response = index.put {
+            document(id: fighter.key.id) {
+                scaName text: fighter.scaName
+                modernName text: fighter.modernName
+                googeId text: fighter.googleId
+            }
+        }
         def fmap = [:]
         fmap.fighterId = fighter.key.id
         fmap.scaName = fighter.scaName
