@@ -65,6 +65,7 @@ for (i in 0..loopTimes) {
             document(id: fighter.key.id) {
                 scaName text: fighter.scaName
                 modernName text: fighter.modernName
+                googeId text: fighter.googleId
             }
         }
         def fmap = [:]
