@@ -38,6 +38,10 @@ import org.sca.calontir.cmpe.dto.TableUpdates;
 import org.sca.calontir.cmpe.user.Security;
 import org.sca.calontir.cmpe.user.SecurityFactory;
 
+/**
+ *
+ * @author rikscarborough
+ */
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
 
     private static final Logger log = Logger.getLogger(FighterServiceImpl.class.getName());
@@ -86,12 +90,11 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     @Override
     public FighterListResultWrapper getFighters(String cursor, Integer pageSize, Integer offset) {
         final FighterDAO fighterDao = new FighterDAO();
-        Cursor startCursor = null;
         FighterResultWrapper fighterResults;
         if (cursor == null) {
             fighterResults = fighterDao.getFighters(pageSize, offset);
         } else {
-            startCursor = Cursor.fromWebSafeString(cursor);
+            Cursor startCursor = Cursor.fromWebSafeString(cursor);
             fighterResults = fighterDao.getFighters(pageSize, startCursor);
         }
         final String newCursor = fighterResults.getCursor().toWebSafeString();
@@ -113,6 +116,12 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
             Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    @Override
+    public FighterListInfo searchFighters(String searchString) {
+        final FighterDAO fighterDao = new FighterDAO();
+        return convert(fighterDao.searchFigthers(searchString));
     }
 
     @Override

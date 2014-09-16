@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.dto.Address;
 import org.sca.calontir.cmpe.dto.Authorization;
@@ -38,6 +38,8 @@ import org.sca.calontir.cmpe.dto.Phone;
  * @author rik
  */
 public class FighterDAO {
+
+    final Logger logger = Logger.getLogger(FighterDAO.class.getName());
 
     final DatastoreService datastore;
     final private FighterCache fCache;
@@ -92,6 +94,15 @@ public class FighterDAO {
         result.setCursor(newCursor);
         return result;
     }
+
+    public List<FighterListItem> searchFigthers(String searchString) {
+        logger.info("Search String");
+
+        final List<FighterListItem> retval = new ArrayList<>();
+        return retval;
+    }
+
+    ;
 
     private Entity getFighterEntity(long fighterId) throws EntityNotFoundException {
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
@@ -183,11 +194,11 @@ public class FighterDAO {
     }
 
     public List<Fighter> getMinorCount() {
-        final DateMidnight now = new DateMidnight();
-        final DateMidnight minorDate = now.minusYears(18);
+        final LocalDate now = new LocalDate();
+        final LocalDate minorDate = now.minusYears(18);
 
         List<Fighter> retArray = new ArrayList<>();
-        Query.Filter filter = new Query.FilterPredicate("dateOfBirth", Query.FilterOperator.GREATER_THAN, minorDate.toDate());
+        Query.Filter filter = new Query.FilterPredicate("dateOfBirth", Query.FilterOperator.GREATER_THAN, minorDate.toDateTimeAtStartOfDay().toDate());
         Query query = new Query("Fighter").setFilter(filter);
         List<Entity> fighters = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
         for (Entity f : fighters) {
@@ -224,7 +235,7 @@ public class FighterDAO {
     }
 
     private List<Entity> getAllFightersAsOf(DateTime dt) {
-        if (dt == null || dt.toDateMidnight().equals(new DateMidnight(1966, 3, 1))) {
+        if (dt == null || dt.toLocalDate().equals(new LocalDate(1966, 3, 1))) {
             Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting all fighters");
             return returnAllFighters();
         }

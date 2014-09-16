@@ -17,6 +17,8 @@ public interface FighterService extends RemoteService {
 
     public Fighter getFighter(Long id);
 
+    public FighterListInfo searchFighters(String searchString);
+
     public Fighter getFighterByScaName(String scaName);
 
     public FighterListResultWrapper getFighters(String cursor, Integer pageSize, Integer offset);

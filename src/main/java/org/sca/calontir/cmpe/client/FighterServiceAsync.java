@@ -25,6 +25,8 @@ public interface FighterServiceAsync {
 
     public void getFighters(String cursor, Integer pageSize, Integer offset, AsyncCallback<FighterListResultWrapper> async);
 
+    public void searchFighters(String searchString, AsyncCallback<FighterListInfo> async);
+
     public void getFighterByScaName(String scaName, AsyncCallback<Fighter> async);
 
     public void saveFighter(Fighter fighter, AsyncCallback<Long> async);

@@ -224,14 +224,9 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
     @Override
     public void find(String searchName) {
-        List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(searchName);
-        table.setRowCount(fighterList.size());
-        List data = dataProvider.getList();
-        data.clear();
-        for (FighterInfo fli : fighterList) {
-            data.add(fli);
-        }
+        log.info("Searching for " + searchName);
 
+        LookupController.getInstance().searchFighters(searchName, table, dataProvider);
         DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
     }
 

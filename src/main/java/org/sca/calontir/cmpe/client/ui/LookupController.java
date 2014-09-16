@@ -1,9 +1,10 @@
 package org.sca.calontir.cmpe.client.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.ListDataProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterInfo;
+import org.sca.calontir.cmpe.client.FighterListInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.dto.AuthType;
@@ -25,7 +27,6 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
 public class LookupController {
 
     private static final Logger log = Logger.getLogger(LookupController.class.getName());
-    private final static long DAY = 86400000L;
     private static final LookupController _instance = new LookupController();
     private List<AuthType> authTypes = null;
     private List<ScaGroup> scaGroups = null;
@@ -33,7 +34,6 @@ public class LookupController {
     boolean dirty = false;
     private boolean fighterDLComplete = false;
     private FighterServiceAsync fighterService = GWT.create(FighterService.class);
-    private Storage stockStore = Storage.getLocalStorageIfSupported();
     public String versionId;
 
     private LookupController() {
@@ -74,6 +74,27 @@ public class LookupController {
     }
 
     public void replaceFighter(FighterInfo replacement) {
+    }
+
+    void searchFighters(final String searchName, final CellTable<FighterInfo> table, final ListDataProvider<FighterInfo> dataProvider) {
+        fighterService.searchFighters(searchName, new AsyncCallback<FighterListInfo>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                log.log(Level.SEVERE, "searchFighters:", caught);
+            }
+
+            @Override
+            public void onSuccess(FighterListInfo result) {
+                List<FighterInfo> fil = result.getFighterInfo();
+                table.setRowCount(fil.size());
+                List data = dataProvider.getList();
+                data.clear();
+                for (FighterInfo fi : fil) {
+                    data.add(fi);
+                }
+            }
+        });
     }
 
     public List<FighterInfo> getFighterList(String searchName) {
@@ -119,4 +140,5 @@ public class LookupController {
             }
         });
     }
+
 }
