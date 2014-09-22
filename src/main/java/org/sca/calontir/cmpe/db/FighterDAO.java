@@ -11,6 +11,15 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.QueryResultList;
+import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.Index;
+import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.PutException;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
+import com.google.appengine.api.search.SearchServiceFactory;
+import com.google.appengine.api.search.StatusCode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -39,7 +48,7 @@ import org.sca.calontir.cmpe.dto.Phone;
  */
 public class FighterDAO {
 
-    final Logger logger = Logger.getLogger(FighterDAO.class.getName());
+    static final Logger logger = Logger.getLogger(FighterDAO.class.getName());
 
     final DatastoreService datastore;
     final private FighterCache fCache;
@@ -58,7 +67,7 @@ public class FighterDAO {
                 retVal = DataTransfer.convert(fighter, datastore);
                 fCache.put(retVal);
             } catch (EntityNotFoundException ex) {
-                Logger.getLogger(FighterDAO.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
         }
 
@@ -95,14 +104,28 @@ public class FighterDAO {
         return result;
     }
 
-    public List<FighterListItem> searchFigthers(String searchString) {
-        logger.info("Search String");
+    public List<FighterListItem> searchFighters(String searchString) {
+        logger.finer("Search String");
+
+        IndexSpec indexSpec = IndexSpec.newBuilder().setName("fighters").build();
+        Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
 
         final List<FighterListItem> retval = new ArrayList<>();
+        Results<ScoredDocument> results = index.search(searchString);
+        for (ScoredDocument document : results) {
+            final Long id = Long.valueOf(document.getId());
+            try {
+                logger.log(Level.FINER, "Found {0}", id);
+                Entity f = getFighterEntity(id);
+                FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+                retval.add(fli);
+            } catch (EntityNotFoundException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        }
+
         return retval;
     }
-
-    ;
 
     private Entity getFighterEntity(long fighterId) throws EntityNotFoundException {
         Key fighterKey = KeyFactory.createKey(Fighter.class.getSimpleName(), fighterId);
@@ -112,7 +135,7 @@ public class FighterDAO {
     }
 
     public Fighter getFighterByGoogleId(String userId) {
-        Logger.getLogger(FighterDAO.class.getName()).log(Level.FINE, "Getting {0}", userId);
+        logger.log(Level.FINE, "Getting {0}", userId);
         Fighter retval = fCache.getFighterByGoogleId(userId);
         if (retval == null) {
             final Query.Filter filter = new Query.FilterPredicate("googleId", Query.FilterOperator.EQUAL, userId);
@@ -236,14 +259,14 @@ public class FighterDAO {
 
     private List<Entity> getAllFightersAsOf(DateTime dt) {
         if (dt == null || dt.toLocalDate().equals(new LocalDate(1966, 3, 1))) {
-            Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting all fighters");
+            logger.log(Level.INFO, "Getting all fighters");
             return returnAllFighters();
         }
-        Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting fighters as of {0}", dt.toString());
+        logger.log(Level.INFO, "Getting fighters as of {0}", dt.toString());
         Query.Filter lastUpdatedFilter = new Query.FilterPredicate("lastUpdated", Query.FilterOperator.GREATER_THAN, dt.toDate());
         Query query = new Query("Fighter").setFilter(lastUpdatedFilter);
         List<Entity> fighters = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-        Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting {0} fighters ", fighters.size());
+        logger.log(Level.INFO, "Getting {0} fighters ", fighters.size());
 
         return fighters;
     }
@@ -267,8 +290,29 @@ public class FighterDAO {
         return this.saveFighter(fighter, userId, true);
     }
 
+    private void saveFighterToIndex(Fighter fighter) {
+        Document doc = Document.newBuilder().setId(fighter.getFighterId().toString())
+                .addField(Field.newBuilder().setName("scaName").setText(fighter.getScaName()))
+                .addField(Field.newBuilder().setName("modernName").setText(fighter.getModernName()))
+                .addField(Field.newBuilder().setName("googeId").setText(fighter.getGoogleId()))
+                .build();
+
+        IndexSpec indexSpec = IndexSpec.newBuilder().setName("fighters").build();
+        Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
+
+        try {
+            index.put(doc);
+        } catch (PutException e) {
+            if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult().getCode())) {
+                // retry putting the document
+            }
+        }
+    }
+
     public Long saveFighter(Fighter fighter, Long userId, boolean validate) throws ValidationException {
         final Long keyValue;
+
+        saveFighterToIndex(fighter);
 
         Entity fighterEntity = null;
 

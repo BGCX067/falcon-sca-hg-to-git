@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import java.util.List;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.ui.SearchEvent.SearchType;
 import org.sca.calontir.cmpe.client.user.Security;
@@ -32,27 +33,17 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  */
 public class SearchBar extends Composite implements DataUpdatedEventHandler, SearchEventHandler {
 
+    private static final Logger logger = Logger.getLogger(SearchBar.class.getName());
     private static final String SEARCH = "Search";
     final private Security security = SecurityFactory.getSecurity();
     final FlowPanel searchPanel = new FlowPanel();
-    private Button submit;
     private SearchBox searchBox;
     private ListBox groupBox;
+    private Button submit;
 
     public SearchBar() {
         searchPanel.getElement().setAttribute("id", "searchBar");
-
-        submit = new Button(SEARCH, new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                submit.setEnabled(false);
-                searchBox.CallSearch();
-                submit.setEnabled(true);
-            }
-        });
-
         buildBar();
-
         initWidget(searchPanel);
     }
 
@@ -62,10 +53,23 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler, Sea
         groupBox = buildGroupBox();
         groupBox.getElement().setAttribute("id", "groupBox");
         groupBox.getElement().getStyle().setDisplay(Style.Display.NONE);
-
         searchPanel.add(searchBox);
         searchPanel.add(groupBox);
 
+        submit = new Button(SEARCH, new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                final String searchName = searchBox.getText();
+                logger.info("Searching for " + searchName);
+                if (searchName == null || searchName.isEmpty()) {
+                    logger.info("lookup all");
+                    fireEvent(new SearchEvent());
+                } else {
+                    logger.info("Searching for name");
+                    fireEvent(new SearchEvent(searchName));
+                }
+            }
+        });
         searchPanel.add(submit);
 
         if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {

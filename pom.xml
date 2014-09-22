@@ -18,12 +18,12 @@
 
     <properties>
         <appengine.app.version>1-3-0a</appengine.app.version>
-        <appengine.target.version>1.9.10</appengine.target.version>
+        <appengine.target.version>1.9.11</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
         <gwt.version>2.6.1</gwt.version>
         <gaelyk.version>2.1.2</gaelyk.version>
-        <gwt.style>OBF</gwt.style>
+        <gwt.style>DETAILED</gwt.style>
     </properties>
 
     <dependencies>

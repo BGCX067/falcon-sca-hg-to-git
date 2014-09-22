@@ -17,12 +17,8 @@ public class SearchBox extends AbstractFieldWidget {
         initWidget(search);
     }
 
-    public void CallSearch() {
-        String searchName = search.getText();
-        if (searchName == null || searchName.trim().length() == 0) {
-            fireEvent(new SearchEvent());
-        } else {
-            fireEvent(new SearchEvent(searchName));
-        }
+    public String getText() {
+        return search.getText();
     }
+
 }

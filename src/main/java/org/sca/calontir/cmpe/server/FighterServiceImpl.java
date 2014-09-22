@@ -113,15 +113,19 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         try {
             return fighterDao.saveFighter(fighter, fighter.getFighterId(), false);
         } catch (ValidationException ex) {
-            Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            log.log(Level.SEVERE, null, ex);
             return null;
         }
     }
 
     @Override
     public FighterListInfo searchFighters(String searchString) {
+        final Security security = SecurityFactory.getSecurity();
+        if (!security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            searchString = "scaName = " + searchString;
+        }
         final FighterDAO fighterDao = new FighterDAO();
-        return convert(fighterDao.searchFigthers(searchString));
+        return convert(fighterDao.searchFighters(searchString));
     }
 
     @Override
@@ -148,7 +152,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
     @Override
     public Map<String, Object> initialLookup() {
-        Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
+        log.log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<>();
         // get application version
         iMap.put("appversion", "1.3.0 Alpha");
