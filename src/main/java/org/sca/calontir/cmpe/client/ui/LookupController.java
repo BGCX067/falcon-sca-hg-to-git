@@ -5,8 +5,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.ListDataProvider;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -30,8 +28,6 @@ public class LookupController {
     private static final LookupController _instance = new LookupController();
     private List<AuthType> authTypes = null;
     private List<ScaGroup> scaGroups = null;
-    private Map<Long, FighterInfo> fighterMap = new HashMap<Long, FighterInfo>();
-    boolean dirty = false;
     private boolean fighterDLComplete = false;
     private FighterServiceAsync fighterService = GWT.create(FighterService.class);
     public String versionId;
@@ -69,13 +65,6 @@ public class LookupController {
         return null;
     }
 
-    public FighterInfo getFighter(Long id) {
-        return fighterMap.get(id);
-    }
-
-    public void replaceFighter(FighterInfo replacement) {
-    }
-
     void searchFighters(final String searchName, final CellTable<FighterInfo> table, final ListDataProvider<FighterInfo> dataProvider) {
         fighterService.searchFighters(searchName, new AsyncCallback<FighterListInfo>() {
 
@@ -95,13 +84,6 @@ public class LookupController {
                 }
             }
         });
-    }
-
-    public List<FighterInfo> getFighterList(String searchName) {
-        fighterMap = new HashMap<Long, FighterInfo>();
-        List<FighterInfo> fighterList = new ArrayList<FighterInfo>(fighterMap.values());
-
-        return fighterList;
     }
 
     private void buildTables() {
@@ -140,5 +122,4 @@ public class LookupController {
             }
         });
     }
-
 }

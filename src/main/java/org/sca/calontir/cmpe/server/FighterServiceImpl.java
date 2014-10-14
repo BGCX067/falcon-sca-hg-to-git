@@ -60,8 +60,8 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     }
 
     private FighterListInfo convert(List<FighterListItem> fighters) {
-        FighterListInfo retval = new FighterListInfo();
-        List<FighterInfo> retValList = new ArrayList<>();
+        final FighterListInfo retval = new FighterListInfo();
+        final List<FighterInfo> retValList = new ArrayList<>();
         for (FighterListItem fli : fighters) {
             if (fli != null) {
                 final FighterInfo info = new FighterInfo();
@@ -101,6 +101,28 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
         final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
         fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
+    }
+
+    @Override
+    public FighterListResultWrapper getFightersByGroup(ScaGroup group, String cursor, Integer pageSize, Integer offset) {
+        log.info(String.format("Getting fighters by group %s", group.getGroupName()));
+        final FighterDAO fighterDao = new FighterDAO();
+        final FighterResultWrapper fighterResults;
+        if (cursor == null) {
+            fighterResults = fighterDao.getFightersByGroup(group, pageSize, offset);
+        } else {
+            final Cursor startCursor = Cursor.fromWebSafeString(cursor);
+            fighterResults = fighterDao.getFightersByGroup(group, pageSize, startCursor);
+        }
+        final String newCursor = fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        log.log(Level.INFO, "Returning: {0}", fighterListResults.getFighters());
         fighterListResults.setCursor(newCursor);
         fighterListResults.setPageSize(pageSize);
         fighterListResults.setCount(fighterDao.getTotalCount());
@@ -271,6 +293,22 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         }
 
         return reports;
+    }
+
+    @Override
+    public Integer countFightersInGroup(String group) {
+        final FighterDAO fighterDao = new FighterDAO();
+        final ScaGroupDAO groupDao = new ScaGroupDAO();
+        final ScaGroup scaGroup = groupDao.getScaGroupByName(group);
+        return fighterDao.getFighterCountInGroup(scaGroup);
+    }
+
+    @Override
+    public Integer countMinorsInGroup(String group) {
+        final FighterDAO fighterDao = new FighterDAO();
+        final ScaGroupDAO groupDao = new ScaGroupDAO();
+        final ScaGroup scaGroup = groupDao.getScaGroupByName(group);
+        return fighterDao.getMinorCountInGroup(scaGroup);
     }
 
 }

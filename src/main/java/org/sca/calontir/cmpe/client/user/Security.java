@@ -8,6 +8,7 @@ import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.LoginInfo;
 import org.sca.calontir.cmpe.client.ui.LookupController;
 import org.sca.calontir.cmpe.common.UserRoles;
+import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
@@ -62,8 +63,12 @@ public class Security {
         return false;
     }
 
-    public synchronized boolean canEditFighter(Long fighterId) {
-        if (loginInfo == null) {
+    public boolean canEditFighter(Fighter fighter) {
+        return canEditFighter(fighter.getFighterId(), fighter.getScaGroup());
+    }
+
+    private synchronized boolean canEditFighter(Long fighterId, ScaGroup userGroup) {
+        if (loginInfo == null || !loginInfo.isLoggedIn()) {
             return false;
         }
 
@@ -71,19 +76,12 @@ public class Security {
             return true;
         }
 
-        if (loginInfo.getFighterId() > 0 && loginInfo.getFighterId() == fighterId.longValue()) {
+        if (loginInfo.getFighterId() > 0 && loginInfo.getFighterId() == fighterId) {
             return true;
         }
 
-        FighterInfo fi = LookupController.getInstance().getFighter(fighterId);
-        FighterInfo user = LookupController.getInstance().getFighter(loginInfo.getFighterId());
-        if (user == null) {
-            return false;
-        }
-
         if (isRole(UserRoles.KNIGHTS_MARSHAL)) {
-            ScaGroup userGroup = LookupController.getInstance().getScaGroup(user.getGroup());
-            ScaGroup fightersGroup = LookupController.getInstance().getScaGroup(fi.getGroup());
+            ScaGroup fightersGroup = LookupController.getInstance().getScaGroup(loginInfo.getGroup());
             if (userGroup != null && fightersGroup != null) {
                 if (userGroup.getGroupName().equals(fightersGroup.getGroupName())) {
                     return true;
@@ -92,8 +90,7 @@ public class Security {
         }
 
         if (isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
-            ScaGroup userGroup = LookupController.getInstance().getScaGroup(user.getGroup());
-            ScaGroup fightersGroup = LookupController.getInstance().getScaGroup(fi.getGroup());
+            ScaGroup fightersGroup = LookupController.getInstance().getScaGroup(loginInfo.getGroup());
             if (userGroup != null && fightersGroup != null) {
                 if (userGroup.getGroupLocation().equals(fightersGroup.getGroupLocation())) {
                     return true;
@@ -104,7 +101,7 @@ public class Security {
         return false;
     }
 
-    public boolean canView(Long fighterId) {
-        return canEditFighter(fighterId);
+    public boolean canView(FighterInfo fighter) {
+        return canEditFighter(fighter.getFighterId(), LookupController.getInstance().getScaGroup(fighter.getGroup()));
     }
 }

@@ -37,7 +37,7 @@ public class DisplayUtils {
                 }
             } else {
                 Element element = DOM.getElementById(display.toString());
-                if (element != null) {
+                if (element != null && !element.getStyle().getDisplay().equals(Style.Display.BLOCK.toString())) {
                     element.getStyle().setDisplay(Style.Display.BLOCK);
                 }
             }

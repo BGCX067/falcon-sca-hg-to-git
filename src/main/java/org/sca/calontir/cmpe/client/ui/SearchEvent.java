@@ -52,7 +52,7 @@ public class SearchEvent extends GwtEvent<SearchEventHandler> {
 
     @Override
     protected void dispatch(SearchEventHandler handler) {
-        logger.info("dispatch");
+        logger.info("SearchEvent dispatch");
         if (searchTypeChange) {
             logger.finer("searchTypeChange");
             handler.switchSearchType(searchType);

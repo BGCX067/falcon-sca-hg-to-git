@@ -239,11 +239,11 @@ public class FighterFormWidget extends Composite implements EditViewHandler, For
                 editButton.add(cancelButton(Target.Info));
                 break;
             case view:
-                if (security.canEditFighter(fighter.getFighterId())) {
-                if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
-                    editButton.add(editButton(Target.Info));
+                if (security.canEditFighter(fighter)) {
+                    if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
+                        editButton.add(editButton(Target.Info));
+                    }
                 }
-            }
                 break;
             case add:
                 edit = true;

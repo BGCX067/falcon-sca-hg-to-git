@@ -8,10 +8,9 @@ import java.util.List;
  * @author rikscarborough
  */
 public class FighterListInfo implements Serializable {
-    
+
     //TODO: Change to containing a list of the following information
     // and a flag to represent if the client should update or replace the data.
-
     List<FighterInfo> fighterInfo;
     boolean updateInfo;
 
@@ -30,6 +29,10 @@ public class FighterListInfo implements Serializable {
     public void setUpdateInfo(boolean updateInfo) {
         this.updateInfo = updateInfo;
     }
-    
+
+    @Override
+    public String toString() {
+        return "FighterListInfo{" + "fighterInfo=" + fighterInfo + ", updateInfo=" + updateInfo + '}';
+    }
 
 }

@@ -19,11 +19,17 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  */
 public interface FighterServiceAsync {
 
+    public void countFightersInGroup(String group, AsyncCallback<Integer> async);
+
+    public void countMinorsInGroup(String group, AsyncCallback<Integer> async);
+
     public void getListItems(Date targetDate, AsyncCallback<FighterListInfo> async);
 
     public void getFighter(Long id, AsyncCallback<Fighter> async);
 
     public void getFighters(String cursor, Integer pageSize, Integer offset, AsyncCallback<FighterListResultWrapper> async);
+
+    public void getFightersByGroup(ScaGroup group, String cursor, Integer pageSize, Integer offset, AsyncCallback<FighterListResultWrapper> async);
 
     public void searchFighters(String searchString, AsyncCallback<FighterListInfo> async);
 

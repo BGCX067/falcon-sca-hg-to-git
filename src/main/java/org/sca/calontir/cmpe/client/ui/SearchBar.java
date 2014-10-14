@@ -111,22 +111,11 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler, Sea
                 group.addItem(g.getGroupName(), g.getGroupName());
             }
 
-            List<FighterInfo> fList = LookupController.getInstance().getFighterList(security.getLoginInfo().getScaName());
-            if (fList != null && fList.size() > 0) {
-                FighterInfo user = fList.get(0);
-                if (user.getGroup() != null) {
-                    for (int i = 0; i < group.getItemCount(); ++i) {
-                        if (group.getValue(i).equals(user.getGroup())) {
-                            group.setSelectedIndex(i);
-                            break;
-                        }
-                    }
-                }
-            }
             group.addChangeHandler(new ChangeHandler() {
                 @Override
                 public void onChange(ChangeEvent event) {
                     ScaGroup scaGroup = LookupController.getInstance().getScaGroup(group.getValue(group.getSelectedIndex()));
+                    logger.info("Changing group to " + scaGroup.getGroupName());
                     fireEvent(new SearchEvent(scaGroup));
                 }
             });
@@ -141,7 +130,6 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler, Sea
         fi.setGroup(fighter.getScaGroup().getGroupName());
         fi.setScaName(fighter.getScaName());
         fi.setAuthorizations(getAuthsAsString(fighter.getAuthorization()));
-        LookupController.getInstance().replaceFighter(fi);
         searchPanel.clear();
 
         buildBar();
@@ -166,7 +154,6 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler, Sea
 
     @Override
     public void fighterAdded() {
-        LookupController.getInstance().replaceFighter(null);
         searchPanel.clear();
 
         buildBar();
@@ -190,25 +177,15 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler, Sea
             groupBox.getElement().getStyle().setDisplay(Style.Display.NONE);
             searchBox.getElement().getStyle().setDisplay(Style.Display.INLINE);
             submit.getElement().getStyle().setDisplay(Style.Display.INLINE);
+            logger.info("switchSearchType: fighter");
             fireEvent(new SearchEvent());
         } else {
             groupBox.getElement().getStyle().setDisplay(Style.Display.INLINE);
             searchBox.getElement().getStyle().setDisplay(Style.Display.NONE);
             submit.getElement().getStyle().setDisplay(Style.Display.NONE);
-            List<FighterInfo> fList = LookupController.getInstance().getFighterList(security.getLoginInfo().getScaName());
-            if (fList != null && fList.size() > 0) {
-                FighterInfo user = fList.get(0);
-                if (user.getGroup() != null) {
-                    for (int i = 0; i < groupBox.getItemCount(); ++i) {
-                        if (groupBox.getValue(i).equals(user.getGroup())) {
-                            groupBox.setSelectedIndex(i);
-                            break;
-                        }
-                    }
-                }
-                ScaGroup scaGroup = LookupController.getInstance().getScaGroup(user.getGroup());
-                fireEvent(new SearchEvent(scaGroup));
-            }
+            ScaGroup scaGroup = LookupController.getInstance().getScaGroup(security.getLoginInfo().getGroup());
+            logger.info("switchSearchType: group");
+            fireEvent(new SearchEvent(scaGroup));
         }
     }
 }

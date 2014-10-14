@@ -16,12 +16,9 @@ import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.datepicker.client.DateBox;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
-import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterService;
 import org.sca.calontir.cmpe.client.FighterServiceAsync;
-import org.sca.calontir.cmpe.client.ui.LookupController;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
 import org.sca.calontir.cmpe.common.ReportingMarshalType;
@@ -36,27 +33,31 @@ public class Activities extends BaseReportPage {
     private class ActiveFighter extends Composite {
 
         public ActiveFighter() {
-            Integer retVal = 0;
-            List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
-            FighterInfo userInfo = LookupController.getInstance().getFighter(security.getLoginInfo().getFighterId());
-            for (FighterInfo fli : fighterList) {
-                if (fli.getGroup().equals(userInfo.getGroup())) {
-                    ++retVal;
+            final Label activeFighters = new Label();
+            final FighterServiceAsync fighterService = GWT.create(FighterService.class);
+            fighterService.countFightersInGroup(security.getLoginInfo().getGroup(), new AsyncCallback<Integer>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    log.severe("ActiveFighter: " + caught.getMessage());
                 }
-            }
-            initWidget(new Label(retVal.toString()));
-            addReportInfo("Active Fighters", retVal.toString());
+
+                @Override
+                public void onSuccess(Integer result) {
+                    activeFighters.setText(result.toString());
+                    addReportInfo("Active Fighters", result);
+                }
+            });
+            initWidget(activeFighters);
         }
     }
 
     private class MinorFighters extends Composite {
 
         public MinorFighters() {
-            FighterInfo userInfo = LookupController.getInstance().getFighter(security.getLoginInfo().getFighterId());
             final Label minors = new Label();
-
             FighterServiceAsync fighterService = GWT.create(FighterService.class);
-            fighterService.getMinorTotal(userInfo.getGroup(), new AsyncCallback<Integer>() {
+            fighterService.countMinorsInGroup(security.getLoginInfo().getGroup(), new AsyncCallback<Integer>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     log.severe("getMinorTotal: " + caught.getMessage());

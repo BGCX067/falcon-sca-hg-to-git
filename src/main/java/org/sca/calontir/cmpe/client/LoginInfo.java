@@ -21,6 +21,7 @@ public class LoginInfo implements Serializable {
     private String scaName;
     private UserRoles userRole;
     private long fighterId;
+    private String group;
 
     public boolean isUser() {
         return isLoggedIn() && getScaName() != null && !getScaName().trim().isEmpty();
@@ -88,6 +89,14 @@ public class LoginInfo implements Serializable {
 
     public void setFighterId(long fighterId) {
         this.fighterId = fighterId;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
 }

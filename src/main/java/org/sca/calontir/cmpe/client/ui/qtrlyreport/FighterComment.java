@@ -53,15 +53,13 @@ public class FighterComment extends BaseReportPage {
 
         fighterComments.addKeyPressHandler(new RequiredFieldKeyPressHandler("Fighter Comments"));
 
-        List<FighterInfo> fighterList = LookupController.getInstance().getFighterList(null);
-        addListPanel(fighterList, bk);
+        addListPanel(null, bk);
 
         add(bk);
     }
 
     private void addListPanel(List<FighterInfo> fighterList, Panel target) {
         Panel listPanel = new FlowPanel();
-        FighterInfo userInfo = LookupController.getInstance().getFighter(security.getLoginInfo().getFighterId());
 
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
@@ -108,20 +106,20 @@ public class FighterComment extends BaseReportPage {
             ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
             if (ReportingMarshalType.ARMORED_COMBAT.equals(rmt)) {
                 if (security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
-                    if (fli.getGroup().equals(userInfo.getGroup())) {
+                    if (fli.getGroup().equals(security.getLoginInfo().getGroup())) {
                         data.add(fli);
                     }
                 }
                 if (security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
                     ScaGroup fightersGroup = LookupController.getInstance().getScaGroup(fli.getGroup());
-                    ScaGroup usersGroup = LookupController.getInstance().getScaGroup(userInfo.getGroup());
+                    ScaGroup usersGroup = LookupController.getInstance().getScaGroup(security.getLoginInfo().getGroup());
                     if (fightersGroup.getGroupLocation().equals(usersGroup.getGroupLocation())) {
                         data.add(fli);
                     }
                 }
             } else {
                 // Hack. Uses data in code.
-                if (fli.getAuthorizations().contains("HR/CT")) {
+                if (fli.getAuthorizations().contains("CT")) {
                     data.add(fli);
                 }
             }

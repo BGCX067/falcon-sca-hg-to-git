@@ -41,6 +41,7 @@ import org.sca.calontir.cmpe.dto.FighterListItem;
 import org.sca.calontir.cmpe.dto.FighterResultWrapper;
 import org.sca.calontir.cmpe.dto.Note;
 import org.sca.calontir.cmpe.dto.Phone;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
  *
@@ -84,6 +85,40 @@ public class FighterDAO {
 
     protected FighterResultWrapper getFighters(int pageSize, Cursor cursor, int offset) {
         final Query query = new Query("Fighter").addSort("scaName");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        if (cursor != null) {
+            fetchOptions.startCursor(cursor);
+        } else if (offset > 0) {
+            fetchOptions.offset(offset);
+        }
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
+    public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, int offset) {
+        return getFightersByGroup(scaGroup, pageSize, null, offset);
+    }
+
+    public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, Cursor cursor) {
+        return getFightersByGroup(scaGroup, pageSize, cursor, 0);
+    }
+
+    protected FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, Cursor cursor, int offset) {
+        ScaGroupDAO groupDao = new ScaGroupDAO();
+        Key groupKey = groupDao.getScaGroupKey(scaGroup.getGroupName());
+        logger.info(String.format("getting fighters by group key %d", groupKey.getId()));
+        Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, groupKey);
+        final Query query = new Query("Fighter").setFilter(scaGroupFilter).addSort("scaName");
         final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
         if (cursor != null) {
             fetchOptions.startCursor(cursor);
@@ -312,8 +347,6 @@ public class FighterDAO {
     public Long saveFighter(Fighter fighter, Long userId, boolean validate) throws ValidationException {
         final Long keyValue;
 
-        saveFighterToIndex(fighter);
-
         Entity fighterEntity = null;
 
         if (fighter.getFighterId() != null && fighter.getFighterId() > 0) {
@@ -333,6 +366,9 @@ public class FighterDAO {
         fighterEntity.setProperty("lastUpdated", new Date());
         fighterEntity.setProperty("userUpdated", userId);
         final Key key = datastore.put(fighterEntity);
+
+        fighter.setFighterId(key.getId());
+        saveFighterToIndex(fighter);
 
         final Query noteQuery = new Query("Note").setAncestor(key);
         Entity noteEntity = datastore.prepare(noteQuery).asSingleEntity();
@@ -565,6 +601,26 @@ public class FighterDAO {
         Query query = new Query("Fighter").setKeysOnly();
         FetchOptions fetchOptions = FetchOptions.Builder.withDefaults();
         PreparedQuery pq = datastore.prepare(query);
+        return pq.countEntities(fetchOptions);
+    }
+
+    public int getFighterCountInGroup(ScaGroup scaGroup) {
+        Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, scaGroup);
+        Query query = new Query("Fighter").setFilter(scaGroupFilter).setKeysOnly();
+        FetchOptions fetchOptions = FetchOptions.Builder.withDefaults();
+        PreparedQuery pq = datastore.prepare(query);
+        return pq.countEntities(fetchOptions);
+    }
+
+    public int getMinorCountInGroup(ScaGroup scaGroup) {
+        final LocalDate now = new LocalDate();
+        final LocalDate minorDate = now.minusYears(18);
+        final Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, scaGroup);
+        final Query.Filter filter = new Query.FilterPredicate("dateOfBirth", Query.FilterOperator.GREATER_THAN, minorDate.toDateTimeAtStartOfDay().toDate());
+        final Query.Filter validFilter = Query.CompositeFilterOperator.and(scaGroupFilter, filter);
+        final Query query = new Query("Fighter").setFilter(validFilter).setKeysOnly();
+        final FetchOptions fetchOptions = FetchOptions.Builder.withDefaults();
+        final PreparedQuery pq = datastore.prepare(query);
         return pq.countEntities(fetchOptions);
     }
 }
