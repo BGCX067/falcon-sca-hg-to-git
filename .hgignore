@@ -18,5 +18,5 @@ nbactions.xml
 upldev.sh
 cmpedata
 ^nb-configuration\.xml$
-data
+^data
 build.gradle

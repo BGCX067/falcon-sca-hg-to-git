@@ -605,7 +605,9 @@ public class FighterDAO {
     }
 
     public int getFighterCountInGroup(ScaGroup scaGroup) {
-        Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, scaGroup);
+        ScaGroupDAO groupDao = new ScaGroupDAO();
+        Key groupKey = groupDao.getScaGroupKey(scaGroup.getGroupName());
+        Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, groupKey);
         Query query = new Query("Fighter").setFilter(scaGroupFilter).setKeysOnly();
         FetchOptions fetchOptions = FetchOptions.Builder.withDefaults();
         PreparedQuery pq = datastore.prepare(query);

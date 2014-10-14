@@ -122,10 +122,9 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
         final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
         fighterListResults.setFighters(convert(fighterResults.getFighters()));
-        log.log(Level.INFO, "Returning: {0}", fighterListResults.getFighters());
         fighterListResults.setCursor(newCursor);
         fighterListResults.setPageSize(pageSize);
-        fighterListResults.setCount(fighterDao.getTotalCount());
+        fighterListResults.setCount(fighterDao.getFighterCountInGroup(group));
         return fighterListResults;
     }
 

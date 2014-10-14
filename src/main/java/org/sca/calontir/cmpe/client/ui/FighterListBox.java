@@ -317,9 +317,8 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                 final Range range = display.getVisibleRange();
                 int start = range.getStart();
                 prevStart = start;
-                table.setRowCount(0);
-                table.setRowData(start, result.getFighters().getFighterInfo());
                 table.setRowCount(result.getCount());
+                table.setRowData(start, result.getFighters().getFighterInfo());
                 cursor = result.getCursor();
             }
         }
