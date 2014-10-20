@@ -283,9 +283,9 @@ public class FighterListBox extends Composite implements SearchEventHandler {
             if (prevStart >= dispStart) {
                 cursor = null;
             }
-            if (dispStart >= table.getRowCount() - 10) {
+            if (dispStart >= table.getRowCount() - dispLength) {
                 cursor = null;
-                prevPageStart = table.getRowCount() - 10;
+                prevPageStart = table.getRowCount() - dispLength;
             }
             final FighterServiceAsync fighterService = GWT.create(FighterService.class);
             switch (dataProviderType) {
