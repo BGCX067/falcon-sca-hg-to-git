@@ -11,7 +11,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -25,7 +24,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.DisplayUtils;
@@ -52,6 +50,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
     final private Security security = SecurityFactory.getSecurity();
     private String cursor = null;
     private int prevStart = 0;
+    private final Shout shout = Shout.getInstance();
 
     public FighterListBox() {
         Panel listBackground = new FlowPanel();
@@ -120,7 +119,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                 return fli.getScaName();
             }
         };
-        scaNameColumn.setSortable(true);
+        scaNameColumn.setSortable(false);
 
         TextColumn<FighterInfo> authorizationColumn = new TextColumn<FighterInfo>() {
             @Override
@@ -135,29 +134,14 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                 return fli.getGroup();
             }
         };
-        groupColumn.setSortable(true);
+        groupColumn.setSortable(false);
 
         table.addColumn(selectColumn, "");
         table.addColumn(imageColumn);
         table.addColumn(scaNameColumn, "SCA Name");
-        ColumnSortEvent.ListHandler<FighterInfo> columnSortHandler = new ColumnSortEvent.ListHandler<>(dataProvider.getList());
-        columnSortHandler.setComparator(scaNameColumn, new Comparator<FighterInfo>() {
-            @Override
-            public int compare(FighterInfo left, FighterInfo right) {
-                return left.getScaName().compareTo(right.getScaName());
-            }
-        });
-        table.addColumnSortHandler(columnSortHandler);
+
         table.addColumn(authorizationColumn, "Authorizations");
         table.addColumn(groupColumn, "Group");
-        columnSortHandler = new ColumnSortEvent.ListHandler<>(dataProvider.getList());
-        columnSortHandler.setComparator(groupColumn, new Comparator<FighterInfo>() {
-            @Override
-            public int compare(FighterInfo left, FighterInfo right) {
-                return left.getGroup().compareTo(right.getGroup());
-            }
-        });
-        table.addColumnSortHandler(columnSortHandler);
 
         if (security.isRoleOrGreater(UserRoles.KNIGHTS_MARSHAL)) {
             TextColumn<FighterInfo> statusColumn = new TextColumn<FighterInfo>() {
@@ -166,17 +150,9 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                     return fli.getStatus();
                 }
             };
-            statusColumn.setSortable(true);
+            statusColumn.setSortable(false);
 
             table.addColumn(statusColumn, "Status");
-            columnSortHandler = new ColumnSortEvent.ListHandler<>(dataProvider.getList());
-            columnSortHandler.setComparator(statusColumn, new Comparator<FighterInfo>() {
-                @Override
-                public int compare(FighterInfo left, FighterInfo right) {
-                    return left.getStatus().compareTo(right.getStatus());
-                }
-            });
-            table.addColumnSortHandler(columnSortHandler);
         }
 
         final SingleSelectionModel<FighterInfo> selectionModel = new SingleSelectionModel<>();
@@ -222,6 +198,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
     }
 
     @Override
+
     public void find(String searchName) {
         log.info("Searching for " + searchName);
 
@@ -258,8 +235,8 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
     private class AsyncDataProviderImpl extends AsyncDataProvider<FighterInfo> {
 
-        private DataProviderType dataProviderType;
-        private ScaGroup group;
+        final private DataProviderType dataProviderType;
+        final private ScaGroup group;
 
         public AsyncDataProviderImpl() {
             this.dataProviderType = DataProviderType.FIGHTER;
@@ -274,6 +251,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
         @Override
         protected void onRangeChanged(final HasData<FighterInfo> display) {
+            shout.tell("Please Wait, search for records....", false);
             int dispStart = display.getVisibleRange().getStart();
             int dispLength = display.getVisibleRange().getLength();
             log.info("display start: " + dispStart + " length " + dispLength);
@@ -290,37 +268,39 @@ public class FighterListBox extends Composite implements SearchEventHandler {
             final FighterServiceAsync fighterService = GWT.create(FighterService.class);
             switch (dataProviderType) {
                 case FIGHTER:
-                    fighterService.getFighters(cursor, dispLength, prevPageStart, new fighterAsyncCallback(display));
+                    fighterService.getFighters(cursor, dispLength, prevPageStart, new FighterAsyncCallback(display));
                     break;
                 case GROUP:
-                    fighterService.getFightersByGroup(group, cursor, dispLength, prevPageStart, new fighterAsyncCallback(display));
+                    fighterService.getFightersByGroup(group, cursor, dispLength, prevPageStart, new FighterAsyncCallback(display));
                     break;
                 default:
             }
         }
 
-        private class fighterAsyncCallback implements AsyncCallback<FighterListResultWrapper> {
+    }
 
-            private final HasData<FighterInfo> display;
+    private class FighterAsyncCallback implements AsyncCallback<FighterListResultWrapper> {
 
-            public fighterAsyncCallback(HasData<FighterInfo> display) {
-                this.display = display;
-            }
+        private final HasData<FighterInfo> display;
 
-            @Override
-            public void onFailure(Throwable caught) {
-                log.log(Level.SEVERE, "loadAll:", caught);
-            }
+        public FighterAsyncCallback(HasData<FighterInfo> display) {
+            this.display = display;
+        }
 
-            @Override
-            public void onSuccess(FighterListResultWrapper result) {
-                final Range range = display.getVisibleRange();
-                int start = range.getStart();
-                prevStart = start;
-                table.setRowCount(result.getCount());
-                table.setRowData(start, result.getFighters().getFighterInfo());
-                cursor = result.getCursor();
-            }
+        @Override
+        public void onFailure(Throwable caught) {
+            log.log(Level.SEVERE, "loadAll:", caught);
+        }
+
+        @Override
+        public void onSuccess(FighterListResultWrapper result) {
+            final Range range = display.getVisibleRange();
+            int start = range.getStart();
+            prevStart = start;
+            table.setRowCount(result.getCount());
+            table.setRowData(start, result.getFighters().getFighterInfo());
+            cursor = result.getCursor();
+            shout.hide();
         }
     }
 }

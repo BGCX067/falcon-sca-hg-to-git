@@ -54,4 +54,10 @@ public interface FighterServiceAsync {
     public void deleteReport(Report report, AsyncCallback<Void> async);
 
     public void getMinorFighters(String group, AsyncCallback<List<Fighter>> asyncCallback);
+
+    public void getFightersSortedByScaName(Integer pageSize, AsyncCallback<FighterListResultWrapper> fighterAsyncCallback);
+
+    public void getFightersSortedByScaGroup(Integer pageSize, AsyncCallback<FighterListResultWrapper> fighterAsyncCallback);
+
+    public void getFightersSortedByStatus(Integer pageSize, AsyncCallback<FighterListResultWrapper> fighterAsyncCallback);
 }

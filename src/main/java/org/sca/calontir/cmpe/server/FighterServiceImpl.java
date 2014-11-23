@@ -129,6 +129,48 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     }
 
     @Override
+    public FighterListResultWrapper getFightersSortedByScaName(Integer pageSize) {
+        final FighterDAO fighterDao = new FighterDAO();
+        FighterResultWrapper fighterResults = fighterDao.getFightersSortedByScaName(pageSize);
+        final String newCursor = fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
+    }
+
+    @Override
+    public FighterListResultWrapper getFightersSortedByScaGroup(Integer pageSize) {
+        final FighterDAO fighterDao = new FighterDAO();
+        FighterResultWrapper fighterResults = fighterDao.getFightersSortedByGroup(pageSize);
+        final String newCursor = fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
+    }
+
+    @Override
+    public FighterListResultWrapper getFightersSortedByStatus(Integer pageSize) {
+        final FighterDAO fighterDao = new FighterDAO();
+        FighterResultWrapper fighterResults = fighterDao.getFightersSortedByStatus(pageSize);
+        final String newCursor = fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
+    }
+
+    @Override
     public Long saveFighter(Fighter fighter) {
         FighterDAO fighterDao = new FighterDAO();
         try {

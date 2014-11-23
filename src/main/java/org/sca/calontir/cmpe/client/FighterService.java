@@ -48,4 +48,10 @@ public interface FighterService extends RemoteService {
     public List<Report> getReports(Integer days);
 
     public void deleteReport(Report report);
+
+    public FighterListResultWrapper getFightersSortedByScaName(Integer pageSize);
+
+    public FighterListResultWrapper getFightersSortedByScaGroup(Integer pageSize);
+
+    public FighterListResultWrapper getFightersSortedByStatus(Integer pageSize);
 }

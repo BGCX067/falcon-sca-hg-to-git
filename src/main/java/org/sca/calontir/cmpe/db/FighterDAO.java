@@ -105,6 +105,57 @@ public class FighterDAO {
         return result;
     }
 
+    public FighterResultWrapper getFightersSortedByScaName(Integer pageSize) {
+        final Query query = new Query("Fighter").addSort("scaName");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
+    public FighterResultWrapper getFightersSortedByGroup(Integer pageSize) {
+        final Query query = new Query("Fighter").addSort("scaGroup");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
+    public FighterResultWrapper getFightersSortedByStatus(Integer pageSize) {
+        final Query query = new Query("Fighter").addSort("status");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
     public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, int offset) {
         return getFightersByGroup(scaGroup, pageSize, null, offset);
     }
@@ -625,4 +676,5 @@ public class FighterDAO {
         final PreparedQuery pq = datastore.prepare(query);
         return pq.countEntities(fetchOptions);
     }
+
 }
