@@ -75,16 +75,21 @@ public class FighterDAO {
         return retVal;
     }
 
-    public FighterResultWrapper getFighters(int pageSize, int offset) {
-        return getFighters(pageSize, null, offset);
+    public FighterResultWrapper getFighters(int pageSize, int offset, boolean getDeleted) {
+        return getFighters(pageSize, null, offset, getDeleted);
     }
 
-    public FighterResultWrapper getFighters(int pageSize, Cursor cursor) {
-        return getFighters(pageSize, cursor, 0);
+    public FighterResultWrapper getFighters(int pageSize, Cursor cursor, boolean getDeleted) {
+        return getFighters(pageSize, cursor, 0, getDeleted);
     }
 
-    protected FighterResultWrapper getFighters(int pageSize, Cursor cursor, int offset) {
-        final Query query = new Query("Fighter").addSort("scaName");
+    protected FighterResultWrapper getFighters(int pageSize, Cursor cursor, int offset, boolean getDeleted) {
+        final Query query = new Query("Fighter");
+        if (!getDeleted) {
+            final Query.Filter scaGroupFilter = new Query.FilterPredicate("status", Query.FilterOperator.NOT_EQUAL, "DELETED");
+            query.setFilter(scaGroupFilter).addSort("status");
+        }
+        query.addSort("scaName");
         final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
         if (cursor != null) {
             fetchOptions.startCursor(cursor);
@@ -156,20 +161,27 @@ public class FighterDAO {
         return result;
     }
 
-    public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, int offset) {
-        return getFightersByGroup(scaGroup, pageSize, null, offset);
+    public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, int offset, boolean getDeleted) {
+        return getFightersByGroup(scaGroup, pageSize, null, offset, getDeleted);
     }
 
-    public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, Cursor cursor) {
-        return getFightersByGroup(scaGroup, pageSize, cursor, 0);
+    public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, Cursor cursor, boolean getDeleted) {
+        return getFightersByGroup(scaGroup, pageSize, cursor, 0, getDeleted);
     }
 
-    protected FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, Cursor cursor, int offset) {
+    protected FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, Cursor cursor, int offset, boolean getDeleted) {
         ScaGroupDAO groupDao = new ScaGroupDAO();
         Key groupKey = groupDao.getScaGroupKey(scaGroup.getGroupName());
-        logger.info(String.format("getting fighters by group key %d", groupKey.getId()));
+        final Query query = new Query("Fighter");
         Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, groupKey);
-        final Query query = new Query("Fighter").setFilter(scaGroupFilter).addSort("scaName");
+
+        if (getDeleted) {
+            query.setFilter(scaGroupFilter).addSort("scaName");
+        } else {
+            final Query.Filter statusFilter = new Query.FilterPredicate("status", Query.FilterOperator.NOT_EQUAL, "DELETED");
+            final Query.Filter compositeFilter = Query.CompositeFilterOperator.and(scaGroupFilter, statusFilter);
+            query.setFilter(compositeFilter).addSort("status").addSort("scaName");
+        }
         final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
         if (cursor != null) {
             fetchOptions.startCursor(cursor);

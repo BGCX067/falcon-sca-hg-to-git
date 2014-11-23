@@ -59,6 +59,7 @@ public class SearchBar extends Composite implements DataUpdatedEventHandler, Sea
         submit = new Button(SEARCH, new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
+                Shout.getInstance().tell("Please Wait, searching for records....", false);
                 final String searchName = searchBox.getText();
                 logger.info("Searching for " + searchName);
                 if (searchName == null || searchName.isEmpty()) {

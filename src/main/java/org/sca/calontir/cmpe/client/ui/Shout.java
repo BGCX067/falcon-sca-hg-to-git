@@ -50,6 +50,11 @@ public class Shout extends PopupPanel {
         comm.setText("");
     }
 
+    public void defaultError() {
+        hide();
+        tell("Ehue -- We've encountered an error. The error has been logged, and we will take a look. In the meantime please refresh by clicking on \"Home\" or hit F5 on your keyboard.", false);
+    }
+
     public void tell(String status, boolean hide) {
         if (showing) {
             status = comm.getHTML() + "<br>" + status;

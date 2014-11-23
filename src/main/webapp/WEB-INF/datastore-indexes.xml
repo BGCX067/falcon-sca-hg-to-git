@@ -8,4 +8,13 @@
         <property name="scaGroup" direction="asc"/>
         <property name="scaName" direction="asc"/>
     </datastore-index>
+    <datastore-index kind="Fighter" ancestor="false" source="manual">
+        <property name="status" direction="asc"/>
+        <property name="scaName" direction="asc"/>
+    </datastore-index>
+    <datastore-index kind="Fighter" ancestor="false" source="manual">
+        <property name="scaGroup" direction="asc"/>
+        <property name="status" direction="asc"/>
+        <property name="scaName" direction="asc"/>
+    </datastore-index>
 </datastore-indexes>

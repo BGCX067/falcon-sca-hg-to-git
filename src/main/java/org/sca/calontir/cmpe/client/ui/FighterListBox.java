@@ -169,6 +169,7 @@ public class FighterListBox extends Composite implements SearchEventHandler {
                             @Override
                             public void onFailure(Throwable caught) {
                                 log.log(Level.SEVERE, "getFighter {0}", caught);
+                                shout.defaultError();
                             }
 
                             @Override
@@ -200,7 +201,6 @@ public class FighterListBox extends Composite implements SearchEventHandler {
     @Override
 
     public void find(String searchName) {
-        log.info("Searching for " + searchName);
 
         LookupController.getInstance().searchFighters(searchName, table, dataProvider);
         DisplayUtils.changeDisplay(DisplayUtils.Displays.ListBox, true);
@@ -251,10 +251,10 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
         @Override
         protected void onRangeChanged(final HasData<FighterInfo> display) {
-            shout.tell("Please Wait, search for records....", false);
+            shout.hide();
+            shout.tell("Please Wait, searching for records....", false);
             int dispStart = display.getVisibleRange().getStart();
             int dispLength = display.getVisibleRange().getLength();
-            log.info("display start: " + dispStart + " length " + dispLength);
 
             int prevPageStart = dispStart - dispLength;
             prevPageStart = prevPageStart < 0 ? 0 : dispStart;
@@ -289,7 +289,9 @@ public class FighterListBox extends Composite implements SearchEventHandler {
 
         @Override
         public void onFailure(Throwable caught) {
+            shout.hide();
             log.log(Level.SEVERE, "loadAll:", caught);
+            shout.defaultError();
         }
 
         @Override

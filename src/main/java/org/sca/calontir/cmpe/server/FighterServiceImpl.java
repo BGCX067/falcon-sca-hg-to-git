@@ -89,15 +89,16 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
     @Override
     public FighterListResultWrapper getFighters(String cursor, Integer pageSize, Integer offset) {
+        final Security security = SecurityFactory.getSecurity();
         final FighterDAO fighterDao = new FighterDAO();
         FighterResultWrapper fighterResults;
         if (cursor == null) {
-            fighterResults = fighterDao.getFighters(pageSize, offset);
+            fighterResults = fighterDao.getFighters(pageSize, offset, security.isRoleOrGreater(UserRoles.CARD_MARSHAL));
         } else {
             Cursor startCursor = Cursor.fromWebSafeString(cursor);
-            fighterResults = fighterDao.getFighters(pageSize, startCursor);
+            fighterResults = fighterDao.getFighters(pageSize, startCursor, security.isRoleOrGreater(UserRoles.CARD_MARSHAL));
         }
-        final String newCursor = fighterResults.getCursor().toWebSafeString();
+        final String newCursor = fighterResults.getCursor() == null ? null : fighterResults.getCursor().toWebSafeString();
 
         final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
         fighterListResults.setFighters(convert(fighterResults.getFighters()));
@@ -109,16 +110,16 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
     @Override
     public FighterListResultWrapper getFightersByGroup(ScaGroup group, String cursor, Integer pageSize, Integer offset) {
-        log.info(String.format("Getting fighters by group %s", group.getGroupName()));
+        final Security security = SecurityFactory.getSecurity();
         final FighterDAO fighterDao = new FighterDAO();
         final FighterResultWrapper fighterResults;
         if (cursor == null) {
-            fighterResults = fighterDao.getFightersByGroup(group, pageSize, offset);
+            fighterResults = fighterDao.getFightersByGroup(group, pageSize, offset, security.isRoleOrGreater(UserRoles.CARD_MARSHAL));
         } else {
             final Cursor startCursor = Cursor.fromWebSafeString(cursor);
-            fighterResults = fighterDao.getFightersByGroup(group, pageSize, startCursor);
+            fighterResults = fighterDao.getFightersByGroup(group, pageSize, startCursor, security.isRoleOrGreater(UserRoles.CARD_MARSHAL));
         }
-        final String newCursor = fighterResults.getCursor().toWebSafeString();
+        final String newCursor = fighterResults.getCursor() == null ? null : fighterResults.getCursor().toWebSafeString();
 
         final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
         fighterListResults.setFighters(convert(fighterResults.getFighters()));

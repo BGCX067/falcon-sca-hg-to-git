@@ -60,7 +60,7 @@ public class IndexPage implements EntryPoint {
             @Override
             public void onUncaughtException(Throwable e) {
                 DisplayUtils.clearDisplay();
-                Shout.getInstance().tell("Ehue -- We've encountered an error. The error has been logged,  and we will take a look. In the meantime please refresh by clicking on \"Home\" or hit F5 on your keyboard.", false);
+                Shout.getInstance().defaultError();
                 log.log(Level.SEVERE, "Uncaught Exception", e);
             }
         });
