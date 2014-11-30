@@ -15,3 +15,9 @@ http://localhost:8080/
 Use Maven's prepare to update the server and the source repository.
 mvn -Dusername=<repository-uid> -Dpassword=<repository-pw> release:prepare
 mvn release:perform
+
+To update the current version
+mvn appengine:update to update the front end.
+mvn appengine:backends_update to update the backend (reports etc.)
+
+mvn clean appengine:update appengine:backends_update will update the entire application.
