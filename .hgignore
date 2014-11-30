@@ -20,3 +20,6 @@ cmpedata
 ^nb-configuration\.xml$
 ^data
 build.gradle
+.classpath
+.project
+settings
