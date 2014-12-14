@@ -2,22 +2,12 @@ package org.sca.calontir.cmpe.server;
 
 import com.google.appengine.api.NamespaceManager;
 import com.google.appengine.api.backends.BackendServiceFactory;
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreInputStream;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -30,7 +20,9 @@ import org.joda.time.DateTime;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.client.FighterInfo;
 import org.sca.calontir.cmpe.client.FighterListInfo;
+import org.sca.calontir.cmpe.client.FighterListResultWrapper;
 import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.db.AuthTypeDAO;
 import org.sca.calontir.cmpe.db.FighterDAO;
 import org.sca.calontir.cmpe.db.ReportDAO;
@@ -39,11 +31,20 @@ import org.sca.calontir.cmpe.db.TableUpdatesDao;
 import org.sca.calontir.cmpe.dto.AuthType;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.FighterListItem;
+import org.sca.calontir.cmpe.dto.FighterResultWrapper;
 import org.sca.calontir.cmpe.dto.Report;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 import org.sca.calontir.cmpe.dto.TableUpdates;
+import org.sca.calontir.cmpe.user.Security;
+import org.sca.calontir.cmpe.user.SecurityFactory;
 
+/**
+ *
+ * @author rikscarborough
+ */
 public class FighterServiceImpl extends RemoteServiceServlet implements FighterService {
+
+    private static final Logger log = Logger.getLogger(FighterServiceImpl.class.getName());
 
     @Override
     public FighterListInfo getListItems(Date targetDate) {
@@ -55,10 +56,15 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         fighters = fighterDao.getFighterListItems(new DateTime(targetDate));
         retval.setUpdateInfo(true);
 
-        List<FighterInfo> retValList = new ArrayList<>();
+        return convert(fighters);
+    }
+
+    private FighterListInfo convert(List<FighterListItem> fighters) {
+        final FighterListInfo retval = new FighterListInfo();
+        final List<FighterInfo> retValList = new ArrayList<>();
         for (FighterListItem fli : fighters) {
             if (fli != null) {
-                FighterInfo info = new FighterInfo();
+                final FighterInfo info = new FighterInfo();
                 info.setFighterId(fli.getFighterId() == null ? 0 : fli.getFighterId());
                 info.setScaName(fli.getScaName() == null ? "" : fli.getScaName());
                 info.setAuthorizations(fli.getAuthorizations() == null ? "" : fli.getAuthorizations());
@@ -82,14 +88,108 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
     }
 
     @Override
+    public FighterListResultWrapper getFighters(String cursor, Integer pageSize, Integer offset) {
+        final Security security = SecurityFactory.getSecurity();
+        final FighterDAO fighterDao = new FighterDAO();
+        FighterResultWrapper fighterResults;
+        if (cursor == null) {
+            fighterResults = fighterDao.getFighters(pageSize, offset, security.isRoleOrGreater(UserRoles.CARD_MARSHAL));
+        } else {
+            Cursor startCursor = Cursor.fromWebSafeString(cursor);
+            fighterResults = fighterDao.getFighters(pageSize, startCursor, security.isRoleOrGreater(UserRoles.CARD_MARSHAL));
+        }
+        final String newCursor = fighterResults.getCursor() == null ? null : fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
+    }
+
+    @Override
+    public FighterListResultWrapper getFightersByGroup(ScaGroup group, String cursor, Integer pageSize, Integer offset) {
+        final Security security = SecurityFactory.getSecurity();
+        final FighterDAO fighterDao = new FighterDAO();
+        final FighterResultWrapper fighterResults;
+        if (cursor == null) {
+            fighterResults = fighterDao.getFightersByGroup(group, pageSize, offset, security.isRoleOrGreater(UserRoles.CARD_MARSHAL));
+        } else {
+            final Cursor startCursor = Cursor.fromWebSafeString(cursor);
+            fighterResults = fighterDao.getFightersByGroup(group, pageSize, startCursor, security.isRoleOrGreater(UserRoles.CARD_MARSHAL));
+        }
+        final String newCursor = fighterResults.getCursor() == null ? null : fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getFighterCountInGroup(group));
+        return fighterListResults;
+    }
+
+    @Override
+    public FighterListResultWrapper getFightersSortedByScaName(Integer pageSize) {
+        final FighterDAO fighterDao = new FighterDAO();
+        FighterResultWrapper fighterResults = fighterDao.getFightersSortedByScaName(pageSize);
+        final String newCursor = fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
+    }
+
+    @Override
+    public FighterListResultWrapper getFightersSortedByScaGroup(Integer pageSize) {
+        final FighterDAO fighterDao = new FighterDAO();
+        FighterResultWrapper fighterResults = fighterDao.getFightersSortedByGroup(pageSize);
+        final String newCursor = fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
+    }
+
+    @Override
+    public FighterListResultWrapper getFightersSortedByStatus(Integer pageSize) {
+        final FighterDAO fighterDao = new FighterDAO();
+        FighterResultWrapper fighterResults = fighterDao.getFightersSortedByStatus(pageSize);
+        final String newCursor = fighterResults.getCursor().toWebSafeString();
+
+        final FighterListResultWrapper fighterListResults = new FighterListResultWrapper();
+        fighterListResults.setFighters(convert(fighterResults.getFighters()));
+        fighterListResults.setCursor(newCursor);
+        fighterListResults.setPageSize(pageSize);
+        fighterListResults.setCount(fighterDao.getTotalCount());
+        return fighterListResults;
+    }
+
+    @Override
     public Long saveFighter(Fighter fighter) {
         FighterDAO fighterDao = new FighterDAO();
         try {
             return fighterDao.saveFighter(fighter, fighter.getFighterId(), false);
         } catch (ValidationException ex) {
-            Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            log.log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    @Override
+    public FighterListInfo searchFighters(String searchString) {
+        final Security security = SecurityFactory.getSecurity();
+        if (!security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            searchString = "scaName = " + searchString;
+        }
+        final FighterDAO fighterDao = new FighterDAO();
+        return convert(fighterDao.searchFighters(searchString));
     }
 
     @Override
@@ -116,43 +216,10 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
     @Override
     public Map<String, Object> initialLookup() {
-        Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.INFO, "Start Initial Lookup");
+        log.log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<>();
         // get application version
-        iMap.put("appversion", "1.2.16");
-
-        // get from blob
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        String namespace = NamespaceManager.get();
-        String blobKeyStr;
-        try {
-            NamespaceManager.set("system");
-
-            String name = "calontir.snapshotkey";
-            Query query = new Query("properties");
-            query.setFilter(new Query.FilterPredicate("name", Query.FilterOperator.EQUAL, name));
-            PreparedQuery preparedQuery = datastore.prepare(query);
-            Entity entity = preparedQuery.asSingleEntity();
-            blobKeyStr = (String) entity.getProperty("property");
-        } finally {
-            NamespaceManager.set(namespace);
-        }
-        BlobKey blobKey = new BlobKey(blobKeyStr);
-        try {
-            BlobstoreInputStream bis = new BlobstoreInputStream(blobKey);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(bis));
-            StringWriter sw = new StringWriter();
-            char[] buffer = new char[1024 * 4];
-            int n = 0;
-            while (-1 != (n = reader.read(buffer))) {
-                sw.write(buffer, 0, n);
-            }
-            String text = sw.toString();
-
-            iMap.put("stored", text);
-        } catch (IOException ex) {
-            Logger.getLogger(FighterServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        iMap.put("appversion", "1.3.0 Alpha");
 
         // get groups
         ScaGroupDAO groupDao = new ScaGroupDAO();
@@ -237,14 +304,53 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
 
     @Override
     public List<Report> getReports(Integer days) {
+        final Security security = SecurityFactory.getSecurity();
         log(String.format("Getting reports for the last %d days", days));
-        String namespace = NamespaceManager.get();
-        try {
-            NamespaceManager.set("calontir");
-            ReportDAO dao = new ReportDAO();
-            return dao.getForDays(days);
-        } finally {
-            NamespaceManager.set(namespace);
+        List<Report> reports = null;
+        log.log(Level.INFO, security.getUser().toString());
+        if (security.isRoleOrGreater(UserRoles.CARD_MARSHAL)) {
+            log.log(Level.INFO, "Card Marshal");
+            final String namespace = NamespaceManager.get();
+            try {
+                NamespaceManager.set("calontir");
+                ReportDAO dao = new ReportDAO();
+                reports = dao.getForDays(days);
+            } finally {
+                NamespaceManager.set(namespace);
+            }
+        } else if (security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
+            log.log(Level.INFO, "Deputy Earl Marshal");
+            ScaGroupDAO groupDao = new ScaGroupDAO();
+            List<String> groups = groupDao.getScaGroupNamesByRegion(security.getUser().getScaGroup().getGroupLocation());
+            final String namespace = NamespaceManager.get();
+            try {
+                NamespaceManager.set("calontir");
+                ReportDAO dao = new ReportDAO();
+                reports = dao.getForRegionAndDays(days, groups);
+            } finally {
+                NamespaceManager.set(namespace);
+            }
+        } else {
+            log.log(Level.INFO, "No reports allowed");
         }
+
+        return reports;
     }
+
+    @Override
+    public Integer countFightersInGroup(String group) {
+        final FighterDAO fighterDao = new FighterDAO();
+        final ScaGroupDAO groupDao = new ScaGroupDAO();
+        final ScaGroup scaGroup = groupDao.getScaGroupByName(group);
+        return fighterDao.getFighterCountInGroup(scaGroup);
+    }
+
+    @Override
+    public Integer countMinorsInGroup(String group) {
+        final FighterDAO fighterDao = new FighterDAO();
+        final ScaGroupDAO groupDao = new ScaGroupDAO();
+        final ScaGroup scaGroup = groupDao.getScaGroupByName(group);
+        return fighterDao.getMinorCountInGroup(scaGroup);
+    }
+
 }

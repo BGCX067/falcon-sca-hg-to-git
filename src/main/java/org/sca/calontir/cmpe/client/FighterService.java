@@ -13,11 +13,21 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
 @RemoteServiceRelativePath("fighter")
 public interface FighterService extends RemoteService {
 
+    public Integer countFightersInGroup(String group);
+
+    public Integer countMinorsInGroup(String group);
+
     public FighterListInfo getListItems(Date targetDate);
 
     public Fighter getFighter(Long id);
 
+    public FighterListInfo searchFighters(String searchString);
+
     public Fighter getFighterByScaName(String scaName);
+
+    public FighterListResultWrapper getFighters(String cursor, Integer pageSize, Integer offset);
+
+    public FighterListResultWrapper getFightersByGroup(ScaGroup group, String cursor, Integer pageSize, Integer offset);
 
     public Long saveFighter(Fighter fighter);
 
@@ -38,4 +48,10 @@ public interface FighterService extends RemoteService {
     public List<Report> getReports(Integer days);
 
     public void deleteReport(Report report);
+
+    public FighterListResultWrapper getFightersSortedByScaName(Integer pageSize);
+
+    public FighterListResultWrapper getFightersSortedByScaGroup(Integer pageSize);
+
+    public FighterListResultWrapper getFightersSortedByStatus(Integer pageSize);
 }

@@ -31,5 +31,4 @@ class HistoryChangeHandlerImpl implements ValueChangeHandler<String> {
             DisplayUtils.changeDisplay(DisplayUtils.Displays.SignupForm);
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package org.sca.calontir.cmpe.db;
 
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -7,7 +8,18 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.QueryResultList;
+import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.Index;
+import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.PutException;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
+import com.google.appengine.api.search.SearchServiceFactory;
+import com.google.appengine.api.search.StatusCode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,8 +29,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.sca.calontir.cmpe.ValidationException;
 import org.sca.calontir.cmpe.dto.Address;
 import org.sca.calontir.cmpe.dto.Authorization;
@@ -26,14 +38,18 @@ import org.sca.calontir.cmpe.dto.DataTransfer;
 import org.sca.calontir.cmpe.dto.Email;
 import org.sca.calontir.cmpe.dto.Fighter;
 import org.sca.calontir.cmpe.dto.FighterListItem;
+import org.sca.calontir.cmpe.dto.FighterResultWrapper;
 import org.sca.calontir.cmpe.dto.Note;
 import org.sca.calontir.cmpe.dto.Phone;
+import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
  *
  * @author rik
  */
 public class FighterDAO {
+
+    static final Logger logger = Logger.getLogger(FighterDAO.class.getName());
 
     final DatastoreService datastore;
     final private FighterCache fCache;
@@ -52,11 +68,161 @@ public class FighterDAO {
                 retVal = DataTransfer.convert(fighter, datastore);
                 fCache.put(retVal);
             } catch (EntityNotFoundException ex) {
-                Logger.getLogger(FighterDAO.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
         }
 
         return retVal;
+    }
+
+    public FighterResultWrapper getFighters(int pageSize, int offset, boolean getDeleted) {
+        return getFighters(pageSize, null, offset, getDeleted);
+    }
+
+    public FighterResultWrapper getFighters(int pageSize, Cursor cursor, boolean getDeleted) {
+        return getFighters(pageSize, cursor, 0, getDeleted);
+    }
+
+    protected FighterResultWrapper getFighters(int pageSize, Cursor cursor, int offset, boolean getDeleted) {
+        final Query query = new Query("Fighter");
+        if (!getDeleted) {
+            final Query.Filter scaGroupFilter = new Query.FilterPredicate("status", Query.FilterOperator.NOT_EQUAL, "DELETED");
+            query.setFilter(scaGroupFilter).addSort("status");
+        }
+        query.addSort("scaName");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        if (cursor != null) {
+            fetchOptions.startCursor(cursor);
+        } else if (offset > 0) {
+            fetchOptions.offset(offset);
+        }
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
+    public FighterResultWrapper getFightersSortedByScaName(Integer pageSize) {
+        final Query query = new Query("Fighter").addSort("scaName");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
+    public FighterResultWrapper getFightersSortedByGroup(Integer pageSize) {
+        final Query query = new Query("Fighter").addSort("scaGroup");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
+    public FighterResultWrapper getFightersSortedByStatus(Integer pageSize) {
+        final Query query = new Query("Fighter").addSort("status");
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
+    public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, int offset, boolean getDeleted) {
+        return getFightersByGroup(scaGroup, pageSize, null, offset, getDeleted);
+    }
+
+    public FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, Cursor cursor, boolean getDeleted) {
+        return getFightersByGroup(scaGroup, pageSize, cursor, 0, getDeleted);
+    }
+
+    protected FighterResultWrapper getFightersByGroup(ScaGroup scaGroup, int pageSize, Cursor cursor, int offset, boolean getDeleted) {
+        ScaGroupDAO groupDao = new ScaGroupDAO();
+        Key groupKey = groupDao.getScaGroupKey(scaGroup.getGroupName());
+        final Query query = new Query("Fighter");
+        Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, groupKey);
+
+        if (getDeleted) {
+            query.setFilter(scaGroupFilter).addSort("scaName");
+        } else {
+            final Query.Filter statusFilter = new Query.FilterPredicate("status", Query.FilterOperator.NOT_EQUAL, "DELETED");
+            final Query.Filter compositeFilter = Query.CompositeFilterOperator.and(scaGroupFilter, statusFilter);
+            query.setFilter(compositeFilter).addSort("status").addSort("scaName");
+        }
+        final FetchOptions fetchOptions = FetchOptions.Builder.withLimit(pageSize);
+        if (cursor != null) {
+            fetchOptions.startCursor(cursor);
+        } else if (offset > 0) {
+            fetchOptions.offset(offset);
+        }
+        final PreparedQuery pq = datastore.prepare(query);
+        final QueryResultList<Entity> results = pq.asQueryResultList(fetchOptions);
+        final List<FighterListItem> retArray = new ArrayList<>();
+        for (final Entity f : results) {
+            final FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+            retArray.add(fli);
+        }
+        final Cursor newCursor = results.getCursor();
+        final FighterResultWrapper result = new FighterResultWrapper();
+        result.setFighters(retArray);
+        result.setCursor(newCursor);
+        return result;
+    }
+
+    public List<FighterListItem> searchFighters(String searchString) {
+        logger.finer("Search String");
+
+        IndexSpec indexSpec = IndexSpec.newBuilder().setName("fighters").build();
+        Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
+
+        final List<FighterListItem> retval = new ArrayList<>();
+        Results<ScoredDocument> results = index.search(searchString);
+        for (ScoredDocument document : results) {
+            final Long id = Long.valueOf(document.getId());
+            try {
+                logger.log(Level.FINER, "Found {0}", id);
+                Entity f = getFighterEntity(id);
+                FighterListItem fli = DataTransfer.convertToListItem(f, datastore);
+                retval.add(fli);
+            } catch (EntityNotFoundException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return retval;
     }
 
     private Entity getFighterEntity(long fighterId) throws EntityNotFoundException {
@@ -67,7 +233,7 @@ public class FighterDAO {
     }
 
     public Fighter getFighterByGoogleId(String userId) {
-        Logger.getLogger(FighterDAO.class.getName()).log(Level.FINE, "Getting {0}", userId);
+        logger.log(Level.FINE, "Getting {0}", userId);
         Fighter retval = fCache.getFighterByGoogleId(userId);
         if (retval == null) {
             final Query.Filter filter = new Query.FilterPredicate("googleId", Query.FilterOperator.EQUAL, userId);
@@ -149,11 +315,11 @@ public class FighterDAO {
     }
 
     public List<Fighter> getMinorCount() {
-        final DateMidnight now = new DateMidnight();
-        final DateMidnight minorDate = now.minusYears(18);
+        final LocalDate now = new LocalDate();
+        final LocalDate minorDate = now.minusYears(18);
 
         List<Fighter> retArray = new ArrayList<>();
-        Query.Filter filter = new Query.FilterPredicate("dateOfBirth", Query.FilterOperator.GREATER_THAN, minorDate.toDate());
+        Query.Filter filter = new Query.FilterPredicate("dateOfBirth", Query.FilterOperator.GREATER_THAN, minorDate.toDateTimeAtStartOfDay().toDate());
         Query query = new Query("Fighter").setFilter(filter);
         List<Entity> fighters = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
         for (Entity f : fighters) {
@@ -190,15 +356,15 @@ public class FighterDAO {
     }
 
     private List<Entity> getAllFightersAsOf(DateTime dt) {
-        if (dt == null || dt.toDateMidnight().equals(new DateMidnight(1966, 3, 1))) {
-            Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting all fighters");
+        if (dt == null || dt.toLocalDate().equals(new LocalDate(1966, 3, 1))) {
+            logger.log(Level.INFO, "Getting all fighters");
             return returnAllFighters();
         }
-        Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting fighters as of {0}", dt.toString());
+        logger.log(Level.INFO, "Getting fighters as of {0}", dt.toString());
         Query.Filter lastUpdatedFilter = new Query.FilterPredicate("lastUpdated", Query.FilterOperator.GREATER_THAN, dt.toDate());
         Query query = new Query("Fighter").setFilter(lastUpdatedFilter);
         List<Entity> fighters = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-        Logger.getLogger(FighterDAO.class.getName()).log(Level.INFO, "Getting {0} fighters ", fighters.size());
+        logger.log(Level.INFO, "Getting {0} fighters ", fighters.size());
 
         return fighters;
     }
@@ -220,6 +386,25 @@ public class FighterDAO {
 
     public Long saveFighter(Fighter fighter, Long userId) throws ValidationException {
         return this.saveFighter(fighter, userId, true);
+    }
+
+    private void saveFighterToIndex(Fighter fighter) {
+        Document doc = Document.newBuilder().setId(fighter.getFighterId().toString())
+                .addField(Field.newBuilder().setName("scaName").setText(fighter.getScaName()))
+                .addField(Field.newBuilder().setName("modernName").setText(fighter.getModernName()))
+                .addField(Field.newBuilder().setName("googeId").setText(fighter.getGoogleId()))
+                .build();
+
+        IndexSpec indexSpec = IndexSpec.newBuilder().setName("fighters").build();
+        Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
+
+        try {
+            index.put(doc);
+        } catch (PutException e) {
+            if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult().getCode())) {
+                // retry putting the document
+            }
+        }
     }
 
     public Long saveFighter(Fighter fighter, Long userId, boolean validate) throws ValidationException {
@@ -244,6 +429,9 @@ public class FighterDAO {
         fighterEntity.setProperty("lastUpdated", new Date());
         fighterEntity.setProperty("userUpdated", userId);
         final Key key = datastore.put(fighterEntity);
+
+        fighter.setFighterId(key.getId());
+        saveFighterToIndex(fighter);
 
         final Query noteQuery = new Query("Note").setAncestor(key);
         Entity noteEntity = datastore.prepare(noteQuery).asSingleEntity();
@@ -471,4 +659,34 @@ public class FighterDAO {
         }
         return true;
     }
+
+    public int getTotalCount() {
+        Query query = new Query("Fighter").setKeysOnly();
+        FetchOptions fetchOptions = FetchOptions.Builder.withDefaults();
+        PreparedQuery pq = datastore.prepare(query);
+        return pq.countEntities(fetchOptions);
+    }
+
+    public int getFighterCountInGroup(ScaGroup scaGroup) {
+        ScaGroupDAO groupDao = new ScaGroupDAO();
+        Key groupKey = groupDao.getScaGroupKey(scaGroup.getGroupName());
+        Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, groupKey);
+        Query query = new Query("Fighter").setFilter(scaGroupFilter).setKeysOnly();
+        FetchOptions fetchOptions = FetchOptions.Builder.withDefaults();
+        PreparedQuery pq = datastore.prepare(query);
+        return pq.countEntities(fetchOptions);
+    }
+
+    public int getMinorCountInGroup(ScaGroup scaGroup) {
+        final LocalDate now = new LocalDate();
+        final LocalDate minorDate = now.minusYears(18);
+        final Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, scaGroup);
+        final Query.Filter filter = new Query.FilterPredicate("dateOfBirth", Query.FilterOperator.GREATER_THAN, minorDate.toDateTimeAtStartOfDay().toDate());
+        final Query.Filter validFilter = Query.CompositeFilterOperator.and(scaGroupFilter, filter);
+        final Query query = new Query("Fighter").setFilter(validFilter).setKeysOnly();
+        final FetchOptions fetchOptions = FetchOptions.Builder.withDefaults();
+        final PreparedQuery pq = datastore.prepare(query);
+        return pq.countEntities(fetchOptions);
+    }
+
 }

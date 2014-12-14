@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datastore-indexes autoGenerate="true">
+    <datastore-index kind="ReportParams" ancestor="false">
+        <property name="value" direction="asc" />
+        <property name="dateEntered" direction="asc" />
+    </datastore-index>
+    <datastore-index kind="Fighter" ancestor="false" source="manual">
+        <property name="scaGroup" direction="asc"/>
+        <property name="scaName" direction="asc"/>
+    </datastore-index>
+    <datastore-index kind="Fighter" ancestor="false" source="manual">
+        <property name="status" direction="asc"/>
+        <property name="scaName" direction="asc"/>
+    </datastore-index>
+    <datastore-index kind="Fighter" ancestor="false" source="manual">
+        <property name="scaGroup" direction="asc"/>
+        <property name="status" direction="asc"/>
+        <property name="scaName" direction="asc"/>
+    </datastore-index>
+</datastore-indexes>

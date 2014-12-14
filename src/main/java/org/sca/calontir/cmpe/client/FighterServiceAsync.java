@@ -19,9 +19,19 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  */
 public interface FighterServiceAsync {
 
+    public void countFightersInGroup(String group, AsyncCallback<Integer> async);
+
+    public void countMinorsInGroup(String group, AsyncCallback<Integer> async);
+
     public void getListItems(Date targetDate, AsyncCallback<FighterListInfo> async);
 
     public void getFighter(Long id, AsyncCallback<Fighter> async);
+
+    public void getFighters(String cursor, Integer pageSize, Integer offset, AsyncCallback<FighterListResultWrapper> async);
+
+    public void getFightersByGroup(ScaGroup group, String cursor, Integer pageSize, Integer offset, AsyncCallback<FighterListResultWrapper> async);
+
+    public void searchFighters(String searchString, AsyncCallback<FighterListInfo> async);
 
     public void getFighterByScaName(String scaName, AsyncCallback<Fighter> async);
 
@@ -44,4 +54,10 @@ public interface FighterServiceAsync {
     public void deleteReport(Report report, AsyncCallback<Void> async);
 
     public void getMinorFighters(String group, AsyncCallback<List<Fighter>> asyncCallback);
+
+    public void getFightersSortedByScaName(Integer pageSize, AsyncCallback<FighterListResultWrapper> fighterAsyncCallback);
+
+    public void getFightersSortedByScaGroup(Integer pageSize, AsyncCallback<FighterListResultWrapper> fighterAsyncCallback);
+
+    public void getFightersSortedByStatus(Integer pageSize, AsyncCallback<FighterListResultWrapper> fighterAsyncCallback);
 }

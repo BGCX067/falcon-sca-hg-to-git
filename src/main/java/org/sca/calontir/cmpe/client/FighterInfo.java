@@ -75,4 +75,9 @@ public class FighterInfo implements Serializable {
     public void setRole(String role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "FighterInfo{" + "fighterId=" + fighterId + ", scaName=" + scaName + ", authorizations=" + authorizations + ", group=" + group + ", status=" + status + ", minor=" + minor + ", role=" + role + '}';
+    }
 }

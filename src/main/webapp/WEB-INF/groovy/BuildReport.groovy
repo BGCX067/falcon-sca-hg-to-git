@@ -18,8 +18,13 @@ if(user == null) {
     return // no
 }
 logger.BuildReport.info "Generating report for ${user.scaName}"
-def toArray = []
+def ccs = params["Email Cc"]?.split(",")
+if(!ccs) {
+	ccs = []
+}
+ccs += user?.email[0].emailAddress
 def from
+def to
 def location = user?.scaGroup?.groupLocation
 def activities = StringEscapeUtils.unescapeHtml(params["Activities"])
 def rmType = params["Reporting Marshal Type"]
@@ -35,7 +40,7 @@ namespace.of("system") {
 	def entities = preparedQuery.asList( withLimit(10) )
 	if(entities != null && entities.size() > 0) {
 		def entity = entities[0]
-		toArray += entity.property
+		ccs += entity.property
 	}
 
     if (rmt.equals(ReportingMarshalType.CALON_STEEL)) {
@@ -45,7 +50,7 @@ namespace.of("system") {
         entities = preparedQuery.asList( withLimit(10) )
         if(entities != null && entities.size() > 0) {
             def entity = entities[0]
-            toArray += entity.property
+            ccs += entity.property
         }
     }
 
@@ -64,12 +69,9 @@ namespace.of("system") {
 	entities = preparedQuery.asList( withLimit(10) )
 	if(entities != null && entities.size() > 0) {
 		def entity = entities[0]
-		toArray += entity.property
+		to = entity.property
 	}
 }
-
-toArray += user?.email[0].emailAddress
-toArray << params["Email Cc"]?.split(",")
 
 namespace.of(kingdom.toLowerCase()) {
 	def reportInfo = new Entity ("Report")
@@ -208,10 +210,11 @@ build.html{
 	}
 }
 
-logger.BuildReport.info "Sending report for ${params["Report Type"]}: to ${toArray}, from ${from}"
+logger.BuildReport.info "Sending report for ${params["Report Type"]}: to ${to}, from ${from}, cc ${ccs}"
 
 mail.send from: from,
-to: toArray,
+to: to,
+cc: ccs,
 subject: "Marshal report - ${user.scaName} - ${params["Report Type"]}",
 htmlBody: writer.toString()
 
