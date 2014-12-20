@@ -219,7 +219,7 @@ public class FighterServiceImpl extends RemoteServiceServlet implements FighterS
         log.log(Level.INFO, "Start Initial Lookup");
         Map<String, Object> iMap = new HashMap<>();
         // get application version
-        iMap.put("appversion", "1.3.0 Alpha");
+        iMap.put("appversion", "1.3.0");
 
         // get groups
         ScaGroupDAO groupDao = new ScaGroupDAO();
