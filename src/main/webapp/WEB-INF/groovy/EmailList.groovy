@@ -1,9 +1,4 @@
-import org.sca.calontir.cmpe.utils.MarshalUtils
-import org.sca.calontir.cmpe.user.Security
-import org.sca.calontir.cmpe.user.SecurityFactory
 import org.sca.calontir.cmpe.common.UserRoles
-import com.google.appengine.api.datastore.Entity
-import com.google.appengine.api.blobstore.BlobKey
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 import au.com.bytecode.opencsv.*
@@ -12,18 +7,22 @@ import au.com.bytecode.opencsv.*
 final int limitNum = 200
 def kingdom = "Calontir"
 def toEmail = params["email"]
+def role = params["role"]
 
-Security security = SecurityFactory.getSecurity()
+if (!(role == UserRoles.CARD_MARSHAL.toString() || role == UserRoles.EARL_MARSHAL.toString())) {
+    logger.EmailList.warning "Cannot run unless Earl or Card Marshal"
+    return
+}
 
 def fighterCount = datastore.execute {
     select count from Fighter
 }
 
-logger.StoreDatabase.info "Count returns " + fighterCount
+logger.EmailList.info "Count returns " + fighterCount
 
 def loopTimes = fighterCount.div(limitNum).intValue() + 1
 
-logger.StoreDatabase.info "Looping " + loopTimes + " times"
+logger.EmailList.info "Looping " + loopTimes + " times"
 
 def index = search.index("fighters")
 
