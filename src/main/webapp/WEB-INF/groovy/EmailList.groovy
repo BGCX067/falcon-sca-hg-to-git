@@ -40,13 +40,6 @@ for (i in 0..loopTimes) {
     }
 
     for (fighter in fighters) {
-        def response = index.put {
-            document(id: fighter.key.id) {
-                scaName text: fighter.scaName
-                modernName text: fighter.modernName
-                googeId text: fighter.googleId
-            }
-        }
         def line = []
         line << fighter.key.id
         line << fighter.scaName
@@ -110,6 +103,8 @@ if (savedCount != fighterCount) {
 
 Writer writer = new StringWriter()
 def w = new CSVWriter(writer)
+w.writeNext((String []) ['ID', 'SCA Name', 'SCA Member Num', 'Modern Name', 'Date Of Birth', 'Google ID', 'Email', 'Address 1', 'Address 2', 'City', 'District',
+    'Postal Code', 'State', 'Phone', 'Auths', 'SCA Group', 'Role', 'Status', 'Treaty'])
 mapList.each { fighter ->
     String[] line = fighter
     w.writeNext(line)
