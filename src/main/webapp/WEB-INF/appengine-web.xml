@@ -3,12 +3,12 @@
     <application>falcon-sca</application>
     <version>${appengine.app.version}</version>
     <threadsafe>true</threadsafe>
-    
+
     <static-error-handlers>
-      <handler file="default_error.html"/>
-      <handler file="over_quota.html" error-code="over_quota"/>
+        <handler file="default_error.html"/>
+        <handler file="over_quota.html" error-code="over_quota"/>
     </static-error-handlers>
-    
+
     <static-files>
         <exclude path="/WEB-INF/**.groovy" />
     </static-files>
@@ -16,4 +16,8 @@
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
+    
+    <inbound-services>
+        <service>mail_bounce</service>
+    </inbound-services>
 </appengine-web-app>

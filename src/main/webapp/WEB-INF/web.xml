@@ -12,6 +12,7 @@
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.AdminServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>FighterServlet</servlet-name>
         <url-pattern>/FighterServlet</url-pattern>
@@ -20,28 +21,22 @@
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/AdminServlet</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>loginService</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.server.LoginServiceImpl</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>loginService</servlet-name>
         <url-pattern>/fighter/login</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>fighterService</servlet-name>
         <servlet-class>org.sca.calontir.cmpe.server.FighterServiceImpl</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>fighterService</servlet-name>
         <url-pattern>/fighter/fighter</url-pattern>
     </servlet-mapping>
-
-
     <!-- The Gaelyk Groovlet servlet -->
     <servlet>
         <servlet-name>GroovletServlet</servlet-name>
@@ -52,8 +47,6 @@
         <servlet-name>GroovletServlet</servlet-name>
         <url-pattern>*.groovy</url-pattern>
     </servlet-mapping>
-
-
     <filter>
         <filter-name>RoutesFilter</filter-name>
         <filter-class>groovyx.gaelyk.routes.RoutesFilter</filter-class>
@@ -62,7 +55,6 @@
         <filter-name>RoutesFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
     <servlet>
         <servlet-name>remoteLogging</servlet-name>
         <servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
@@ -80,4 +72,21 @@
         <url-pattern>/remote_api</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>bouncehandler</servlet-name>
+        <servlet-class>org.sca.calontir.cmpe.BounceHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>bouncehandler</servlet-name>
+        <url-pattern>/_ah/bounce</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>bounce</web-resource-name>
+            <url-pattern>/_ah/bounce</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
 </web-app>
