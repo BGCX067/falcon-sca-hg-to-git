@@ -4,22 +4,26 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RichTextArea;
-import com.google.gwt.view.client.ListDataProvider;
-import java.util.Comparator;
-import java.util.List;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.Range;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.sca.calontir.cmpe.client.FighterInfo;
+import org.sca.calontir.cmpe.client.FighterListResultWrapper;
+import org.sca.calontir.cmpe.client.FighterService;
+import org.sca.calontir.cmpe.client.FighterServiceAsync;
 import org.sca.calontir.cmpe.client.ui.LookupController;
+import org.sca.calontir.cmpe.client.ui.Shout;
 import org.sca.calontir.cmpe.client.user.Security;
 import org.sca.calontir.cmpe.client.user.SecurityFactory;
-import org.sca.calontir.cmpe.common.ReportingMarshalType;
-import org.sca.calontir.cmpe.common.UserRoles;
 import org.sca.calontir.cmpe.dto.ScaGroup;
 
 /**
@@ -28,7 +32,11 @@ import org.sca.calontir.cmpe.dto.ScaGroup;
  */
 public class FighterComment extends BaseReportPage {
 
+    private static final Logger log = Logger.getLogger(FighterComment.class.getName());
     final private Security security = SecurityFactory.getSecurity();
+    private final Shout shout = Shout.getInstance();
+    private String cursor = null;
+    private int prevStart = 0;
 
     @Override
     public void buildPage() {
@@ -53,12 +61,12 @@ public class FighterComment extends BaseReportPage {
 
         fighterComments.addKeyPressHandler(new RequiredFieldKeyPressHandler("Fighter Comments"));
 
-        addListPanel(null, bk);
+        addListPanel(bk);
 
         add(bk);
     }
 
-    private void addListPanel(List<FighterInfo> fighterList, Panel target) {
+    private void addListPanel(Panel target) {
         Panel listPanel = new FlowPanel();
 
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
@@ -94,54 +102,9 @@ public class FighterComment extends BaseReportPage {
         table.addColumn(authorizationColumn, "Authorizations");
         table.addColumn(statusColumn, "Status");
 
-        ListDataProvider<FighterInfo> dataProvider = new ListDataProvider<FighterInfo>();
+        ScaGroup group = LookupController.getInstance().getScaGroup(security.getLoginInfo().getGroup());
+        AsyncDataProvider<FighterInfo> dataProvider = new AsyncDataProviderImpl(table, group);
         dataProvider.addDataDisplay(table);
-
-        table.setRowCount(fighterList.size());
-
-        List data = dataProvider.getList();
-        data.clear();
-        for (FighterInfo fli : fighterList) {
-            String rmType = (String) getReportInfo().get("Reporting Marshal Type");
-            ReportingMarshalType rmt = ReportingMarshalType.getByCode(rmType);
-            if (ReportingMarshalType.ARMORED_COMBAT.equals(rmt)) {
-                if (security.isRole(UserRoles.KNIGHTS_MARSHAL)) {
-                    if (fli.getGroup().equals(security.getLoginInfo().getGroup())) {
-                        data.add(fli);
-                    }
-                }
-                if (security.isRole(UserRoles.DEPUTY_EARL_MARSHAL)) {
-                    ScaGroup fightersGroup = LookupController.getInstance().getScaGroup(fli.getGroup());
-                    ScaGroup usersGroup = LookupController.getInstance().getScaGroup(security.getLoginInfo().getGroup());
-                    if (fightersGroup.getGroupLocation().equals(usersGroup.getGroupLocation())) {
-                        data.add(fli);
-                    }
-                }
-            } else {
-                // Hack. Uses data in code.
-                if (fli.getAuthorizations().contains("CT")) {
-                    data.add(fli);
-                }
-            }
-        }
-
-        ColumnSortEvent.ListHandler<FighterInfo> columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
-        columnSortHandler.setComparator(scaNameColumn, new Comparator<FighterInfo>() {
-            @Override
-            public int compare(FighterInfo left, FighterInfo right) {
-                return left.getScaName().compareTo(right.getScaName());
-            }
-        });
-        table.addColumnSortHandler(columnSortHandler);
-
-        columnSortHandler = new ColumnSortEvent.ListHandler<FighterInfo>(dataProvider.getList());
-        columnSortHandler.setComparator(statusColumn, new Comparator<FighterInfo>() {
-            @Override
-            public int compare(FighterInfo left, FighterInfo right) {
-                return left.getStatus().compareTo(right.getStatus());
-            }
-        });
-        table.addColumnSortHandler(columnSortHandler);
 
         listPanel.add(table);
         listPanel.add(pager);
@@ -157,5 +120,56 @@ public class FighterComment extends BaseReportPage {
 
     @Override
     public void onLeavePage() {
+    }
+
+    private class AsyncDataProviderImpl extends AsyncDataProvider<FighterInfo> {
+
+        CellTable<FighterInfo> table = new CellTable<FighterInfo>();
+        private final ScaGroup group;
+
+        public AsyncDataProviderImpl(CellTable<FighterInfo> table, ScaGroup group) {
+            this.table = table;
+            this.group = group;
+        }
+
+        @Override
+        protected void onRangeChanged(final HasData<FighterInfo> display) {
+            shout.hide();
+            shout.tell("Please Wait, searching for records....", false);
+            int dispStart = display.getVisibleRange().getStart();
+            int dispLength = display.getVisibleRange().getLength();
+
+            int prevPageStart = dispStart - dispLength;
+            prevPageStart = prevPageStart < 0 ? 0 : dispStart;
+            if (prevStart >= dispStart) {
+                cursor = null;
+            }
+            if (dispStart >= table.getRowCount() - dispLength) {
+                cursor = null;
+                prevPageStart = table.getRowCount() - dispLength;
+            }
+            final FighterServiceAsync fighterService = GWT.create(FighterService.class);
+            fighterService.getFightersByGroup(group, cursor, dispLength, prevPageStart, new AsyncCallback<FighterListResultWrapper>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    shout.hide();
+                    log.log(Level.SEVERE, "loadgroup:", caught);
+                    shout.defaultError();
+                }
+
+                @Override
+                public void onSuccess(FighterListResultWrapper result) {
+                    final Range range = display.getVisibleRange();
+                    int start = range.getStart();
+                    prevStart = start;
+                    table.setRowCount(result.getCount());
+                    table.setRowData(start, result.getFighters().getFighterInfo());
+                    cursor = result.getCursor();
+                    shout.hide();
+                }
+            });
+        }
+
     }
 }
