@@ -7,11 +7,4 @@
         <schedule>every sunday 21:39</schedule>
         <timezone>America/Chicago</timezone>
     </cron>
-    <cron>
-        <url>/StoreDatabase.groovy</url>
-        <target>adminb</target>
-        <description>Backup data once a week</description>
-        <schedule>every wednesday 21:00</schedule>
-        <timezone>America/Chicago</timezone>
-    </cron>
 </cronentries>
