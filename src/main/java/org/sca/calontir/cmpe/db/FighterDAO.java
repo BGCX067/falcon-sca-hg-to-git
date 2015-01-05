@@ -680,7 +680,9 @@ public class FighterDAO {
     public int getMinorCountInGroup(ScaGroup scaGroup) {
         final LocalDate now = new LocalDate();
         final LocalDate minorDate = now.minusYears(18);
-        final Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, scaGroup);
+        final ScaGroupDAO groupDao = new ScaGroupDAO();
+        final Key groupKey = groupDao.getScaGroupKey(scaGroup.getGroupName());
+        final Query.Filter scaGroupFilter = new Query.FilterPredicate("scaGroup", Query.FilterOperator.EQUAL, groupKey);
         final Query.Filter filter = new Query.FilterPredicate("dateOfBirth", Query.FilterOperator.GREATER_THAN, minorDate.toDateTimeAtStartOfDay().toDate());
         final Query.Filter validFilter = Query.CompositeFilterOperator.and(scaGroupFilter, filter);
         final Query query = new Query("Fighter").setFilter(validFilter).setKeysOnly();
